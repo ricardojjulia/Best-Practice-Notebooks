@@ -114,22 +114,20 @@ timeseries diskUsage = avg(dt.host.disk.used.percent), by:{dt.entity.host}
 
 ### Utilization vs. Allocation
 
-```
-┌─────────────────────────────────────┐
-│           Node Capacity             │
-│  ┌────────────────────────────────┐ │
-│  │     System Reserved            │ │
-│  ├────────────────────────────────┤ │
-│  │     Allocatable                │ │
-│  │  ┌───────────────────────────┐ │ │
-│  │  │   Requested (sum)         │ │ │
-│  │  │  ┌──────────────────────┐ │ │ │
-│  │  │  │ Actually Used        │ │ │ │
-│  │  │  └──────────────────────┘ │ │ │
-│  │  └───────────────────────────┘ │ │
-│  └────────────────────────────────┘ │
-└─────────────────────────────────────┘
-```
+![Node Resource Utilization Model](images/node-capacity-utilization.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Layer | Description |
+|-------|-------------|
+| Node Capacity | Total hardware resources |
+| System Reserved | kubelet, runtime, OS |
+| Allocatable | Available for pods |
+| Requested (sum) | Pod requests |
+| Actually Used | Real-time usage |
+
+**Key Insight:** Requested ≠ Used. Over-provisioning wastes resources. Monitor both to optimize cluster efficiency.
+For environments where SVG doesn't render
+-->
 
 ```dql
 // CPU request vs. usage by namespace

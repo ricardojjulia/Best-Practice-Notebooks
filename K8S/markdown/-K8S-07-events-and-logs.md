@@ -52,13 +52,20 @@ Kubernetes events are first-class objects that record what happened in the clust
 
 ### Event Lifecycle
 
-```
-Event Created → Stored in etcd → TTL expires (default 1h) → Deleted
-                     ↓
-            Dynatrace ingests
-                     ↓
-            Persisted in Grail
-```
+![Kubernetes Events & Logs Flow](images/k8s-event-log-flow.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Stage | Description |
+|-------|-------------|
+| Event Created | Kubernetes generates event |
+| Stored in etcd | Event persisted temporarily |
+| TTL expires (1h) | Event deleted from etcd |
+| Dynatrace Ingests | Captured before deletion |
+| Persisted in Grail | Long-term storage (35+ days) |
+
+**Key:** K8s events have 1h TTL in etcd, but Dynatrace preserves them for 35+ days.
+For environments where SVG doesn't render
+-->
 
 **Important:** Kubernetes events are short-lived. Dynatrace captures them for long-term storage and analysis.
 

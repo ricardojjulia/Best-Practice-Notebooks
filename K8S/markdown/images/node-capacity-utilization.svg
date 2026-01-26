@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 380">
+  <defs>
+    <linearGradient id="capacityGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="reservedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#b91c1c;stop-opacity:0.6" />
+    </linearGradient>
+    <linearGradient id="allocatableGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#326ce5;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#1e4a9e;stop-opacity:0.4" />
+    </linearGradient>
+    <linearGradient id="requestedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:0.5" />
+    </linearGradient>
+    <linearGradient id="usedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#0f172a"/>
+
+  <!-- Title -->
+  <text x="250" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#f1f5f9" text-anchor="middle">Node Resource Utilization Model</text>
+
+  <!-- Node Capacity (outermost) -->
+  <rect x="40" y="55" width="300" height="260" rx="12" fill="url(#capacityGrad)" stroke="#64748b" stroke-width="2" filter="url(#shadow)"/>
+  <text x="55" y="78" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#f1f5f9">Node Capacity</text>
+  <text x="55" y="93" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Total hardware resources</text>
+
+  <!-- System Reserved -->
+  <rect x="55" y="105" width="270" height="40" rx="6" fill="url(#reservedGrad)" stroke="#ef4444" stroke-width="1"/>
+  <text x="70" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" fill="#fca5a5">System Reserved</text>
+  <text x="200" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#fecaca">kubelet, runtime, OS</text>
+
+  <!-- Allocatable -->
+  <rect x="55" y="155" width="270" height="145" rx="6" fill="url(#allocatableGrad)" stroke="#3b82f6" stroke-width="1"/>
+  <text x="70" y="178" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" fill="#93c5fd">Allocatable</text>
+  <text x="170" y="178" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#bfdbfe">Available for pods</text>
+
+  <!-- Requested (sum of pod requests) -->
+  <rect x="70" y="190" width="240" height="95" rx="6" fill="url(#requestedGrad)" stroke="#f59e0b" stroke-width="1"/>
+  <text x="85" y="213" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="500" fill="#fcd34d">Requested (sum)</text>
+  <text x="200" y="213" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#fef3c7">Pod requests</text>
+
+  <!-- Actually Used -->
+  <rect x="85" y="225" width="210" height="45" rx="6" fill="url(#usedGrad)" stroke="#22c55e" stroke-width="1" filter="url(#shadow)"/>
+  <text x="100" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#fff">Actually Used</text>
+  <text x="220" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#dcfce7">Real-time usage</text>
+
+  <!-- Legend -->
+  <rect x="360" y="55" width="125" height="180" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="422" y="78" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#f1f5f9" text-anchor="middle">Legend</text>
+
+  <rect x="375" y="95" width="16" height="16" rx="3" fill="#64748b"/>
+  <text x="400" y="107" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#cbd5e1">Total Capacity</text>
+
+  <rect x="375" y="120" width="16" height="16" rx="3" fill="url(#reservedGrad)" stroke="#ef4444" stroke-width="1"/>
+  <text x="400" y="132" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#cbd5e1">Reserved</text>
+
+  <rect x="375" y="145" width="16" height="16" rx="3" fill="url(#allocatableGrad)" stroke="#3b82f6" stroke-width="1"/>
+  <text x="400" y="157" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#cbd5e1">Allocatable</text>
+
+  <rect x="375" y="170" width="16" height="16" rx="3" fill="url(#requestedGrad)" stroke="#f59e0b" stroke-width="1"/>
+  <text x="400" y="182" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#cbd5e1">Requested</text>
+
+  <rect x="375" y="195" width="16" height="16" rx="3" fill="url(#usedGrad)" stroke="#22c55e" stroke-width="1"/>
+  <text x="400" y="207" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#cbd5e1">Actually Used</text>
+
+  <!-- Key Insight box -->
+  <rect x="40" y="325" width="445" height="45" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="55" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#f59e0b">Key Insight:</text>
+  <text x="130" y="345" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#cbd5e1">Requested ≠ Used. Over-provisioning wastes resources.</text>
+  <text x="55" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">Monitor both to optimize cluster efficiency and avoid scheduling failures.</text>
+</svg>

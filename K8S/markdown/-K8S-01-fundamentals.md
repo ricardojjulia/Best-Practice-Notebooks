@@ -76,24 +76,17 @@ Dynatrace monitors Kubernetes through multiple components:
 
 ### Data Flow
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Kubernetes Cluster                    │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │   Node 1    │  │   Node 2    │  │   Node 3    │     │
-│  │  ┌───────┐  │  │  ┌───────┐  │  │  ┌───────┐  │     │
-│  │  │OneAgent│  │  │  │OneAgent│  │  │  │OneAgent│  │     │
-│  │  └───┬───┘  │  │  └───┬───┘  │  │  └───┬───┘  │     │
-│  └──────┼──────┘  └──────┼──────┘  └──────┼──────┘     │
-│         └────────────────┼────────────────┘             │
-│                          ▼                              │
-│                   ┌─────────────┐                       │
-│                   │ ActiveGate  │◄── K8s API            │
-│                   └──────┬──────┘                       │
-└──────────────────────────┼──────────────────────────────┘
-                           ▼
-                  Dynatrace SaaS/Managed
-```
+![Kubernetes Monitoring Data Flow](images/k8s-data-flow.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Component | Location | Function |
+|-----------|----------|----------|
+| OneAgent (DaemonSet) | Each Node | Collects metrics, traces, logs |
+| ActiveGate (StatefulSet) | In Cluster | Routes data, monitors K8s API |
+| K8s API | Control Plane | Provides cluster state metadata |
+| Dynatrace SaaS/Managed | Cloud | Stores and analyzes all telemetry |
+For environments where SVG doesn't render
+-->
 
 ## 3. Entity Model for Kubernetes
 
@@ -112,21 +105,19 @@ Dynatrace creates entities for each Kubernetes resource and maintains relationsh
 
 ### Entity Relationships
 
-```
-KUBERNETES_CLUSTER
-    │
-    ├── KUBERNETES_NODE (runs on)
-    │       │
-    │       └── PROCESS_GROUP_INSTANCE (runs on)
-    │               │
-    │               └── SERVICE (provided by)
-    │
-    └── CLOUD_APPLICATION_NAMESPACE (contains)
-            │
-            └── CLOUD_APPLICATION (belongs to)
-                    │
-                    └── PROCESS_GROUP_INSTANCE (instance of)
-```
+![Kubernetes Entity Relationships](images/k8s-entity-relationships.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Parent Entity | Relationship | Child Entity |
+|---------------|--------------|--------------|
+| KUBERNETES_CLUSTER | runs on | KUBERNETES_NODE |
+| KUBERNETES_NODE | runs on | PROCESS_GROUP_INSTANCE |
+| PROCESS_GROUP_INSTANCE | provided by | SERVICE |
+| KUBERNETES_CLUSTER | contains | CLOUD_APPLICATION_NAMESPACE |
+| CLOUD_APPLICATION_NAMESPACE | belongs to | CLOUD_APPLICATION |
+| CLOUD_APPLICATION | instance of | PROCESS_GROUP_INSTANCE |
+For environments where SVG doesn't render
+-->
 
 ### Entity Naming
 

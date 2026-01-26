@@ -79,49 +79,40 @@ OpenTelemetry is a Cloud Native Computing Foundation (CNCF) project, formed from
 
 ### Hybrid Approach
 
-Dynatrace supports using both:
+Dynatrace supports using both OneAgent and OTel together:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Application                          │
-│  ┌─────────────┐           ┌─────────────┐             │
-│  │  OneAgent   │           │   OTel SDK  │             │
-│  │  (auto)     │           │  (custom)   │             │
-│  └──────┬──────┘           └──────┬──────┘             │
-└─────────┼─────────────────────────┼─────────────────────┘
-          │                         │
-          ▼                         ▼
-   ┌─────────────────────────────────────┐
-   │          Dynatrace Backend          │
-   │  (Unified view, correlation, AI)    │
-   └─────────────────────────────────────┘
-```
+![Hybrid Instrumentation](images/hybrid-instrumentation.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Component | Function |
+|-----------|----------|
+| Application | Runs your code |
+| OneAgent (auto) | Automatic instrumentation |
+| OTel SDK (custom) | Manual custom spans |
+| Dynatrace Backend | Unified view, correlation, Davis AI |
+
+Both agents send to Dynatrace for unified analysis.
+For environments where SVG doesn't render
+-->
 
 ## 3. Core Components
 
 ### OpenTelemetry Architecture
 
-```
-┌───────────────┐     ┌───────────────┐     ┌───────────────┐
-│  Application  │     │  Application  │     │  Application  │
-│  + OTel SDK   │     │  + OTel SDK   │     │  + OTel SDK   │
-└───────┬───────┘     └───────┬───────┘     └───────┬───────┘
-        │                     │                     │
-        └──────────┬──────────┴──────────┬──────────┘
-                   │      OTLP           │
-                   ▼                     ▼
-        ┌─────────────────────────────────────┐
-        │       OpenTelemetry Collector       │
-        │  ┌─────────┐ ┌─────────┐ ┌───────┐ │
-        │  │Receivers│→│Processors│→│Exporters│
-        │  └─────────┘ └─────────┘ └───────┘ │
-        └───────────────────┬─────────────────┘
-                            │ OTLP
-                            ▼
-                  ┌─────────────────┐
-                  │   Dynatrace     │
-                  └─────────────────┘
-```
+![OpenTelemetry Architecture](images/otel-architecture.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Component | Role |
+|-----------|------|
+| Applications + OTel SDK | Instrumented services |
+| OTLP (gRPC/HTTP) | Wire protocol |
+| OpenTelemetry Collector | Receives, processes, exports |
+| Receivers | OTLP, Jaeger, Prometheus |
+| Processors | Batch, Filter, Attributes |
+| Exporters | OTLP/HTTP, Debug |
+| Dynatrace | Unified view, correlation, Davis AI |
+For environments where SVG doesn't render
+-->
 
 ### Component Descriptions
 

@@ -47,23 +47,19 @@ The Dynatrace Operator manages the complete lifecycle of Dynatrace monitoring co
 
 ### Operator Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   dynatrace namespace                        │
-│  ┌──────────────────┐                                       │
-│  │ Dynatrace        │  watches   ┌─────────────┐            │
-│  │ Operator         │──────────►│  DynaKube   │            │
-│  │ Deployment       │            │  CR         │            │
-│  └──────────────────┘            └──────┬──────┘            │
-│           │                              │                   │
-│           │ creates/manages              │ defines           │
-│           ▼                              ▼                   │
-│  ┌────────────────────────────────────────────────┐         │
-│  │  OneAgent    │  ActiveGate  │  Webhook  │ CSI  │         │
-│  │  DaemonSet   │  StatefulSet │  Service  │Driver│         │
-│  └────────────────────────────────────────────────┘         │
-└─────────────────────────────────────────────────────────────┘
-```
+![DynaKube Operator Architecture](images/dynakube-operator-architecture.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Component | Type | Function |
+|-----------|------|----------|
+| Dynatrace Operator | Deployment | Watches DynaKube CR, manages components |
+| DynaKube | Custom Resource | Defines desired monitoring state |
+| OneAgent | DaemonSet | Full-stack monitoring on each node |
+| ActiveGate | StatefulSet | Routing and K8s API monitoring |
+| Webhook | Service | Code module injection |
+| CSI Driver | DaemonSet | Volume-based code modules |
+For environments where SVG doesn't render
+-->
 
 ## 2. Prerequisites Setup
 

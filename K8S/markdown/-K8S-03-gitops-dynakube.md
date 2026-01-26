@@ -44,18 +44,20 @@ GitOps enables declarative, version-controlled management of your Dynatrace moni
 
 ### GitOps Workflow for DynaKube
 
-```
-Developer → Git Commit → Pull Request → Merge
-                                          ↓
-                               GitOps Controller
-                               (ArgoCD / Flux)
-                                          ↓
-                               Apply to Cluster
-                                          ↓
-                               Operator Reconciles
-                                          ↓
-                               Monitoring Updated
-```
+![GitOps Workflow](images/gitops-workflow.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Step | Action | Component |
+|------|--------|-----------|
+| 1 | Developer commits YAML | Git Repository |
+| 2 | Pull Request reviewed | Git Repository |
+| 3 | Merge to main | Git Repository |
+| 4 | GitOps controller detects | ArgoCD / Flux |
+| 5 | Apply to cluster | Kubernetes API |
+| 6 | Operator reconciles | Dynatrace Operator |
+| 7 | Monitoring updated | OneAgent / ActiveGate |
+For environments where SVG doesn't render
+-->
 
 ### Repository Structure
 

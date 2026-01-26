@@ -63,25 +63,20 @@ The OpenTelemetry Collector is a standalone service that:
 
 ### Data Flow
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    OpenTelemetry Collector                       │
-│                                                                  │
-│  ┌──────────┐    ┌──────────────┐    ┌──────────┐              │
-│  │Receivers │───▶│  Processors  │───▶│Exporters │              │
-│  │          │    │              │    │          │              │
-│  │ OTLP     │    │ Batch        │    │ OTLP     │───▶ Dynatrace│
-│  │ Jaeger   │    │ Memory limit │    │ Debug    │───▶ Console  │
-│  │ Prometheus│   │ Filter       │    │          │              │
-│  │ Zipkin   │    │ Attributes   │    │          │              │
-│  └──────────┘    └──────────────┘    └──────────┘              │
-│                                                                  │
-│  ┌───────────────────────────────────────────────┐             │
-│  │               Extensions                       │             │
-│  │  Health check, pprof, zpages                  │             │
-│  └───────────────────────────────────────────────┘             │
-└─────────────────────────────────────────────────────────────────┘
-```
+![OpenTelemetry Collector Pipeline](images/collector-pipeline.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Stage | Components | Function |
+|-------|------------|----------|
+| Receivers | OTLP, Jaeger, Prometheus, Zipkin, Filelog | Ingest telemetry |
+| Processors | batch, memory_limiter, filter, attributes, k8sattributes | Transform data |
+| Exporters | otlphttp, otlp, debug, prometheus | Send to backends |
+| Extensions | health_check, pprof, zpages | Operational support |
+
+Data flows: Receivers → Processors → Exporters
+Supports traces / metrics / logs pipelines
+For environments where SVG doesn't render
+-->
 
 ### Pipeline Types
 
