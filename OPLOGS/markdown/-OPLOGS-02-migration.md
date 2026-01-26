@@ -309,3 +309,7 @@ Continue to **OPLOGS-03: Querying & Parsing** to learn DQL syntax and DPL parsin
 - [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
 - [Log Ingest API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/log-monitoring-v2/post-ingest-logs)
 - [OTLP Log Ingestion](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/getting-started/logs)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

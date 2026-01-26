@@ -324,7 +324,7 @@ Congratulations! You've completed the onboarding series.
 | **Log management** | OPMIG series (OpenPipeline migration) |
 | **Synthetic monitoring** | SYNTH series |
 | **Access control migration** | MZ2POL series |
-| **Platform migration** | USFOODS series (NR to Dynatrace) |
+| **Platform migration** | Migration playbooks (NR to Dynatrace) |
 | **Official training** | Dynatrace University |
 | **Community** | community.dynatrace.com |
 
@@ -358,3 +358,7 @@ In this notebook, you learned:
 - [DQL Examples](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-examples)
 - [Dashboard Sharing](https://docs.dynatrace.com/docs/observe-and-explore/dashboards/dashboard-sharing)
 - [Dynatrace Community](https://community.dynatrace.com/)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

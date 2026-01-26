@@ -394,3 +394,7 @@ Continue to **OPLOGS-07: Analytics & Dashboards** for aggregation and visualizat
 - [Dynatrace Entity Model](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-guide/dql-entities)
 - [Kubernetes Monitoring](https://docs.dynatrace.com/docs/shortlink/kubernetes-monitoring)
 - [Log Enrichment](https://docs.dynatrace.com/docs/observe-and-explore/logs/log-management-and-analytics/lma-log-enrichment)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

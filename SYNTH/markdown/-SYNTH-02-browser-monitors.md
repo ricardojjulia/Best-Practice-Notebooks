@@ -338,3 +338,7 @@ Continue to **SYNTH-03: HTTP Monitors** to learn about lightweight API monitorin
 - [Browser Clickpaths](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/browser-monitors/browser-clickpaths)
 - [Synthetic Recorder](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/browser-monitors/record-browser-clickpath)
 - [Performance Metrics](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/analysis-and-alerting/analyze-synthetic-monitors)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

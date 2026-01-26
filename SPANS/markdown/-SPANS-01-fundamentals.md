@@ -265,3 +265,7 @@ Continue to **SPANS-02: Querying Spans with DQL** to learn:
 - Finding specific traces by trace.id
 - Querying HTTP and database spans
 - Combining multiple filters for precise analysis
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

@@ -468,3 +468,7 @@ Continue to **SPANS-08: Cost-Efficient DQL Queries** to learn:
 - Query cost estimation techniques
 - Best practices for production queries
 - Indexed fields and performance strategies
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

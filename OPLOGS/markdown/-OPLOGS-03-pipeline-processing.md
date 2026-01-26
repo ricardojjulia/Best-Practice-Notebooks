@@ -549,3 +549,7 @@ Continue to **OPLOGS-04: Buckets & Data Governance** to learn about storage mana
 - [Metric Extraction](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics)
 - [Event Generation](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/create-business-events)
 - [DPL Pattern Language](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

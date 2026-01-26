@@ -235,3 +235,7 @@ In this notebook, you learned:
 - [Get Started with Dynatrace](https://docs.dynatrace.com/docs/discover-dynatrace/get-started)
 - [Navigate the Dynatrace Platform](https://docs.dynatrace.com/docs/discover-dynatrace/get-started/dynatrace-ui)
 - [Dynatrace Community - Start with Dynatrace](https://community.dynatrace.com/t5/Start-with-Dynatrace/bd-p/GetStarted)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

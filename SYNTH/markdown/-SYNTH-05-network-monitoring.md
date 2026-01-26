@@ -445,3 +445,7 @@ Continue to **SYNTH-06: Analytics & Alerting** to learn about dashboards, SLOs, 
 - [ICMP Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors/icmp-monitors)
 - [DNS Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors/dns-monitors)
 - [TCP Port Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors/tcp-monitors)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

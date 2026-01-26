@@ -247,3 +247,7 @@ Continue to **OPLOGS-02: Migration Guide** to learn how to migrate from classic 
 - [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
 - [Grail Data Lakehouse](https://docs.dynatrace.com/docs/platform/grail)
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

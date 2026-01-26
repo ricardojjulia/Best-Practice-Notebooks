@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 340">
+  <defs>
+    <linearGradient id="spfBlueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="spfGreenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <filter id="spfShadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+    <marker id="spfArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+    <marker id="spfArrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="340" fill="#f8f9fa" rx="10"/>
+
+  <!-- Title -->
+  <text x="350" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#1e293b" text-anchor="middle">SCIM Provisioning Flow</text>
+  <text x="350" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b" text-anchor="middle">Automated user and group synchronization</text>
+
+  <!-- IdP Box -->
+  <rect x="40" y="80" width="200" height="180" rx="8" fill="#fff" stroke="#3b82f6" stroke-width="2" filter="url(#spfShadow)"/>
+  <rect x="40" y="80" width="200" height="40" rx="8" fill="url(#spfBlueGrad)"/>
+  <rect x="40" y="110" width="200" height="10" fill="url(#spfBlueGrad)"/>
+  <text x="140" y="105" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">Identity Provider</text>
+  <text x="140" y="140" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">(Okta, Azure AD, etc.)</text>
+
+  <!-- IdP actions -->
+  <rect x="55" y="155" width="170" height="25" rx="3" fill="#dbeafe"/>
+  <text x="140" y="172" font-family="system-ui, sans-serif" font-size="9" fill="#1d4ed8" text-anchor="middle">User created/modified</text>
+
+  <rect x="55" y="185" width="170" height="25" rx="3" fill="#dbeafe"/>
+  <text x="140" y="202" font-family="system-ui, sans-serif" font-size="9" fill="#1d4ed8" text-anchor="middle">Group membership changed</text>
+
+  <rect x="55" y="215" width="170" height="25" rx="3" fill="#dbeafe"/>
+  <text x="140" y="232" font-family="system-ui, sans-serif" font-size="9" fill="#1d4ed8" text-anchor="middle">User disabled/deleted</text>
+
+  <!-- SCIM API -->
+  <rect x="280" y="120" width="140" height="100" rx="8" fill="#fff" stroke="#8b5cf6" stroke-width="2" filter="url(#spfShadow)"/>
+  <text x="350" y="155" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#7c3aed" text-anchor="middle">SCIM 2.0 API</text>
+  <text x="350" y="175" font-family="monospace" font-size="9" fill="#475569" text-anchor="middle">POST /Users</text>
+  <text x="350" y="190" font-family="monospace" font-size="9" fill="#475569" text-anchor="middle">PATCH /Users/{id}</text>
+  <text x="350" y="205" font-family="monospace" font-size="9" fill="#475569" text-anchor="middle">PUT /Groups/{id}</text>
+
+  <!-- Dynatrace Box -->
+  <rect x="460" y="80" width="200" height="180" rx="8" fill="#fff" stroke="#10b981" stroke-width="2" filter="url(#spfShadow)"/>
+  <rect x="460" y="80" width="200" height="40" rx="8" fill="url(#spfGreenGrad)"/>
+  <rect x="460" y="110" width="200" height="10" fill="url(#spfGreenGrad)"/>
+  <text x="560" y="105" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">Dynatrace Account</text>
+  <text x="560" y="140" font-family="system-ui, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Account Management</text>
+
+  <!-- DT results -->
+  <rect x="475" y="155" width="170" height="25" rx="3" fill="#dcfce7"/>
+  <text x="560" y="172" font-family="system-ui, sans-serif" font-size="9" fill="#166534" text-anchor="middle">User created/updated</text>
+
+  <rect x="475" y="185" width="170" height="25" rx="3" fill="#dcfce7"/>
+  <text x="560" y="202" font-family="system-ui, sans-serif" font-size="9" fill="#166534" text-anchor="middle">Group sync complete</text>
+
+  <rect x="475" y="215" width="170" height="25" rx="3" fill="#dcfce7"/>
+  <text x="560" y="232" font-family="system-ui, sans-serif" font-size="9" fill="#166534" text-anchor="middle">Access revoked</text>
+
+  <!-- Arrows -->
+  <line x1="240" y1="170" x2="275" y2="170" stroke="#64748b" stroke-width="2" marker-end="url(#spfArrow)"/>
+  <text x="257" y="160" font-family="system-ui, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Push</text>
+
+  <line x1="420" y1="170" x2="455" y2="170" stroke="#16a34a" stroke-width="2" marker-end="url(#spfArrowGreen)"/>
+  <text x="437" y="160" font-family="system-ui, sans-serif" font-size="9" fill="#16a34a" text-anchor="middle">Sync</text>
+
+  <!-- Sync operations -->
+  <text x="350" y="280" font-family="system-ui, sans-serif" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">SCIM Operations</text>
+
+  <rect x="60" y="295" width="130" height="35" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1"/>
+  <text x="125" y="310" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0369a1" text-anchor="middle">Create User</text>
+  <text x="125" y="322" font-family="monospace" font-size="8" fill="#0369a1" text-anchor="middle">POST /Users</text>
+
+  <rect x="210" y="295" width="130" height="35" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <text x="275" y="310" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#92400e" text-anchor="middle">Update User</text>
+  <text x="275" y="322" font-family="monospace" font-size="8" fill="#92400e" text-anchor="middle">PATCH /Users/{id}</text>
+
+  <rect x="360" y="295" width="130" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="425" y="310" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#166534" text-anchor="middle">Sync Groups</text>
+  <text x="425" y="322" font-family="monospace" font-size="8" fill="#166534" text-anchor="middle">PUT /Groups/{id}</text>
+
+  <rect x="510" y="295" width="130" height="35" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+  <text x="575" y="310" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#b91c1c" text-anchor="middle">Deactivate</text>
+  <text x="575" y="322" font-family="monospace" font-size="8" fill="#b91c1c" text-anchor="middle">PATCH active=false</text>
+</svg>

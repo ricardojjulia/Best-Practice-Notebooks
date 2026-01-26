@@ -378,3 +378,7 @@ In this notebook, you learned:
 - [Workflow Actions](https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions)
 - [Slack Integration](https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions/slack)
 - [PagerDuty Integration](https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions/pagerduty)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

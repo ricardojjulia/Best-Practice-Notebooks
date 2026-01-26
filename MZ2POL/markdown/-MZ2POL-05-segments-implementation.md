@@ -431,3 +431,7 @@ Continue to **MZ2POL-06: Migration Execution** to:
 - [Segments in DQL Queries](https://docs.dynatrace.com/docs/manage/segments/concepts/segments-concepts-queries)
 - [Log Filtering with Segments](https://www.dynatrace.com/news/blog/log-filtering-made-easy-data-segmentation-and-advanced-filters-in-dynatrace-logs/)
 - [Power Dashboarding: Filter Data Effectively](https://www.dynatrace.com/news/blog/power-dashboarding-3-filter-data-effectively/)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

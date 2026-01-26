@@ -12,12 +12,17 @@ Each topic follows the same structure:
 
 ## Topics
 
+- [AUTOM](AUTOM/README.md) — Dynatrace automation (8 notebooks)
+- [IAMADM](IAMADM/README.md) — IAM administration (9 notebooks)
+- [K8S](K8S/README.md) — Kubernetes monitoring (9 notebooks)
+- [M2S](M2S/README.md) — Managed to SaaS migration (8 notebooks)
+- [MZ2POL](MZ2POL/README.md) — Management Zone to Policy migration (8 notebooks)
 - [ONBRD](ONBRD/README.md) — Dynatrace onboarding (10 notebooks)
 - [OPLOGS](OPLOGS/README.md) — OpenPipeline logs (8 notebooks)
 - [OPMIG](OPMIG/README.md) — OpenPipeline migration (9 notebooks)
+- [OTEL](OTEL/README.md) — OpenTelemetry integration (8 notebooks)
 - [SPANS](SPANS/README.md) — Distributed tracing and spans (8 notebooks)
 - [SYNTH](SYNTH/README.md) — Synthetic monitoring (6 notebooks)
-- [MZ2POL](MZ2POL/README.md) — Management Zone to Policy migration (8 notebooks)
 
 ## How to Use
 
@@ -27,4 +32,3 @@ Each topic follows the same structure:
 	- Read PDFs/ for printable versions.
 	- Use markdown/ for lightweight viewing or diffs.
 3. Follow the numbered sequence to progress through each series.
-

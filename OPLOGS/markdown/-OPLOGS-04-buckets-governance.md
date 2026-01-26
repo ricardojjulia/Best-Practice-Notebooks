@@ -494,3 +494,7 @@ Continue to **OPLOGS-05: Querying & Parsing** to learn advanced DQL techniques f
 - [Log Storage Configuration](https://docs.dynatrace.com/docs/manage/data-privacy-and-security/data-management/log-monitoring-data-storage)
 - [Data Retention](https://docs.dynatrace.com/docs/manage/data-privacy-and-security/data-management/data-retention)
 - [IAM Policies](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

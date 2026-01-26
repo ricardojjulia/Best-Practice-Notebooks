@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="350" viewBox="0 0 700 350">
+  <!-- Background -->
+  <rect width="700" height="350" fill="#1e293b"/>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Monaco Download → Deploy Workflow</text>
+
+  <!-- Step boxes -->
+  <!-- Step 1: Download -->
+  <rect x="30" y="80" width="100" height="60" rx="6" fill="#6366f1"/>
+  <text x="80" y="105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">1. Download</text>
+  <text x="80" y="120" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="10">monaco</text>
+  <text x="80" y="132" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="10">download</text>
+
+  <!-- Arrow 1 -->
+  <line x1="130" y1="110" x2="160" y2="110" stroke="#64748b" stroke-width="2"/>
+  <polygon points="160,110 152,106 152,114" fill="#64748b"/>
+
+  <!-- Step 2: Edit YAML -->
+  <rect x="160" y="80" width="100" height="60" rx="6" fill="#8b5cf6"/>
+  <text x="210" y="105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">2. Edit YAML</text>
+  <text x="210" y="120" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="10">Modify</text>
+  <text x="210" y="132" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="10">configs</text>
+
+  <!-- Arrow 2 -->
+  <line x1="260" y1="110" x2="290" y2="110" stroke="#64748b" stroke-width="2"/>
+  <polygon points="290,110 282,106 282,114" fill="#64748b"/>
+
+  <!-- Step 3: Validate -->
+  <rect x="290" y="80" width="100" height="60" rx="6" fill="#a78bfa"/>
+  <text x="340" y="105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">3. Validate</text>
+  <text x="340" y="120" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="10">monaco</text>
+  <text x="340" y="132" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="10">validate</text>
+
+  <!-- Arrow 3 -->
+  <line x1="390" y1="110" x2="420" y2="110" stroke="#64748b" stroke-width="2"/>
+  <polygon points="420,110 412,106 412,114" fill="#64748b"/>
+
+  <!-- Step 4: Git Commit -->
+  <rect x="420" y="80" width="100" height="60" rx="6" fill="#f97316"/>
+  <text x="470" y="105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">4. Git Commit</text>
+  <text x="470" y="120" text-anchor="middle" fill="#fff7ed" font-family="Arial, sans-serif" font-size="10">Version</text>
+  <text x="470" y="132" text-anchor="middle" fill="#fff7ed" font-family="Arial, sans-serif" font-size="10">control</text>
+
+  <!-- Arrow 4 -->
+  <line x1="520" y1="110" x2="550" y2="110" stroke="#64748b" stroke-width="2"/>
+  <polygon points="550,110 542,106 542,114" fill="#64748b"/>
+
+  <!-- Step 5: Dry Run -->
+  <rect x="550" y="80" width="100" height="60" rx="6" fill="#14b8a6"/>
+  <text x="600" y="105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">5. Dry Run</text>
+  <text x="600" y="120" text-anchor="middle" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="10">monaco deploy</text>
+  <text x="600" y="132" text-anchor="middle" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="10">--dry-run</text>
+
+  <!-- Arrow down from Dry Run -->
+  <line x1="600" y1="140" x2="600" y2="180" stroke="#64748b" stroke-width="2"/>
+  <polygon points="600,180 596,172 604,172" fill="#64748b"/>
+
+  <!-- Step 6: Deploy -->
+  <rect x="550" y="180" width="100" height="60" rx="6" fill="#22c55e"/>
+  <text x="600" y="205" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">6. Deploy</text>
+  <text x="600" y="220" text-anchor="middle" fill="#dcfce7" font-family="Arial, sans-serif" font-size="10">monaco</text>
+  <text x="600" y="232" text-anchor="middle" fill="#dcfce7" font-family="Arial, sans-serif" font-size="10">deploy</text>
+
+  <!-- Environment boxes -->
+  <rect x="50" y="200" width="200" height="120" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="150" y="220" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Target Environments</text>
+
+  <rect x="70" y="235" width="70" height="30" rx="4" fill="#3b82f6" fill-opacity="0.6"/>
+  <text x="105" y="255" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Dev</text>
+
+  <rect x="70" y="275" width="70" height="30" rx="4" fill="#8b5cf6" fill-opacity="0.6"/>
+  <text x="105" y="295" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Staging</text>
+
+  <rect x="160" y="255" width="70" height="30" rx="4" fill="#22c55e" fill-opacity="0.6"/>
+  <text x="195" y="275" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Production</text>
+
+  <!-- Arrow from Deploy to environments -->
+  <line x1="550" y1="210" x2="250" y2="210" stroke="#64748b" stroke-width="2" stroke-dasharray="5,3"/>
+  <polygon points="250,210 258,206 258,214" fill="#64748b"/>
+
+  <!-- Legend -->
+  <rect x="300" y="260" width="200" height="70" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="280" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Commands</text>
+  <text x="320" y="300" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">monaco download</text>
+  <text x="320" y="315" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">monaco validate</text>
+  <text x="410" y="300" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">monaco deploy</text>
+  <text x="410" y="315" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">monaco delete</text>
+</svg>

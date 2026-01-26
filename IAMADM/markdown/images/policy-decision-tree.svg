@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420">
+  <defs>
+    <linearGradient id="pdtBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pdtGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pdtOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    <filter id="pdtShadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.15"/>
+    </filter>
+    <marker id="pdtArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="420" fill="#f8f9fa" rx="10"/>
+
+  <!-- Title -->
+  <text x="350" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold" fill="#1e293b" text-anchor="middle">Policy Decision Tree</text>
+  <text x="350" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b" text-anchor="middle">When to use default policies vs. custom policies</text>
+
+  <!-- Start node -->
+  <rect x="275" y="70" width="150" height="40" rx="20" fill="url(#pdtBlueGrad)" filter="url(#pdtShadow)"/>
+  <text x="350" y="95" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">Need to grant access?</text>
+
+  <!-- First decision -->
+  <line x1="350" y1="110" x2="350" y2="130" stroke="#64748b" stroke-width="2"/>
+  <rect x="250" y="135" width="200" height="45" rx="6" fill="#fff" stroke="#64748b" stroke-width="1.5" filter="url(#pdtShadow)"/>
+  <text x="350" y="155" font-family="system-ui, sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Standard permission</text>
+  <text x="350" y="170" font-family="system-ui, sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">(logs, metrics, entities)?</text>
+
+  <!-- Yes branch - default policy -->
+  <line x1="250" y1="157" x2="140" y2="157" stroke="#16a34a" stroke-width="2"/>
+  <line x1="140" y1="157" x2="140" y2="210" stroke="#16a34a" stroke-width="2" marker-end="url(#pdtArrow)"/>
+  <text x="195" y="150" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#16a34a">YES</text>
+
+  <rect x="50" y="215" width="180" height="55" rx="6" fill="url(#pdtGreenGrad)" filter="url(#pdtShadow)"/>
+  <text x="140" y="238" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">Use Default Policy</text>
+  <text x="140" y="255" font-family="system-ui, sans-serif" font-size="10" fill="#dcfce7" text-anchor="middle">env-viewer, env-editor, etc.</text>
+
+  <!-- No branch - continue -->
+  <line x1="450" y1="157" x2="560" y2="157" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="560" y1="157" x2="560" y2="210" stroke="#f59e0b" stroke-width="2" marker-end="url(#pdtArrow)"/>
+  <text x="505" y="150" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#f59e0b">NO</text>
+
+  <!-- Second decision -->
+  <rect x="460" y="215" width="200" height="45" rx="6" fill="#fff" stroke="#64748b" stroke-width="1.5" filter="url(#pdtShadow)"/>
+  <text x="560" y="235" font-family="system-ui, sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">Need to restrict by</text>
+  <text x="560" y="250" font-family="system-ui, sans-serif" font-size="11" fill="#1e293b" text-anchor="middle">segment or condition?</text>
+
+  <!-- Yes - conditional policy -->
+  <line x1="460" y1="237" x2="350" y2="237" stroke="#16a34a" stroke-width="2"/>
+  <line x1="350" y1="237" x2="350" y2="285" stroke="#16a34a" stroke-width="2" marker-end="url(#pdtArrow)"/>
+  <text x="405" y="228" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#16a34a">YES</text>
+
+  <rect x="260" y="290" width="180" height="55" rx="6" fill="url(#pdtOrangeGrad)" filter="url(#pdtShadow)"/>
+  <text x="350" y="313" font-family="system-ui, sans-serif" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">Custom Policy</text>
+  <text x="350" y="330" font-family="system-ui, sans-serif" font-size="10" fill="#fef3c7" text-anchor="middle">with WHERE conditions</text>
+
+  <!-- No - full custom -->
+  <line x1="660" y1="237" x2="680" y2="237" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="680" y1="237" x2="680" y2="305" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="680" y1="305" x2="560" y2="305" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="560" y1="305" x2="560" y2="355" stroke="#f59e0b" stroke-width="2" marker-end="url(#pdtArrow)"/>
+  <text x="665" y="255" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#f59e0b">NO</text>
+
+  <rect x="470" y="360" width="180" height="45" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#pdtShadow)"/>
+  <text x="560" y="380" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#92400e" text-anchor="middle">Review with Security</text>
+  <text x="560" y="395" font-family="system-ui, sans-serif" font-size="10" fill="#a16207" text-anchor="middle">May need new permission</text>
+
+  <!-- Legend -->
+  <rect x="50" y="360" width="180" height="50" rx="6" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="60" y="380" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#475569">Policy Types:</text>
+  <rect x="60" y="388" width="8" height="8" fill="#10b981"/>
+  <text x="75" y="396" font-family="system-ui, sans-serif" font-size="9" fill="#475569">Default (built-in)</text>
+  <rect x="130" y="388" width="8" height="8" fill="#f59e0b"/>
+  <text x="145" y="396" font-family="system-ui, sans-serif" font-size="9" fill="#475569">Custom (scoped)</text>
+</svg>

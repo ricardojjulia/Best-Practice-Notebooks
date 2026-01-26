@@ -424,3 +424,7 @@ In this notebook, you learned:
 - [DQL Functions](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/functions)
 - [DQL Commands](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands)
 - [DQL Examples](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-examples)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

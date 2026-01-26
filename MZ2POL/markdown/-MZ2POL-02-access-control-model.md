@@ -354,3 +354,7 @@ Continue to **MZ2POL-03: Assessment and Migration Planning** to:
 - [IAM Policy Reference](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policystatements)
 - [Default Policies Reference](https://docs.dynatrace.com/docs/manage/identity-access-management/use-cases/default-groups-permissions)
 - [Grant Access to Entities with Security Context](https://docs.dynatrace.com/docs/manage/identity-access-management/use-cases/access-security-context)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

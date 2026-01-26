@@ -329,3 +329,7 @@ Continue to **SYNTH-05: Network Monitoring** to learn about synthetic network av
 - [ActiveGate Deployment](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate)
 - [Synthetic-Enabled ActiveGate](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/private-synthetic-locations/create-a-private-synthetic-location)
 - [ActiveGate in Kubernetes](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/guides/activegate-capabilities)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

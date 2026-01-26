@@ -336,3 +336,7 @@ In this notebook, you learned:
 - [Cloud Tags](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-cloud-platforms)
 - [Kubernetes Labels](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

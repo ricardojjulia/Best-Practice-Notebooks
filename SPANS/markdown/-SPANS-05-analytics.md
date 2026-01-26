@@ -304,3 +304,7 @@ Continue to **SPANS-06: Security Analysis with Spans** to learn:
 - Analyzing authentication and authorization flows
 - Finding anomalous behavior
 - Security audit queries
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

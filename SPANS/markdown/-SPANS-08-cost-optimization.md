@@ -475,3 +475,7 @@ You have completed the **Spans & Distributed Tracing** notebook series!
 - Configure alerts based on span analytics
 - Set up OpenPipeline for data optimization
 - Explore Davis AI integration for intelligent analysis
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

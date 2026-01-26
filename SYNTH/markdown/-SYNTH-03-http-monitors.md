@@ -391,3 +391,7 @@ Continue to **SYNTH-04: Scripted Monitors** to learn about advanced scripting ca
 - [Multi-step HTTP Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/http-monitors/create-http-monitor)
 - [Credential Vault](https://docs.dynatrace.com/docs/manage/identity-access-management/credential-vault)
 - [SSL Certificate Monitoring](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/analysis-and-alerting/synthetic-ssl-certificates)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

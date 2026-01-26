@@ -333,9 +333,11 @@ Deploying ActiveGate in Kubernetes requires careful consideration of where, how,
 
 The Dynatrace Operator manages ActiveGate lifecycle automatically.
 
+> **Important:** Use `apiVersion: dynatrace.com/v1beta5` for Dynatrace Operator 1.7.0+. Earlier versions (v1beta1, v1beta2) are deprecated and no longer supported.
+
 ```yaml
 # dynakube.yaml - ActiveGate via Operator
-apiVersion: dynatrace.com/v1beta2
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube
@@ -886,3 +888,7 @@ In this notebook, you learned:
 - [ActiveGate on Kubernetes](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/guides/operation/activegate)
 - [DynaKube Custom Resource](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/reference/dynakube)
 - [Helm Chart Repository](https://github.com/Dynatrace/dynatrace-operator/tree/main/config/helm)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

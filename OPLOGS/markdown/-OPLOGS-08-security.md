@@ -452,3 +452,7 @@ Continue to **OPLOGS-07: Buckets & Cost Optimization** for storage management.
 - [OpenPipeline Data Masking](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/mask-sensitive-data)
 - [Log Security Best Practices](https://docs.dynatrace.com/docs/observe-and-explore/logs/log-management-and-analytics/lma-security)
 - [GDPR and Compliance](https://docs.dynatrace.com/docs/manage/data-privacy-and-security)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

@@ -467,3 +467,7 @@ Continue to **SPANS-03: Trace Analysis & Troubleshooting** to learn:
 - Latency analysis across services
 - Root cause analysis techniques
 - Tracing request flows through your system
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

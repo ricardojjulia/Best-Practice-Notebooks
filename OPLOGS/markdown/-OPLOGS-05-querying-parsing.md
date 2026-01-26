@@ -399,3 +399,7 @@ Continue to **OPLOGS-06: Topology & Entity Context** to learn about entity conte
 - [DQL Functions](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/functions)
 - [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language)
 - [DPL Architect Tool](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language/dpl-architect)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

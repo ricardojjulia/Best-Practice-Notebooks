@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="400" viewBox="0 0 700 400">
+  <!-- Background -->
+  <rect width="700" height="400" fill="#1e293b"/>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Dynatrace Workflow Architecture</text>
+
+  <!-- Trigger Section -->
+  <rect x="30" y="60" width="150" height="180" rx="6" fill="#0f172a" stroke="#6366f1" stroke-width="2"/>
+  <text x="105" y="85" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="13" font-weight="bold">Triggers</text>
+
+  <!-- Trigger types -->
+  <rect x="45" y="100" width="120" height="28" rx="4" fill="#6366f1" fill-opacity="0.6"/>
+  <text x="105" y="118" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Problem Event</text>
+
+  <rect x="45" y="135" width="120" height="28" rx="4" fill="#6366f1" fill-opacity="0.6"/>
+  <text x="105" y="153" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Schedule (Cron)</text>
+
+  <rect x="45" y="170" width="120" height="28" rx="4" fill="#6366f1" fill-opacity="0.6"/>
+  <text x="105" y="188" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Custom Event</text>
+
+  <rect x="45" y="205" width="120" height="28" rx="4" fill="#6366f1" fill-opacity="0.6"/>
+  <text x="105" y="223" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Manual / On Demand</text>
+
+  <!-- Arrow from Trigger to Tasks -->
+  <line x1="180" y1="150" x2="220" y2="150" stroke="#64748b" stroke-width="2"/>
+  <polygon points="220,150 212,146 212,154" fill="#64748b"/>
+
+  <!-- Tasks Section -->
+  <rect x="220" y="60" width="260" height="280" rx="6" fill="#0f172a" stroke="#14b8a6" stroke-width="2"/>
+  <text x="350" y="85" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="13" font-weight="bold">Tasks (Actions)</text>
+
+  <!-- Task 1 -->
+  <rect x="240" y="100" width="100" height="50" rx="4" fill="#14b8a6"/>
+  <text x="290" y="122" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">DQL Query</text>
+  <text x="290" y="138" text-anchor="middle" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="9">Get context</text>
+
+  <!-- Task 2 -->
+  <rect x="360" y="100" width="100" height="50" rx="4" fill="#14b8a6"/>
+  <text x="410" y="122" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">JavaScript</text>
+  <text x="410" y="138" text-anchor="middle" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="9">Custom logic</text>
+
+  <!-- Arrow between tasks -->
+  <line x1="340" y1="125" x2="360" y2="125" stroke="#64748b" stroke-width="2"/>
+  <polygon points="360,125 352,121 352,129" fill="#64748b"/>
+
+  <!-- Task 3 -->
+  <rect x="240" y="170" width="100" height="50" rx="4" fill="#14b8a6"/>
+  <text x="290" y="192" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">HTTP Request</text>
+  <text x="290" y="208" text-anchor="middle" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="9">Call API</text>
+
+  <!-- Task 4 -->
+  <rect x="360" y="170" width="100" height="50" rx="4" fill="#14b8a6"/>
+  <text x="410" y="192" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Notification</text>
+  <text x="410" y="208" text-anchor="middle" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="9">Slack/Teams</text>
+
+  <!-- Condition diamond -->
+  <polygon points="350,250 390,280 350,310 310,280" fill="#f97316"/>
+  <text x="350" y="285" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Condition</text>
+
+  <!-- Vertical arrows -->
+  <line x1="290" y1="150" x2="290" y2="170" stroke="#64748b" stroke-width="2"/>
+  <polygon points="290,170 286,162 294,162" fill="#64748b"/>
+
+  <line x1="350" y1="220" x2="350" y2="250" stroke="#64748b" stroke-width="2"/>
+  <polygon points="350,250 346,242 354,242" fill="#64748b"/>
+
+  <!-- Outputs Section -->
+  <rect x="520" y="60" width="150" height="180" rx="6" fill="#0f172a" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="595" y="85" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="13" font-weight="bold">Outputs</text>
+
+  <!-- Output types -->
+  <rect x="535" y="100" width="120" height="28" rx="4" fill="#8b5cf6" fill-opacity="0.6"/>
+  <text x="595" y="118" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">ServiceNow Ticket</text>
+
+  <rect x="535" y="135" width="120" height="28" rx="4" fill="#8b5cf6" fill-opacity="0.6"/>
+  <text x="595" y="153" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Slack Message</text>
+
+  <rect x="535" y="170" width="120" height="28" rx="4" fill="#8b5cf6" fill-opacity="0.6"/>
+  <text x="595" y="188" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Webhook Call</text>
+
+  <rect x="535" y="205" width="120" height="28" rx="4" fill="#8b5cf6" fill-opacity="0.6"/>
+  <text x="595" y="223" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Auto-Remediation</text>
+
+  <!-- Arrow from Tasks to Outputs -->
+  <line x1="480" y1="150" x2="520" y2="150" stroke="#64748b" stroke-width="2"/>
+  <polygon points="520,150 512,146 512,154" fill="#64748b"/>
+
+  <!-- Legend -->
+  <rect x="520" y="280" width="150" height="70" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="595" y="300" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Data Flow</text>
+  <line x1="540" y1="320" x2="580" y2="320" stroke="#64748b" stroke-width="2"/>
+  <polygon points="580,320 572,316 572,324" fill="#64748b"/>
+  <text x="595" y="335" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Variables passed</text>
+</svg>

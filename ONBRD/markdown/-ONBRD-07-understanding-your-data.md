@@ -318,3 +318,7 @@ In this notebook, you learned:
 - [Topology and Dependencies](https://docs.dynatrace.com/docs/observe-and-explore/services/service-analysis/service-flow)
 - [Grail Data Model](https://docs.dynatrace.com/docs/platform/grail)
 - [Entity Types Reference](https://docs.dynatrace.com/docs/discover-dynatrace/references/entity-types)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

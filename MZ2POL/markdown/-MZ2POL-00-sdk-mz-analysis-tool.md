@@ -436,3 +436,7 @@ export default async function() {
 ---
 
 *MZ2POL-00: SDK Management Zone Analysis Tool - Part of the MZ to Policies/Boundaries/Segments Series*
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

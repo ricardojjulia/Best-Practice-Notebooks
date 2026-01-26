@@ -515,3 +515,7 @@ You have completed the Synthetic Monitoring Best Practices series:
 - [Service Level Objectives](https://docs.dynatrace.com/docs/platform-modules/automations/service-level-objectives)
 - [Alerting Profiles](https://docs.dynatrace.com/docs/platform-modules/automations/alerting)
 - [Dashboards](https://docs.dynatrace.com/docs/observe-and-explore/dashboards-and-notebooks/dashboards-new)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

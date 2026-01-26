@@ -293,3 +293,7 @@ In this notebook, you learned:
 - [OIDC Configuration](https://docs.dynatrace.com/docs/manage/identity-access-management/single-sign-on/configure-oidc)
 - [Access Tokens](https://docs.dynatrace.com/docs/manage/access-control/access-tokens)
 - [OAuth Clients](https://docs.dynatrace.com/docs/manage/identity-access-management/oauth-clients)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

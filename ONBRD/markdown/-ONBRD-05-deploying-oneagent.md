@@ -1,6 +1,6 @@
 # Deploying OneAgent
 
-> **Series:** ONBRD | **Notebook:** 5 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 2026-01-20
 
 ## Getting Data Into Dynatrace
 
@@ -141,7 +141,35 @@ For Ansible, Puppet, Chef, or other tools, see:
 
 ## 5. Kubernetes Deployment
 
-For Kubernetes environments, use the Dynatrace Operator.
+For Kubernetes environments, use the Dynatrace Operator—the recommended approach for deploying and managing OneAgent in containerized environments.
+
+### OneAgent Deployment Modes
+
+The Dynatrace Operator supports multiple deployment modes. Choose based on your requirements:
+
+![OneAgent Deployment Modes](images/oneagent-deployment-modes.svg)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| Cloud Native FullStack | Init container injection | Kubernetes-native, automatic (recommended) |
+| Application Only | Sidecar injection | PaaS, no host access |
+| Host Monitoring | Host metrics only | When code-level not needed |
+-->
+
+| Mode | Deployment | Code-Level | Host Metrics | Best For |
+|------|------------|------------|--------------|----------|
+| **Cloud Native FullStack** | Init container + CSI | Yes | Yes | Modern K8s (recommended) |
+| **Application Only** | Sidecar | Yes | No | PaaS, shared nodes, OpenShift |
+| **Host Monitoring** | DaemonSet | No | Yes | When code-level monitoring not needed |
+
+> **Note:** Classic FullStack mode is deprecated. Dynatrace recommends migrating to Cloud Native FullStack for all Kubernetes environments.
+
+### Deployment Method: Helm vs Manifests
+
+| Method | Pros | Cons | Best For |
+|--------|------|------|----------|
+| **Helm Charts** | Version management, easy upgrades, values override | Requires Helm | Production, GitOps |
+| **Manifest Files** | Simple, no dependencies | Manual version tracking | Air-gapped, constrained environments |
 
 ### Prerequisites
 
@@ -159,7 +187,24 @@ For Kubernetes environments, use the Dynatrace Operator.
 | `settings.write` | Write configuration |
 | `DataExport` | Export data (optional) |
 
-### Installation Steps
+### Installation Option 1: Helm (Recommended)
+
+```bash
+# Add Dynatrace Helm repository
+helm repo add dynatrace https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/main/config/helm/repos/stable
+helm repo update
+
+# Create namespace and secret
+kubectl create namespace dynatrace
+kubectl -n dynatrace create secret generic dynakube --from-literal="apiToken=<API_TOKEN>" --from-literal="dataIngestToken=<DATA_INGEST_TOKEN>"
+
+# Install with Helm
+helm install dynatrace-operator dynatrace/dynatrace-operator \
+  --namespace dynatrace \
+  --set installCRD=true
+```
+
+### Installation Option 2: Manifest Files
 
 1. **Navigate to Kubernetes monitoring**
    - Infrastructure → Kubernetes → Add cluster
@@ -179,6 +224,153 @@ For Kubernetes environments, use the Dynatrace Operator.
    ```bash
    kubectl get pods -n dynatrace
    ```
+
+### DynaKube Custom Resource Configuration
+
+The DynaKube CR is the primary configuration for the Dynatrace Operator. Here are examples for each deployment mode:
+
+> **Important:** Use `apiVersion: dynatrace.com/v1beta5` for Dynatrace Operator 1.7.0+. Earlier versions (v1beta1, v1beta2) are deprecated and no longer supported.
+
+**Cloud Native FullStack (Recommended for most K8s):**
+
+```yaml
+apiVersion: dynatrace.com/v1beta5
+kind: DynaKube
+metadata:
+  name: dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: https://{tenant-id}.live.dynatrace.com/api
+
+  # Cloud Native FullStack - automatic init container injection
+  oneAgent:
+    cloudNativeFullStack:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      args:
+        - --set-host-group=my-k8s-cluster
+
+  # ActiveGate for Kubernetes API monitoring
+  activeGate:
+    capabilities:
+      - kubernetes-monitoring
+      - routing
+      - dynatrace-api
+```
+
+**Application Only (for PaaS or shared nodes):**
+
+```yaml
+apiVersion: dynatrace.com/v1beta5
+kind: DynaKube
+metadata:
+  name: dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: https://{tenant-id}.live.dynatrace.com/api
+
+  # Application Only - sidecar injection, no host monitoring
+  oneAgent:
+    applicationMonitoring:
+      useCSIDriver: true
+```
+
+**Host Monitoring (host metrics only):**
+
+```yaml
+apiVersion: dynatrace.com/v1beta5
+kind: DynaKube
+metadata:
+  name: dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: https://{tenant-id}.live.dynatrace.com/api
+
+  # Host monitoring only - no code-level visibility
+  oneAgent:
+    hostMonitoring: {}
+```
+
+### Air-Gapped / Private Registry Deployment
+
+For environments without internet access, host images in a private registry:
+
+```yaml
+apiVersion: dynatrace.com/v1beta5
+kind: DynaKube
+metadata:
+  name: dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: https://{tenant-id}.live.dynatrace.com/api
+
+  # Custom image locations for air-gapped environments
+  oneAgent:
+    cloudNativeFullStack:
+      image: my-registry.example.com/dynatrace/oneagent:latest
+
+  activeGate:
+    capabilities:
+      - kubernetes-monitoring
+    image: my-registry.example.com/dynatrace/activegate:latest
+```
+
+**Image Mirroring Script:**
+```bash
+# Mirror required images to private registry
+IMAGES=(
+  "docker.io/dynatrace/dynatrace-operator:v1.3.2"
+  "docker.io/dynatrace/dynatrace-oneagent:latest"
+  "docker.io/dynatrace/dynatrace-activegate:latest"
+)
+
+for img in "${IMAGES[@]}"; do
+  docker pull $img
+  docker tag $img my-registry.example.com/${img#*/}
+  docker push my-registry.example.com/${img#*/}
+done
+```
+
+### Kubernetes Metadata and Dynatrace Tags
+
+Dynatrace can leverage Kubernetes labels and annotations for observability:
+
+| Feature | Behavior | Limitations |
+|---------|----------|-------------|
+| **Pod labels** | Appear as `[Kubernetes]` context tags on processes | Requires OneAgent code module injection |
+| **Annotations** | Available as custom metadata at Process level | Requires view RBAC permissions |
+| **Namespace labels** | Available via Primary Grail tags | Does not enrich K8s metrics or events |
+
+**Requirements:**
+- Service accounts need `view` access via rolebinding/clusterrolebinding
+- Labels are read via Kubernetes REST API at deployment time
+- Not all entities receive automatic tags (namespaces, pods, workloads have limited support)
+
+For more control, configure automatic tagging rules: **Settings → Automatically applied tags**
+
+### Multi-Tenant / Namespace Isolation
+
+For large clusters with multiple teams, use namespace selectors:
+
+```yaml
+apiVersion: dynatrace.com/v1beta5
+kind: DynaKube
+metadata:
+  name: team-a-dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: https://team-a-tenant.live.dynatrace.com/api
+
+  oneAgent:
+    cloudNativeFullStack:
+      namespaceSelector:
+        matchLabels:
+          dynatrace-tenant: team-a
+```
+
+This allows different teams/tenants to monitor different namespaces within the same cluster.
 
 ## 6. Verifying Deployment
 
@@ -325,3 +517,7 @@ In this notebook, you learned:
 - [Windows Installation](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent/installation-and-operation/windows/installation/install-oneagent-on-windows)
 - [Kubernetes Operator](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 - [Deployment API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/deployment)
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
