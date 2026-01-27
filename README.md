@@ -12,17 +12,17 @@ Each topic follows the same structure:
 
 ## Topics
 
-- [AUTOM](AUTOM/README.md) — Dynatrace automation (8 notebooks)
-- [IAMADM](IAMADM/README.md) — IAM administration (9 notebooks)
-- [K8S](K8S/README.md) — Kubernetes monitoring (9 notebooks)
-- [M2S](M2S/README.md) — Managed to SaaS migration (8 notebooks)
-- [MZ2POL](MZ2POL/README.md) — Management Zone to Policy migration (8 notebooks)
-- [ONBRD](ONBRD/README.md) — Dynatrace onboarding (10 notebooks)
-- [OPLOGS](OPLOGS/README.md) — OpenPipeline logs (8 notebooks)
-- [OPMIG](OPMIG/README.md) — OpenPipeline migration (9 notebooks)
-- [OTEL](OTEL/README.md) — OpenTelemetry integration (8 notebooks)
-- [SPANS](SPANS/README.md) — Distributed tracing and spans (8 notebooks)
-- [SYNTH](SYNTH/README.md) — Synthetic monitoring (6 notebooks)
+- [AUTOM - Dynatrace automation](AUTOM%20-%20Dynatrace%20automation/README.md) (8 notebooks)
+- [IAMADM - IAM administration](IAMADM%20-%20IAM%20administration/README.md) (9 notebooks)
+- [K8S - Kubernetes monitoring](K8S%20-%20Kubernetes%20monitoring/README.md) (9 notebooks)
+- [M2S - Managed to SaaS migration](M2S%20-%20Managed%20to%20SaaS%20migration/README.md) (8 notebooks)
+- [MZ2POL - Management Zone to Policy migration](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/README.md) (8 notebooks)
+- [ONBRD - Dynatrace onboarding](ONBRD%20-%20Dynatrace%20onboarding/README.md) (10 notebooks)
+- [OPLOGS - OpenPipeline logs](OPLOGS%20-%20OpenPipeline%20logs/README.md) (8 notebooks)
+- [OPMIG - OpenPipeline migration](OPMIG%20-%20OpenPipeline%20migration/README.md) (9 notebooks)
+- [OTEL - OpenTelemetry integration](OTEL%20-%20OpenTelemetry%20integration/README.md) (8 notebooks)
+- [SPANS - Distributed tracing and spans](SPANS%20-%20Distributed%20tracing%20and%20spans/README.md) (8 notebooks)
+- [SYNTH - Synthetic monitoring](SYNTH%20-%20Synthetic%20monitoring/README.md) (6 notebooks)
 
 ## How to Use
 
