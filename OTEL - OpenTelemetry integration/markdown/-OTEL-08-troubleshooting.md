@@ -175,10 +175,10 @@ grpcurl -plaintext collector:4317 list
 ### Test Dynatrace Connectivity
 
 ```bash
-# Test OTLP endpoint
-curl -v https://abc12345.live.dynatrace.com/api/v2/otlp/v1/traces \
+# Test OTLP endpoint (set DT_API_TOKEN env var first)
+curl -v https://${DT_ENV_ID}.live.dynatrace.com/api/v2/otlp/v1/traces \
   -X POST \
-  -H "Authorization: Api-Token dt0c01.XXX..." \
+  -H "Authorization: Api-Token ${DT_API_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{}'
 

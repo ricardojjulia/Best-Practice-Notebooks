@@ -207,7 +207,7 @@ exporters:
   otlphttp:
     endpoint: https://{your-env}.live.dynatrace.com/api/v2/otlp
     headers:
-      Authorization: Api-Token dt0c01.xxx...
+      Authorization: Api-Token ${DT_API_TOKEN}
 ```
 
 ### Debug Exporter
@@ -225,9 +225,9 @@ exporters:
 ```yaml
 exporters:
   otlphttp/dynatrace:
-    endpoint: https://xxx.live.dynatrace.com/api/v2/otlp
+    endpoint: https://${DT_ENV_ID}.live.dynatrace.com/api/v2/otlp
     headers:
-      Authorization: Api-Token dt0c01.xxx...
+      Authorization: Api-Token ${DT_API_TOKEN}
   otlphttp/backup:
     endpoint: https://backup-backend.example.com
 
@@ -320,9 +320,9 @@ processors:
 
 exporters:
   otlphttp:
-    endpoint: https://{your-env}.live.dynatrace.com/api/v2/otlp
+    endpoint: https://${DT_ENV_ID}.live.dynatrace.com/api/v2/otlp
     headers:
-      Authorization: Api-Token dt0c01.xxx...
+      Authorization: Api-Token ${DT_API_TOKEN}
 
 service:
   pipelines:

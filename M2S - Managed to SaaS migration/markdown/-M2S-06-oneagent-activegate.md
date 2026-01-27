@@ -370,12 +370,9 @@ fetch dt.entity.host
 | limit 20
 ```
 
-```dql
-// Check OneAgent versions
-fetch dt.entity.host
-| summarize hostCount = count(), by:{oneAgentVersion}
-| sort hostCount desc
-```
+### 5.1.1 OneAgent Version Check
+
+> **Note:** OneAgent version is not available as a DQL field. Use the Dynatrace UI: Navigate to **Manage → Deployment status → OneAgent** to view version distribution.
 
 ### 5.2 Data Flow Validation
 
@@ -390,8 +387,8 @@ timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}
 ```dql
 // Verify logs are flowing
 fetch logs
-| summarize logCount = count(), by:{bin(timestamp, 5m)}
-| sort timestamp desc
+| summarize logCount = count(), by:{time_bucket = bin(timestamp, 5m)}
+| sort time_bucket desc
 | limit 12
 ```
 

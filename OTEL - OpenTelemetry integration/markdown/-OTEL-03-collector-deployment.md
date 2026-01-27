@@ -380,15 +380,17 @@ spec:
 
 ### Token Management
 
+Store Dynatrace API tokens in Kubernetes Secrets:
+
 ```yaml
-# Kubernetes Secret
+# Kubernetes Secret (create via kubectl or sealed-secrets)
 apiVersion: v1
 kind: Secret
 metadata:
   name: dynatrace-otel-token
 type: Opaque
 stringData:
-  token: dt0c01.xxx...
+  token: <your-dynatrace-api-token>
 ```
 
 ```yaml

@@ -716,10 +716,10 @@ spec:
 
 Generate sealed secrets:
 ```bash
-# Seal the secret
+# Seal the secret (use your actual tokens from Dynatrace)
 kubectl create secret generic dynakube \
-  --from-literal=apiToken=dt0c01.xxx \
-  --from-literal=dataIngestToken=dt0c01.yyy \
+  --from-literal=apiToken=<your-api-token> \
+  --from-literal=dataIngestToken=<your-data-ingest-token> \
   --dry-run=client -o yaml | \
   kubeseal --format yaml > sealed-dynakube.yaml
 ```

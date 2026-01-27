@@ -100,8 +100,8 @@ fetch dt.entity.host
 ```dql
 // Check host activity by looking at recent metrics
 // Hosts not sending metrics may have issues
-timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}
-| filter isNull(avg)
+timeseries avgCpu = avg(dt.host.cpu.usage), by:{dt.entity.host}
+| filter isNull(avgCpu)
 | fields dt.entity.host
 ```
 
@@ -164,8 +164,8 @@ timeseries avg(dt.host.memory.usage), by:{dt.entity.host}
 ```dql
 // Check log volume over time
 fetch logs
-| summarize logCount = count(), by:{bin(timestamp, 5m)}
-| sort timestamp desc
+| summarize logCount = count(), by:{time_bucket = bin(timestamp, 5m)}
+| sort time_bucket desc
 | limit 24
 ```
 
@@ -182,8 +182,8 @@ fetch logs
 ```dql
 // Check distributed traces are flowing
 fetch spans
-| summarize spanCount = count(), by:{bin(timestamp, 5m)}
-| sort timestamp desc
+| summarize spanCount = count(), by:{time_bucket = bin(timestamp, 5m)}
+| sort time_bucket desc
 | limit 12
 ```
 
@@ -200,11 +200,10 @@ fetch spans
 
 ```dql
 // Check for metric data continuity over time
-// Count data points per time bucket - gaps show as low or zero counts
-fetch dt.host.cpu.usage
-| summarize dataPoints = count(), by:{time_bucket = bin(timestamp, 5m)}
-| sort time_bucket asc
-| limit 50
+// Use timeseries to query metrics - count hosts with data per time bucket
+timeseries avgCpu = avg(dt.host.cpu.usage), by:{dt.entity.host}
+| summarize hostsWithData = count()
+| limit 1
 ```
 
 ---

@@ -94,7 +94,7 @@ Create environment variables for authentication:
 
 ```bash
 export DT_TENANT_URL="https://{tenant-id}.live.dynatrace.com"
-export DT_API_TOKEN="dt0c01.XXXXXXXX.YYYYYYYY"
+export DT_API_TOKEN="<your-api-token>"
 ```
 
 ---

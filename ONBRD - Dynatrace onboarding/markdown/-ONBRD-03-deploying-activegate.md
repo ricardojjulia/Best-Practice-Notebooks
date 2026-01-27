@@ -395,8 +395,8 @@ kubectl create namespace dynatrace
 
 # Create secret with tokens
 kubectl -n dynatrace create secret generic dynakube \
-  --from-literal=apiToken=dt0c01.XXXXXXXX \
-  --from-literal=paasToken=dt0c01.YYYYYYYY
+  --from-literal=apiToken=<your-api-token> \
+  --from-literal=paasToken=<your-paas-token>
 
 # Install Dynatrace Operator via Helm
 helm repo add dynatrace https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/main/config/helm/repos/stable
@@ -482,8 +482,8 @@ metadata:
   namespace: dynatrace
 type: Opaque
 stringData:
-  apiToken: "dt0c01.XXXXXXXXXXXXXXXX"
-  paasToken: "dt0c01.YYYYYYYYYYYYYYYY"
+  apiToken: "<your-api-token>"
+  paasToken: "<your-paas-token>"
 ---
 # activegate-configmap.yaml
 apiVersion: v1

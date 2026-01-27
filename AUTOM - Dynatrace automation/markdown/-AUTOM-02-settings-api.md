@@ -77,7 +77,7 @@ https://{tenant-id}.live.dynatrace.com/api/v2/settings
 All requests require an API token in the `Authorization` header:
 
 ```bash
-Authorization: Api-Token dt0c01.XXXXXXXX.YYYYYYYY
+Authorization: Api-Token <your-api-token>
 ```
 
 ### Core Endpoints

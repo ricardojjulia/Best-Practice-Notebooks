@@ -140,7 +140,7 @@ Create `terraform.tfvars`:
 
 ```hcl
 dynatrace_url   = "https://abc12345.live.dynatrace.com"
-dynatrace_token = "dt0c01.XXXXXXXX.YYYYYYYY"
+dynatrace_token = "<your-api-token>"
 ```
 
 > **Security:** Never commit `terraform.tfvars` with real tokens. Use environment variables or secret management.

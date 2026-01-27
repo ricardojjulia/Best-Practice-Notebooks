@@ -172,38 +172,60 @@ Your existing investments are preserved:
 <a id="assessment"></a>
 ## 4. Assessing Your Managed Environment
 
-Before planning your migration, document your current state. Run these queries in your Managed environment.
+Before planning your migration, document your current state.
+
+> **Important:** DQL (Grail) is only available in SaaS environments. For Managed environments, use the **Entities API v2** or the **Dynatrace UI** to gather this information.
 
 ### Environment Size Assessment
 
-```dql
-// Count total monitored hosts
-fetch dt.entity.host
-| summarize totalHosts = count()
+Use the Entities API v2 to gather counts from your Managed environment:
+
+```bash
+# Count total monitored hosts
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(HOST)&pageSize=1" \
+  -H "Authorization: Api-Token {TOKEN}" | jq '.totalCount'
+
+# Count hosts by OS type
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(HOST)&fields=properties.osType" \
+  -H "Authorization: Api-Token {TOKEN}"
+
+# Count services
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(SERVICE)&pageSize=1" \
+  -H "Authorization: Api-Token {TOKEN}" | jq '.totalCount'
+
+# Count applications
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(APPLICATION)&pageSize=1" \
+  -H "Authorization: Api-Token {TOKEN}" | jq '.totalCount'
 ```
 
-```dql
-// Count hosts by operating system
-fetch dt.entity.host
-| summarize count = count(), by:{osType}
-| sort count desc
-```
-
-```dql
-// Count monitored services
-fetch dt.entity.service
-| summarize totalServices = count()
-```
-
-```dql
-// Count applications (web and mobile)
-fetch dt.entity.application
-| summarize totalApplications = count()
-```
+Or use the Dynatrace UI:
+- **Hosts:** Navigate to Infrastructure → Hosts (count shown in header)
+- **Services:** Navigate to Applications & Microservices → Services
+- **Applications:** Navigate to Applications & Microservices → Frontend
 
 ### OneAgent Version Assessment
 
-Understanding your OneAgent versions helps plan the migration:
+Understanding your OneAgent versions helps plan the migration. Use the Entities API:
+
+```bash
+# Get OneAgent versions
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(HOST)&fields=properties.oneAgentVersion" \
+  -H "Authorization: Api-Token {TOKEN}"
+```
+
+Or use the Dynatrace UI: Navigate to **Manage → Deployment status → OneAgent**
+
+### ActiveGate Assessment
+
+Identify your ActiveGate deployment using the Entities API:
+
+```bash
+# Get ActiveGate inventory
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(ENVIRONMENT_ACTIVE_GATE)" \
+  -H "Authorization: Api-Token {TOKEN}"
+```
+
+Or use the Dynatrace UI: Navigate to **Manage → Deployment status → ActiveGates**
 
 ```dql
 // Check OneAgent versions across hosts
@@ -211,41 +233,6 @@ fetch dt.entity.host
 | summarize hostCount = count(), by:{oneAgentVersion}
 | sort hostCount desc
 ```
-
-### ActiveGate Assessment
-
-Identify your ActiveGate deployment:
-
-```dql
-// ActiveGate inventory - use the Entities API v2 or Settings API
-// Note: ActiveGates are not directly queryable via DQL fetch
-// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
-// Or check the ActiveGates page in the Dynatrace UI
-```
-
-### Migration Complexity Indicators
-
-| Factor | Low Complexity | High Complexity |
-|--------|---------------|----------------|
-| Host count | < 500 | > 5,000 |
-| Service count | < 200 | > 2,000 |
-| Custom integrations | Few or none | Many custom webhooks |
-| Network restrictions | Open outbound | Strict firewall rules |
-| Compliance requirements | Standard | PCI, HIPAA, SOC2 |
-| Team availability | Dedicated team | Part-time resources |
-
-### Pre-Migration Checklist
-
-| Requirement | Status | Notes |
-|-------------|--------|-------|
-| Network can reach SaaS endpoints | [ ] | Port 443 outbound |
-| SaaS tenant provisioned | [ ] | Tenant URL confirmed |
-| API tokens created | [ ] | Both environments |
-| Documentation of current config | [ ] | Settings inventory |
-| Test environment available | [ ] | For validation |
-| Migration window identified | [ ] | Low-traffic period |
-
----
 
 <a id="next-steps"></a>
 ## 5. Next Steps
@@ -308,7 +295,3 @@ In this notebook, you learned:
 ---
 
 *Continue to **M2S-02: Migration Framework Overview** to learn about the structured approach to migration.*
-
----
-
-<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

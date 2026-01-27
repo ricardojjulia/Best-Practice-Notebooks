@@ -115,7 +115,7 @@ Plan extra time for:
 ```bash
 # Set source environment
 export DT_SOURCE_URL="https://source-tenant.live.dynatrace.com"
-export DT_SOURCE_TOKEN="dt0c01.SOURCE_TOKEN"
+export DT_SOURCE_TOKEN="<your-source-api-token>"
 
 # Download all configurations
 monaco download \
@@ -178,7 +178,7 @@ environmentGroups:
 ```bash
 # Set target environment
 export DT_TARGET_URL="https://target-tenant.live.dynatrace.com"
-export DT_TARGET_TOKEN="dt0c01.TARGET_TOKEN"
+export DT_TARGET_TOKEN="<your-target-api-token>"
 
 # Validate first
 monaco validate manifest.yaml

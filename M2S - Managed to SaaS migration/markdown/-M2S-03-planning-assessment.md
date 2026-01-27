@@ -61,103 +61,33 @@ The Plan phase is critical—most migration problems stem from incomplete discov
 
 ### 2.1 Entity Inventory
 
-Run these queries to build your entity inventory:
+> **Important:** DQL (Grail) is only available in SaaS environments. For discovering your Managed environment, use the **Entities API v2** or the **Dynatrace UI**.
 
-```dql
-// Complete host inventory with details
-fetch dt.entity.host
-| fieldsAdd hostName = entity.name
-| fields hostName, osType, cloudType, oneAgentVersion
-| sort hostName asc
+Use the Entities API to build your entity inventory:
+
+```bash
+# Complete host inventory with details
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(HOST)&fields=properties.osType,properties.oneAgentVersion,properties.cloudType" \
+  -H "Authorization: Api-Token {TOKEN}" > hosts.json
+
+# Service inventory
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(SERVICE)&fields=properties.serviceType" \
+  -H "Authorization: Api-Token {TOKEN}" > services.json
+
+# Application inventory
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(APPLICATION)" \
+  -H "Authorization: Api-Token {TOKEN}" > applications.json
+
+# Synthetic monitor inventory
+curl -X GET "https://{your-managed-url}/api/v2/entities?entitySelector=type(SYNTHETIC_TEST)" \
+  -H "Authorization: Api-Token {TOKEN}" > synthetics.json
 ```
 
-```dql
-// Service inventory with type
-fetch dt.entity.service
-| fieldsAdd serviceName = entity.name
-| fields serviceName, serviceType
-| sort serviceName asc
-```
-
-```dql
-// Application inventory
-fetch dt.entity.application
-| fieldsAdd appName = entity.name, applicationType
-| fields appName, applicationType
-| sort appName asc
-```
-
-```dql
-// Synthetic monitor inventory
-fetch dt.entity.synthetic_test
-| fieldsAdd monitorName = entity.name
-| fields monitorName, id
-| sort monitorName asc
-```
-
-### 2.2 Summary Statistics
-
-Create a high-level summary for planning:
-
-```dql
-// Entity count summary
-fetch dt.entity.host | summarize hosts = count()
-| append [fetch dt.entity.service | summarize services = count()]
-| append [fetch dt.entity.application | summarize applications = count()]
-| append [fetch dt.entity.process_group | summarize processGroups = count()]
-| append [fetch dt.entity.synthetic_test | summarize syntheticMonitors = count()]
-```
-
-```dql
-// Hosts by OS type
-fetch dt.entity.host
-| summarize count = count(), by:{osType}
-| sort count desc
-```
-
-```dql
-// Hosts by cloud provider
-fetch dt.entity.host
-| summarize count = count(), by:{cloudType}
-| sort count desc
-```
-
-### 2.3 ActiveGate Inventory
-
-```dql
-// ActiveGate inventory - use the Entities API v2 or Settings API
-// Note: ActiveGates are not directly queryable via DQL fetch
-// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
-// Or check the ActiveGates page in the Dynatrace UI
-```
-
-### 2.4 Configuration Inventory
-
-Document these configuration categories:
-
-| Category | Items to Document | Migration Method |
-|----------|-------------------|------------------|
-| **Management Zones** | Zone names, rules, permissions | Settings API export |
-| **Auto-tagging Rules** | Tag definitions, conditions | Settings API export |
-| **Alerting Profiles** | Profiles, severities, filters | Manual or API |
-| **Problem Notifications** | Integrations, webhooks | Recreate with new URLs |
-| **Maintenance Windows** | Scheduled windows | Manual recreation |
-| **Custom Dashboards** | Dashboard JSON | Export/Import |
-| **SLOs** | Definitions, targets | Settings API |
-| **Calculated Services** | Service detection rules | Manual review |
-| **Request Attributes** | Capture rules | Settings API |
-
-### 2.5 Integration Inventory
-
-| Integration Type | Details to Capture |
-|------------------|--------------------|
-| **ITSM** | ServiceNow, Jira URLs and credentials |
-| **Notification** | Email, Slack, Teams, PagerDuty configs |
-| **CI/CD** | Jenkins, Azure DevOps, GitLab hooks |
-| **Custom API** | Any scripts calling Dynatrace APIs |
-| **SSO/SAML** | Identity provider configuration |
-
----
+Or navigate in the Dynatrace UI:
+- **Hosts:** Infrastructure → Hosts
+- **Services:** Applications & Microservices → Services
+- **Applications:** Applications & Microservices → Frontend
+- **Synthetics:** Digital Experience → Synthetic
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Discovery Area | Status |
@@ -228,9 +158,9 @@ Define measurable success criteria:
 
 | Criterion | Target | Measurement |
 |-----------|--------|-------------|
-| Host coverage | 100% of current hosts reporting | DQL entity count |
-| Service discovery | All services detected | DQL service count |
-| Data continuity | No gaps > 15 minutes | Timeseries query |
+| Host coverage | 100% of current hosts reporting | Entity count in SaaS |
+| Service discovery | All services detected | Service count in SaaS |
+| Data continuity | No gaps > 15 minutes | Metrics analysis |
 | Alert functionality | Test alerts received | Notification test |
 | Dashboard accuracy | All tiles showing data | Visual inspection |
 | Integration health | All webhooks functioning | Integration tests |
@@ -368,7 +298,7 @@ Before proceeding to Execute phase:
 
 ### Immediate Actions
 
-1. **Complete discovery queries** - Run all queries in this notebook
+1. **Complete discovery API calls** - Run all API commands in this notebook
 2. **Document configurations** - Create configuration inventory spreadsheet
 3. **Define success criteria** - Get stakeholder agreement
 4. **Create timeline** - Schedule phases and milestones
@@ -392,8 +322,8 @@ Before proceeding to Execute phase:
 
 In this notebook, you learned:
 
-- How to conduct thorough environment discovery
-- DQL queries for building entity inventory
+- How to conduct thorough environment discovery using the Entities API
+- API calls for building entity inventory from Managed environments
 - Configuration categories requiring migration
 - How to define success criteria and timeline
 - Risk assessment methodology

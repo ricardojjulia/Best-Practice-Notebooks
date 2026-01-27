@@ -276,8 +276,8 @@ spec:
 # Create sealed secret from raw secret
 kubectl create secret generic dynakube \
   --namespace dynatrace \
-  --from-literal=apiToken=dt0c01.xxx \
-  --from-literal=dataIngestToken=dt0c01.yyy \
+  --from-literal=apiToken=<your-api-token> \
+  --from-literal=dataIngestToken=<your-data-ingest-token> \
   --dry-run=client -o yaml | \
   kubeseal --format yaml > dynakube-sealed.yaml
 ```

@@ -230,17 +230,19 @@ exporters:
   otlphttp:
     endpoint: https://{your-env}.live.dynatrace.com/api/v2/otlp
     headers:
-      Authorization: Api-Token dt0c01.xxx...
+      Authorization: Api-Token ${DT_API_TOKEN}
 ```
 
 **SDK Direct Export (Python):**
 
 ```python
+import os
+
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 exporter = OTLPSpanExporter(
     endpoint="https://{your-env}.live.dynatrace.com/api/v2/otlp/v1/traces",
-    headers={"Authorization": "Api-Token dt0c01.xxx..."}
+    headers={"Authorization": f"Api-Token {os.environ['DT_API_TOKEN']}"}
 )
 ```
 
