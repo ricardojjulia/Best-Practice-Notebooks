@@ -185,8 +185,8 @@ fetch dt.entity.host
 ```dql
 // Count hosts by operating system
 fetch dt.entity.host
-| summarize count(), by:{osType}
-| sort `count()` desc
+| summarize count = count(), by:{osType}
+| sort count desc
 ```
 
 ```dql
@@ -208,8 +208,7 @@ Understanding your OneAgent versions helps plan the migration:
 ```dql
 // Check OneAgent versions across hosts
 fetch dt.entity.host
-| fieldsAdd agentVersion = entity.detected.properties[`oneagent.version`]
-| summarize hostCount = count(), by:{agentVersion}
+| summarize hostCount = count(), by:{oneAgentVersion}
 | sort hostCount desc
 ```
 
@@ -218,10 +217,10 @@ fetch dt.entity.host
 Identify your ActiveGate deployment:
 
 ```dql
-// List ActiveGates and their purposes
-fetch dt.entity.active_gate
-| fieldsAdd name = entity.name
-| fields name, id
+// ActiveGate inventory - use the Entities API v2 or Settings API
+// Note: ActiveGates are not directly queryable via DQL fetch
+// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
+// Or check the ActiveGates page in the Dynatrace UI
 ```
 
 ### Migration Complexity Indicators

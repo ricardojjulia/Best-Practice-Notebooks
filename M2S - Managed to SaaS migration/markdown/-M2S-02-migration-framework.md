@@ -117,7 +117,7 @@ The Plan phase ensures you understand what you have and how you'll migrate it.
 fetch dt.entity.host | summarize hosts = count()
 | append [fetch dt.entity.service | summarize services = count()]
 | append [fetch dt.entity.application | summarize applications = count()]
-| append [fetch dt.entity.synthetic_monitor | summarize synthetics = count()]
+| append [fetch dt.entity.synthetic_test | summarize synthetics = count()]
 ```
 
 ### Stage 2: Strategize

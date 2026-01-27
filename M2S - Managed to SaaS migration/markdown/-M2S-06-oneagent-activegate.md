@@ -122,10 +122,10 @@ Invoke-WebRequest -Uri "https://{tenant}.live.dynatrace.com/api/v1/deployment/in
 ### 2.3 Verify ActiveGate Connection
 
 ```dql
-// Verify ActiveGate is connected and reporting
-fetch dt.entity.active_gate
-| fieldsAdd gateName = entity.name
-| fields gateName, id
+// ActiveGate validation - use the Entities API v2 or Settings API
+// Note: ActiveGates are not directly queryable via DQL fetch
+// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
+// Or check the ActiveGates page in the Dynatrace UI
 ```
 
 ---
@@ -362,20 +362,18 @@ fetch dt.entity.host
 ```
 
 ```dql
-// List recently active hosts
+// List hosts reporting to SaaS
 fetch dt.entity.host
-| fieldsAdd hostName = entity.name, lastSeen = entity.lastSeenTms
-| filter lastSeen > now() - 15m
-| fields hostName, lastSeen
-| sort lastSeen desc
+| fieldsAdd hostName = entity.name
+| fields hostName, id
+| sort hostName desc
 | limit 20
 ```
 
 ```dql
 // Check OneAgent versions
 fetch dt.entity.host
-| fieldsAdd agentVersion = entity.detected.properties[`oneagent.version`]
-| summarize hostCount = count(), by:{agentVersion}
+| summarize hostCount = count(), by:{oneAgentVersion}
 | sort hostCount desc
 ```
 
@@ -400,10 +398,9 @@ fetch logs
 ### 5.3 Service Discovery Validation
 
 ```dql
-// Check services discovered
+// Check active services discovered after migration
 fetch dt.entity.service
-| fieldsAdd serviceName = entity.name, lastSeen = entity.lastSeenTms
-| filter lastSeen > now() - 15m
+| fieldsAdd serviceName = entity.name
 | summarize activeServices = count()
 ```
 

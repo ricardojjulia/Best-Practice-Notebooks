@@ -81,7 +81,7 @@ fetch dt.entity.host | summarize hosts = count()
 | append [fetch dt.entity.service | summarize services = count()]
 | append [fetch dt.entity.application | summarize applications = count()]
 | append [fetch dt.entity.process_group | summarize processGroups = count()]
-| append [fetch dt.entity.synthetic_monitor | summarize syntheticMonitors = count()]
+| append [fetch dt.entity.synthetic_test | summarize syntheticMonitors = count()]
 ```
 
 ### 2.2 Host Validation
@@ -89,20 +89,20 @@ fetch dt.entity.host | summarize hosts = count()
 Verify all expected hosts are reporting:
 
 ```dql
-// List all hosts with last seen time
+// List all hosts (to verify reporting)
 fetch dt.entity.host
-| fieldsAdd hostName = entity.name, lastSeen = entity.lastSeenTms
-| fields hostName, lastSeen
-| sort lastSeen desc
+| fieldsAdd hostName = entity.name
+| fields hostName, id
+| sort hostName desc
+| limit 50
 ```
 
 ```dql
-// Find hosts not seen recently (potential issues)
-fetch dt.entity.host
-| fieldsAdd hostName = entity.name, lastSeen = entity.lastSeenTms
-| filter lastSeen < now() - 30m
-| fields hostName, lastSeen
-| sort lastSeen asc
+// Check host activity by looking at recent metrics
+// Hosts not sending metrics may have issues
+timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}
+| filter isNull(avg)
+| fields dt.entity.host
 ```
 
 ### 2.3 Service Discovery Validation
@@ -110,25 +110,23 @@ fetch dt.entity.host
 ```dql
 // Count services by technology
 fetch dt.entity.service
-| summarize count(), by:{serviceType}
-| sort `count()` desc
+| summarize count = count(), by:{serviceType}
+| sort count desc
 ```
 
 ```dql
-// Active services in last hour
+// Count active services
 fetch dt.entity.service
-| fieldsAdd serviceName = entity.name, lastSeen = entity.lastSeenTms
-| filter lastSeen > now() - 1h
 | summarize activeServices = count()
 ```
 
 ### 2.4 ActiveGate Validation
 
 ```dql
-// Verify ActiveGates are connected
-fetch dt.entity.active_gate
-| fieldsAdd gateName = entity.name
-| fields gateName, id
+// ActiveGate validation - use the Entities API v2 or Settings API
+// Note: ActiveGates are not directly queryable via DQL fetch
+// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
+// Or check the ActiveGates page in the Dynatrace UI
 ```
 
 ### 2.5 Validation Comparison Table
@@ -174,8 +172,8 @@ fetch logs
 ```dql
 // Check logs by source
 fetch logs
-| summarize count(), by:{log.source}
-| sort `count()` desc
+| summarize count = count(), by:{log.source}
+| sort count desc
 | limit 10
 ```
 
@@ -201,10 +199,12 @@ fetch spans
 ### 3.4 Data Gaps Detection
 
 ```dql
-// Look for gaps in metric data (should see consistent counts)
-timeseries hosts = count(dt.host.cpu.usage), by:{}
-| fieldsAdd gap = if(hosts < 1, then: "GAP", else: "OK")
-| filter gap == "GAP"
+// Check for metric data continuity over time
+// Count data points per time bucket - gaps show as low or zero counts
+fetch dt.host.cpu.usage
+| summarize dataPoints = count(), by:{time_bucket = bin(timestamp, 5m)}
+| sort time_bucket asc
+| limit 50
 ```
 
 ---

@@ -384,45 +384,6 @@ async function queryMultipleHosts(hostIds: string[]) {
 
 ---
 
-<a id="applications"></a>
-## 5. Building Applications
-
-### CLI Tool Example
-
-```typescript
-#!/usr/bin/env ts-node
-import { setEnvConfig } from '@dynatrace-sdk/client-core';
-import { queryClient } from '@dynatrace-sdk/client-query';
-import { Command } from 'commander';
-
-const program = new Command();
-
-program
-  .name('dt-cli')
-  .description('Dynatrace CLI tool')
-  .version('1.0.0');
-
-program
-  .command('hosts')
-  .description('List all hosts')
-  .action(async () => {
-    setEnvConfig({
-      environmentUrl: process.env.DT_TENANT_URL!,
-      apiToken: process.env.DT_API_TOKEN!
-    });
-    
-    const result = await queryClient.query({
-      body: {
-        query: 'fetch dt.entity.host | fields entity.name'
-      }
-    });
-    
-    console.table(result.result?.records);
-  });
-
-program.parse();
-```
-
 ### Reporting Script
 
 ```python
@@ -445,8 +406,8 @@ def generate_host_report():
             | fieldsAdd 
                 name = entity.name,
                 osType,
-                cpuCores = entity.detected.properties[`host.cpuCores`],
-                memoryTotal = entity.detected.properties[`host.memoryTotal`]
+                cpuCores,
+                physicalMemory
             | sort name asc
         """
     )

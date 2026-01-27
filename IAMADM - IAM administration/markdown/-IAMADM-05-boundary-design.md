@@ -362,8 +362,8 @@ Verify boundaries work as expected before production use.
 ```dql
 // Check security context distribution on services
 fetch dt.entity.service
-| summarize count(), by:{dt.security_context}
-| sort count() desc
+| summarize count = count(), by:{dt.security_context}
+| sort count desc
 | limit 20
 ```
 

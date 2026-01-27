@@ -352,7 +352,7 @@ fetch dt.settings
 
 ```dql
 // Verify synthetic monitors
-fetch dt.entity.synthetic_monitor
+fetch dt.entity.synthetic_test
 | summarize total = count()
 ```
 

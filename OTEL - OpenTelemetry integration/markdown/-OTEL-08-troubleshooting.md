@@ -361,16 +361,16 @@ go tool pprof http://collector:1777/debug/pprof/heap
 // Check OTel data arrival
 fetch spans, from: now() - 1h
 | filter isNotNull(otel.library.name)
-| summarize count(), by:{bin(timestamp, 5m)}
-| sort timestamp asc
+| summarize count = count(), by:{time_bucket = bin(timestamp, 5m)}
+| sort time_bucket asc
 ```
 
 ```dql
 // Find services without service.name
 fetch spans, from: now() - 1h
 | filter isNull(service.name) or service.name == ""
-| summarize count(), by:{otel.library.name}
-| sort count() desc
+| summarize count = count(), by:{otel.library.name}
+| sort count desc
 ```
 
 ## 8. Common Fixes

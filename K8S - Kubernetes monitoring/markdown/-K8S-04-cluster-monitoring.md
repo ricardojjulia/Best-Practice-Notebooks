@@ -224,8 +224,8 @@ fetch logs
 fetch logs, from: now() - 24h
 | filter matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s")
 | parse content, "LD:eventType ' ' LD"
-| summarize count(), by:{eventType}
-| sort count() desc
+| summarize count = count(), by:{eventType}
+| sort count desc
 | limit 20
 ```
 

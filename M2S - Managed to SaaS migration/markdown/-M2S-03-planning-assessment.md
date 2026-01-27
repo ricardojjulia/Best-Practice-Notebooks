@@ -66,23 +66,16 @@ Run these queries to build your entity inventory:
 ```dql
 // Complete host inventory with details
 fetch dt.entity.host
-| fieldsAdd 
-    hostName = entity.name,
-    osType,
-    cloudType,
-    agentVersion = entity.detected.properties[`oneagent.version`]
-| fields hostName, osType, cloudType, agentVersion
+| fieldsAdd hostName = entity.name
+| fields hostName, osType, cloudType, oneAgentVersion
 | sort hostName asc
 ```
 
 ```dql
-// Service inventory with technology
+// Service inventory with type
 fetch dt.entity.service
-| fieldsAdd 
-    serviceName = entity.name,
-    serviceType,
-    technologyType = entity.detected.properties[`technology`]
-| fields serviceName, serviceType, technologyType
+| fieldsAdd serviceName = entity.name
+| fields serviceName, serviceType
 | sort serviceName asc
 ```
 
@@ -96,7 +89,7 @@ fetch dt.entity.application
 
 ```dql
 // Synthetic monitor inventory
-fetch dt.entity.synthetic_monitor
+fetch dt.entity.synthetic_test
 | fieldsAdd monitorName = entity.name
 | fields monitorName, id
 | sort monitorName asc
@@ -112,30 +105,30 @@ fetch dt.entity.host | summarize hosts = count()
 | append [fetch dt.entity.service | summarize services = count()]
 | append [fetch dt.entity.application | summarize applications = count()]
 | append [fetch dt.entity.process_group | summarize processGroups = count()]
-| append [fetch dt.entity.synthetic_monitor | summarize syntheticMonitors = count()]
+| append [fetch dt.entity.synthetic_test | summarize syntheticMonitors = count()]
 ```
 
 ```dql
 // Hosts by OS type
 fetch dt.entity.host
-| summarize count(), by:{osType}
-| sort `count()` desc
+| summarize count = count(), by:{osType}
+| sort count desc
 ```
 
 ```dql
 // Hosts by cloud provider
 fetch dt.entity.host
-| summarize count(), by:{cloudType}
-| sort `count()` desc
+| summarize count = count(), by:{cloudType}
+| sort count desc
 ```
 
 ### 2.3 ActiveGate Inventory
 
 ```dql
-// ActiveGate inventory
-fetch dt.entity.active_gate
-| fieldsAdd gateName = entity.name
-| fields gateName, id
+// ActiveGate inventory - use the Entities API v2 or Settings API
+// Note: ActiveGates are not directly queryable via DQL fetch
+// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
+// Or check the ActiveGates page in the Dynatrace UI
 ```
 
 ### 2.4 Configuration Inventory

@@ -257,8 +257,8 @@ fetch spans
 // OTel instrumentation libraries in use
 fetch spans
 | filter isNotNull(otel.library.name)
-| summarize count(), by:{otel.library.name, otel.library.version}
-| sort count() desc
+| summarize count = count(), by:{otel.library.name, otel.library.version}
+| sort count desc
 | limit 20
 ```
 

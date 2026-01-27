@@ -744,23 +744,23 @@ spec:
 After installation, verify ActiveGate is connected and healthy.
 
 ```dql
-// List all ActiveGates and their status
-fetch dt.entity.active_gate
-| fields entity.name, state
-| sort entity.name
+// ActiveGate verification - use the Entities API v2 or Settings API
+// Note: ActiveGates are not directly queryable via DQL fetch
+// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
+// Or check the Deployment Status → ActiveGates page in the Dynatrace UI
 ```
 
 ```dql
-// Check ActiveGate versions
-fetch dt.entity.active_gate
-| fields entity.name, state
-| sort entity.name
+// ActiveGate version check - use the Entities API v2
+// GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")&fields=properties
+// The response includes version information in the properties
+// Or check Deployment Status → ActiveGates in the UI for version details
 ```
 
 ```dql
-// Count ActiveGates 
-fetch dt.entity.active_gate
-| summarize ag_count = count()
+// ActiveGate count - use the Entities API v2
+// GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
+// Count the entities in the response, or check the ActiveGates page in UI
 ```
 
 ### Verification via UI

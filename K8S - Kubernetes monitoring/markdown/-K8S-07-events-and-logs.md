@@ -290,8 +290,8 @@ fetch logs
 ```dql
 // Pattern: Identify noisy pods
 fetch logs, from: now() - 1h
-| summarize count(), by:{k8s.pod.name}
-| sort count() desc
+| summarize count = count(), by:{k8s.pod.name}
+| sort count desc
 | limit 10
 ```
 
@@ -328,8 +328,8 @@ fetch logs
 // Log level distribution by namespace
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name) and isNotNull(loglevel)
-| summarize count(), by:{k8s.namespace.name, loglevel}
-| sort count() desc
+| summarize count = count(), by:{k8s.namespace.name, loglevel}
+| sort count desc
 | limit 30
 ```
 
