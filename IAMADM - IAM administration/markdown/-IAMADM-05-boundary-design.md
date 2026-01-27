@@ -119,7 +119,7 @@ If you only boundary one domain:
 
 **Complete Three-Domain Boundary:**
 ```
-environment:dt.security_context IN ("checkout");
+environment:management-zone IN ("checkout");
 storage:dt.security_context IN ("checkout");
 settings:dt.security_context IN ("checkout");
 ```
@@ -138,8 +138,7 @@ settings:dt.security_context IN ("checkout");
 
 | Domain | Field | Description |
 |--------|-------|-------------|
-| environment | `dt.security_context` | Entity security context |
-| environment | `management-zone` | Legacy MZ (deprecated) |
+| environment | `management-zone` | Management zone filter |
 | storage | `dt.security_context` | Data security context |
 | storage | `bucket.name` | Storage bucket name |
 | settings | `dt.security_context` | Settings security context |
@@ -150,7 +149,7 @@ settings:dt.security_context IN ("checkout");
 Grant access to multiple security contexts:
 
 ```
-environment:dt.security_context IN ("checkout", "payments", "shared");
+environment:management-zone IN ("checkout", "payments", "shared");
 storage:dt.security_context IN ("checkout", "payments", "shared");
 settings:dt.security_context IN ("checkout", "payments", "shared");
 ```
@@ -160,14 +159,22 @@ settings:dt.security_context IN ("checkout", "payments", "shared");
 For admin groups needing full access:
 
 ```
-environment:dt.security_context IN ("*");
+environment:management-zone IN ("*");
 storage:dt.security_context IN ("*");
 settings:dt.security_context IN ("*");
 ```
 
-## 4. Security Context Strategy
+### Boundary Limitations
 
-Security contexts are the foundation of boundary filtering. Plan your strategy carefully.
+| Limitation | Description | Workaround |
+|------------|-------------|------------|
+| **Max 10 conditions** | Only 10 lines per boundary | Create multiple boundaries |
+| **No AND between lines** | Each line is OR-combined | Use multiple boundaries for AND logic |
+| **Limited operators** | Basic operators only | Simplify condition expressions |
+
+## 4. Security Context and Data Partitioning Strategy
+
+Security contexts and Grail buckets form the foundation of boundary filtering and data partitioning. Plan your strategy carefully.
 
 ### What is a Security Context?
 
@@ -178,17 +185,69 @@ A **security context** is a label applied to:
 
 Boundaries filter based on these labels.
 
+### Primary Grail Fields
+
+**Primary Grail fields** are first-class attributes that Dynatrace uses for data organization. These should drive your bucket, permission, and segmentation strategy:
+
+| Field | Source | Use Case |
+|-------|--------|----------|
+| `k8s.cluster.name` | Kubernetes | Cluster-level isolation |
+| `k8s.namespace.name` | Kubernetes | Namespace-level access |
+| `aws.account.id` | AWS metadata | AWS account separation |
+| `azure.subscription.id` | Azure metadata | Azure subscription separation |
+| `gcp.project.id` | GCP metadata | GCP project separation |
+| `dt.host_group.id` | OneAgent config | Host group-based isolation |
+
+These fields are automatically enriched from infrastructure metadata and provide consistent, reliable partitioning dimensions.
+
+### Grail Bucket Strategy
+
+**Buckets** partition data in Grail for access control, retention, and query performance.
+
+**Key Principle:** Set up buckets along organizational lines and route data based on primary Grail fields.
+
+| Bucket Design | Example | Benefit |
+|---------------|---------|---------|
+| **By Environment** | `prod_logs`, `dev_logs` | Separate prod/non-prod access |
+| **By Team/LOB** | `checkout_data`, `payments_data` | Team-level isolation |
+| **By Compliance** | `pci_logs`, `general_logs` | Regulatory separation |
+| **By Region** | `us_data`, `eu_data` | Geographic compliance |
+
+### Bucket + Boundary Integration
+
+Use `storage:bucket.name` in boundaries to restrict access to specific buckets:
+
+```
+// Restrict to production bucket only
+storage:bucket.name IN ("prod_logs", "prod_metrics");
+storage:dt.security_context IN ("production");
+environment:management-zone IN ("Production");
+```
+
+### Primary Grail Tags
+
+Beyond fields, **Primary Grail Tags** can be configured from:
+- Kubernetes labels (first 3 selected during setup)
+- AWS resource tags
+- Azure resource tags
+
+These tags become first-class Grail attributes available for:
+- Bucket assignment rules
+- Policy/boundary conditions
+- Pipeline routing
+- Segment filters
+
 ### Assigning Security Context
 
 Security context is set via (modern approaches):
 
 1. **Entity Enrichment rules** - Automatic based on entity properties
 2. **Host properties** - Set on hosts and inherited by services
-3. **Primary Grail tags** - First-class tags for Grail data
+3. **Primary Grail fields/tags** - First-class tags for Grail data
 4. **OneAgent group** - Inherited from deployment
 5. **Log attributes** - Set during OpenPipeline ingestion
 
-> **Note:** Auto-tagging is a legacy approach. Prefer Entity Enrichment for new implementations.
+> **Note:** Auto-tagging is a legacy approach. Prefer Entity Enrichment and Primary Grail Fields for new implementations.
 
 ### Security Context Design Patterns
 
@@ -222,8 +281,19 @@ Security Contexts:
 
 Teams get their context + `shared`:
 ```
-environment:dt.security_context IN ("checkout", "shared");
+environment:management-zone IN ("checkout", "shared");
 ```
+
+### Recommended Partitioning Strategy
+
+1. **Identify primary dimensions** - What drives access control? (team, environment, region, compliance)
+2. **Map to Primary Grail Fields** - Use `k8s.cluster.name`, `aws.account.id`, `dt.host_group.id`
+3. **Design buckets** - Create buckets aligned with access control boundaries
+4. **Configure pipelines** - Route data to buckets based on primary fields
+5. **Define boundaries** - Use `storage:bucket.name` and `storage:dt.security_context`
+6. **Create segments** - For cross-bucket query filtering
+
+> **See Also:** For migration from Management Zones, refer to **MZ2POL-04: Policies and Boundaries** which covers mapping MZ patterns to the new model.
 
 ## 5. Common Boundary Patterns
 
@@ -232,7 +302,7 @@ environment:dt.security_context IN ("checkout", "shared");
 Restrict to one team's data:
 
 ```
-environment:dt.security_context IN ("checkout");
+environment:management-zone IN ("checkout");
 storage:dt.security_context IN ("checkout");
 settings:dt.security_context IN ("checkout");
 ```
@@ -242,7 +312,7 @@ settings:dt.security_context IN ("checkout");
 Team data plus shared infrastructure:
 
 ```
-environment:dt.security_context IN ("checkout", "shared", "infrastructure");
+environment:management-zone IN ("checkout", "shared", "infrastructure");
 storage:dt.security_context IN ("checkout", "shared", "infrastructure");
 settings:dt.security_context IN ("checkout", "shared");
 ```
@@ -252,7 +322,7 @@ settings:dt.security_context IN ("checkout", "shared");
 For SRE or platform teams:
 
 ```
-environment:dt.security_context IN ("checkout", "payments", "catalog", "shared");
+environment:management-zone IN ("checkout", "payments", "catalog", "shared");
 storage:dt.security_context IN ("checkout", "payments", "catalog", "shared");
 settings:dt.security_context IN ("checkout", "payments", "catalog", "shared");
 ```
@@ -263,14 +333,14 @@ Production vs non-production:
 
 **Production:**
 ```
-environment:dt.security_context IN ("prod-checkout", "prod-payments");
+environment:management-zone IN ("prod-checkout", "prod-payments");
 storage:dt.security_context IN ("prod-checkout", "prod-payments");
 settings:dt.security_context IN ("prod-checkout", "prod-payments");
 ```
 
 **Non-Production:**
 ```
-environment:dt.security_context IN ("dev-checkout", "staging-checkout");
+environment:management-zone IN ("dev-checkout", "staging-checkout");
 storage:dt.security_context IN ("dev-checkout", "staging-checkout");
 settings:dt.security_context IN ("dev-checkout", "staging-checkout");
 ```
@@ -282,13 +352,13 @@ Using two groups for the same user:
 **Group 1: All-Viewers (broad read)**
 ```
 Policy: environment-viewer
-Boundary: environment:dt.security_context IN ("*");
+Boundary: environment:management-zone IN ("*");
 ```
 
 **Group 2: Checkout-Editors (scoped write)**
 ```
 Policy: checkout-write-policy
-Boundary: environment:dt.security_context IN ("checkout");
+Boundary: environment:management-zone IN ("checkout");
 ```
 
 ## 6. Multi-Tenant Isolation
@@ -317,21 +387,21 @@ For organizations serving multiple customers or business units that require stri
 
 **Tenant A Group:**
 ```
-environment:dt.security_context IN ("tenant-a");
+environment:management-zone IN ("tenant-a");
 storage:dt.security_context IN ("tenant-a");
 settings:dt.security_context IN ("tenant-a");
 ```
 
 **Tenant B Group:**
 ```
-environment:dt.security_context IN ("tenant-b");
+environment:management-zone IN ("tenant-b");
 storage:dt.security_context IN ("tenant-b");
 settings:dt.security_context IN ("tenant-b");
 ```
 
 **Platform Team (cross-tenant):**
 ```
-environment:dt.security_context IN ("platform", "shared");
+environment:management-zone IN ("platform", "shared");
 storage:dt.security_context IN ("platform", "shared");
 settings:dt.security_context IN ("platform", "shared");
 ```

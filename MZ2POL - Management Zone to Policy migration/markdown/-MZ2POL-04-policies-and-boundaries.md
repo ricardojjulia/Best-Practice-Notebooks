@@ -378,19 +378,48 @@ Group: "LOB5-Team" (SAML from AD)
 
 ---
 
-## 9. Security Context Configuration
+## 9. Security Context and Bucket Strategy
 
 ### What Is Security Context?
 
 **Security Context** (`dt.security_context`) is an entity attribute used for access control. It's the recommended way to scope boundaries for Grail data.
 
+### Primary Grail Fields
+
+When migrating from Management Zones, leverage **Primary Grail Fields** for consistent data partitioning:
+
+| Field | Source | MZ Migration Use |
+|-------|--------|------------------|
+| `k8s.cluster.name` | Kubernetes | Replace cluster-based MZs |
+| `k8s.namespace.name` | Kubernetes | Replace namespace-based MZs |
+| `aws.account.id` | AWS metadata | Replace AWS account MZs |
+| `dt.host_group.id` | OneAgent config | Replace host group-based MZs |
+
+### Bucket Strategy for Migration
+
+**Buckets** partition Grail data and integrate with boundaries:
+
+```
+// Boundary with bucket restriction
+storage:bucket.name IN ("prod_logs");
+storage:dt.security_context IN ("team-frontend");
+environment:management-zone IN ("Frontend-Team");
+```
+
+**Migration Principle:** Map your MZ hierarchy to buckets:
+- **Horizontal MZs** (teams) → Team-specific buckets or security contexts
+- **Vertical MZs** (environments) → Environment buckets with `dt.host_group.id`
+- **Regional MZs** → Region buckets with cloud provider fields
+
+> **For detailed bucket design guidance**, see **IAMADM-05: Boundary Design Patterns** which covers Primary Grail Fields, bucket strategy, and partitioning patterns in depth.
+
 ### Setting Security Context
 
 Security context can be set via:
-- **Auto-tagging rules**
-- **OneAgent configuration**
-- **API**
-- **Settings UI**
+- **Entity Enrichment rules** (recommended)
+- **Host properties** via OneAgent
+- **OpenPipeline processing**
+- **Auto-tagging rules** (legacy)
 
 ### Security Context Naming Strategy
 

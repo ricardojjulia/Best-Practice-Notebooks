@@ -306,9 +306,9 @@ fetch dt.entity.azure_vm
 
 ```dql
 // Check for cloud-sourced metrics
-fetch dt.metrics
-| filter matchesPhrase(dt.metrics.key, "cloud")
-| fields dt.metrics.key
+metrics 
+| filter matchesPhrase(metric.key, "cloud")
+| fields metric.key
 | limit 20
 ```
 
