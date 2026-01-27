@@ -1,4 +1,4 @@
-# IAMADM - IAM Administration
+# IAMADM - IAM administration
 
 Enterprise identity and access management administration for Dynatrace.
 

@@ -1,4 +1,4 @@
-# MZ2POL - Management Zone to Policy Migration
+# MZ2POL - Management Zone to Policy migration
 
 Tools and guidance for migrating from Management Zones to Policy-based access control in Dynatrace.
 

@@ -1,4 +1,4 @@
-# OPLOGS - OpenPipeline Logs
+# OPLOGS - OpenPipeline logs
 
 End-to-end guidance for managing logs with Dynatrace OpenPipeline.
 

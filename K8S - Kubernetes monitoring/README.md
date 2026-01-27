@@ -1,4 +1,4 @@
-# K8S - Kubernetes Monitoring
+# K8S - Kubernetes monitoring
 
 Best practices for monitoring Kubernetes with Dynatrace.
 

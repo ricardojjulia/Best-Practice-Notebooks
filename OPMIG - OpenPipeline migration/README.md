@@ -1,4 +1,4 @@
-# OPMIG - OpenPipeline Migration
+# OPMIG - OpenPipeline migration
 
 Structured migration path to Dynatrace OpenPipeline.
 

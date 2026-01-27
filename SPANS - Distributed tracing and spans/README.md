@@ -1,4 +1,4 @@
-# SPANS - Distributed Tracing & Spans
+# SPANS - Distributed tracing and spans
 
 Guidance for working with distributed traces and spans in Dynatrace.
 

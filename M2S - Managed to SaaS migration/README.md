@@ -1,4 +1,4 @@
-# M2S - Managed to SaaS Migration
+# M2S - Managed to SaaS migration
 
 Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
 

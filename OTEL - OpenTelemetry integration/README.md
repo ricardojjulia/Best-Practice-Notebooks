@@ -1,4 +1,4 @@
-# OTEL - OpenTelemetry
+# OTEL - OpenTelemetry integration
 
 Integrating OpenTelemetry with Dynatrace for observability.
 

@@ -1,4 +1,4 @@
-# AUTOM - Dynatrace Automation
+# AUTOM - Dynatrace automation
 
 Comprehensive guide to automating Dynatrace configuration and operations.
 

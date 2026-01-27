@@ -1,4 +1,4 @@
-# SYNTH - Synthetic Monitoring
+# SYNTH - Synthetic monitoring
 
 Series covering Dynatrace Synthetic Monitoring (browser, HTTP, private locations, and analytics).
 

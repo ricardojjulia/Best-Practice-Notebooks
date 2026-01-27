@@ -1,4 +1,4 @@
-# ONBRD - Dynatrace Onboarding
+# ONBRD - Dynatrace onboarding
 
 Step-by-step onboarding series for new Dynatrace users, from initial setup to dashboards.
 
