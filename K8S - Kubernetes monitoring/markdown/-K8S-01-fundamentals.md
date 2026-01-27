@@ -191,23 +191,20 @@ Dynatrace collects multiple signal types from Kubernetes:
 ```dql
 // List all monitored Kubernetes clusters
 fetch dt.entity.kubernetes_cluster
-| fields entity.name, clusterId, cloudType, tags
+| fields entity.name, tags
 | sort entity.name asc
 ```
 
 ```dql
-// Get node counts per cluster
+// Count all Kubernetes nodes
 fetch dt.entity.kubernetes_node
-| summarize nodeCount = count(), by:{belongs_to[dt.entity.kubernetes_cluster]}
-| lookup [fetch dt.entity.kubernetes_cluster | fields id, entity.name], sourceField:belongs_to[dt.entity.kubernetes_cluster], lookupField:id, prefix:"cluster."
-| fields cluster.entity.name, nodeCount
-| sort nodeCount desc
+| summarize nodeCount = count()
 ```
 
 ```dql
-// List namespaces with workload counts
+// List namespaces
 fetch dt.entity.cloud_application_namespace
-| fields entity.name, clusterName, tags
+| fields entity.name, tags
 | sort entity.name asc
 | limit 50
 ```
@@ -218,16 +215,20 @@ Let's explore common queries for Kubernetes monitoring.
 
 ```dql
 // Container CPU usage - find highest consumers
-timeseries avg_cpu = avg(dt.containers.cpu.usage_percent), by:{dt.entity.container_group_instance}
-| sort avg(avg_cpu) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.usage_percent"
+| summarize avgCpu = avg(value), by:{dt.entity.container_group_instance}
+| sort avgCpu desc
 | limit 20
 ```
 
 ```dql
 // Container memory usage approaching limits
-timeseries mem_pct = avg(dt.containers.memory.usage_percent), by:{dt.entity.container_group_instance}
-| filter avg(mem_pct) > 80
-| sort avg(mem_pct) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.memory.usage_percent"
+| summarize avgMem = avg(value), by:{dt.entity.container_group_instance}
+| filter avgMem > 80
+| sort avgMem desc
 ```
 
 ```dql
@@ -244,8 +245,8 @@ fetch logs
 // Pod restarts - find crashlooping workloads
 fetch logs
 | filter matchesPhrase(content, "BackOff") or matchesPhrase(content, "CrashLoopBackOff")
-| summarize restartCount = count(), by:{bin(timestamp, 1h)}
-| sort timestamp desc
+| summarize restartCount = count(), by:{timeBucket = bin(timestamp, 1h)}
+| sort timeBucket desc
 ```
 
 ## 7. Next Steps

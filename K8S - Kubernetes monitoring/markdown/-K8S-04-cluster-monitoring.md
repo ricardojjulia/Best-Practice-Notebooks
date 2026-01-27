@@ -53,11 +53,9 @@ The built-in Kubernetes dashboard provides:
 Navigate to: **Infrastructure > Kubernetes**
 
 ```dql
-// Cluster overview - nodes and status
+// List all monitored Kubernetes clusters
 fetch dt.entity.kubernetes_cluster
-| fields entity.name, clusterId, tags
-| lookup [fetch dt.entity.kubernetes_node | summarize nodeCount = count(), by:{belongs_to[dt.entity.kubernetes_cluster]}], sourceField:id, lookupField:belongs_to[dt.entity.kubernetes_cluster]
-| fields entity.name, nodeCount
+| fields entity.name, tags
 | sort entity.name asc
 ```
 
@@ -74,31 +72,34 @@ fetch dt.entity.kubernetes_cluster
 | **NetworkUnavailable** | Network not configured | True |
 
 ```dql
-// List all Kubernetes nodes with details
+// List all Kubernetes nodes
 fetch dt.entity.kubernetes_node
-| fields entity.name, kubernetesClusterName, cpuCores, physicalMemory, tags
-| sort kubernetesClusterName asc, entity.name asc
+| fields entity.name, tags
+| sort entity.name asc
 ```
 
 ```dql
-// Node CPU utilization over time
+// Node CPU utilization over time (top 10 by name)
 timeseries nodeCpu = avg(dt.kubernetes.node.cpu_usage), by:{dt.entity.kubernetes_node}
-| sort avg(nodeCpu) desc
 | limit 10
 ```
 
 ```dql
-// Node memory utilization - find nodes approaching limits
-timeseries nodeMemory = avg(dt.kubernetes.node.memory_usage), by:{dt.entity.kubernetes_node}
-| filter avg(nodeMemory) > 80
-| sort avg(nodeMemory) desc
+// Node memory utilization - average over time period
+fetch dt.metrics
+| filter metric.key == "dt.kubernetes.node.memory_usage"
+| summarize avgMemory = avg(value), by:{dt.entity.kubernetes_node}
+| filter avgMemory > 80
+| sort avgMemory desc
 ```
 
 ```dql
 // Node filesystem usage - disk pressure detection
-timeseries diskUsage = avg(dt.host.disk.used.percent), by:{dt.entity.host}
-| filter avg(diskUsage) > 80
-| sort avg(diskUsage) desc
+fetch dt.metrics
+| filter metric.key == "dt.host.disk.used.percent"
+| summarize avgDiskUsage = avg(value), by:{dt.entity.host}
+| filter avgDiskUsage > 80
+| sort avgDiskUsage desc
 ```
 
 ## 3. Resource Capacity Planning
@@ -130,24 +131,30 @@ For environments where SVG doesn't render
 -->
 
 ```dql
-// CPU request vs. usage by namespace
-timeseries cpuRequests = sum(dt.kubernetes.workload.requests_cpu), by:{k8s.namespace.name}
-| sort avg(cpuRequests) desc
+// CPU requests by namespace (average over time period)
+fetch dt.metrics
+| filter metric.key == "dt.kubernetes.workload.requests_cpu"
+| summarize avgCpuRequests = avg(value), by:{k8s.namespace.name}
+| sort avgCpuRequests desc
 | limit 15
 ```
 
 ```dql
-// Memory requests by namespace
-timeseries memRequests = sum(dt.kubernetes.workload.requests_memory), by:{k8s.namespace.name}
-| sort avg(memRequests) desc
+// Memory requests by namespace (average over time period)
+fetch dt.metrics
+| filter metric.key == "dt.kubernetes.workload.requests_memory"
+| summarize avgMemRequests = avg(value), by:{k8s.namespace.name}
+| sort avgMemRequests desc
 | limit 15
 ```
 
 ```dql
-// Find over-provisioned workloads (low usage vs high requests)
-timeseries cpuUsage = avg(dt.containers.cpu.usage_percent), by:{dt.entity.cloud_application}
-| filter avg(cpuUsage) < 20
-| sort avg(cpuUsage) asc
+// Find over-provisioned workloads (low CPU usage)
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.usage_percent"
+| summarize avgCpuUsage = avg(value), by:{dt.entity.cloud_application}
+| filter avgCpuUsage < 20
+| sort avgCpuUsage asc
 | limit 20
 ```
 
@@ -242,17 +249,21 @@ fetch logs, from: now() - 24h
 
 ```dql
 // Find workloads with very low CPU utilization (candidates for right-sizing)
-timeseries cpuUsage = avg(dt.containers.cpu.usage_percent), by:{dt.entity.cloud_application}
-| filter avg(cpuUsage) < 10
-| sort avg(cpuUsage) asc
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.usage_percent"
+| summarize avgCpuUsage = avg(value), by:{dt.entity.cloud_application}
+| filter avgCpuUsage < 10
+| sort avgCpuUsage asc
 | limit 25
 ```
 
 ```dql
-// Memory usage efficiency by workload
-timeseries memUsage = avg(dt.containers.memory.usage_percent), by:{dt.entity.cloud_application}
-| filter avg(memUsage) < 30
-| sort avg(memUsage) asc
+// Memory usage efficiency by workload (low usage = over-provisioned)
+fetch dt.metrics
+| filter metric.key == "dt.containers.memory.usage_percent"
+| summarize avgMemUsage = avg(value), by:{dt.entity.cloud_application}
+| filter avgMemUsage < 30
+| sort avgMemUsage asc
 | limit 25
 ```
 

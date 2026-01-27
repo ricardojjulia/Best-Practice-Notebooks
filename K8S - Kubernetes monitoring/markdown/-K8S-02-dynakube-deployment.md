@@ -398,8 +398,8 @@ kubectl -n dynatrace get pods -l app.kubernetes.io/component=activegate
 ```dql
 // Verify Kubernetes cluster is reporting to Dynatrace
 fetch dt.entity.kubernetes_cluster
-| fields entity.name, clusterId, lastSeenTms
-| sort lastSeenTms desc
+| fields entity.name, tags
+| sort entity.name asc
 ```
 
 ```dql

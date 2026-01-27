@@ -63,10 +63,10 @@ infra-monitoring
 | `default` | Catch-all | Discourage use |
 
 ```dql
-// List all namespaces with workload counts
+// List all namespaces
 fetch dt.entity.cloud_application_namespace
-| fields entity.name, kubernetesClusterName, tags
-| sort kubernetesClusterName asc, entity.name asc
+| fields entity.name, tags
+| sort entity.name asc
 | limit 50
 ```
 
@@ -105,16 +105,20 @@ spec:
 | `monitoring` | Injection control | `monitoring: enabled` |
 
 ```dql
-// Namespace resource usage summary
-timeseries cpuUsage = avg(dt.containers.cpu.usage_percent), by:{k8s.namespace.name}
-| sort avg(cpuUsage) desc
+// Namespace resource usage summary (CPU)
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.usage_percent"
+| summarize avgCpuUsage = avg(value), by:{k8s.namespace.name}
+| sort avgCpuUsage desc
 | limit 15
 ```
 
 ```dql
 // Memory usage by namespace
-timeseries memUsage = avg(dt.containers.memory.usage_percent), by:{k8s.namespace.name}
-| sort avg(memUsage) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.memory.usage_percent"
+| summarize avgMemUsage = avg(value), by:{k8s.namespace.name}
+| sort avgMemUsage desc
 | limit 15
 ```
 
@@ -168,15 +172,19 @@ spec:
 
 ```dql
 // CPU requests by namespace (quota tracking)
-timeseries cpuRequests = sum(dt.kubernetes.workload.requests_cpu), by:{k8s.namespace.name}
-| sort avg(cpuRequests) desc
+fetch dt.metrics
+| filter metric.key == "dt.kubernetes.workload.requests_cpu"
+| summarize avgCpuRequests = avg(value), by:{k8s.namespace.name}
+| sort avgCpuRequests desc
 | limit 15
 ```
 
 ```dql
 // Memory requests by namespace
-timeseries memRequests = sum(dt.kubernetes.workload.requests_memory), by:{k8s.namespace.name}
-| sort avg(memRequests) desc
+fetch dt.metrics
+| filter metric.key == "dt.kubernetes.workload.requests_memory"
+| summarize avgMemRequests = avg(value), by:{k8s.namespace.name}
+| sort avgMemRequests desc
 | limit 15
 ```
 
@@ -263,10 +271,9 @@ spec:
 ```
 
 ```dql
-// Workload distribution across namespaces
+// Workload count by namespace
 fetch dt.entity.cloud_application
-| summarize workloadCount = count(), by:{cloudApplicationNamespaces}
-| sort workloadCount desc
+| summarize workloadCount = count()
 | limit 20
 ```
 
@@ -297,11 +304,10 @@ metadata:
 
 ```dql
 // Resource consumption by namespace (for cost allocation)
-timeseries 
-    avgCpu = avg(dt.containers.cpu.usage_percent),
-    avgMem = avg(dt.containers.memory.usage_percent),
-    by:{k8s.namespace.name}
-| sort avg(avgCpu) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.usage_percent"
+| summarize avgCpu = avg(value), by:{k8s.namespace.name}
+| sort avgCpu desc
 | limit 15
 ```
 

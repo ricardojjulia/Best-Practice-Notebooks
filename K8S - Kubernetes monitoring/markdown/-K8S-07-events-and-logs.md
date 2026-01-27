@@ -267,8 +267,8 @@ fetch logs
 fetch logs, from: now() - 24h
 | filter matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s")
 | filter matchesPhrase(content, "Warning")
-| summarize eventCount = count(), by:{bin(timestamp, 1h)}
-| sort timestamp asc
+| summarize eventCount = count(), by:{timeBucket = bin(timestamp, 1h)}
+| sort timeBucket asc
 ```
 
 ## 6. Log Analysis Patterns

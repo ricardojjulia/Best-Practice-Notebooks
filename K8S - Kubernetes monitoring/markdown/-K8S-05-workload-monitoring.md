@@ -52,10 +52,10 @@ Workload monitoring focuses on the application layer: deployments, pods, contain
 | `SERVICE` | Service (detected) | Endpoints, traffic |
 
 ```dql
-// List all workloads (deployments, statefulsets) with details
+// List all workloads (deployments, statefulsets)
 fetch dt.entity.cloud_application
-| fields entity.name, cloudApplicationNamespaces, workloadKind, tags
-| sort cloudApplicationNamespaces asc, entity.name asc
+| fields entity.name, tags
+| sort entity.name asc
 | limit 50
 ```
 
@@ -118,24 +118,30 @@ fetch logs
 
 ```dql
 // Container CPU usage - find high consumers
-timeseries cpuUsage = avg(dt.containers.cpu.usage_percent), by:{dt.entity.container_group_instance}
-| sort avg(cpuUsage) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.usage_percent"
+| summarize avgCpuUsage = avg(value), by:{dt.entity.container_group_instance}
+| sort avgCpuUsage desc
 | limit 15
 ```
 
 ```dql
 // Container memory usage approaching limits
-timeseries memUsage = avg(dt.containers.memory.usage_percent), by:{dt.entity.container_group_instance}
-| filter avg(memUsage) > 75
-| sort avg(memUsage) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.memory.usage_percent"
+| summarize avgMemUsage = avg(value), by:{dt.entity.container_group_instance}
+| filter avgMemUsage > 75
+| sort avgMemUsage desc
 | limit 15
 ```
 
 ```dql
 // Container CPU throttling - performance impact
-timeseries throttled = avg(dt.containers.cpu.throttled_time), by:{dt.entity.container_group_instance}
-| filter avg(throttled) > 0
-| sort avg(throttled) desc
+fetch dt.metrics
+| filter metric.key == "dt.containers.cpu.throttled_time"
+| summarize avgThrottled = avg(value), by:{dt.entity.container_group_instance}
+| filter avgThrottled > 0
+| sort avgThrottled desc
 | limit 15
 ```
 
@@ -187,9 +193,11 @@ fetch spans
 ```
 
 ```dql
-// Service throughput over time
-timeseries requestRate = count(), by:{dt.entity.service}
-| sort avg(requestRate) desc
+// Service throughput
+fetch spans
+| filter span.kind == "server"
+| summarize requestCount = count(), by:{dt.entity.service}
+| sort requestCount desc
 | limit 10
 ```
 
@@ -286,17 +294,21 @@ Dynatrace Davis AI automatically detects:
 - Failure rate anomalies
 
 ```dql
-// Error rate trend (detecting increases)
-timeseries errors = countIf(loglevel == "ERROR"), by:{k8s.namespace.name}
-| filter avg(errors) > 0
-| sort avg(errors) desc
+// Error count by namespace (detecting increases)
+fetch logs
+| filter loglevel == "ERROR"
+| filter isNotNull(k8s.namespace.name)
+| summarize errorCount = count(), by:{k8s.namespace.name}
+| sort errorCount desc
 | limit 10
 ```
 
 ```dql
-// Memory trend by workload (detecting leaks)
-timeseries memoryBytes = avg(dt.containers.memory.working_set_bytes), by:{dt.entity.cloud_application}
-| sort avg(memoryBytes) desc
+// Memory usage by workload (detecting high consumers)
+fetch dt.metrics
+| filter metric.key == "dt.containers.memory.working_set_bytes"
+| summarize avgMemoryBytes = avg(value), by:{dt.entity.cloud_application}
+| sort avgMemoryBytes desc
 | limit 10
 ```
 

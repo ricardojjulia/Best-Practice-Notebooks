@@ -228,10 +228,11 @@ fetch logs, from: now() - 1h
 fetch logs, from: now() - 1h
 | parse content, "IPADDR:ip_found"
 | filter isNotNull(ip_found)
-| fieldsAdd ip_type = if(startsWith(ip_found, "10."), "RFC1918-10",
-                     else: if(startsWith(ip_found, "192.168."), "RFC1918-192",
-                     else: if(startsWith(ip_found, "172."), "RFC1918-172",
-                     else: if(startsWith(ip_found, "127."), "LOOPBACK",
+| fieldsAdd ip_str = toString(ip_found)
+| fieldsAdd ip_type = if(startsWith(ip_str, "10."), "RFC1918-10",
+                     else: if(startsWith(ip_str, "192.168."), "RFC1918-192",
+                     else: if(startsWith(ip_str, "172."), "RFC1918-172",
+                     else: if(startsWith(ip_str, "127."), "LOOPBACK",
                      else: "EXTERNAL"))))
 | summarize {count = count()}, by: {ip_type}
 | sort count desc
