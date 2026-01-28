@@ -1,6 +1,6 @@
 # MZ2POL-03: Assessment and Migration Planning
 
-> **Series:** MZ2POL | **Notebook:** 4 of 8 | **Created:** December 2025
+> **Series:** MZ2POL | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Overview
 
@@ -81,7 +81,7 @@ Group your MZs by their primary purpose:
 
 ---
 
-## 3. Security Context Planning
+## 3. Security Context and Bucket Planning
 
 ### Design Your Security Context Strategy
 
@@ -92,6 +92,52 @@ Security Context enables entity-level access control. Plan how to tag your entit
 | Services | `team-{teamname}` | Team ownership |
 | Hosts | `env-{environment}` | Environment separation |
 | Applications | `app-{appname}` | Application isolation |
+
+### Design Your Bucket Strategy
+
+> **⚠️ Critical:** Plan buckets carefully - names are immutable and data cannot be moved between buckets.
+
+**Bucket Decisions:**
+
+| Decision | Options | Considerations |
+|----------|---------|----------------|
+| **Partitioning dimension** | Team, Environment, Region, Compliance | What drives access control? |
+| **Naming convention** | `{team}_{datatype}_{retention}` | Include org, type, and retention |
+| **Number of buckets** | Per team? Per environment? Both? | Balance isolation vs management overhead |
+
+**Bucket Limitations to Consider:**
+
+| Limitation | Impact on Planning |
+|------------|-------------------|
+| One data type per bucket | Need separate buckets for logs, spans, metrics |
+| Maximum 80 buckets per environment | Plan for scale within this limit |
+| ~1 TB/day optimal per bucket | Best query performance |
+| 1-3 TB/day acceptable | Limited query window due to 500 GB scan limit |
+| 3 TB/day maximum | Hard limit per bucket |
+| Names immutable | Choose naming convention carefully upfront |
+| No data migration | Cannot consolidate or split buckets later |
+
+**Query Constraints (affects bucket sizing):**
+
+| Constraint | Value |
+|------------|-------|
+| Maximum data scanned per query | 500 GB |
+| Maximum records returned | 1,000 |
+| Maximum response payload | 1 MB |
+
+### Mapping MZs to Buckets
+
+For each MZ, determine if bucket partitioning is needed:
+
+| MZ Pattern | Bucket Recommendation |
+|------------|----------------------|
+| Team-based MZ with strict isolation needs | Create team-specific buckets |
+| Environment MZ (Prod/Dev separation) | Consider environment buckets |
+| Compliance MZ (PCI, HIPAA) | **Strongly recommended** - physical separation |
+| Regional MZ (filtering only) | Usually **not needed** - use Segments instead |
+| Application MZ (informational) | Usually **not needed** - use Segments instead |
+
+> **For comprehensive bucket guidance**, see **ORGNZ-03: Bucket Strategy and Design**.
 
 ### Query Entities Without Security Context
 
@@ -161,13 +207,18 @@ fetch dt.entity.service
 - [ ] Document current user access patterns
 - [ ] Create migration mapping for all MZs
 - [ ] Design security context strategy
+- [ ] **Design bucket strategy** (if using buckets for isolation)
 - [ ] Identify dependencies (alerts, dashboards, APIs)
 
-#### Phase 2: Foundation
+#### Phase 2: Foundation - Buckets and Security Context
+- [ ] **Create Grail buckets** (if applicable)
+- [ ] **Configure OpenPipeline routing** to buckets
 - [ ] Apply security context to entities
 - [ ] Create user groups in Account Management
 - [ ] Set up IAM policy structure
 - [ ] Create boundary definitions
+
+> **⚠️ Bucket Order:** Create buckets and configure pipeline routing BEFORE migrating policies. Data must flow to correct buckets first.
 
 #### Phase 3: Segments
 - [ ] Create segments for data filtering
@@ -176,6 +227,7 @@ fetch dt.entity.service
 - [ ] Validate filtering behavior
 
 #### Phase 4: Policy Assignment
+- [ ] Create bucket-based policies (if using buckets)
 - [ ] Bind policies to groups
 - [ ] Apply boundaries to policy bindings
 - [ ] Test user access (parallel with MZs)
@@ -192,6 +244,18 @@ fetch dt.entity.service
 - [ ] Archive MZ configurations
 - [ ] Remove unused MZs
 - [ ] Update documentation
+
+### Bucket Migration Checklist
+
+If using buckets for team/compliance isolation:
+
+- [ ] Bucket naming convention finalized
+- [ ] Buckets created for each data type (logs, spans, metrics)
+- [ ] OpenPipeline routing rules configured
+- [ ] Data flowing to correct buckets verified
+- [ ] Bucket-specific policies created
+- [ ] Policies include `WHERE storage:bucket.name = "..."` conditions
+- [ ] Boundaries include `storage:bucket.name IN (...)` restrictions
 
 ---
 

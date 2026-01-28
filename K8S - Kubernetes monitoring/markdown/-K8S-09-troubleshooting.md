@@ -1,6 +1,6 @@
 # Troubleshooting Kubernetes Monitoring
 
-> **Series:** K8S | **Notebook:** 9 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 9 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Debugging Dynatrace Monitoring in Kubernetes
 
@@ -34,19 +34,19 @@ When monitoring doesn't work as expected, systematic troubleshooting is essentia
 
 ### Systematic Approach
 
-```
-1. Identify the symptom
-   ↓
-2. Check component status
-   ↓
-3. Review logs and events
-   ↓
-4. Verify configuration
-   ↓
-5. Test connectivity
-   ↓
-6. Apply fix and validate
-```
+![Troubleshooting Methodology](images/troubleshooting-methodology.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Step | Action | Purpose |
+|------|--------|---------|
+| 1 | Identify symptom | What's wrong? |
+| 2 | Check status | Pods running? |
+| 3 | Review logs/events | Error messages |
+| 4 | Verify config | DynaKube YAML |
+| 5 | Test connectivity | curl endpoints |
+| 6 | Apply fix & validate | Fix, verify, document |
+For environments where SVG doesn't render
+-->
 
 ### Common Symptom Categories
 

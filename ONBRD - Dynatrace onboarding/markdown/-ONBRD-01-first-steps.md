@@ -1,6 +1,6 @@
 # Getting Started: Your First Steps in Dynatrace
 
-> **Series:** ONBRD | **Notebook:** 1 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Finding Your Way Around
 

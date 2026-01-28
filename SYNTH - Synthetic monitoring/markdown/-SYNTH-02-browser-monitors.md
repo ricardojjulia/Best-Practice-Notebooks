@@ -1,6 +1,6 @@
 # 🌐 Browser Monitors
 
-> **Series:** SYNTH | **Notebook:** 2 of 6 | **Created:** December 2025
+> **Series:** SYNTH | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Creating and Optimizing Browser-Based Synthetic Tests
 

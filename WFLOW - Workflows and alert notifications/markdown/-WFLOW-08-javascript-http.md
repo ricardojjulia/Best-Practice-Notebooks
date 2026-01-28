@@ -1,6 +1,6 @@
 # JavaScript & HTTP Actions
 
-> **Series:** WFLOW | **Notebook:** 8 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 8 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Custom Code and API Integration
 

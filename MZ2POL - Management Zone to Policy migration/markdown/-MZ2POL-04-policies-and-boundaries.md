@@ -1,6 +1,6 @@
 # MZ2POL-04: Policies and Boundaries
 
-> **Series:** MZ2POL | **Notebook:** 5 of 8 | **Created:** December 2025
+> **Series:** MZ2POL | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Overview
 
@@ -397,21 +397,85 @@ When migrating from Management Zones, leverage **Primary Grail Fields** for cons
 
 ### Bucket Strategy for Migration
 
-**Buckets** partition Grail data and integrate with boundaries:
+**Buckets** partition Grail data and integrate with policies and boundaries for team-level access control.
+
+### Bucket Limitations
+
+> **⚠️ Critical:** Plan buckets carefully during migration - these constraints cannot be changed later.
+
+| Limitation | Details |
+|------------|---------|
+| **One data type per bucket** | Logs, metrics, events, OR spans - not mixed |
+| **Names are immutable** | Bucket names CANNOT be changed after creation |
+| **No data migration** | Data CANNOT be moved between buckets |
+| **Naming rules** | 3-100 chars, lowercase alphanumeric, underscores, hyphens only |
+| **Maximum buckets** | 80 per environment (default limit) |
+| **Optimal ingest** | ~1 TB/day per bucket for best query performance |
+| **Acceptable ingest** | 1-3 TB/day per bucket (limited query window) |
+| **Maximum ingest** | 3 TB/day per bucket hard limit |
+
+### Query Constraints
+
+| Limit | Value | Impact |
+|-------|-------|--------|
+| **Maximum data scanned** | 500 GB | Limits queryable time window |
+| **Maximum records returned** | 1,000 | Use aggregations for larger datasets |
+| **Maximum response payload** | 1 MB | Large result sets may be truncated |
+
+### Default Bucket Retentions
+
+| Bucket | Retention |
+|--------|-----------|
+| `default_logs` | 35 days |
+| `default_metrics` | 15 months |
+| `default_spans` | 10 days |
+| `default_events` | 35 days |
+
+### Using Buckets for Team Isolation (MZ Replacement)
+
+When replacing team-based MZs, use buckets in **both policies AND boundaries**:
 
 ```
-// Boundary with bucket restriction
-storage:bucket.name IN ("prod_logs");
+// Policy: Grant team access to their specific buckets
+ALLOW storage:logs:read WHERE storage:bucket.name = "frontend_logs"
+ALLOW storage:spans:read WHERE storage:bucket.name = "frontend_spans"
+ALLOW storage:metrics:read WHERE storage:bucket.name = "frontend_metrics"
+
+// Boundary: Restrict to team's buckets and security context
+storage:bucket.name IN ("frontend_logs", "frontend_spans", "frontend_metrics");
 storage:dt.security_context IN ("team-frontend");
 environment:management-zone IN ("Frontend-Team");
 ```
 
-**Migration Principle:** Map your MZ hierarchy to buckets:
-- **Horizontal MZs** (teams) → Team-specific buckets or security contexts
-- **Vertical MZs** (environments) → Environment buckets with `dt.host_group.id`
-- **Regional MZs** → Region buckets with cloud provider fields
+### Migration Mapping: MZ to Buckets
 
-> **For detailed bucket design guidance**, see **IAMADM-05: Boundary Design Patterns** which covers Primary Grail Fields, bucket strategy, and partitioning patterns in depth.
+| MZ Pattern | Bucket Strategy |
+|------------|-----------------|
+| **Team MZ** (e.g., "Frontend-Team") | Team-specific buckets: `frontend_logs`, `frontend_spans` |
+| **Environment MZ** (e.g., "Production") | Environment buckets: `prod_logs`, `prod_metrics` |
+| **Regional MZ** (e.g., "US-East") | Region buckets: `useast_logs`, `useast_spans` |
+| **Compliance MZ** (e.g., "PCI") | Compliance buckets: `pci_logs`, `pci_events` |
+
+### Complete Team Migration Example
+
+**Before (MZ-based):**
+- Management Zone: "Checkout-Team"
+- Users see all data within the MZ
+
+**After (Policy + Bucket + Boundary):**
+```
+Group: Checkout-Team (SAML from AD)
+├── Policy: Checkout Data Access
+│   ├── ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
+│   ├── ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans"
+│   └── ALLOW storage:metrics:read WHERE storage:bucket.name = "checkout_metrics"
+└── Boundary:
+    storage:bucket.name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
+    storage:dt.security_context IN ("checkout");
+    environment:management-zone IN ("Checkout-Team");
+```
+
+> **For detailed bucket design guidance**, see **ORGNZ-03: Bucket Strategy and Design** which covers naming conventions, retention planning, and cost attribution patterns in depth.
 
 ### Setting Security Context
 

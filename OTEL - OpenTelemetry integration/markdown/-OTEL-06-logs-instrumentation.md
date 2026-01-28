@@ -1,6 +1,6 @@
 # Logs and Events
 
-> **Series:** OTEL | **Notebook:** 6 of 8 | **Created:** January 2026
+> **Series:** OTEL | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Integrating Logs with OpenTelemetry
 

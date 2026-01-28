@@ -1,6 +1,6 @@
 # MZ2POL-02: Understanding the New Access Control Model
 
-> **Series:** MZ2POL | **Notebook:** 3 of 8 | **Created:** December 2025
+> **Series:** MZ2POL | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Overview
 
@@ -126,6 +126,7 @@ Boundaries restrict **WHERE** policies apply - they limit the scope of permissio
 - `environment` - Environment restrictions
 - `environment:management-zone` - MZ-based restrictions
 - `storage:dt.security_context` - Security context filtering
+- `storage:bucket.name` - Bucket-based restrictions
 
 ### Boundary Examples
 
@@ -144,6 +145,11 @@ environment:management-zone startsWith "mgmt_na"
 storage:dt.security_context = "team-frontend"
 ```
 
+**Restrict by Bucket (data partitioning):**
+```
+storage:bucket.name IN ("frontend_logs", "frontend_spans")
+```
+
 ### Boundary Limitations
 
 | Limitation | Workaround |
@@ -151,6 +157,100 @@ storage:dt.security_context = "team-frontend"
 | Max 10 restrictions per boundary | Create multiple boundaries |
 | No AND operator (lines are OR) | Use multiple boundary assignments |
 | Only works with security policies | Cannot use with role-based permissions |
+
+---
+
+## 3.5 Buckets: Data Partitioning for Access Control
+
+### What Are Buckets?
+
+**Buckets** are Grail storage containers that physically partition your data. Unlike boundaries (which filter at query time), buckets provide **hard data separation** - data in one bucket is completely isolated from other buckets.
+
+### Why Use Buckets for Access Control?
+
+| Benefit | Description |
+|---------|-------------|
+| **Physical isolation** | Data is stored separately, not just filtered |
+| **Performance** | Smaller, team-specific data sets query faster |
+| **Compliance** | Meet regulatory requirements for data separation |
+| **Retention control** | Different retention policies per bucket |
+| **Cost allocation** | Track storage costs by team/project |
+
+### Buckets vs Boundaries vs Segments
+
+| Aspect | Buckets | Boundaries | Segments |
+|--------|---------|------------|----------|
+| **Isolation** | Physical separation | Query-time filtering | Query-time filtering |
+| **Reversible** | ❌ No (data can't move) | ✅ Yes | ✅ Yes |
+| **Performance** | Best (smaller data sets) | Good | Good |
+| **Flexibility** | Low (plan carefully) | High | High |
+| **Use case** | Team data isolation | Permission scoping | Data filtering |
+
+### Bucket Limitations
+
+> **⚠️ Critical:** Plan buckets carefully - these constraints cannot be changed later.
+
+| Limitation | Details |
+|------------|---------|
+| **One data type per bucket** | Logs, metrics, events, OR spans - not mixed |
+| **Names are immutable** | Bucket names CANNOT be changed after creation |
+| **No data migration** | Data CANNOT be moved between buckets |
+| **Naming rules** | 3-100 chars, lowercase alphanumeric, underscores, hyphens only |
+| **Maximum buckets** | 80 per environment (default limit) |
+| **Optimal ingest** | ~1 TB/day per bucket for best query performance |
+| **Acceptable ingest** | 1-3 TB/day per bucket (limited query window) |
+| **Maximum ingest** | 3 TB/day per bucket hard limit |
+
+### Query Constraints
+
+| Limit | Value | Impact |
+|-------|-------|--------|
+| **Maximum data scanned** | 500 GB | Limits queryable time window |
+| **Maximum records returned** | 1,000 | Use aggregations for larger datasets |
+| **Maximum response payload** | 1 MB | Large result sets may be truncated |
+
+### Using Buckets in Policies
+
+Grant team access to their specific buckets:
+
+```
+// Policy: Grant team access to their buckets
+ALLOW storage:logs:read WHERE storage:bucket.name = "frontend_logs"
+ALLOW storage:spans:read WHERE storage:bucket.name = "frontend_spans"
+ALLOW storage:metrics:read WHERE storage:bucket.name = "frontend_metrics"
+```
+
+### Using Buckets in Boundaries
+
+Combine buckets with security context for layered control:
+
+```
+// Boundary: Restrict to team's buckets AND security context
+storage:bucket.name IN ("frontend_logs", "frontend_spans", "frontend_metrics");
+storage:dt.security_context IN ("team-frontend");
+environment:management-zone IN ("Frontend-Team");
+```
+
+### When to Use Buckets vs Other Options
+
+| Scenario | Recommended Approach |
+|----------|---------------------|
+| Strict team data isolation | **Buckets** + Policies |
+| Compliance/regulatory requirements | **Buckets** for physical separation |
+| Flexible team access | **Boundaries** with security context |
+| Ad-hoc data filtering | **Segments** |
+| Combination (defense in depth) | **Buckets** + **Boundaries** |
+
+### MZ to Bucket Mapping
+
+| MZ Pattern | Bucket Strategy |
+|------------|-----------------|
+| Team MZs | Team-specific buckets: `teamA_logs`, `teamA_spans` |
+| Environment MZs | Environment buckets: `prod_logs`, `dev_logs` |
+| Regional MZs | Region buckets: `useast_logs`, `euwest_logs` |
+| Compliance MZs | Compliance buckets: `pci_logs`, `hipaa_logs` |
+
+> **For comprehensive bucket guidance**, see **ORGNZ-03: Bucket Strategy and Design**.
 
 ---
 

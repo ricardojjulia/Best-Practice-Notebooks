@@ -1,6 +1,6 @@
 # OpenTelemetry Fundamentals
 
-> **Series:** OTEL | **Notebook:** 1 of 8 | **Created:** January 2026
+> **Series:** OTEL | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Introduction to OpenTelemetry and Dynatrace
 

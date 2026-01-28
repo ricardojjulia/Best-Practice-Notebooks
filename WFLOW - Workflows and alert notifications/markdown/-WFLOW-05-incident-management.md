@@ -1,6 +1,6 @@
 # PagerDuty & ServiceNow Integration
 
-> **Series:** WFLOW | **Notebook:** 5 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Incident Management Automation
 
@@ -44,21 +44,19 @@ Integrate Dynatrace workflows with enterprise incident management platforms. Thi
 
 ### Integration Flow
 
-```
-Davis Problem Detected
-        ↓
-  Workflow Triggered
-        ↓
-  Create PagerDuty/SNOW Incident
-        ↓
-  On-Call Engineer Notified
-        ↓
-  Problem Resolved in Dynatrace
-        ↓
-  Workflow Triggered (close event)
-        ↓
-  Resolve PagerDuty/SNOW Incident
-```
+![Incident Management Integration Flow](images/incident-management-flow.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Step | Component | Action |
+|------|-----------|--------|
+| 1 | Davis AI | Detects problem |
+| 2 | Workflow | Processes event |
+| 3 | ITSM | Creates incident |
+| 4 | Team | Investigates & fixes |
+| 5 | Resolution | Problem closed, ticket resolved |
+Supported: ServiceNow, PagerDuty, Jira, HTTP API
+For environments where SVG doesn't render
+-->
 
 ## 2. PagerDuty Setup
 

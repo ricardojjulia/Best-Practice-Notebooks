@@ -1,6 +1,6 @@
 # 🔍 Spans & Distributed Tracing Fundamentals
 
-> **Series:** SPANS | **Notebook:** 1 of 8 | **Created:** December 2025
+> **Series:** SPANS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Understanding the Building Blocks of Observability
 

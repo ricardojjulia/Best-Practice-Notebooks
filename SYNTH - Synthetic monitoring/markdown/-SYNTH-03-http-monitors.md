@@ -1,6 +1,6 @@
 # 🔗 HTTP Monitors
 
-> **Series:** SYNTH | **Notebook:** 3 of 6 | **Created:** December 2025
+> **Series:** SYNTH | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Lightweight API and Endpoint Monitoring
 

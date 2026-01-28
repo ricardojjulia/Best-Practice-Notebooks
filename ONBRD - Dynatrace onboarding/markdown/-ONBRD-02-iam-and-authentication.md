@@ -1,6 +1,6 @@
 # IAM and Authentication
 
-> **Series:** ONBRD | **Notebook:** 2 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Setting Up Secure Access
 

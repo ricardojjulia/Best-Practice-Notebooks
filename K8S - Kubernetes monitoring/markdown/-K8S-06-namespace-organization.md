@@ -1,6 +1,6 @@
 # Namespace Organization and Boundaries
 
-> **Series:** K8S | **Notebook:** 6 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Organizing Kubernetes Monitoring with Namespaces
 

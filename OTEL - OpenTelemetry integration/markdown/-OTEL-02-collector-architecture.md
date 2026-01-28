@@ -1,6 +1,6 @@
 # OpenTelemetry Collector Architecture
 
-> **Series:** OTEL | **Notebook:** 2 of 8 | **Created:** January 2026
+> **Series:** OTEL | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Understanding the OTel Collector Pipeline
 

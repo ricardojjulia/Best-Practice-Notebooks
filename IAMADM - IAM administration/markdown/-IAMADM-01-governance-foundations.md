@@ -1,6 +1,6 @@
 # IAM Governance Foundations
 
-> **Series:** IAMADM | **Notebook:** 1 of 9 | **Created:** January 2026
+> **Series:** IAMADM | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Building a Strong Foundation for Identity Management
 
@@ -39,9 +39,22 @@ Dynatrace Gen3 IAM replaces the legacy Management Zone-based access control with
 |-----------|---------|-------|
 | **Policies** | Define what actions users can perform | Account or Environment |
 | **Boundaries** | Filter which entities users can see | Environment |
+| **Buckets** | Physically partition data for team isolation | Environment |
 | **Segments** | Reusable DQL-based data filters | Environment |
 | **Groups** | Collections of users with shared access | Account |
 | **Users** | Individual identities (local or federated) | Account |
+
+### Data Partitioning Options
+
+Choose the right isolation mechanism for your needs:
+
+| Mechanism | Isolation Type | Reversible | Best For |
+|-----------|---------------|------------|----------|
+| **Buckets** | Physical separation | ❌ No | Strict team isolation, compliance |
+| **Boundaries** | Query-time filtering | ✅ Yes | Flexible access scoping |
+| **Segments** | Query-time filtering | ✅ Yes | Ad-hoc data views |
+
+> **⚠️ Key Decision:** If you need **hard data isolation** between teams (e.g., Team A can never see Team B's data), use **Buckets**. If you need flexible, changeable access controls, use **Boundaries**.
 
 ### Why Gen3?
 
@@ -51,6 +64,7 @@ The Gen3 model provides several advantages over legacy Management Zones:
 - **Flexibility**: Attribute-based rules adapt as your environment changes
 - **Separation of Concerns**: Policies (actions) separate from boundaries (visibility)
 - **Grail Integration**: Native support for Grail data lakehouse permissions
+- **Bucket Partitioning**: Physical data isolation for compliance and team separation
 
 > **Note:** If you're migrating from Management Zones, see the **MZ2POL** series for migration guidance. This series assumes you're using Gen3 IAM.
 

@@ -1,6 +1,6 @@
 # OpenPipeline Migration Guide: Part 4
 
-> **Series:** OPMIG | **Notebook:** 4 of 9 | **Created:** December 2025
+> **Series:** OPMIG | **Notebook:** 4 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Pipeline Configuration Fundamentals
 

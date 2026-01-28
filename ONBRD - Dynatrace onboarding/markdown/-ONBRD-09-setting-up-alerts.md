@@ -1,6 +1,6 @@
 # Setting Up Alerts
 
-> **Series:** ONBRD | **Notebook:** 9 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Getting Notified When Things Go Wrong
 

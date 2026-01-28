@@ -1,6 +1,6 @@
 # Advanced Notification Routing
 
-> **Series:** WFLOW | **Notebook:** 4 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Intelligent Alert Routing
 
@@ -115,6 +115,18 @@ tasks:
 | **HIGH** | Slack #alerts + Email |
 | **MEDIUM** | Slack #alerts |
 | **LOW** | Slack #alerts (business hours only) |
+
+![Severity-Based Notification Routing](images/notification-routing.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Severity | Channel | Action |
+|----------|---------|--------|
+| CRITICAL | PagerDuty + Slack #urgent | Page on-call, ServiceNow P1 |
+| HIGH | Slack + ServiceNow P2 | Escalate in 30m |
+| MEDIUM | Teams + ServiceNow P3 | Business hours only |
+| LOW | Log only | Weekly digest |
+For environments where SVG doesn't render
+-->
 
 ### Workflow Configuration
 

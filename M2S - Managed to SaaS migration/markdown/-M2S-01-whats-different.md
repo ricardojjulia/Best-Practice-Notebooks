@@ -1,6 +1,6 @@
 # What's Different in SaaS
 
-> **Series:** M2S | **Notebook:** 1 of 8 | **Created:** January 2026
+> **Series:** M2S | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ---
 

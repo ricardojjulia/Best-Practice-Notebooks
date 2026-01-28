@@ -1,6 +1,6 @@
 # Understanding Your Data
 
-> **Series:** ONBRD | **Notebook:** 7 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Exploring What Dynatrace Discovered
 

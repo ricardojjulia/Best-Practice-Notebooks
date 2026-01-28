@@ -1,6 +1,6 @@
 # DQL Queries for Kubernetes
 
-> **Series:** K8S | **Notebook:** 8 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 8 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Advanced Query Patterns for Kubernetes Data
 

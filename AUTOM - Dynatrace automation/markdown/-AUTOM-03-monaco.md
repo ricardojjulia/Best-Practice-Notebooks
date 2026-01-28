@@ -1,6 +1,6 @@
 # Monaco Configuration-as-Code
 
-> **Series:** AUTOM | **Notebook:** 3 of 8 | **Created:** January 2026
+> **Series:** AUTOM | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ---
 

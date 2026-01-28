@@ -1,6 +1,6 @@
 # 🔎 Querying Spans with DQL
 
-> **Series:** SPANS | **Notebook:** 2 of 8 | **Created:** December 2025
+> **Series:** SPANS | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Mastering Span Queries in Dynatrace
 

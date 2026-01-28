@@ -1,6 +1,6 @@
 # Workload Monitoring
 
-> **Series:** K8S | **Notebook:** 5 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Application-Level Observability in Kubernetes
 

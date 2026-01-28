@@ -1,6 +1,6 @@
 # GitOps for DynaKube
 
-> **Series:** K8S | **Notebook:** 3 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Managing DynaKube with ArgoCD and Flux
 

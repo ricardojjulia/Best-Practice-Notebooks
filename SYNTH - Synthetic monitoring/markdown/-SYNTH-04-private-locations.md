@@ -1,6 +1,6 @@
 # 🏢 Private Synthetic Locations
 
-> **Series:** SYNTH | **Notebook:** 4 of 6 | **Created:** December 2025
+> **Series:** SYNTH | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Monitoring Internal Applications from Your Infrastructure
 
