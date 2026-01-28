@@ -22,3 +22,7 @@ Guidance for working with distributed traces and spans in Dynatrace.
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
 2. Start with Fundamentals, then follow the sequence as needed.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

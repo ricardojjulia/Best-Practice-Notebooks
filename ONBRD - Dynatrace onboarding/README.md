@@ -24,3 +24,7 @@ Step-by-step onboarding series for new Dynatrace users, from initial setup to da
 ## Usage
 1. Pick a format: import JSON from NOTEBOOKS/ into Dynatrace, read PDFs/ for print, or open markdown/ for lightweight viewing.
 2. Follow the numbered order for the recommended learning path.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

@@ -22,3 +22,7 @@ Comprehensive guide to automating Dynatrace configuration and operations.
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
 2. Start with Automation Landscape for an overview, then explore specific tools as needed.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

@@ -22,3 +22,7 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
 2. Use the SDK analysis tool first, then follow the numbered migration path.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
