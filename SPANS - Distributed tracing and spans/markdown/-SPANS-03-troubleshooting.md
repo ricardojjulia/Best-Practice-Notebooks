@@ -1,6 +1,6 @@
 # 🔧 Trace Analysis & Troubleshooting
 
-> **Series:** SPANS | **Notebook:** 3 of 8 | **Created:** December 2025
+> **Series:** SPANS | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Root Cause Analysis with Distributed Traces
 

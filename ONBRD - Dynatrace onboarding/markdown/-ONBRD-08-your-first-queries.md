@@ -1,6 +1,6 @@
 # Your First Queries
 
-> **Series:** ONBRD | **Notebook:** 8 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Learning DQL Fundamentals
 

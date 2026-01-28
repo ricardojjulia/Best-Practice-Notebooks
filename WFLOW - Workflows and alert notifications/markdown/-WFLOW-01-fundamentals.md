@@ -1,6 +1,6 @@
 # Workflow Fundamentals
 
-> **Series:** WFLOW | **Notebook:** 1 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Introduction to Dynatrace Workflows
 
@@ -120,6 +120,20 @@ Dynamic values using Jinja2 syntax:
 {{ result("task_name").output }} # Access task output
 {{ env.SECRET_NAME }}             # Access secrets
 ```
+
+### Visual: Workflow Execution Flow
+
+![Workflow Execution Flow](images/workflow-execution-flow.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Stage | Description | Examples |
+|-------|-------------|----------|
+| Trigger | Event that starts workflow | Davis Problem, Schedule, On-Demand |
+| Tasks | Actions to execute | Slack, HTTP, JavaScript, DQL |
+| Conditions | Logic to control flow | Severity checks, boolean expressions |
+| Results | Capture output | SUCCEEDED, FAILED, TIMED_OUT |
+For environments where SVG doesn't render
+-->
 
 ## 4. Accessing Workflows
 

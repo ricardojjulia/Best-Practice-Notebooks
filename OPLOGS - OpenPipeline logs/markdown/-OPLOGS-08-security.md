@@ -1,6 +1,6 @@
 # 🔒 Security & Data Protection
 
-> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025
+> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Sensitive Data Discovery, Masking, and Compliance
 

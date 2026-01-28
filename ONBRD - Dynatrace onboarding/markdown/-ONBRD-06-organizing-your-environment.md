@@ -1,6 +1,6 @@
 # Organizing Your Environment
 
-> **Series:** ONBRD | **Notebook:** 6 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Tags, Segments, and Naming Conventions
 

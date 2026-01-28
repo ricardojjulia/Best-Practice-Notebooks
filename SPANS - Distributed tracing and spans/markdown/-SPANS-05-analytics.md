@@ -1,6 +1,6 @@
 # 📊 Advanced Span Analytics
 
-> **Series:** SPANS | **Notebook:** 5 of 8 | **Created:** December 2025
+> **Series:** SPANS | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Time-Series Analysis and Complex Aggregations
 

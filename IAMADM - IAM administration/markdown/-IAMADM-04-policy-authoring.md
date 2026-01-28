@@ -1,6 +1,6 @@
 # Policy Authoring and Management
 
-> **Series:** IAMADM | **Notebook:** 4 of 9 | **Created:** January 2026
+> **Series:** IAMADM | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Mastering Dynatrace Policy Syntax
 
@@ -185,9 +185,17 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 | Domain | Field | Description |
 |--------|-------|-------------|
 | Storage | `storage:dt.security_context` | Security context on data |
-| Storage | `storage:bucket.name` | Bucket name |
+| Storage | `storage:bucket.name` | **Bucket name (for team isolation)** |
 | Settings | `settings:schemaId` | Settings schema |
 | Settings | `settings:dt.security_context` | Security context on settings |
+
+### Security Context vs Bucket Conditions
+
+| Condition Type | Use Case | Example |
+|----------------|----------|----------|
+| **Security Context** | Flexible, changeable access | `storage:dt.security_context = "team-a"` |
+| **Bucket** | Hard data isolation | `storage:bucket.name = "team-a-logs"` |
+| **Both** | Defense in depth | Both conditions in policy + boundary |
 
 ### Condition Examples
 
@@ -196,9 +204,9 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 ALLOW storage:logs:read WHERE storage:dt.security_context = "checkout"
 ```
 
-**Scope to specific bucket:**
+**Scope to specific bucket (team isolation):**
 ```
-ALLOW storage:logs:read WHERE storage:bucket.name = "application-logs"
+ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
 ```
 
 **Scope to settings schema:**
@@ -208,12 +216,18 @@ ALLOW settings:objects:write WHERE settings:schemaId startsWith "builtin:alertin
 
 **Multiple conditions (AND):**
 ```
-ALLOW storage:logs:read WHERE storage:dt.security_context = "team-a" AND storage:bucket.name = "default"
+ALLOW storage:logs:read WHERE storage:dt.security_context = "team-a" AND storage:bucket.name = "team-a-logs"
 ```
 
 **Multiple values (IN):**
 ```
 ALLOW storage:logs:read WHERE storage:dt.security_context IN ("team-a", "team-b", "shared")
+```
+
+**Multiple buckets (team access):**
+```
+ALLOW storage:logs:read WHERE storage:bucket.name IN ("checkout_logs", "shared_logs")
+ALLOW storage:spans:read WHERE storage:bucket.name IN ("checkout_spans", "shared_spans")
 ```
 
 ## 5. Common Policy Patterns
@@ -238,16 +252,41 @@ ALLOW state:*:read;
 ALLOW settings:objects:read;
 ```
 
-### Pattern 2: Team-Scoped Access
+### Pattern 2: Team-Scoped Access (Security Context)
 
 ```
-// Full access to team's data only
+// Full access to team's data only (flexible, query-time filtering)
 ALLOW storage:*:read WHERE storage:dt.security_context = "checkout-team";
 ALLOW storage:*:write WHERE storage:dt.security_context = "checkout-team";
 ALLOW settings:objects:* WHERE settings:dt.security_context = "checkout-team";
 ```
 
-### Pattern 3: Log Management
+### Pattern 3: Bucket-Based Team Isolation (Recommended for Strict Isolation)
+
+> **Use this pattern** when teams must have physically separated data with no cross-team visibility.
+
+```
+// Grant access to team's specific buckets (hard data isolation)
+ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs";
+ALLOW storage:logs:write WHERE storage:bucket.name = "checkout_logs";
+ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans";
+ALLOW storage:spans:write WHERE storage:bucket.name = "checkout_spans";
+ALLOW storage:metrics:read WHERE storage:bucket.name = "checkout_metrics";
+ALLOW storage:metrics:write WHERE storage:bucket.name = "checkout_metrics";
+
+// Also grant access to shared buckets
+ALLOW storage:logs:read WHERE storage:bucket.name = "shared_logs";
+ALLOW storage:spans:read WHERE storage:bucket.name = "shared_spans";
+```
+
+**Bucket + Security Context (Defense in Depth):**
+```
+// Combine bucket restriction with security context for maximum isolation
+ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs" 
+  AND storage:dt.security_context = "checkout";
+```
+
+### Pattern 4: Log Management
 
 ```
 // Read all logs, manage log pipelines
@@ -255,7 +294,7 @@ ALLOW storage:logs:read;
 ALLOW settings:objects:* WHERE settings:schemaId startsWith "builtin:logmonitoring";
 ```
 
-### Pattern 4: Dashboard Creator
+### Pattern 5: Dashboard Creator
 
 ```
 // Create and share dashboards
@@ -263,7 +302,7 @@ ALLOW document:documents:*;
 ALLOW storage:*:read;
 ```
 
-### Pattern 5: Alerting Manager
+### Pattern 6: Alerting Manager
 
 ```
 // Manage alerting configuration
@@ -272,7 +311,7 @@ ALLOW settings:objects:* WHERE settings:schemaId startsWith "builtin:problem";
 ALLOW automation:workflows:*;
 ```
 
-### Pattern 6: SRE On-Call Access
+### Pattern 7: SRE On-Call Access
 
 ```
 // Broad read access + problem management
@@ -282,7 +321,7 @@ ALLOW document:documents:read;
 ALLOW settings:objects:read;
 ```
 
-### Pattern 7: Security Auditor
+### Pattern 8: Security Auditor
 
 ```
 // Read everything, write nothing
@@ -291,6 +330,25 @@ ALLOW settings:*:read;
 ALLOW document:*:read;
 ALLOW state:*:read;
 ```
+
+### Pattern 9: Compliance-Scoped Access (Bucket-Based)
+
+```
+// Access only to PCI-compliant data bucket
+ALLOW storage:logs:read WHERE storage:bucket.name = "pci_logs";
+ALLOW storage:spans:read WHERE storage:bucket.name = "pci_spans";
+// No access to non-PCI buckets
+```
+
+### Choosing Between Patterns
+
+| Requirement | Recommended Pattern |
+|-------------|---------------------|
+| Teams can share data flexibly | Pattern 2 (Security Context) |
+| Teams must never see each other's data | **Pattern 3 (Buckets)** |
+| Compliance/regulatory data separation | **Pattern 9 (Bucket-Based)** |
+| Temporary project access | Pattern 2 (Security Context) |
+| Cost allocation by team | **Pattern 3 (Buckets)** |
 
 ## 6. Default vs Custom Policies
 

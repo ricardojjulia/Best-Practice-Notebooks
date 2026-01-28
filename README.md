@@ -48,6 +48,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 - [K8S-07: Events and Logs](K8S%20-%20Kubernetes%20monitoring/markdown/-K8S-07-events-and-logs.md) — Kubernetes events and log monitoring
 - [K8S-08: DQL for K8s](K8S%20-%20Kubernetes%20monitoring/markdown/-K8S-08-dql-for-k8s.md) — Querying Kubernetes data with DQL
 - [K8S-09: Troubleshooting](K8S%20-%20Kubernetes%20monitoring/markdown/-K8S-09-troubleshooting.md) — Diagnosing Kubernetes monitoring issues
+- [K8S-10: Metadata Telemetry Enrichment](K8S%20-%20Kubernetes%20monitoring/markdown/-K8S-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
 
 ### [M2S - Managed to SaaS migration](M2S%20-%20Managed%20to%20SaaS%20migration/README.md)
 Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
@@ -106,6 +107,18 @@ Structured migration path to Dynatrace OpenPipeline.
 - [OPMIG-07: Metric & Event Extraction](OPMIG%20-%20OpenPipeline%20migration/markdown/-OPMIG-07-metric-event-extraction.md) — Deriving metrics/events from logs
 - [OPMIG-08: Security & Masking](OPMIG%20-%20OpenPipeline%20migration/markdown/-OPMIG-08-security-masking.md) — Security controls and data masking
 - [OPMIG-09: Troubleshooting & Validation](OPMIG%20-%20OpenPipeline%20migration/markdown/-OPMIG-09-troubleshooting-validation.md) — Validation and issue resolution
+
+### [ORGNZ - Organize data: buckets, segments, security](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/README.md)
+Organizing data in Dynatrace Grail using buckets, segments, and security context.
+- [ORGNZ-01: Introduction to Organizing Data](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-01-introduction-to-organizing-data.md) — Why data organization matters in Grail
+- [ORGNZ-02: Understanding Grail Buckets](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-02-understanding-grail-buckets.md) — Bucket fundamentals and data types
+- [ORGNZ-03: Bucket Strategy and Design](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-03-bucket-strategy-and-design.md) — Naming conventions and retention planning
+- [ORGNZ-04: Permissions in Grail](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-04-permissions-in-grail.md) — Overview of Grail permission levels
+- [ORGNZ-05: Bucket-Level Access Control](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-05-bucket-level-access-control.md) — IAM policies for bucket access
+- [ORGNZ-06: Security Context](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-06-security-context.md) — Fine-grained access with dt.security_context
+- [ORGNZ-07: Advanced Permission Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-07-advanced-permission-patterns.md) — Record and field-level permissions
+- [ORGNZ-08: Grail Segments](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-08-grail-segments.md) — Logical data filtering with segments
+- [ORGNZ-09: Enterprise Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-ORGNZ-09-enterprise-patterns.md) — Combining mechanisms for enterprise governance
 
 ### [OTEL - OpenTelemetry integration](OTEL%20-%20OpenTelemetry%20integration/README.md)
 Integrating OpenTelemetry with Dynatrace for observability.

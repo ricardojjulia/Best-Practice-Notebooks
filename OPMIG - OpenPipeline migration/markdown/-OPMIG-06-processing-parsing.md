@@ -1,6 +1,6 @@
 # OPMIG-06: Processing, Parsing & Transformation
 
-> **Series:** OPMIG | **Notebook:** 6 of 9 | **Created:** December 2025
+> **Series:** OPMIG | **Notebook:** 6 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 > **OpenPipeline Migration Series** | Notebook 6 of 9  
 > **Level:** Intermediate to Advanced  

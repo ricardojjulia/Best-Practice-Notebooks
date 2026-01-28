@@ -1,6 +1,6 @@
 # 📋 OpenPipeline Fundamentals
 
-> **Series:** OPLOGS | **Notebook:** 1 of 8 | **Created:** December 2025
+> **Series:** OPLOGS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Understanding the Unified Data Ingestion Framework
 

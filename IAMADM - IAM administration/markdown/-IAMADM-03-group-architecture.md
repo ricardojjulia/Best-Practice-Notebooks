@@ -1,6 +1,6 @@
 # Group Architecture and Design
 
-> **Series:** IAMADM | **Notebook:** 3 of 9 | **Created:** January 2026
+> **Series:** IAMADM | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Designing Scalable Group Structures
 

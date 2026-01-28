@@ -1,6 +1,6 @@
 # MZ2POL-06: Migration Execution
 
-> **Series:** MZ2POL | **Notebook:** 7 of 8 | **Created:** December 2025
+> **Series:** MZ2POL | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Overview
 

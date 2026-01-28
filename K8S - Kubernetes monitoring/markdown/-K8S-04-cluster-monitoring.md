@@ -1,6 +1,6 @@
 # Cluster Health Monitoring
 
-> **Series:** K8S | **Notebook:** 4 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Deep-Dive into Kubernetes Cluster Metrics
 

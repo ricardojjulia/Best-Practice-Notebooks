@@ -1,6 +1,6 @@
 # Kubernetes Monitoring Fundamentals
 
-> **Series:** K8S | **Notebook:** 1 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Introduction to Kubernetes Observability with Dynatrace
 

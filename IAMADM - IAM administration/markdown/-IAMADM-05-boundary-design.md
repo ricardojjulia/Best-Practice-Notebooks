@@ -1,6 +1,6 @@
 # Boundary Design Patterns
 
-> **Series:** IAMADM | **Notebook:** 5 of 9 | **Created:** January 2026
+> **Series:** IAMADM | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Controlling Data Visibility with Boundaries
 
@@ -213,16 +213,81 @@ These fields are automatically enriched from infrastructure metadata and provide
 | **By Compliance** | `pci_logs`, `general_logs` | Regulatory separation |
 | **By Region** | `us_data`, `eu_data` | Geographic compliance |
 
+### Bucket Limitations
+
+> **⚠️ Critical:** Plan buckets carefully - these constraints cannot be changed later.
+
+| Limitation | Details |
+|------------|---------|
+| **One data type per bucket** | Logs, metrics, events, OR spans - not mixed |
+| **Names are immutable** | Bucket names CANNOT be changed after creation |
+| **No data migration** | Data CANNOT be moved between buckets |
+| **Naming rules** | 3-100 chars, lowercase alphanumeric, underscores, hyphens only |
+| **Maximum buckets** | 80 per environment (default limit) |
+| **Optimal ingest** | ~1 TB/day per bucket for best query performance |
+| **Acceptable ingest** | 1-3 TB/day per bucket (limited query window) |
+| **Maximum ingest** | 3 TB/day per bucket hard limit |
+
+### Query Constraints
+
+| Limit | Value | Impact |
+|-------|-------|--------|
+| **Maximum data scanned** | 500 GB | Limits queryable time window |
+| **Maximum records returned** | 1,000 | Use aggregations for larger datasets |
+| **Maximum response payload** | 1 MB | Large result sets may be truncated |
+
+### Default Bucket Retentions
+
+| Bucket | Retention |
+|--------|-----------|
+| `default_logs` | 35 days |
+| `default_metrics` | 15 months |
+| `default_spans` | 10 days |
+| `default_events` | 35 days |
+
+**Naming Convention:** Include organization, data type, and retention in bucket names:
+- `teamA_logs_90d`
+- `prod_spans_30d`
+- `pci_metrics_365d`
+
 ### Bucket + Boundary Integration
 
-Use `storage:bucket.name` in boundaries to restrict access to specific buckets:
+Use `storage:bucket.name` in boundaries to restrict team access to their data:
 
 ```
-// Restrict to production bucket only
-storage:bucket.name IN ("prod_logs", "prod_metrics");
-storage:dt.security_context IN ("production");
-environment:management-zone IN ("Production");
+// Policy: Grant read access to team's bucket
+ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
+ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans"
+
+// Boundary: Restrict to team's buckets and security context
+storage:bucket.name IN ("checkout_logs", "checkout_spans");
+storage:dt.security_context IN ("checkout");
+environment:management-zone IN ("Checkout");
 ```
+
+### Using Buckets for Team Isolation
+
+For team-level data access control:
+
+1. **Create team-specific buckets** - `teamA_logs`, `teamA_spans`, etc.
+2. **Configure pipeline routing** - Route data to buckets based on primary Grail fields
+3. **Create bucket-based policies** - Grant access to specific buckets
+4. **Apply boundaries** - Combine bucket + security context restrictions
+
+```
+// Complete team isolation example
+Group: Checkout-Team
+├── Policy: Checkout Data Access
+│   ├── ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
+│   ├── ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans"
+│   └── ALLOW storage:metrics:read WHERE storage:bucket.name = "checkout_metrics"
+└── Boundary:
+    storage:bucket.name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
+    storage:dt.security_context IN ("checkout");
+    environment:management-zone IN ("Checkout");
+```
+
+> **For comprehensive bucket guidance**, see **ORGNZ-03: Bucket Strategy and Design** which covers naming conventions, retention planning, and cost attribution patterns.
 
 ### Primary Grail Tags
 
@@ -290,8 +355,9 @@ environment:management-zone IN ("checkout", "shared");
 2. **Map to Primary Grail Fields** - Use `k8s.cluster.name`, `aws.account.id`, `dt.host_group.id`
 3. **Design buckets** - Create buckets aligned with access control boundaries
 4. **Configure pipelines** - Route data to buckets based on primary fields
-5. **Define boundaries** - Use `storage:bucket.name` and `storage:dt.security_context`
-6. **Create segments** - For cross-bucket query filtering
+5. **Define policies** - Grant bucket-specific permissions per team
+6. **Apply boundaries** - Use `storage:bucket.name` and `storage:dt.security_context`
+7. **Create segments** - For cross-bucket query filtering
 
 > **See Also:** For migration from Management Zones, refer to **MZ2POL-04: Policies and Boundaries** which covers mapping MZ patterns to the new model.
 

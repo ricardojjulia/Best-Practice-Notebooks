@@ -1,6 +1,6 @@
 # Audit Logging and Compliance
 
-> **Series:** IAMADM | **Notebook:** 7 of 9 | **Created:** January 2026
+> **Series:** IAMADM | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Meeting Regulatory and Security Requirements
 

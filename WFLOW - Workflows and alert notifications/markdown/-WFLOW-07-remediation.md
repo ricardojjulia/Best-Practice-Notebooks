@@ -1,6 +1,6 @@
 # Problem-Triggered Remediation
 
-> **Series:** WFLOW | **Notebook:** 7 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Auto-Remediation with Workflows
 
@@ -52,23 +52,21 @@ Level 3: Fully automated with guardrails
 Level 4: Self-healing with learning
 ```
 
-### Remediation Flow
+### Auto-Remediation Loop
 
-```
-Davis Problem
-     ↓
-Workflow Triggered
-     ↓
-Validate Remediation Applicable
-     ↓
-Check Safety Guardrails
-     ↓
-Execute Remediation Action
-     ↓
-Verify Success
-     ↓
-Notify Team
-```
+![Auto-Remediation Loop](images/remediation-loop.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Step | Action | Description |
+|------|--------|-------------|
+| 1. Detect | Davis Problem | Triggers workflow |
+| 2. Analyze | DQL queries | Determine root cause |
+| 3. Remediate | Execute action | HTTP/Script/K8s API |
+| 4. Validate | Check metrics | Verify resolution |
+| Loop | If not resolved | Return to step 1 |
+Examples: Restart pod, scale up, clear cache, rotate certs
+For environments where SVG doesn't render
+-->
 
 ## 2. Safety Guardrails
 

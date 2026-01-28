@@ -1,6 +1,6 @@
 # 🔐 Security Analysis with Spans
 
-> **Series:** SPANS | **Notebook:** 6 of 8 | **Created:** December 2025
+> **Series:** SPANS | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Protecting Distributed Traces and Ensuring Compliance
 

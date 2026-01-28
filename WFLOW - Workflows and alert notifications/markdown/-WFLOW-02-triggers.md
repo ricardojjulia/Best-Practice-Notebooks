@@ -1,6 +1,6 @@
 # Triggers & Event Types
 
-> **Series:** WFLOW | **Notebook:** 2 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Event-Driven Workflow Triggers
 
@@ -38,6 +38,19 @@ Triggers determine when workflows execute. This notebook covers all trigger type
 | **Schedule** | Cron expression matches | Reports, health checks, cleanup jobs |
 | **On-Demand** | Manual execution or API call | Testing, ad-hoc automation |
 | **Event** | Business/custom event ingested | Business process automation |
+
+![Trigger Types Overview](images/trigger-types-overview.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Trigger | Source | Use Case |
+|---------|--------|----------|
+| Davis Problem | AI detects incident | Alert notifications |
+| Davis Event | Metric threshold | Capacity alerts |
+| Schedule | Cron expression | Reports, health checks |
+| On-Demand | Manual/API | Testing, ad-hoc |
+| Event | Business event | Business automation |
+For environments where SVG doesn't render
+-->
 
 ### Choosing the Right Trigger
 
@@ -88,6 +101,17 @@ When a Davis problem triggers, you get access to:
 | Problem opened | New problem detected | Create incident, notify team |
 | Problem updated | Root cause/impact changed | Update incident notes |
 | Problem closed | Problem resolved | Close incident, send summary |
+
+![Davis Problem Lifecycle](images/davis-problem-lifecycle.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| State | Description | Typical Workflow Actions |
+|-------|-------------|--------------------------|
+| OPENED | Problem detected | Create ticket, notify team, page if critical |
+| UPDATED | Root cause changed | Add notes, escalate if spreading |
+| CLOSED | Problem resolved | Resolve ticket, send summary, log MTTR |
+For environments where SVG doesn't render
+-->
 
 ### Example: Filter Critical Production Problems
 

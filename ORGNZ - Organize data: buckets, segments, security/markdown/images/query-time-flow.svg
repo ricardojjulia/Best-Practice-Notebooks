@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480">
+  <defs>
+    <linearGradient id="bgGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="stepGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="processGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="resultGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <filter id="shadow4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#bgGrad4)"/>
+
+  <!-- Title -->
+  <text x="300" y="35" text-anchor="middle" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="18" font-weight="600">How Permissions Work at Query Time</text>
+
+  <!-- Step 1: User Query -->
+  <rect x="175" y="55" width="250" height="45" rx="8" fill="url(#stepGrad)" filter="url(#shadow4)"/>
+  <text x="205" y="82" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">1</text>
+  <text x="230" y="82" fill="white" font-family="system-ui, sans-serif" font-size="13">User submits DQL query</text>
+
+  <line x1="300" y1="100" x2="300" y2="125" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Step 2: IAM Evaluation -->
+  <rect x="150" y="130" width="300" height="45" rx="8" fill="url(#processGrad)" filter="url(#shadow4)"/>
+  <text x="180" y="157" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">2</text>
+  <text x="205" y="157" fill="white" font-family="system-ui, sans-serif" font-size="13">Grail evaluates user's IAM policies</text>
+
+  <line x1="300" y1="175" x2="300" y2="200" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Step 3: Bucket Scope -->
+  <rect x="150" y="205" width="300" height="45" rx="8" fill="url(#processGrad)" filter="url(#shadow4)"/>
+  <text x="180" y="232" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">3</text>
+  <text x="205" y="232" fill="white" font-family="system-ui, sans-serif" font-size="13">Query scopes to allowed buckets</text>
+
+  <line x1="300" y1="250" x2="300" y2="275" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Step 4: Record Filter -->
+  <rect x="150" y="280" width="300" height="45" rx="8" fill="url(#processGrad)" filter="url(#shadow4)"/>
+  <text x="180" y="307" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">4</text>
+  <text x="205" y="307" fill="white" font-family="system-ui, sans-serif" font-size="13">Record-level filters applied</text>
+
+  <line x1="300" y1="325" x2="300" y2="350" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Step 5: Field Masks -->
+  <rect x="150" y="355" width="300" height="45" rx="8" fill="url(#processGrad)" filter="url(#shadow4)"/>
+  <text x="180" y="382" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">5</text>
+  <text x="205" y="382" fill="white" font-family="system-ui, sans-serif" font-size="13">Field-level masks applied (if any)</text>
+
+  <line x1="300" y1="400" x2="300" y2="425" stroke="#10b981" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Step 6: Results -->
+  <rect x="175" y="430" width="250" height="40" rx="8" fill="url(#resultGrad)" filter="url(#shadow4)"/>
+  <text x="205" y="455" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">6</text>
+  <text x="230" y="455" fill="white" font-family="system-ui, sans-serif" font-size="13">Results returned to user</text>
+
+  <!-- Side note -->
+  <rect x="470" y="280" width="110" height="60" rx="6" fill="#7f1d1d" stroke="#dc2626" stroke-width="1"/>
+  <text x="525" y="303" text-anchor="middle" fill="#fca5a5" font-family="system-ui, sans-serif" font-size="10">Unauthorized</text>
+  <text x="525" y="318" text-anchor="middle" fill="#fca5a5" font-family="system-ui, sans-serif" font-size="10">records are</text>
+  <text x="525" y="333" text-anchor="middle" fill="#fca5a5" font-family="system-ui, sans-serif" font-size="10" font-weight="bold">filtered out</text>
+  <line x1="450" y1="302" x2="470" y2="302" stroke="#dc2626" stroke-width="1" stroke-dasharray="4"/>
+</svg>

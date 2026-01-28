@@ -1,6 +1,6 @@
 # Kubernetes Events and Log Ingestion
 
-> **Series:** K8S | **Notebook:** 7 of 9 | **Created:** January 2026
+> **Series:** K8S | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Capturing and Analyzing Kubernetes Events and Logs
 

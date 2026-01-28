@@ -1,6 +1,6 @@
 # OPMIG-07: Metric & Event Extraction
 
-> **Series:** OPMIG | **Notebook:** 7 of 9 | **Created:** December 2025
+> **Series:** OPMIG | **Notebook:** 7 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 > **OpenPipeline Migration Series** | Notebook 7 of 9  
 > **Level:** Intermediate to Advanced  

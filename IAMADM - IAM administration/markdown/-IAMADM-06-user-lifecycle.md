@@ -1,6 +1,6 @@
 # User Lifecycle and Provisioning
 
-> **Series:** IAMADM | **Notebook:** 6 of 9 | **Created:** January 2026
+> **Series:** IAMADM | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Automating User Management at Scale
 

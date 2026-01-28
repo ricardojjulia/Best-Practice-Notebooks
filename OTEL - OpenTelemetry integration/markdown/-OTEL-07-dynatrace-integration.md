@@ -1,6 +1,6 @@
 # Dynatrace OTLP Integration
 
-> **Series:** OTEL | **Notebook:** 7 of 8 | **Created:** January 2026
+> **Series:** OTEL | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Complete Setup for OpenTelemetry with Dynatrace
 
@@ -73,15 +73,24 @@ Find your environment ID:
 
 ### Token Format
 
-Dynatrace API tokens look like:
-```
-dt0c01.<24-char-public-portion>.<64-char-secret-portion>
-```
+![Dynatrace API Token Structure](images/dynatrace-token-format.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Part | Description | Length |
+|------|-------------|--------|
+| Prefix | Token type identifier (e.g., dt0c01 for API v2) | 6 chars |
+| Public ID | Token identifier (safe to log) | 24 chars |
+| Secret | Secret key (keep secure!) | 64 chars |
+Parts are separated by dots (.)
+For environments where SVG doesn't render
+-->
 
 ### Header Format
 
+Use the `Api-Token` prefix in the Authorization header:
+
 ```
-Authorization: Api-Token dt0c01.XXX...
+Authorization: Api-Token <your-full-token>
 ```
 
 ## 3. Collector Configuration
@@ -154,7 +163,7 @@ service:
 
 ```bash
 export DT_ENV_ID="abc12345"
-export DT_API_TOKEN="dt0c01.XXX..."
+export DT_API_TOKEN="<your-api-token>"
 
 otelcol-contrib --config otel-collector-config.yaml
 ```
@@ -195,10 +204,15 @@ trace.set_tracer_provider(provider)
 ### Java with System Properties
 
 ```bash
+# Set environment variables first
+export DT_ENV_ID="abc12345"
+export DT_API_TOKEN="<your-api-token>"
+
+# URL-encode the token for the header (space becomes %20)
 java -javaagent:opentelemetry-javaagent.jar \
   -Dotel.service.name=my-java-app \
-  -Dotel.exporter.otlp.endpoint=https://abc12345.live.dynatrace.com/api/v2/otlp \
-  -Dotel.exporter.otlp.headers=Authorization=Api-Token%20dt0c01.XXX... \
+  -Dotel.exporter.otlp.endpoint=https://${DT_ENV_ID}.live.dynatrace.com/api/v2/otlp \
+  -Dotel.exporter.otlp.headers="Authorization=Api-Token%20${DT_API_TOKEN}" \
   -jar app.jar
 ```
 
@@ -295,8 +309,8 @@ with tracer.start_as_current_span("checkout") as span:
 // Verify OTel traces are arriving
 fetch spans
 | filter isNotNull(otel.library.name)
-| summarize count(), by:{service.name, otel.library.name}
-| sort count() desc
+| summarize count = count(), by:{service.name, otel.library.name}
+| sort count desc
 | limit 20
 ```
 
@@ -310,8 +324,11 @@ fetch spans, from: now() - 1h
 ```
 
 ```dql
-// View OTel metrics
-timeseries count(), by:{otel.scope.name}
+// View OTel data by instrumentation scope
+fetch spans
+| filter isNotNull(otel.scope.name)
+| summarize count = count(), by:{otel.scope.name}
+| sort count desc
 | limit 10
 ```
 

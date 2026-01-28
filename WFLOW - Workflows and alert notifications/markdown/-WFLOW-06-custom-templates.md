@@ -1,6 +1,6 @@
 # Custom Notification Templates
 
-> **Series:** WFLOW | **Notebook:** 6 of 9 | **Created:** January 2026
+> **Series:** WFLOW | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Rich Message Formatting
 

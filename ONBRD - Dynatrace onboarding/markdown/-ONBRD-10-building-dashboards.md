@@ -1,6 +1,6 @@
 # Building Dashboards
 
-> **Series:** ONBRD | **Notebook:** 10 of 10 | **Created:** December 2025
+> **Series:** ONBRD | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Visualizing Your Data
 

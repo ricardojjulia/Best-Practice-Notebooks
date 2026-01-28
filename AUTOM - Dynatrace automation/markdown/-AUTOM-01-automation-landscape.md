@@ -1,6 +1,6 @@
 # Automation Landscape
 
-> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026
+> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ---
 
