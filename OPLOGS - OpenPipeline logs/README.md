@@ -2,6 +2,8 @@
 
 End-to-end guidance for managing logs with Dynatrace OpenPipeline.
 
+> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+
 ## Structure
 - NOTEBOOKS/ — Dynatrace notebook JSON files for each topic
 - PDFs/ — Printable versions of the notebooks

@@ -2,6 +2,8 @@
 
 Automating workflows and configuring alert notifications in Dynatrace.
 
+> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+
 ## Structure
 - notebooks/ — Dynatrace notebook JSON files
 - pdfs/ — Printable versions of each notebook
