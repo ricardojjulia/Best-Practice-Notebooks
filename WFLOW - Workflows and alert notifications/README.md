@@ -1,0 +1,23 @@
+# WFLOW - Workflows and alert notifications
+
+Automating workflows and configuring alert notifications in Dynatrace.
+
+## Structure
+- notebooks/ — Dynatrace notebook JSON files
+- pdfs/ — Printable versions of each notebook
+- markdown/ — Markdown exports of the notebooks
+
+## Notebook Lineup
+1. [Fundamentals](markdown/-WFLOW-01-fundamentals.md) — Core workflow concepts
+2. [Triggers](markdown/-WFLOW-02-triggers.md) — Workflow trigger configuration
+3. [Notification Basics](markdown/-WFLOW-03-notification-basics.md) — Setting up basic notifications
+4. [Notification Routing](markdown/-WFLOW-04-notification-routing.md) — Advanced notification routing
+5. [Incident Management](markdown/-WFLOW-05-incident-management.md) — Integrating with incident management
+6. [Custom Templates](markdown/-WFLOW-06-custom-templates.md) — Creating custom notification templates
+7. [Remediation](markdown/-WFLOW-07-remediation.md) — Automated remediation workflows
+8. [JavaScript & HTTP](markdown/-WFLOW-08-javascript-http.md) — JavaScript actions and HTTP requests
+9. [Governance](markdown/-WFLOW-09-governance.md) — Workflow governance and best practices
+
+## Usage
+1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
+2. Start with Fundamentals, then progress through notification setup and advanced topics.

@@ -8,12 +8,12 @@ Series covering Dynatrace Synthetic Monitoring (browser, HTTP, private locations
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. Fundamentals — Core synthetic monitoring concepts
-2. Browser Monitors — Creating and managing browser monitors
-3. HTTP Monitors — HTTP/API monitors
-4. Private Locations — Deploying private synthetic locations
-5. Network Monitoring — Network performance monitoring
-6. Analytics — Analyzing synthetic monitoring data
+1. [Fundamentals](markdown/-SYNTH-01-fundamentals.md) — Core synthetic monitoring concepts
+2. [Browser Monitors](markdown/-SYNTH-02-browser-monitors.md) — Creating and managing browser monitors
+3. [HTTP Monitors](markdown/-SYNTH-03-http-monitors.md) — HTTP/API monitors
+4. [Private Locations](markdown/-SYNTH-04-private-locations.md) — Deploying private synthetic locations
+5. [Network Monitoring](markdown/-SYNTH-05-network-monitoring.md) — Network performance monitoring
+6. [Analytics](markdown/-SYNTH-06-analytics.md) — Analyzing synthetic monitoring data
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
