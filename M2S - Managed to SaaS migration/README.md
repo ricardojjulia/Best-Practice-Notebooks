@@ -8,14 +8,14 @@ Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. What's Different — Key differences between Managed and SaaS
-2. Migration Framework — Overall migration approach and framework
-3. Planning & Assessment — Assessing readiness and planning migration
-4. Architecture Design — Designing your SaaS architecture
-5. Configuration Migration — Migrating configurations and settings
-6. OneAgent & ActiveGate — Migrating agents and gateways
-7. Security & Privacy — Security considerations for migration
-8. Validation & Optimization — Validating and optimizing post-migration
+1. [What's Different](markdown/-M2S-01-whats-different.md) — Key differences between Managed and SaaS
+2. [Migration Framework](markdown/-M2S-02-migration-framework.md) — Overall migration approach and framework
+3. [Planning & Assessment](markdown/-M2S-03-planning-assessment.md) — Assessing readiness and planning migration
+4. [Architecture Design](markdown/-M2S-04-architecture-design.md) — Designing your SaaS architecture
+5. [Configuration Migration](markdown/-M2S-05-configuration-migration.md) — Migrating configurations and settings
+6. [OneAgent & ActiveGate](markdown/-M2S-06-oneagent-activegate.md) — Migrating agents and gateways
+7. [Security & Privacy](markdown/-M2S-07-security-privacy.md) — Security considerations for migration
+8. [Validation & Optimization](markdown/-M2S-08-validation-optimization.md) — Validating and optimizing post-migration
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

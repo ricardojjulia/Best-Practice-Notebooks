@@ -8,16 +8,16 @@ Step-by-step onboarding series for new Dynatrace users, from initial setup to da
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. First Steps — Getting started with Dynatrace
-2. IAM and Authentication — Identity and access management
-3. Deploying ActiveGate — Installing and configuring ActiveGate
-4. Cloud/SaaS Integrations — Connecting cloud platforms
-5. Deploying OneAgent — Deployment strategies
-6. Organizing Your Environment — Structuring environments and entities
-7. Understanding Your Data — Data model and exploration
-8. Your First Queries — Intro to DQL
-9. Setting Up Alerts — Alerting and notifications
-10. Building Dashboards — Creating stakeholder dashboards
+1. [First Steps](markdown/-ONBRD-01-first-steps.md) — Getting started with Dynatrace
+2. [IAM and Authentication](markdown/-ONBRD-02-iam-and-authentication.md) — Identity and access management
+3. [Deploying ActiveGate](markdown/-ONBRD-03-deploying-activegate.md) — Installing and configuring ActiveGate
+4. [Cloud/SaaS Integrations](markdown/-ONBRD-04-cloud-saas-integrations.md) — Connecting cloud platforms
+5. [Deploying OneAgent](markdown/-ONBRD-05-deploying-oneagent.md) — Deployment strategies
+6. [Organizing Your Environment](markdown/-ONBRD-06-organizing-your-environment.md) — Structuring environments and entities
+7. [Understanding Your Data](markdown/-ONBRD-07-understanding-your-data.md) — Data model and exploration
+8. [Your First Queries](markdown/-ONBRD-08-your-first-queries.md) — Intro to DQL
+9. [Setting Up Alerts](markdown/-ONBRD-09-setting-up-alerts.md) — Alerting and notifications
+10. [Building Dashboards](markdown/-ONBRD-10-building-dashboards.md) — Creating stakeholder dashboards
 
 ## Usage
 1. Pick a format: import JSON from NOTEBOOKS/ into Dynatrace, read PDFs/ for print, or open markdown/ for lightweight viewing.

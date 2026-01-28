@@ -8,15 +8,15 @@ Structured migration path to Dynatrace OpenPipeline.
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. Introduction: Why Migrate — Benefits and goals
-2. Architecture & Key Concepts — OpenPipeline architecture overview
-3. Migration Assessment & Planning — Migration plan and readiness
-4. Pipeline Configuration — Configuring OpenPipeline
-5. Routing & Buckets — Routing rules and storage strategy
-6. Processing & Parsing — Transformation and parsing rules
-7. Metric & Event Extraction — Deriving metrics/events from logs
-8. Security & Masking — Security controls and data masking
-9. Troubleshooting & Validation — Validation and issue resolution
+1. [Introduction: Why Migrate](markdown/-OPMIG-01-introduction-why-migrate.md) — Benefits and goals
+2. [Architecture & Key Concepts](markdown/-OPMIG-02-architecture-key-concepts.md) — OpenPipeline architecture overview
+3. [Migration Assessment & Planning](markdown/-OPMIG-03-migration-assessment-planning.md) — Migration plan and readiness
+4. [Pipeline Configuration](markdown/-OPMIG-04-pipeline-configuration.md) — Configuring OpenPipeline
+5. [Routing & Buckets](markdown/-OPMIG-05-routing-buckets.md) — Routing rules and storage strategy
+6. [Processing & Parsing](markdown/-OPMIG-06-processing-parsing.md) — Transformation and parsing rules
+7. [Metric & Event Extraction](markdown/-OPMIG-07-metric-event-extraction.md) — Deriving metrics/events from logs
+8. [Security & Masking](markdown/-OPMIG-08-security-masking.md) — Security controls and data masking
+9. [Troubleshooting & Validation](markdown/-OPMIG-09-troubleshooting-validation.md) — Validation and issue resolution
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
