@@ -142,6 +142,18 @@ Guidance for working with distributed traces and spans in Dynatrace.
 - [SPANS-07: Buckets & Pipeline](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-SPANS-07-buckets-pipeline.md) — Storage and processing
 - [SPANS-08: Cost Optimization](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-SPANS-08-cost-optimization.md) — Optimizing trace ingestion costs
 
+### [S2D - Splunk to Dynatrace migration](S2D%20-%20Splunk%20to%20Dynatrace%20migration/README.md)
+Guide for migrating monitoring capabilities from Splunk to Dynatrace.
+- [S2D-01: Getting Started](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-01-getting-started.md) — Migration overview and roadmap
+- [S2D-02: Locating Logs](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-02-locating-logs.md) — Finding and verifying log data in Dynatrace
+- [S2D-03: SPL to DQL Translation](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-03-spl-to-dql.md) — Converting Splunk queries to DQL
+- [S2D-04: Davis Anomaly Detectors](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-04-davis-anomaly-detectors.md) — Migrating alerts to continuous monitoring
+- [S2D-05: Workflow-Based Alerts](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-05-workflow-alerts.md) — Migrating alerts to scheduled workflows
+- [S2D-06: ArrayMovingSum](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-06-arraymovingsum.md) — Rolling sums for extended timeframes
+- [S2D-07: Metric Creation](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-07-metric-creation.md) — Extracting metrics from logs via OpenPipeline
+- [S2D-08: Dashboard Migration](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-08-dashboard-migration.md) — Converting Splunk dashboards to Dynatrace
+- [S2D-09: Naming Standards](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-S2D-09-naming-standards.md) — Asset naming conventions and organization
+
 ### [SYNTH - Synthetic monitoring](SYNTH%20-%20Synthetic%20monitoring/README.md)
 Series covering Dynatrace Synthetic Monitoring.
 - [SYNTH-01: Fundamentals](SYNTH%20-%20Synthetic%20monitoring/markdown/-SYNTH-01-fundamentals.md) — Core synthetic monitoring concepts
