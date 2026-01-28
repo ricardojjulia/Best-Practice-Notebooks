@@ -2,6 +2,8 @@
 
 Best practices for monitoring Kubernetes with Dynatrace.
 
+> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+
 ## Structure
 - NOTEBOOKS/ — Dynatrace notebook JSON files
 - PDFs/ — Printable versions of each notebook
