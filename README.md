@@ -158,3 +158,7 @@ Automating workflows and configuring alert notifications in Dynatrace.
 	- Read PDFs/ for printable versions.
 	- Use markdown/ for lightweight viewing or diffs.
 3. Follow the numbered sequence to progress through each series.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

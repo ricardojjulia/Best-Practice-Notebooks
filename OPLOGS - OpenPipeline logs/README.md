@@ -22,3 +22,7 @@ End-to-end guidance for managing logs with Dynatrace OpenPipeline.
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
 2. Start with Fundamentals before progressing to advanced topics.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

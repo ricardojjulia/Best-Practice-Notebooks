@@ -23,3 +23,7 @@ Automating workflows and configuring alert notifications in Dynatrace.
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
 2. Start with Fundamentals, then progress through notification setup and advanced topics.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
