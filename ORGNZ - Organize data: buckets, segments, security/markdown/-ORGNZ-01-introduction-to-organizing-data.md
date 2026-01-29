@@ -116,8 +116,8 @@ Grail supports permissions at multiple levels:
 ```dql
 // List all buckets in your environment
 fetch dt.system.buckets
-| fields bucket.name, bucket.table, bucket.retentionDays, bucket.status
-| sort bucket.table asc, bucket.name asc
+| fields name, display_name, dt.system.table, retention_days, estimated_uncompressed_bytes
+| sort dt.system.table asc, name asc
 ```
 
 ```dql
