@@ -132,7 +132,6 @@ fetch dt.system.buckets
 | sort dt.system.table asc, name asc
 ```
 
-
 ## Querying Data from Buckets
 
 ```dql
