@@ -163,8 +163,8 @@ fetch logs
 ```dql
 // Compare bucket retention configurations
 fetch dt.system.buckets
-| fields bucket.name, bucket.table, bucket.retentionDays
-| sort bucket.retentionDays desc
+| fields name, dt.system.table, retention_days
+| sort retention_days desc
 ```
 
 ## Bucket Strategy Considerations
