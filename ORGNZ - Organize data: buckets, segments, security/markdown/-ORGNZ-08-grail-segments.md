@@ -229,7 +229,8 @@ fetch dt.entity.host
 ```dql
 // Test tag-based filtering
 fetch dt.entity.service
-| filter tags contains "team:platform"
+| expand tags
+| filter contains(tags,  "team:platform")
 | fields entity.name, tags
 | limit 20
 ```
@@ -237,7 +238,7 @@ fetch dt.entity.service
 ```dql
 // Test log filtering by host group
 fetch logs
-| filter host.group starts-with "prod-"
+| filter startsWith(host.group,"prod-")
 | summarize count = count(), by:{host.group}
 | sort count desc
 | limit 10
