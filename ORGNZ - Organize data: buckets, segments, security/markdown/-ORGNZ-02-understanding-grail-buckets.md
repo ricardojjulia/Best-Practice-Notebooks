@@ -132,13 +132,6 @@ fetch dt.system.buckets
 | sort dt.system.table asc, name asc
 ```
 
-```dql
-// Get bucket details including display names
-fetch dt.system.buckets
-| fields bucket.name, bucket.displayName, bucket.table, bucket.retentionDays
-| filter bucket.table == "logs"
-| sort bucket.retentionDays desc
-```
 
 ## Querying Data from Buckets
 
@@ -150,20 +143,20 @@ fetch logs
 
 ```dql
 // Query logs from a specific custom bucket
-fetch logs, from: "custom_logs_bucket"
+fetch logs, bucket:{"default_logs"}
 | limit 10
 ```
 
 ```dql
 // Query from multiple buckets simultaneously
-fetch logs, from: {"default_logs", "audit_logs", "security_logs"}
+fetch logs, bucket: {"default_logs", "audit_logs", "security_logs"}
 | limit 100
 ```
 
 ```dql
 // Filter by bucket within query
 fetch logs
-| filter dt.system.bucket == "prod_infra_logs"
+| filter dt.system.bucket == "default_logs"
 | filter loglevel == "ERROR"
 | limit 50
 ```
