@@ -167,13 +167,13 @@ ALLOW storage:logs:read, storage:metrics:read, storage:spans:read;
 ```dql
 // List buckets you have access to
 fetch dt.system.buckets
-| fields bucket.name, bucket.table, bucket.retentionDays
-| sort bucket.name asc
+| fields name, display_name, dt.system.table, retention_days
+| sort name asc
 ```
 
 ```dql
 // Query data from specific bucket to verify access
-fetch logs, from: "team_platform_logs"
+fetch logs, bucket: "team_platform_logs"
 | limit 10
 ```
 
