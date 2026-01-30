@@ -20,6 +20,8 @@ Best practices for monitoring Kubernetes with Dynatrace.
 8. [DQL for K8s](markdown/-K8S-08-dql-for-k8s.md) — Querying Kubernetes data with DQL
 9. [Troubleshooting](markdown/-K8S-09-troubleshooting.md) — Diagnosing Kubernetes monitoring issues
 10. [Metadata Telemetry Enrichment](markdown/-K8S-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
+11. [Multi-Tool Coexistence](markdown/-K8S-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
+12. [Specialized Monitoring](markdown/-K8S-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
