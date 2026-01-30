@@ -10,14 +10,14 @@ Guidance for working with distributed traces and spans in Dynatrace.
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. [Fundamentals](markdown/-SPANS-01-fundamentals.md) — Core tracing concepts
-2. [Querying](markdown/-SPANS-02-querying.md) — Querying spans and traces with DQL
-3. [Troubleshooting](markdown/-SPANS-03-troubleshooting.md) — Using traces for issue investigation
-4. [Topology](markdown/-SPANS-04-topology.md) — Service topology from traces
-5. [Analytics](markdown/-SPANS-05-analytics.md) — Advanced trace analytics
-6. [Security](markdown/-SPANS-06-security.md) — Span security and data protection
-7. [Buckets & Pipeline](markdown/-SPANS-07-buckets-pipeline.md) — Storage and processing
-8. [Cost Optimization](markdown/-SPANS-08-cost-optimization.md) — Optimizing trace ingestion costs
+1. [Fundamentals](markdown/-[SPANS]-01-fundamentals.md) — Core tracing concepts
+2. [Querying](markdown/-[SPANS]-02-querying.md) — Querying spans and traces with DQL
+3. [Troubleshooting](markdown/-[SPANS]-03-troubleshooting.md) — Using traces for issue investigation
+4. [Topology](markdown/-[SPANS]-04-topology.md) — Service topology from traces
+5. [Analytics](markdown/-[SPANS]-05-analytics.md) — Advanced trace analytics
+6. [Security](markdown/-[SPANS]-06-security.md) — Span security and data protection
+7. [Buckets & Pipeline](markdown/-[SPANS]-07-buckets-pipeline.md) — Storage and processing
+8. [Cost Optimization](markdown/-[SPANS]-08-cost-optimization.md) — Optimizing trace ingestion costs
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

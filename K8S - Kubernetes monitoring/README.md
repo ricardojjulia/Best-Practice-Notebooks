@@ -10,18 +10,18 @@ Best practices for monitoring Kubernetes with Dynatrace.
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. [Fundamentals](markdown/-K8S-01-fundamentals.md) — Core Kubernetes monitoring concepts
-2. [Dynakube Deployment](markdown/-K8S-02-dynakube-deployment.md) — Deploying Dynatrace Operator and Dynakube
-3. [GitOps Dynakube](markdown/-K8S-03-gitops-dynakube.md) — Managing Dynakube with GitOps
-4. [Cluster Monitoring](markdown/-K8S-04-cluster-monitoring.md) — Monitoring Kubernetes clusters
-5. [Workload Monitoring](markdown/-K8S-05-workload-monitoring.md) — Monitoring workloads and applications
-6. [Namespace Organization](markdown/-K8S-06-namespace-organization.md) — Organizing and filtering by namespace
-7. [Events and Logs](markdown/-K8S-07-events-and-logs.md) — Kubernetes events and log monitoring
-8. [DQL for K8s](markdown/-K8S-08-dql-for-k8s.md) — Querying Kubernetes data with DQL
-9. [Troubleshooting](markdown/-K8S-09-troubleshooting.md) — Diagnosing Kubernetes monitoring issues
-10. [Metadata Telemetry Enrichment](markdown/-K8S-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
-11. [Multi-Tool Coexistence](markdown/-K8S-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
-12. [Specialized Monitoring](markdown/-K8S-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
+1. [Fundamentals](markdown/-[K8S]-01-fundamentals.md) — Core Kubernetes monitoring concepts
+2. [Dynakube Deployment](markdown/-[K8S]-02-dynakube-deployment.md) — Deploying Dynatrace Operator and Dynakube
+3. [GitOps Dynakube](markdown/-[K8S]-03-gitops-dynakube.md) — Managing Dynakube with GitOps
+4. [Cluster Monitoring](markdown/-[K8S]-04-cluster-monitoring.md) — Monitoring Kubernetes clusters
+5. [Workload Monitoring](markdown/-[K8S]-05-workload-monitoring.md) — Monitoring workloads and applications
+6. [Namespace Organization](markdown/-[K8S]-06-namespace-organization.md) — Organizing and filtering by namespace
+7. [Events and Logs](markdown/-[K8S]-07-events-and-logs.md) — Kubernetes events and log monitoring
+8. [DQL for K8s](markdown/-[K8S]-08-dql-for-k8s.md) — Querying Kubernetes data with DQL
+9. [Troubleshooting](markdown/-[K8S]-09-troubleshooting.md) — Diagnosing Kubernetes monitoring issues
+10. [Metadata Telemetry Enrichment](markdown/-[K8S]-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
+11. [Multi-Tool Coexistence](markdown/-[K8S]-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
+12. [Specialized Monitoring](markdown/-[K8S]-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
