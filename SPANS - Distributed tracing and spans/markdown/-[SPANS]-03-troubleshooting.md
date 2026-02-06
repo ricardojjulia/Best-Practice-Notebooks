@@ -65,7 +65,7 @@ Start by identifying error spans in your system:
 
 ```dql
 // Find recent error spans
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | fields start_time,
          service.name,
@@ -79,7 +79,7 @@ fetch spans
 
 ```dql
 // Count errors by service to see which services are most affected
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | summarize {
     error_count = count(),
@@ -91,7 +91,7 @@ fetch spans
 
 ```dql
 // Error rate per service (server spans only)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     total_requests = count(),
@@ -110,7 +110,7 @@ Group errors to identify common patterns:
 
 ```dql
 // Group errors by type and service using collectDistinct
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | summarize {
     occurrence = count(),
@@ -123,7 +123,7 @@ fetch spans
 
 ```dql
 // Find traces with multiple errors (cascading failures)
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | summarize {
     error_count = count(),
@@ -137,7 +137,7 @@ fetch spans
 
 ```dql
 // Error timeline - visualize errors over time
-fetch spans
+fetch spans, from:-24h
 | filter span.kind == "server"
 | makeTimeseries {
     errors = countIf(span.status_code == "error"),
@@ -164,7 +164,7 @@ Analyze latency patterns to find performance issues:
 
 ```dql
 // Latency percentiles by service
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
@@ -179,7 +179,7 @@ fetch spans
 
 ```dql
 // Latency percentiles by operation
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
@@ -194,7 +194,7 @@ fetch spans
 
 ```dql
 // Latency trend over time (use bin() for percentiles since makeTimeseries doesn't support percentile)
-fetch spans
+fetch spans, from:-24h
 | filter span.kind == "server"
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | summarize {
@@ -213,7 +213,7 @@ Identify and analyze slow requests:
 
 ```dql
 // Find slow server spans (> 1 second)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter duration > 1s
 | fieldsAdd duration_ms = duration / 1000000
@@ -228,7 +228,7 @@ fetch spans
 
 ```dql
 // Find slow traces with summary of services involved
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     trace_duration_ms = max(duration) / 1000000,
@@ -243,7 +243,7 @@ fetch spans
 
 ```dql
 // Identify slow operations (candidates for optimization)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter duration > 500ms
 | summarize {
@@ -263,7 +263,7 @@ Once you've identified a problematic trace, reconstruct the full picture:
 
 ```dql
 // Get a sample trace ID from error spans
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | fields trace.id, service.name, span.name
 | limit 5
@@ -271,7 +271,7 @@ fetch spans
 
 ```dql
 // Reconstruct full trace (replace YOUR_TRACE_ID with actual trace.id)
-fetch spans
+fetch spans, from:-1h
 // | filter trace.id == "YOUR_TRACE_ID"
 | fieldsAdd duration_ms = duration / 1000000
 | fields start_time,
@@ -288,7 +288,7 @@ fetch spans
 
 ```dql
 // Analyze trace complexity
-fetch spans
+fetch spans, from:-1h
 | summarize {
     span_count = count(),
     services_involved = countDistinct(service.name),
@@ -319,7 +319,7 @@ Use these patterns to find the origin of problems:
 
 ```dql
 // Find the FIRST error span in failing traces
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | summarize {
     first_error_time = min(start_time),
@@ -333,7 +333,7 @@ fetch spans
 
 ```dql
 // Find the bottleneck span in each trace
-fetch spans
+fetch spans, from:-1h
 | summarize {
     max_duration_ms = max(duration) / 1000000,
     total_spans = count(),
@@ -346,7 +346,7 @@ fetch spans
 
 ```dql
 // Time spent per span kind (where is time going?)
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total_time_ms = sum(duration) / 1000000,
     span_count = count(),
@@ -363,7 +363,7 @@ Analyze failures in downstream services (CLIENT spans):
 
 ```dql
 // Find which downstream services are causing errors
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client" and span.status_code == "error"
 | summarize {
     failure_count = count(),
@@ -376,7 +376,7 @@ fetch spans
 
 ```dql
 // Dependency health - error rates for outbound calls
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client"
 | summarize {
     calls = count(),
@@ -391,7 +391,7 @@ fetch spans
 
 ```dql
 // Map service-to-service dependencies
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client"
 | filter isNotNull(server.address)
 | summarize {
@@ -412,7 +412,7 @@ Analyze database operations for performance issues:
 
 ```dql
 // Find slow database queries
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.system)
 | filter duration > 100ms
 | summarize {
@@ -427,7 +427,7 @@ fetch spans
 
 ```dql
 // Find failing database operations
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.system) and span.status_code == "error"
 | summarize {
     error_count = count(),
@@ -439,7 +439,7 @@ fetch spans
 
 ```dql
 // Quick service health check (use for dashboards)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),

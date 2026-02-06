@@ -1,6 +1,6 @@
 # Kubernetes Monitoring Fundamentals
 
-> **Series:** K8S | **Notebook:** 1 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 1 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Introduction to Kubernetes Observability with Dynatrace
 Kubernetes introduces unique observability challenges: ephemeral workloads, dynamic scaling, complex networking, and multi-layer abstractions. Dynatrace provides comprehensive Kubernetes monitoring through the DynaKube operator, which deploys and manages monitoring components automatically.
@@ -213,25 +213,21 @@ Let's explore common queries for Kubernetes monitoring.
 
 ```dql
 // Container CPU usage - find highest consumers
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpu = avg(value), by:{dt.entity.container_group_instance}
-| sort avgCpu desc
+timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.container_group_instance}
+| sort avgCpuMillicores desc
 | limit 20
 ```
 
 ```dql
 // Container memory usage approaching limits
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.usage_percent"
-| summarize avgMem = avg(value), by:{dt.entity.container_group_instance}
-| filter avgMem > 80
-| sort avgMem desc
+timeseries avgMemBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{dt.entity.container_group_instance}
+| fieldsAdd avgMemBytesValue = arrayAvg(avgMemBytes)
+| sort avgMemBytesValue desc
 ```
 
 ```dql
 // Kubernetes events - recent warnings and errors
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s")
 | filter matchesPhrase(content, "Warning") or matchesPhrase(content, "Error")
 | fields timestamp, content
@@ -241,7 +237,7 @@ fetch logs
 
 ```dql
 // Pod restarts - find crashlooping workloads
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "BackOff") or matchesPhrase(content, "CrashLoopBackOff")
 | summarize restartCount = count(), by:{timeBucket = bin(timestamp, 1h)}
 | sort timeBucket desc

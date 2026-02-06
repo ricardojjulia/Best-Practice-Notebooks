@@ -139,14 +139,14 @@ fetch dt.system.buckets
 
 ```dql
 // Summarize data volume by bucket
-fetch logs
+fetch logs, from:-1h
 | summarize recordCount = count(), by:{dt.system.bucket}
 | sort recordCount desc
 ```
 
 ```dql
 // Check for records with security context
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(dt.security_context)
 | summarize count = count(), by:{dt.security_context}
 | sort count desc

@@ -275,7 +275,7 @@ fetch dt.entity.service
 ```dql
 // Test log filtering with segment condition
 // Validates segment will work for log queries
-fetch logs
+fetch logs, from:-1h
 | filter matchesValue(dt.entity.service.tags, "team:frontend")
 | fields timestamp, content, dt.entity.service
 | sort timestamp desc

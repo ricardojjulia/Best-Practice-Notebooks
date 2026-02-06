@@ -342,7 +342,7 @@ def checkout():
 
 ```dql
 // View spans with custom attributes
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(order.id)
 | fields timestamp, trace.id, span.name, order.id, duration
 | sort timestamp desc
@@ -351,7 +351,7 @@ fetch spans
 
 ```dql
 // Find spans with errors
-fetch spans
+fetch spans, from:-1h
 | filter otel.status_code == "ERROR"
 | fields timestamp, trace.id, span.name, otel.status_message
 | sort timestamp desc

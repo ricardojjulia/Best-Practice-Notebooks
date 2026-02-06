@@ -82,7 +82,7 @@ Count the number of log records matching certain criteria.
 
 ```dql
 // Counter metric candidate: Error log count
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.deployment.name, "checkout-service")
 | makeTimeseries count = count(), by:{k8s.deployment.name}, interval:1m
@@ -96,7 +96,7 @@ Track a numeric value extracted from log records.
 
 ```dql
 // Value metric candidate: Response time from logs
-fetch logs
+fetch logs, from:-24h
 | filter isNotNull(response_time)
 | filter matchesPhrase(k8s.deployment.name, "api-service")
 | makeTimeseries avg_response = avg(response_time), by:{k8s.deployment.name}, interval:1m
@@ -139,7 +139,7 @@ This defines how the metric will be segmented.
 
 ```dql
 // Query to convert to metric
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.cluster.name, "production")
 | filter matchesPhrase(k8s.namespace.name, "ecommerce")
@@ -192,7 +192,7 @@ Once created, metrics are queried using `fetch metrics` instead of `fetch logs`:
 ```dql
 // Query the extracted metric (after it's created)
 // Note: This is an example - metric name will depend on your configuration
-timeseries avg(log.ecommerce.error_count), by:{k8s.deployment.name}
+timeseries avg(log.ecommerce.error_count), from:-1h, by:{k8s.deployment.name}
 ```
 
 <a id="request-process"></a>

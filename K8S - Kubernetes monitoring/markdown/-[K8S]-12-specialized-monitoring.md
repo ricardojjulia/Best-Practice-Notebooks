@@ -100,7 +100,7 @@ kubectl -n ingress-nginx logs -l app.kubernetes.io/name=ingress-nginx | grep -i 
 
 ```dql
 // Check if NGINX Ingress spans are arriving
-fetch spans
+fetch spans, from:-1h
 | filter contains(service.name, "nginx") or contains(service.name, "ingress")
 | summarize count = count(), by:{service.name, span.name}
 | sort count desc
@@ -275,7 +275,7 @@ env:
 
 ```dql
 // Check CSI driver pod status
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "csi") and matchesPhrase(content, "dynatrace")
 | fields timestamp, content
 | sort timestamp desc
@@ -284,7 +284,7 @@ fetch logs
 
 ```dql
 // Monitor telemetry ingest volume by protocol
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(otel.scope.name)
 | summarize span_count = count(), by:{service.name}
 | sort span_count desc

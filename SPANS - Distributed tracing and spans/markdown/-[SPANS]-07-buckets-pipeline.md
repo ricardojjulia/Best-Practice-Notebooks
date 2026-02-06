@@ -90,7 +90,7 @@ Discover which buckets contain your data and their characteristics.
 
 ```dql
 // Find out which bucket your spans are stored in
-fetch spans
+fetch spans, from:-1h
 | fieldsAdd bucket = dt.system.bucket
 | summarize {span_count = count()}, by:{bucket}
 | sort span_count desc
@@ -98,7 +98,7 @@ fetch spans
 
 ```dql
 // Analyze span distribution by bucket and service
-fetch spans
+fetch spans, from:-1h
 | fieldsAdd bucket = dt.system.bucket
 | summarize {span_count = count()}, by:{bucket, dt.entity.service}
 | sort bucket, span_count desc
@@ -148,7 +148,7 @@ fetch spans
 
 ```dql
 // Find health check spans (candidates for dropping)
-fetch spans
+fetch spans, from:-1h
 | filter contains(span.name, "health") or 
         contains(span.name, "ready") or
         contains(span.name, "alive") or
@@ -159,7 +159,7 @@ fetch spans
 
 ```dql
 // Find static asset requests (often low value)
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(url.path)
 | filter endsWith(url.path, ".js") or 
         endsWith(url.path, ".css") or
@@ -172,7 +172,7 @@ fetch spans
 ```dql
 // Find high-volume, low-value spans
 // High volume but almost no errors = candidates for filtering
-fetch spans
+fetch spans, from:-1h
 | summarize {
     count = count(),
     error_count = countIf(span.status_code == "error")
@@ -237,7 +237,7 @@ stages:
 
 ```dql
 // Example: Fields you might want to pre-compute
-fetch spans
+fetch spans, from:-1h
 | fieldsAdd 
     duration_ms = duration / 1000000,
     is_error = span.status_code == "error",
@@ -251,7 +251,7 @@ fetch spans
 
 ```dql
 // Identify services by domain for enrichment planning
-fetch spans
+fetch spans, from:-1h
 | summarize {count = count()}, by:{dt.entity.service}
 | sort count desc
 | limit 20
@@ -305,14 +305,14 @@ stages:
 
 ```dql
 // Check what environments/namespaces exist for routing planning
-fetch spans
+fetch spans, from:-1h
 | summarize {count = count()}, by:{k8s.namespace.name}
 | sort count desc
 ```
 
 ```dql
 // Identify sensitive services for routing
-fetch spans
+fetch spans, from:-1h
 | filter contains(span.name, "payment") or
         contains(span.name, "auth") or
         contains(span.name, "login")
@@ -353,7 +353,7 @@ stages:
 
 ```dql
 // Identify high-volume services for sampling consideration
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total = count(),
     errors = countIf(span.status_code == "error"),
@@ -368,7 +368,7 @@ fetch spans
 
 ```dql
 // Calculate potential savings from filtering
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total = count(),
     health_checks = countIf(
@@ -408,7 +408,7 @@ Use bucket-based queries to implement access control patterns.
 
 ```dql
 // Data retention analysis: Span volume by day
-fetch spans
+fetch spans, from:-1h
 | fieldsAdd day = bin(start_time, 1d)
 | summarize {span_count = count()}, by:{day}
 | sort day desc
@@ -417,7 +417,7 @@ fetch spans
 
 ```dql
 // Volume analysis by service (for cost allocation)
-fetch spans
+fetch spans, from:-1h
 | summarize {
     span_count = count(),
     avg_duration_ms = avg(duration) / 1000000

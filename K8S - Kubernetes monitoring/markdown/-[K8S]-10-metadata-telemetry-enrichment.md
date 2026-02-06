@@ -1,6 +1,6 @@
 # K8S-10: Metadata Telemetry Enrichment
 
-> **Series:** K8S | **Notebook:** 10 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 10 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Enriching All Telemetry with Kubernetes Metadata
 Kubernetes metadata enrichment automatically adds labels and annotations from your Kubernetes resources to all telemetry signals. This is the **recommended approach** for adding context to your observability data because it enriches everything: metrics, logs, traces, events, and entities.
@@ -267,7 +267,7 @@ Once enrichment is configured, you can filter and group by the enriched attribut
 
 ```dql
 // Query logs by enriched team label
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | summarize logCount = count(), by:{k8s.namespace.name}
 | sort logCount desc
@@ -276,16 +276,13 @@ fetch logs
 
 ```dql
 // Group metrics by cost center (enriched label)
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| filter isNotNull(k8s.namespace.name)
-| summarize avgCpu = avg(value), by:{k8s.namespace.name}
-| sort avgCpu desc
+timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.namespace.name}
+| sort avgCpuMillicores desc
 ```
 
 ```dql
 // Find all spans from production environment
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | summarize 
     spanCount = count(),
@@ -311,7 +308,7 @@ Create enrichment rule for `cost-center` label, then query:
 
 ```dql
 fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
+| filter metric.key == "dt.kubernetes.container.cpu_usage"
 | summarize totalCpu = sum(value), by:{k8s.cost-center}
 ```
 

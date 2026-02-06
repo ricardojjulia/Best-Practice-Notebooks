@@ -82,7 +82,7 @@ Create a 60-minute rolling sum of error logs:
 
 ```dql
 // 60-minute rolling sum of error logs
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | makeTimeseries error_count = count(), interval:1m
 | fieldsAdd error_count_last_1h = arrayMovingSum(error_count, 60)
@@ -126,7 +126,7 @@ For Davis Anomaly Detectors, you must use `interval:1m` and `window:60`:
 
 ```dql
 // Query for Davis Anomaly Detector with 60-minute rolling sum
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.deployment.name, "checkout-service")
 | makeTimeseries error_count = count(), by:{dt.entity.cloud_application}, interval:1m
@@ -174,7 +174,7 @@ Related functions for rolling calculations:
 
 ```dql
 // Rolling average response time over 30 minutes
-fetch logs
+fetch logs, from:-24h
 | filter isNotNull(response_time)
 | makeTimeseries avg_response = avg(response_time), interval:1m
 | fieldsAdd avg_response_30m = arrayMovingAvg(avg_response, 30)

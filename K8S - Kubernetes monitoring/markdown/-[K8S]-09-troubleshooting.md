@@ -1,6 +1,6 @@
 # Troubleshooting Kubernetes Monitoring
 
-> **Series:** K8S | **Notebook:** 9 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 9 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Debugging Dynatrace Monitoring in Kubernetes
 When monitoring doesn't work as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic procedures, and resolution steps for Dynatrace Kubernetes monitoring.
@@ -264,13 +264,13 @@ kubectl label namespace <namespace> dynatrace-injection=enabled
 ```dql
 // Verify Kubernetes entities are being discovered
 fetch dt.entity.kubernetes_cluster
-| fields entity.name, lastSeenTms
-| sort lastSeenTms desc
+| fields entity.name, lifetime
+| sort lifetime desc
 ```
 
 ```dql
 // Check if container metrics are flowing
-timeseries cpu = avg(dt.containers.cpu.usage_percent)
+timeseries cpu = avg(dt.kubernetes.container.cpu_usage), from:-1h
 | limit 1
 ```
 

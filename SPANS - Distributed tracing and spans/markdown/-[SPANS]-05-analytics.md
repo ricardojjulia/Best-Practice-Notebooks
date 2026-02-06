@@ -47,7 +47,7 @@ Use `makeTimeseries` to create time-series data for visualization and trend anal
 
 ```dql
 // Request volume over time by service
-fetch spans
+fetch spans, from:-24h
 | filter span.kind == "server"
 | makeTimeseries {
     request_count = count(),
@@ -57,7 +57,7 @@ fetch spans
 
 ```dql
 // Average duration over time (without grouping)
-fetch spans
+fetch spans, from:-24h
 | filter span.kind == "server"
 | makeTimeseries {
     request_count = count(),
@@ -67,7 +67,7 @@ fetch spans
 
 ```dql
 // For percentile trends, use time-bucketed summarize instead
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | summarize {
@@ -87,7 +87,7 @@ Identify trends and patterns in your span data over time.
 
 ```dql
 // Hourly error rate trend
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fieldsAdd hour_bucket = bin(start_time, 1h)
 | summarize {
@@ -101,7 +101,7 @@ fetch spans
 
 ```dql
 // Latency trend by service (10-minute buckets)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | summarize {
@@ -115,7 +115,7 @@ fetch spans
 
 ```dql
 // Identify services with degrading performance
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fieldsAdd time_bucket = bin(start_time, 30m)
 | summarize {
@@ -135,7 +135,7 @@ Perform multi-dimensional analysis with complex aggregation patterns.
 
 ```dql
 // Service health scorecard
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     total_requests = count(),
@@ -156,7 +156,7 @@ fetch spans
 
 ```dql
 // Endpoint-level analysis with multiple metrics
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     request_count = count(),
@@ -174,7 +174,7 @@ fetch spans
 
 ```dql
 // HTTP method distribution with performance metrics
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.request.method)
 | summarize {
     request_count = count(),
@@ -193,7 +193,7 @@ Compare metrics across different dimensions to identify outliers and patterns.
 
 ```dql
 // Compare span kinds: server vs client performance
-fetch spans
+fetch spans, from:-1h
 | filter in(span.kind, {"server", "client"})
 | summarize {
     span_count = count(),
@@ -206,7 +206,7 @@ fetch spans
 
 ```dql
 // Compare success vs error span characteristics
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     span_count = count(),
@@ -219,7 +219,7 @@ fetch spans
 
 ```dql
 // HTTP status code distribution by service
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | fieldsAdd status_class = if(http.response.status_code >= 500, "5xx",
                             else: if(http.response.status_code >= 400, "4xx",
@@ -239,7 +239,7 @@ Queries optimized for use in Dynatrace dashboards and reports.
 
 ```dql
 // Dashboard: Request rate and error rate over time
-fetch spans
+fetch spans, from:-24h
 | filter span.kind == "server"
 | makeTimeseries {
     requests = count(),
@@ -249,7 +249,7 @@ fetch spans
 
 ```dql
 // Dashboard: Service health summary (single value tiles)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     total_requests = count(),
@@ -262,7 +262,7 @@ fetch spans
 
 ```dql
 // Dashboard: Top 10 services by request volume
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
@@ -276,7 +276,7 @@ fetch spans
 
 ```dql
 // Dashboard: Recent errors list
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | fields start_time, service.name, span.name, span.status_message
 | sort start_time desc

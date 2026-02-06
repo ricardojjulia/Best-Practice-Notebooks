@@ -100,7 +100,7 @@ fetch dt.entity.host
 ```dql
 // Check host activity by looking at recent metrics
 // Hosts not sending metrics may have issues
-timeseries avgCpu = avg(dt.host.cpu.usage), by:{dt.entity.host}
+timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 | filter isNull(avgCpu)
 | fields dt.entity.host
 ```
@@ -148,13 +148,13 @@ fetch dt.entity.service
 
 ```dql
 // Check CPU metrics are flowing
-timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}
+timeseries avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 | limit 10
 ```
 
 ```dql
 // Check memory metrics
-timeseries avg(dt.host.memory.usage), by:{dt.entity.host}
+timeseries avg(dt.host.memory.usage), from:-1h, by:{dt.entity.host}
 | limit 10
 ```
 
@@ -162,7 +162,7 @@ timeseries avg(dt.host.memory.usage), by:{dt.entity.host}
 
 ```dql
 // Check log volume over time
-fetch logs
+fetch logs, from:-1h
 | summarize logCount = count(), by:{time_bucket = bin(timestamp, 5m)}
 | sort time_bucket desc
 | limit 24
@@ -170,7 +170,7 @@ fetch logs
 
 ```dql
 // Check logs by source
-fetch logs
+fetch logs, from:-1h
 | summarize count = count(), by:{log.source}
 | sort count desc
 | limit 10
@@ -180,7 +180,7 @@ fetch logs
 
 ```dql
 // Check distributed traces are flowing
-fetch spans
+fetch spans, from:-1h
 | summarize spanCount = count(), by:{time_bucket = bin(timestamp, 5m)}
 | sort time_bucket desc
 | limit 12
@@ -188,7 +188,7 @@ fetch spans
 
 ```dql
 // Check service request volume
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize requestCount = count(), by:{dt.entity.service}
 | sort requestCount desc
@@ -200,7 +200,7 @@ fetch spans
 ```dql
 // Check for metric data continuity over time
 // Use timeseries to query metrics - count hosts with data per time bucket
-timeseries avgCpu = avg(dt.host.cpu.usage), by:{dt.entity.host}
+timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 | summarize hostsWithData = count()
 | limit 1
 ```

@@ -177,7 +177,7 @@ ALLOW storage:logs:read WHERE storage:dt.security_context = "crn-70400-team";
 
 ```dql
 // View logs with security context
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(dt.security_context)
 | fields timestamp, content, dt.security_context
 | limit 20
@@ -185,7 +185,7 @@ fetch logs
 
 ```dql
 // Summarize data by security context
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(dt.security_context)
 | summarize recordCount = count(), by:{dt.security_context}
 | sort recordCount desc
@@ -194,14 +194,14 @@ fetch logs
 
 ```dql
 // Filter logs by specific security context
-fetch logs
+fetch logs, from:-1h
 | filter dt.security_context == "team:platform"
 | limit 50
 ```
 
 ```dql
 // Check for hierarchical security context patterns
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(dt.security_context)
 | filter dt.security_context matches "finance/*"
 | summarize count = count(), by:{dt.security_context}

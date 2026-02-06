@@ -166,14 +166,14 @@ Cost: Chargeback to Finance cost center
 
 ```dql
 // Analyze log volume by bucket over last 24 hours
-fetch logs
+fetch logs, from:-1h
 | summarize recordCount = count(), by:{dt.system.bucket}
 | sort recordCount desc
 ```
 
 ```dql
 // Track log ingest trends by bucket over time
-fetch logs
+fetch logs, from:-1h
 | summarize recordCount = count(), by:{time_bucket = bin(timestamp, 1h), dt.system.bucket}
 | sort time_bucket desc
 ```

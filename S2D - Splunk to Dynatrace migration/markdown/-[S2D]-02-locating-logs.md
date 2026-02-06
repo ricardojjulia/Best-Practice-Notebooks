@@ -110,7 +110,7 @@ To determine whether required logs are present in Dynatrace, use DQL queries wit
 ```dql
 // Search logs by host name
 // Replace 'your-host-name' with the actual host from Splunk
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(host.name, "your-host-name")
 | summarize count = count(), by:{log.source}
 | sort count desc
@@ -121,7 +121,7 @@ fetch logs
 ```dql
 // Search by specific log file path
 // Replace path with your application's log location
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(log.source, "/var/log/application")
 | summarize count = count(), by:{host.name}
 | sort count desc
@@ -131,7 +131,7 @@ fetch logs
 
 ```dql
 // Search by Kubernetes cluster and namespace
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(k8s.cluster.name, "production-cluster")
 | filter matchesPhrase(k8s.namespace.name, "ecommerce")
 | summarize count = count(), by:{k8s.deployment.name, k8s.pod.name}

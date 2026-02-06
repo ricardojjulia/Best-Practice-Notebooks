@@ -70,7 +70,7 @@ Regularly audit your span data for potential PII exposure. These queries help id
 ```dql
 // Find URLs that might contain email addresses
 // Look for @ symbol or URL-encoded %40
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(url.path)
 | filter contains(url.path, "@") or contains(url.path, "%40")
 | fields start_time,
@@ -85,7 +85,7 @@ fetch spans
 
 ```dql
 // Find URLs with potential user identifiers
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(url.path)
 | filter contains(url.path, "user") or 
         contains(url.path, "email") or
@@ -103,7 +103,7 @@ fetch spans
 ```dql
 // Find URLs with sensitive query parameters
 // These suggest credentials or tokens in URLs
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(url.path)
 | filter contains(url.path, "password") or
         contains(url.path, "token") or
@@ -121,7 +121,7 @@ fetch spans
 
 ```dql
 // Find database queries that might contain sensitive data
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.statement)
 | filter contains(db.statement, "password") or
         contains(db.statement, "ssn") or
@@ -139,7 +139,7 @@ fetch spans
 
 ```dql
 // Audit error messages for potential data leakage
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | filter isNotNull(span.status_message)
 | fields dt.entity.service,
@@ -152,7 +152,7 @@ fetch spans
 
 ```dql
 // Identify which potentially sensitive fields are present
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total_spans = count(),
     has_url = countIf(isNotNull(url.path)),
@@ -184,7 +184,7 @@ HTTP status codes can reveal security-relevant patterns:
 
 ```dql
 // Analyze HTTP status code distribution
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | summarize {count = count()}, by:{http.response.status_code}
 | sort count desc
@@ -193,7 +193,7 @@ fetch spans
 
 ```dql
 // Find security-relevant HTTP errors (401, 403, 429)
-fetch spans
+fetch spans, from:-1h
 | filter in(http.response.status_code, {401, 403, 429})
 | summarize {
     count = count()
@@ -204,7 +204,7 @@ fetch spans
 
 ```dql
 // Security status codes over time (detect spikes)
-fetch spans
+fetch spans, from:-1h
 | filter in(http.response.status_code, {401, 403, 429, 500})
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | fieldsAdd status_category = if(http.response.status_code == 401, "401_Unauthorized",
@@ -224,7 +224,7 @@ Monitor authentication endpoints for potential brute force or credential stuffin
 
 ```dql
 // Find 401 Unauthorized responses (failed authentication)
-fetch spans
+fetch spans, from:-1h
 | filter http.response.status_code == 401
 | fields start_time,
          dt.entity.service,
@@ -238,7 +238,7 @@ fetch spans
 
 ```dql
 // Count authentication failures by endpoint
-fetch spans
+fetch spans, from:-1h
 | filter http.response.status_code == 401
 | summarize {
     failure_count = count(),
@@ -250,7 +250,7 @@ fetch spans
 
 ```dql
 // Authentication failure rate over time
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | filter contains(http.route, "auth") or contains(http.route, "login") or contains(span.name, "login")
 | fieldsAdd time_bucket = bin(start_time, 10m)
@@ -265,7 +265,7 @@ fetch spans
 
 ```dql
 // High-frequency authentication failures by service
-fetch spans
+fetch spans, from:-1h
 | filter contains(span.name, "auth") or contains(span.name, "login")
 | filter span.status_code == "error" or http.response.status_code == 401 or http.response.status_code == 403
 | summarize {
@@ -283,7 +283,7 @@ Detect unusual patterns that might indicate attacks or misuse.
 
 ```dql
 // Find endpoints with unusually high error rates
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(http.response.status_code)
 | summarize {
@@ -300,7 +300,7 @@ fetch spans
 
 ```dql
 // Detect potential enumeration attacks (high 404 rates)
-fetch spans
+fetch spans, from:-1h
 | filter http.response.status_code == 404
 | summarize {
     not_found_count = count(),
@@ -313,7 +313,7 @@ fetch spans
 
 ```dql
 // Find rate limiting events (429 responses)
-fetch spans
+fetch spans, from:-1h
 | filter http.response.status_code == 429
 | fields start_time,
          dt.entity.service,
@@ -325,7 +325,7 @@ fetch spans
 
 ```dql
 // Unusual access patterns - services with high error rates
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
@@ -344,7 +344,7 @@ Monitor access patterns to sensitive endpoints like admin panels, configuration 
 
 ```dql
 // Find access to admin or configuration endpoints
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter contains(url.path, "admin") 
       or contains(url.path, "config")
@@ -362,7 +362,7 @@ fetch spans
 
 ```dql
 // Monitor data export or bulk operations
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter contains(url.path, "export")
       or contains(url.path, "download")
@@ -377,7 +377,7 @@ fetch spans
 
 ```dql
 // Identify services that might handle regulated data
-fetch spans
+fetch spans, from:-1h
 | filter contains(span.name, "health") or
         contains(span.name, "patient") or
         contains(span.name, "payment") or
@@ -449,7 +449,7 @@ routing:
 ```dql
 // Verify email masking is working
 // Result should be empty if masking is effective
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(url.path)
 | filter contains(url.path, "@") and not(contains(url.path, "***@"))
 | fields url.path
@@ -487,7 +487,7 @@ fetch spans
 
 ```dql
 // SECURE: Aggregate patterns without exposing individual data
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     request_count = count(),
@@ -504,7 +504,7 @@ fetch spans
 // http.route: /users/:id (pattern, no PII)
 // url.path: /users/john.doe@email.com (actual value, potential PII)
 
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.route)
 | summarize {
     requests = count(),
@@ -518,7 +518,7 @@ fetch spans
 
 ```dql
 // For investigation: Get just enough trace.ids to diagnose
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
 | summarize {
     error_count = count(),
@@ -536,7 +536,7 @@ Use these queries for regular security audits.
 
 ```dql
 // Security summary dashboard: Overall security status
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | summarize {
     total_requests = count(),
@@ -551,7 +551,7 @@ fetch spans
 
 ```dql
 // Security events timeline
-fetch spans
+fetch spans, from:-24h
 | filter in(http.response.status_code, {401, 403, 429})
 | makeTimeseries {
     auth_failures = countIf(http.response.status_code == 401),
@@ -562,7 +562,7 @@ fetch spans
 
 ```dql
 // Services with highest security event rates
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | summarize {
     total_requests = count(),
@@ -576,7 +576,7 @@ fetch spans
 
 ```dql
 // Final audit: Summary of potential security concerns
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total_spans = count(),
     spans_with_url = countIf(isNotNull(url.path)),

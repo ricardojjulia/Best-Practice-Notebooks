@@ -231,7 +231,7 @@ Add hour-of-day filtering to exclude off-hours:
 
 ```dql
 // Filter logs to business hours only (8 AM - 6 PM)
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | fieldsAdd hour = toLong(formatTimestamp(timestamp, format:"HH"))
 | filter hour >= 8 AND hour < 18

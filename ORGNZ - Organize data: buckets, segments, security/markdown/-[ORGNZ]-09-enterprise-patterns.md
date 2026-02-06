@@ -258,7 +258,7 @@ For environments where SVG doesn't render
 
 ```dql
 // Audit bucket distribution
-fetch logs
+fetch logs, from:-1h
 | summarize 
     recordCount = count(),
     by:{dt.system.bucket}
@@ -267,7 +267,7 @@ fetch logs
 
 ```dql
 // Audit security context coverage
-fetch logs
+fetch logs, from:-1h
 | summarize 
     total = count(),
     withContext = countIf(isNotNull(dt.security_context)),

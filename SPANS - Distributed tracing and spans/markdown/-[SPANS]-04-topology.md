@@ -60,7 +60,7 @@ First, discover all services generating spans in your environment:
 
 ```dql
 // List all services with span counts
-fetch spans
+fetch spans, from:-1h
 | summarize {
     span_count = count(),
     operations = countDistinct(span.name)
@@ -71,7 +71,7 @@ fetch spans
 
 ```dql
 // Service role analysis - understand each service's function
-fetch spans
+fetch spans, from:-1h
 | summarize {
     server_spans = countIf(span.kind == "server"),
     client_spans = countIf(span.kind == "client"),
@@ -85,7 +85,7 @@ fetch spans
 
 ```dql
 // Discover all operations/endpoints per service
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     request_count = count(),
@@ -112,7 +112,7 @@ Use CLIENT spans to understand which services call which other services:
 
 ```dql
 // Map service-to-service calls using CLIENT spans
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client"
 | summarize {
     call_count = count(),
@@ -127,7 +127,7 @@ fetch spans
 ```dql
 // Find services called by other services using peer.service attribute
 // peer.service shows the target service name when available
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(peer.service)
 | summarize {
     call_count = count(),
@@ -139,7 +139,7 @@ fetch spans
 
 ```dql
 // Map dependencies using HTTP host/URL information
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(server.address)
 | summarize {
     call_count = count(),
@@ -159,7 +159,7 @@ Analyze the matching CLIENT and SERVER span pairs to understand inter-service co
 
 ```dql
 // Analyze outbound calls from each service
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client"
 | summarize {
     outbound_calls = count(),
@@ -174,7 +174,7 @@ fetch spans
 
 ```dql
 // Analyze inbound requests to each service
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     inbound_requests = count(),
@@ -189,7 +189,7 @@ fetch spans
 
 ```dql
 // Find services with high outbound/inbound ratio (integration heavy)
-fetch spans
+fetch spans, from:-1h
 | summarize {
     inbound = countIf(span.kind == "server"),
     outbound = countIf(span.kind == "client")
@@ -226,7 +226,7 @@ Analyze asynchronous messaging patterns using PRODUCER and CONSUMER spans:
 
 ```dql
 // Find message producers (services sending async messages)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "producer"
 | summarize {
     messages_sent = count(),
@@ -239,7 +239,7 @@ fetch spans
 
 ```dql
 // Find message consumers (services receiving async messages)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "consumer"
 | summarize {
     messages_received = count(),
@@ -253,7 +253,7 @@ fetch spans
 
 ```dql
 // Analyze messaging system usage (Kafka, RabbitMQ, etc.)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "producer" or span.kind == "consumer"
 | filter isNotNull(messaging.system)
 | summarize {
@@ -268,7 +268,7 @@ fetch spans
 
 ```dql
 // Map producer to consumer relationships
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "producer" or span.kind == "consumer"
 | summarize {
     span_count = count()
@@ -285,7 +285,7 @@ Analyze parent-child relationships within traces to understand call depth:
 
 ```dql
 // Count spans per trace to understand trace complexity
-fetch spans
+fetch spans, from:-1h
 | summarize {
     span_count = count(),
     services_involved = countDistinct(service.name),
@@ -298,7 +298,7 @@ fetch spans
 ```dql
 // Examine a complete trace hierarchy
 // Replace YOUR_TRACE_ID with an actual trace ID from above
-fetch spans
+fetch spans, from:-1h
 // | filter trace.id == "YOUR_TRACE_ID"
 | fieldsAdd duration_ms = duration / 1000000
 | fields start_time,
@@ -314,7 +314,7 @@ fetch spans
 
 ```dql
 // Find entry points (root spans) and their downstream services
-fetch spans
+fetch spans, from:-1h
 | filter isNull(span.parent_id)
 | summarize {
     entry_count = count(),
@@ -332,7 +332,7 @@ Identify latency hot spots between services:
 
 ```dql
 // Latency by service-to-service call
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(server.address)
 | summarize {
     call_count = count(),
@@ -346,7 +346,7 @@ fetch spans
 
 ```dql
 // Time spent per service in traces
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total_time_ms = sum(duration) / 1000000,
     span_count = count(),
@@ -358,7 +358,7 @@ fetch spans
 
 ```dql
 // Find slowest dependencies (CLIENT spans)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client"
 | filter duration > 500ms
 | summarize {
@@ -389,7 +389,7 @@ Identify the services and operations that contribute most to end-to-end latency:
 
 ```dql
 // Find services contributing most to total trace time
-fetch spans
+fetch spans, from:-1h
 | summarize {
     total_self_time_ms = sum(duration) / 1000000,
     span_count = count(),
@@ -402,7 +402,7 @@ fetch spans
 
 ```dql
 // Find slowest operations across all services
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     call_count = count(),
@@ -418,7 +418,7 @@ fetch spans
 ```dql
 // Identify high-impact optimization candidates
 // (high volume + high latency = most benefit from optimization)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     call_count = count(),

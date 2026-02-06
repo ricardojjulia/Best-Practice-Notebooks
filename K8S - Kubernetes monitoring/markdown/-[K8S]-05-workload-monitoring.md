@@ -1,6 +1,6 @@
 # Workload Monitoring
 
-> **Series:** K8S | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Application-Level Observability in Kubernetes
 Workload monitoring focuses on the application layer: deployments, pods, containers, and the services they provide. This notebook covers monitoring Kubernetes workloads from deployment health to service performance.
@@ -77,7 +77,7 @@ During deployments, monitor:
 
 ```dql
 // Deployment events - track rollouts
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "deployment") and (matchesPhrase(content, "scaled") or matchesPhrase(content, "updated") or matchesPhrase(content, "rollout"))
 | fields timestamp, content
 | sort timestamp desc
@@ -86,7 +86,7 @@ fetch logs
 
 ```dql
 // Pod restart counts - identify unstable workloads
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "restarted") or matchesPhrase(content, "BackOff")
 | fields timestamp, content
 | sort timestamp desc
@@ -116,30 +116,25 @@ fetch logs
 
 ```dql
 // Container CPU usage - find high consumers
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpuUsage = avg(value), by:{dt.entity.container_group_instance}
-| sort avgCpuUsage desc
+timeseries avgCpuUsageMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.container_group_instance}
+| sort avgCpuUsageMillicores desc
 | limit 15
 ```
 
 ```dql
 // Container memory usage approaching limits
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.usage_percent"
-| summarize avgMemUsage = avg(value), by:{dt.entity.container_group_instance}
-| filter avgMemUsage > 75
-| sort avgMemUsage desc
+timeseries avgMemUsageBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{dt.entity.container_group_instance}
+| fieldsAdd avgMemUsageBytesValue = arrayAvg(avgMemUsageBytes)
+| sort avgMemUsageBytesValue desc
 | limit 15
 ```
 
 ```dql
 // Container CPU throttling - performance impact
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.throttled_time"
-| summarize avgThrottled = avg(value), by:{dt.entity.container_group_instance}
-| filter avgThrottled > 0
-| sort avgThrottled desc
+timeseries avgThrottled = avg(dt.containers.cpu.throttled_time), from:-1h, by:{dt.entity.container_group_instance}
+| fieldsAdd avgThrottledValue = arrayAvg(avgThrottled)
+| filter avgThrottledValue > 0
+| sort avgThrottledValue desc
 | limit 15
 ```
 
@@ -165,7 +160,7 @@ fetch dt.metrics
 
 ```dql
 // Service response time (spans)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize 
     p50 = percentile(duration, 50),
@@ -178,7 +173,7 @@ fetch spans
 
 ```dql
 // Service error rates
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize 
     total = count(),
@@ -192,7 +187,7 @@ fetch spans
 
 ```dql
 // Service throughput
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize requestCount = count(), by:{dt.entity.service}
 | sort requestCount desc
@@ -219,7 +214,7 @@ Distributed tracing in Kubernetes follows requests across:
 
 ```dql
 // Traces by namespace
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | summarize requestCount = count(), avgDuration = avg(duration), by:{k8s.namespace.name}
 | sort requestCount desc
@@ -228,7 +223,7 @@ fetch spans
 
 ```dql
 // Slow traces by workload
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server" and duration > 1000000000  // > 1 second
 | fields timestamp, trace.id, k8s.namespace.name, k8s.deployment.name, duration
 | sort duration desc
@@ -254,7 +249,7 @@ OneAgent collects container logs from:
 
 ```dql
 // Application error logs by namespace
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR" or loglevel == "SEVERE"
 | filter isNotNull(k8s.namespace.name)
 | summarize errorCount = count(), by:{k8s.namespace.name}
@@ -264,7 +259,7 @@ fetch logs
 
 ```dql
 // Recent application logs with context
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | filter loglevel == "ERROR"
 | fields timestamp, k8s.namespace.name, k8s.pod.name, content
@@ -293,7 +288,7 @@ Dynatrace Davis AI automatically detects:
 
 ```dql
 // Error count by namespace (detecting increases)
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR"
 | filter isNotNull(k8s.namespace.name)
 | summarize errorCount = count(), by:{k8s.namespace.name}
@@ -303,9 +298,7 @@ fetch logs
 
 ```dql
 // Memory usage by workload (detecting high consumers)
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.working_set_bytes"
-| summarize avgMemoryBytes = avg(value), by:{dt.entity.cloud_application}
+timeseries avgMemoryBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{dt.entity.cloud_application}
 | sort avgMemoryBytes desc
 | limit 10
 ```

@@ -90,7 +90,7 @@ By the end of this notebook, you will be able to:
 ```dql
 // Single value: Total error count
 // Splunk: index=app level=ERROR | stats count
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR"
 | summarize total_errors = count()
 ```
@@ -100,7 +100,7 @@ fetch logs
 ```dql
 // Line chart: Error trend over time
 // Splunk: index=app level=ERROR | timechart count
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | makeTimeseries error_count = count(), interval:5m
 ```
@@ -110,7 +110,7 @@ fetch logs
 ```dql
 // Bar chart: Errors by service
 // Splunk: index=app level=ERROR | stats count by service
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR"
 | summarize error_count = count(), by:{k8s.deployment.name}
 | sort error_count desc
@@ -122,7 +122,7 @@ fetch logs
 ```dql
 // Table: Service health summary
 // Splunk: index=app | stats count, count(eval(level="ERROR")) as errors by service
-fetch logs
+fetch logs, from:-1h
 | summarize 
     total = count(),
     errors = countIf(loglevel == "ERROR"),
@@ -149,7 +149,7 @@ Dynatrace dashboards support variables for interactive filtering:
 ```dql
 // Using dashboard variables in DQL
 // Variables: $cluster, $namespace, $deployment
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(k8s.cluster.name, $cluster)
 | filter matchesPhrase(k8s.namespace.name, $namespace)
 | filter matchesPhrase(k8s.deployment.name, $deployment)
@@ -160,7 +160,7 @@ fetch logs
 
 ```dql
 // Query to populate a deployment dropdown variable
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(k8s.deployment.name)
 | summarize count(), by:{k8s.deployment.name}
 | fields k8s.deployment.name
@@ -200,7 +200,7 @@ Variables: `host_name`, `log_source`
 
 ```dql
 // VM Log Searcher - Log count by host
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(host.name, $host_name)
 | filter matchesPhrase(log.source, $log_source)
 | summarize count = count(), by:{host.name}
@@ -209,7 +209,7 @@ fetch logs
 
 ```dql
 // VM Log Searcher - Log count by source
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(host.name, $host_name)
 | filter matchesPhrase(log.source, $log_source)
 | summarize count = count(), by:{host.name, log.source}
@@ -222,7 +222,7 @@ Variables: `k8s_cluster`, `k8s_namespace`, `k8s_deployment`
 
 ```dql
 // K8s Log Searcher - Log count by cluster
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(k8s.cluster.name, $k8s_cluster)
 | filter matchesPhrase(k8s.namespace.name, $k8s_namespace)
 | filter matchesPhrase(k8s.deployment.name, $k8s_deployment)
@@ -232,7 +232,7 @@ fetch logs
 
 ```dql
 // K8s Log Searcher - Log count by deployment
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(k8s.cluster.name, $k8s_cluster)
 | filter matchesPhrase(k8s.namespace.name, $k8s_namespace)
 | filter matchesPhrase(k8s.deployment.name, $k8s_deployment)

@@ -328,7 +328,7 @@ with tracer.start_as_current_span("checkout") as span:
 
 ```dql
 // Verify OTel traces are arriving
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(otel.library.name)
 | summarize count = count(), by:{service.name, otel.library.name}
 | sort count desc
@@ -346,7 +346,7 @@ fetch spans, from: now() - 1h
 
 ```dql
 // View OTel data by instrumentation scope
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(otel.scope.name)
 | summarize count = count(), by:{otel.scope.name}
 | sort count desc

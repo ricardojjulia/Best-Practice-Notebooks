@@ -69,7 +69,7 @@ Filter spans to focus on specific services. Use `dt.entity.service` for reliable
 
 ```dql
 // Filter spans for a specific service using exact match
-fetch spans
+fetch spans, from:-1h
 | filter service.name == "checkout"
 | fields start_time, span.name, span.kind, duration
 | sort start_time desc
@@ -78,7 +78,7 @@ fetch spans
 
 ```dql
 // Use in() with curly braces {} for multiple values (NOT parentheses!)
-fetch spans
+fetch spans, from:-1h
 | filter in(service.name, {"checkout", "payment", "cart"})
 | fields start_time, service.name, span.name, span.kind, duration
 | sort start_time desc
@@ -87,7 +87,7 @@ fetch spans
 
 ```dql
 // Count spans by service entity (more reliable)
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(dt.entity.service)
 | summarize {span_count = count()}, by: {dt.entity.service}
 | sort span_count desc
@@ -113,7 +113,7 @@ Filter spans based on their role in the distributed transaction.
 ```dql
 // Find all SERVER spans (inbound requests)
 // Note: "server" is lowercase, not "SERVER"
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fields start_time, service.name, span.name, duration
 | sort duration desc
@@ -122,7 +122,7 @@ fetch spans
 
 ```dql
 // Find CLIENT spans (outbound calls to dependencies)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "client"
 | fields start_time, service.name, span.name, duration
 | sort duration desc
@@ -131,7 +131,7 @@ fetch spans
 
 ```dql
 // Count spans by kind to understand your traffic patterns
-fetch spans
+fetch spans, from:-1h
 | summarize {span_count = count()}, by: {span.kind}
 | sort span_count desc
 ```
@@ -144,7 +144,7 @@ Find spans for specific operations or endpoints using the `span.name` attribute:
 
 ```dql
 // Find spans for a specific operation/endpoint
-fetch spans
+fetch spans, from:-1h
 | filter contains(span.name, "checkout")
 | fields start_time, service.name, trace.id, span.name, duration, span.status_code
 | sort start_time desc
@@ -153,7 +153,7 @@ fetch spans
 
 ```dql
 // Find all POST operations (write operations)
-fetch spans
+fetch spans, from:-1h
 | filter startsWith(span.name, "POST")
 | fields start_time, service.name, span.name, duration, span.status_code
 | sort start_time desc
@@ -176,7 +176,7 @@ DQL provides several string matching functions:
 
 ```dql
 // Contains - partial match anywhere in the string
-fetch spans
+fetch spans, from:-1h
 | filter contains(span.name, "Get")
 | fields span.name, service.name
 | dedup span.name
@@ -185,7 +185,7 @@ fetch spans
 
 ```dql
 // startsWith and endsWith - prefix/suffix matching
-fetch spans
+fetch spans, from:-1h
 | filter startsWith(span.name, "GET") or endsWith(span.name, "query")
 | fields span.name
 | dedup span.name
@@ -194,7 +194,7 @@ fetch spans
 
 ```dql
 // matchesPhrase - wildcard pattern matching with *
-fetch spans
+fetch spans, from:-1h
 | filter matchesPhrase(span.name, "GET /api/*")
 | fields span.name
 | dedup span.name
@@ -203,7 +203,7 @@ fetch spans
 
 ```dql
 // Use dedup to see unique span names per service
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fields service.name, span.name
 | dedup service.name, span.name
@@ -219,7 +219,7 @@ Locate all spans belonging to a specific trace:
 
 ```dql
 // First, find some trace IDs to work with
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fields start_time, trace.id, span.name, service.name
 | sort start_time desc
@@ -229,7 +229,7 @@ fetch spans
 ```dql
 // Find all spans for a specific trace ID
 // Replace YOUR_TRACE_ID with an actual trace.id from above
-fetch spans
+fetch spans, from:-1h
 // | filter trace.id == "YOUR_TRACE_ID"
 | fields start_time, span.id, span.parent_id, span.name, service.name, duration
 | sort start_time asc
@@ -238,7 +238,7 @@ fetch spans
 
 ```dql
 // Find root spans (entry points) - spans without a parent
-fetch spans
+fetch spans, from:-1h
 | filter isNull(span.parent_id)
 | fields start_time, trace.id, span.name, service.name, duration, span.status_code
 | sort start_time desc
@@ -260,7 +260,7 @@ Query HTTP-specific span attributes for API troubleshooting:
 
 ```dql
 // Query HTTP spans with response status codes
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | fields start_time, 
          service.name, 
@@ -274,7 +274,7 @@ fetch spans
 
 ```dql
 // Find HTTP 5xx errors (server errors)
-fetch spans
+fetch spans, from:-1h
 | filter http.response.status_code >= 500 
       and http.response.status_code < 600
 | fields start_time, 
@@ -290,7 +290,7 @@ fetch spans
 
 ```dql
 // Summarize HTTP status codes by route
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.response.status_code)
 | summarize {status_count = count()}, by: {http.response.status_code}
 | sort http.response.status_code asc
@@ -311,7 +311,7 @@ Analyze database operations captured as spans:
 
 ```dql
 // Find all database spans
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.system)
 | fields start_time,
          service.name,
@@ -325,7 +325,7 @@ fetch spans
 
 ```dql
 // Find slow database queries (over 100ms)
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.system) 
       and duration > 100ms
 | fieldsAdd duration_ms = duration / 1000000
@@ -341,7 +341,7 @@ fetch spans
 
 ```dql
 // Summarize database usage
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize {
     db_span_count = count(),
@@ -369,7 +369,7 @@ fetch spans
 
 ```dql
 // Find spans that have database information
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize {db_span_count = count()}, by: {db.system, db.name}
 | sort db_span_count desc
@@ -377,7 +377,7 @@ fetch spans
 
 ```dql
 // Find HTTP spans with missing route (potential instrumentation issue)
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(http.request.method) and isNull(http.route)
 | fields service.name, span.name, http.request.method, url.path
 | dedup service.name, span.name
@@ -394,7 +394,7 @@ Build complex queries by combining multiple filter conditions:
 
 ```dql
 // Complex filter: Find slow SERVER spans in the checkout service
-fetch spans
+fetch spans, from:-1h
 | filter service.name == "checkout"
       and span.kind == "server"
       and duration > 500ms
@@ -409,7 +409,7 @@ fetch spans
 
 ```dql
 // Find error spans for specific services and operations
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"
       and in(service.name, {"payment", "checkout"})
       and span.kind == "server"
@@ -426,7 +426,7 @@ fetch spans
 
 ```dql
 // Find spans: either server errors OR slow successful requests
-fetch spans
+fetch spans, from:-1h
 | filter http.response.status_code >= 500
       or (http.response.status_code >= 200 
           and http.response.status_code < 300 

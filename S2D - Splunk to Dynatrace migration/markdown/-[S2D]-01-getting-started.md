@@ -128,7 +128,7 @@ Before diving deeper, let's verify that logs are available in Dynatrace. This qu
 
 ```dql
 // View available log sources and counts
-fetch logs
+fetch logs, from:-1h
 | summarize count = count(), by:{log.source}
 | sort count desc
 | limit 20
@@ -138,7 +138,7 @@ Check logs by host name to match Splunk source mapping.
 
 ```dql
 // View log counts by host
-fetch logs
+fetch logs, from:-1h
 | summarize count = count(), by:{host.name}
 | sort count desc
 | limit 20
@@ -148,7 +148,7 @@ For Kubernetes workloads, check by cluster and namespace.
 
 ```dql
 // View log counts by Kubernetes attributes
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(k8s.cluster.name)
 | summarize count = count(), by:{k8s.cluster.name, k8s.namespace.name}
 | sort count desc

@@ -157,7 +157,7 @@ fetch dt.system.buckets
 
 ```dql
 // Query logs from default bucket (implicit)
-fetch logs
+fetch logs, from:-1h
 | limit 10
 ```
 
@@ -175,7 +175,7 @@ fetch logs, bucket: {"default_logs", "audit_logs", "security_logs"}
 
 ```dql
 // Filter by bucket within query
-fetch logs
+fetch logs, from:-1h
 | filter dt.system.bucket == "default_logs"
 | filter loglevel == "ERROR"
 | limit 50

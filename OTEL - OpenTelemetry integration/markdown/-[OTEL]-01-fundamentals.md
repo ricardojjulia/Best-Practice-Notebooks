@@ -246,7 +246,7 @@ exporter = OTLPSpanExporter(
 
 ```dql
 // View OpenTelemetry traces in Dynatrace
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(otel.library.name)
 | fields timestamp, trace.id, span.name, otel.library.name, duration
 | sort timestamp desc
@@ -255,7 +255,7 @@ fetch spans
 
 ```dql
 // OTel instrumentation libraries in use
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(otel.library.name)
 | summarize count = count(), by:{otel.library.name, otel.library.version}
 | sort count desc

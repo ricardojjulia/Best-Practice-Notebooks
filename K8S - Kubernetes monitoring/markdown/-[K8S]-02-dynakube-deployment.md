@@ -445,7 +445,7 @@ fetch dt.entity.kubernetes_cluster
 
 ```dql
 // Check OneAgent deployment health via events
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "dynatrace") and matchesPhrase(content, "oneagent")
 | fields timestamp, content
 | sort timestamp desc

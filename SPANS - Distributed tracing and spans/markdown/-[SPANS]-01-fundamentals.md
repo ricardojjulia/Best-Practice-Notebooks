@@ -171,7 +171,7 @@ Let's explore span data using DQL. We'll start with the most basic query and pro
 
 ```dql
 // Basic span query - fetch all spans from the last 2 hours
-fetch spans
+fetch spans, from:-1h
 | limit 100
 ```
 
@@ -181,7 +181,7 @@ Instead of retrieving all span attributes, select only the fields you need for b
 
 ```dql
 // Select specific span fields for analysis
-fetch spans
+fetch spans, from:-1h
 | fields start_time,
          trace.id,
          span.id,
@@ -202,7 +202,7 @@ Span duration in Dynatrace is stored in **nanoseconds**. Here's how to convert t
 
 ```dql
 // Convert duration from nanoseconds to milliseconds and seconds
-fetch spans
+fetch spans, from:-1h
 | fields start_time,
          span.name,
          service.name,
@@ -219,7 +219,7 @@ Use filters to focus on specific spans. Filter early in your query for better pe
 
 ```dql
 // Filter spans by service and span kind
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter duration > 100ms
 | fields start_time,
@@ -237,7 +237,7 @@ Find all services that are generating span data:
 
 ```dql
 // Discover all services with span data
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {span_count = count()}, by:{service.name}
 | sort span_count desc

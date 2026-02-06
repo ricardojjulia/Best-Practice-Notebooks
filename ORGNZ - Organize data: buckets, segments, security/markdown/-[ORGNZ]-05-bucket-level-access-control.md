@@ -196,7 +196,7 @@ fetch logs, bucket: "team_platform_logs"
 
 ```dql
 // Check data distribution across accessible buckets
-fetch logs
+fetch logs, from:-1h
 | summarize count = count(), by:{dt.system.bucket}
 | sort count desc
 ```

@@ -66,7 +66,7 @@ The **most important** optimization: Apply filters as early as possible in the q
 
 ```dql
 // ✅ EFFICIENT: Filter BEFORE any processing
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"           // Filter first!
 | filter dt.entity.service == "SERVICE-6C36694E683AD694"  // Further narrow
 | filter span.status_code == "error"     // Even more specific
@@ -77,7 +77,7 @@ fetch spans
 ```dql
 // ❌ INEFFICIENT: Processing before filtering scans more data
 // This pattern wastes resources - shown for comparison only
-fetch spans
+fetch spans, from:-1h
 | fieldsAdd duration_ms = duration / 1000000  // Processing first (bad)
 | summarize {avg_duration = avg(duration_ms)}, by:{dt.entity.service, span.name}
 | filter dt.entity.service == "SERVICE-6C36694E683AD694"  // Too late!
@@ -86,7 +86,7 @@ fetch spans
 
 ```dql
 // ✅ EFFICIENT: Combine multiple filter conditions
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
         and isNotNull(dt.entity.service)
         and duration > 100ms
@@ -123,7 +123,7 @@ Filter on **indexed fields** for best query performance. These fields have optim
 
 ```dql
 // ✅ FAST: Filter on indexed fields
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(dt.entity.service)    // Indexed
 | filter span.kind == "server"           // Indexed
 | filter span.status_code == "error"     // Indexed
@@ -133,14 +133,14 @@ fetch spans
 
 ```dql
 // ⚠️ SLOWER: Filter on non-indexed field requires full scan
-fetch spans
+fetch spans, from:-1h
 | filter contains(url.path, "checkout")  // Not indexed - slower
 | limit 100
 ```
 
 ```dql
 // ✅ BETTER: Combine indexed filter first, then non-indexed
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"           // Indexed - reduces data first
 | filter isNotNull(dt.entity.service)    // Indexed - further reduces
 | filter contains(url.path, "checkout")  // Non-indexed on smaller dataset
@@ -155,7 +155,7 @@ Select only the fields you need - avoid fetching all attributes.
 
 ```dql
 // ✅ EFFICIENT: Select only required fields
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fields start_time,
          dt.entity.service,
@@ -168,14 +168,14 @@ fetch spans
 ```dql
 // ❌ INEFFICIENT: Fetching all fields (default behavior)
 // Returns ALL fields for each span - more data transfer
-fetch spans
+fetch spans, from:-1h
 | filter isNotNull(dt.entity.service)
 | limit 5
 ```
 
 ```dql
 // ✅ EFFICIENT: Compute fields only when needed
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter duration > 500ms
 | fieldsAdd duration_ms = duration / 1000000
@@ -204,7 +204,7 @@ Always use the smallest time range that meets your needs.
 
 ```dql
 // Query with explicit time filter (last 15 minutes)
-fetch spans
+fetch spans, from:-1h
 | filter start_time >= now() - 15m
 | filter span.kind == "server"
 | summarize {span_count = count()}, by:{dt.entity.service}
@@ -214,7 +214,7 @@ fetch spans
 
 ```dql
 // Narrow time range for troubleshooting specific incident
-fetch spans
+fetch spans, from:-1h
 | filter start_time >= now() - 30m
 | filter span.kind == "server"
 | filter span.status_code == "error"
@@ -225,7 +225,7 @@ fetch spans
 
 ```dql
 // Use aggregations for longer time ranges to reduce output
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     span_count = count(),
@@ -244,7 +244,7 @@ Use aggregations to summarize data instead of retrieving raw records. Simpler ag
 
 ```dql
 // ✅ EFFICIENT: Basic aggregations
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
@@ -256,7 +256,7 @@ fetch spans
 
 ```dql
 // ✅ EFFICIENT: Summarize at source with error rate calculation
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     total_requests = count(),
@@ -272,7 +272,7 @@ fetch spans
 ```dql
 // ⚠️ MORE EXPENSIVE: Many percentiles are costlier
 // Use only the percentiles you actually need
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     p50 = percentile(duration, 50) / 1000000,
@@ -286,7 +286,7 @@ fetch spans
 
 ```dql
 // Time-bucketed aggregations for trends
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | fieldsAdd time_bucket = bin(start_time, 5m)
 | summarize {
@@ -306,14 +306,14 @@ Avoid grouping by high-cardinality fields (fields with many unique values).
 ```dql
 // ❌ BAD: Grouping by high-cardinality field
 // trace.id could have millions of unique values!
-fetch spans
+fetch spans, from:-1h
 | summarize {trace_span_count = count()}, by:{trace.id}
 | limit 10
 ```
 
 ```dql
 // ✅ GOOD: Group by lower-cardinality fields
-fetch spans
+fetch spans, from:-1h
 | summarize {span_count = count()}, by:{dt.entity.service, span.name}
 | sort span_count desc
 | limit 20
@@ -321,7 +321,7 @@ fetch spans
 
 ```dql
 // ✅ GOOD: If you need trace analysis, filter first
-fetch spans
+fetch spans, from:-1h
 | filter span.status_code == "error"      // Reduce first
 | filter start_time >= now() - 15m        // Narrow time
 | summarize {
@@ -402,7 +402,7 @@ fetch spans, bucket: {"default_spans"}
 ```dql
 // Production Pattern: Well-optimized comprehensive query
 // Follows all optimization rules
-fetch spans
+fetch spans, from:-1h
 | filter start_time >= now() - 1h          // 1. Appropriate time range
 | filter isNotNull(dt.entity.service)      // 2. Filter early (indexed)
 | filter span.kind == "server"             // 2. Additional early filter (indexed)

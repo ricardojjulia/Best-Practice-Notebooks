@@ -1,6 +1,6 @@
 # Namespace Organization and Boundaries
 
-> **Series:** K8S | **Notebook:** 6 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 6 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Organizing Kubernetes Monitoring with Namespaces
 Namespaces provide logical boundaries in Kubernetes for resource isolation, access control, and organizational structure. This notebook covers namespace strategies and how to leverage them in Dynatrace for filtered views, access control, and cost allocation.
@@ -104,19 +104,15 @@ spec:
 
 ```dql
 // Namespace resource usage summary (CPU)
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpuUsage = avg(value), by:{k8s.namespace.name}
-| sort avgCpuUsage desc
+timeseries avgCpuUsageMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.namespace.name}
+| sort avgCpuUsageMillicores desc
 | limit 15
 ```
 
 ```dql
 // Memory usage by namespace
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.usage_percent"
-| summarize avgMemUsage = avg(value), by:{k8s.namespace.name}
-| sort avgMemUsage desc
+timeseries avgMemUsageBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{k8s.namespace.name}
+| sort avgMemUsageBytes desc
 | limit 15
 ```
 
@@ -170,18 +166,14 @@ spec:
 
 ```dql
 // CPU requests by namespace (quota tracking)
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.workload.requests_cpu"
-| summarize avgCpuRequests = avg(value), by:{k8s.namespace.name}
+timeseries avgCpuRequests = avg(dt.kubernetes.workload.requests_cpu), from:-1h, by:{k8s.namespace.name}
 | sort avgCpuRequests desc
 | limit 15
 ```
 
 ```dql
 // Memory requests by namespace
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.workload.requests_memory"
-| summarize avgMemRequests = avg(value), by:{k8s.namespace.name}
+timeseries avgMemRequests = avg(dt.kubernetes.workload.requests_memory), from:-1h, by:{k8s.namespace.name}
 | sort avgMemRequests desc
 | limit 15
 ```
@@ -302,10 +294,8 @@ metadata:
 
 ```dql
 // Resource consumption by namespace (for cost allocation)
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpu = avg(value), by:{k8s.namespace.name}
-| sort avgCpu desc
+timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.namespace.name}
+| sort avgCpuMillicores desc
 | limit 15
 ```
 

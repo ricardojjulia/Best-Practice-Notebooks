@@ -257,7 +257,7 @@ fetch dt.entity.service
 
 ```dql
 // Test log filtering by host group
-fetch logs
+fetch logs, from:-1h
 | filter startsWith(host.group,"prod-")
 | summarize count = count(), by:{host.group}
 | sort count desc

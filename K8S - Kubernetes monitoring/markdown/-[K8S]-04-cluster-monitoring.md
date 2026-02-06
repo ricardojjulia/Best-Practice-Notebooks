@@ -1,6 +1,6 @@
 # Cluster Health Monitoring
 
-> **Series:** K8S | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Deep-Dive into Kubernetes Cluster Metrics
 Cluster health monitoring provides visibility into the infrastructure layer of Kubernetes: nodes, control plane, and cluster-wide resources. This notebook covers key metrics, thresholds, and DQL queries for proactive cluster management.
@@ -77,26 +77,24 @@ fetch dt.entity.kubernetes_node
 
 ```dql
 // Node CPU utilization over time (top 10 by name)
-timeseries nodeCpu = avg(dt.kubernetes.node.cpu_usage), by:{dt.entity.kubernetes_node}
+timeseries nodeCpu = avg(dt.kubernetes.node.cpu_usage), from:-1h, by:{dt.entity.kubernetes_node}
 | limit 10
 ```
 
 ```dql
 // Node memory utilization - average over time period
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.node.memory_usage"
-| summarize avgMemory = avg(value), by:{dt.entity.kubernetes_node}
-| filter avgMemory > 80
-| sort avgMemory desc
+timeseries avgMemory = avg(dt.kubernetes.node.memory_usage), from:-1h, by:{dt.entity.kubernetes_node}
+| fieldsAdd avgMemoryValue = arrayAvg(avgMemory)
+| filter avgMemoryValue > 80
+| sort avgMemoryValue desc
 ```
 
 ```dql
 // Node filesystem usage - disk pressure detection
-fetch dt.metrics
-| filter metric.key == "dt.host.disk.used.percent"
-| summarize avgDiskUsage = avg(value), by:{dt.entity.host}
-| filter avgDiskUsage > 80
-| sort avgDiskUsage desc
+timeseries avgDiskUsage = avg(dt.host.disk.used.percent), from:-1h, by:{dt.entity.host}
+| fieldsAdd avgDiskUsageValue = arrayAvg(avgDiskUsage)
+| filter avgDiskUsageValue > 80
+| sort avgDiskUsageValue desc
 ```
 
 <a id="resource-capacity-planning"></a>
@@ -129,29 +127,23 @@ For environments where SVG doesn't render
 
 ```dql
 // CPU requests by namespace (average over time period)
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.workload.requests_cpu"
-| summarize avgCpuRequests = avg(value), by:{k8s.namespace.name}
+timeseries avgCpuRequests = avg(dt.kubernetes.workload.requests_cpu), from:-1h, by:{k8s.namespace.name}
 | sort avgCpuRequests desc
 | limit 15
 ```
 
 ```dql
 // Memory requests by namespace (average over time period)
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.workload.requests_memory"
-| summarize avgMemRequests = avg(value), by:{k8s.namespace.name}
+timeseries avgMemRequests = avg(dt.kubernetes.workload.requests_memory), from:-1h, by:{k8s.namespace.name}
 | sort avgMemRequests desc
 | limit 15
 ```
 
 ```dql
 // Find over-provisioned workloads (low CPU usage)
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpuUsage = avg(value), by:{dt.entity.cloud_application}
-| filter avgCpuUsage < 20
-| sort avgCpuUsage asc
+timeseries avgCpuUsageMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.cloud_application}
+| fieldsAdd avgCpuUsageMillicoresValue = arrayAvg(avgCpuUsageMillicores)
+| sort avgCpuUsageMillicoresValue asc
 | limit 20
 ```
 
@@ -175,7 +167,7 @@ For managed Kubernetes (EKS, AKS, GKE), control plane metrics are limited. Focus
 
 ```dql
 // API server events and errors
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "kube-apiserver") or matchesPhrase(content, "api-server")
 | filter matchesPhrase(content, "error") or matchesPhrase(content, "failed")
 | fields timestamp, content
@@ -198,7 +190,7 @@ fetch logs
 
 ```dql
 // Kubernetes warning events
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "Warning") and (matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s"))
 | fields timestamp, content
 | sort timestamp desc
@@ -207,7 +199,7 @@ fetch logs
 
 ```dql
 // Failed scheduling events
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "FailedScheduling") or matchesPhrase(content, "Insufficient")
 | fields timestamp, content
 | sort timestamp desc
@@ -216,7 +208,7 @@ fetch logs
 
 ```dql
 // OOMKilled events - memory issues
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "OOMKilled") or matchesPhrase(content, "Out of memory")
 | fields timestamp, content
 | sort timestamp desc
@@ -246,21 +238,17 @@ fetch logs, from: now() - 24h
 
 ```dql
 // Find workloads with very low CPU utilization (candidates for right-sizing)
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpuUsage = avg(value), by:{dt.entity.cloud_application}
-| filter avgCpuUsage < 10
-| sort avgCpuUsage asc
+timeseries avgCpuUsageMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.cloud_application}
+| fieldsAdd avgCpuUsageMillicoresValue = arrayAvg(avgCpuUsageMillicores)
+| sort avgCpuUsageMillicoresValue asc
 | limit 25
 ```
 
 ```dql
 // Memory usage efficiency by workload (low usage = over-provisioned)
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.usage_percent"
-| summarize avgMemUsage = avg(value), by:{dt.entity.cloud_application}
-| filter avgMemUsage < 30
-| sort avgMemUsage asc
+timeseries avgMemUsageBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{dt.entity.cloud_application}
+| fieldsAdd avgMemUsageBytesValue = arrayAvg(avgMemUsageBytes)
+| sort avgMemUsageBytesValue asc
 | limit 25
 ```
 

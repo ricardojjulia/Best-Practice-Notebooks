@@ -140,7 +140,7 @@ The key insight for translation is that both platforms should require roughly th
 ```dql
 // Option 1: Alert Reimagined - DQL for Davis Anomaly Detector
 // Threshold: 3, Violating Samples: 2, Sliding Window: 15
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.cluster.name, "production")
 | filter matchesPhrase(k8s.deployment.name, "checkout-service")
@@ -168,7 +168,7 @@ fetch logs
 ```dql
 // Option 2: Conservative - Same threshold, minimum samples
 // Threshold: 6, Violating Samples: 1, Sliding Window: 15
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.cluster.name, "production")
 | filter matchesPhrase(k8s.deployment.name, "checkout-service")
@@ -240,7 +240,7 @@ Your query must return timeseries data with a 1-minute interval:
 
 ```dql
 // Template for Davis Anomaly Detector DQL
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.cluster.name, "your-cluster")
 | filter matchesPhrase(k8s.namespace.name, "your-namespace")

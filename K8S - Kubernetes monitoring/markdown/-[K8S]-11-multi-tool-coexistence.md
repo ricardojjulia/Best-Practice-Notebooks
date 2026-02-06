@@ -1,6 +1,6 @@
 # Multi-Tool Coexistence & Advanced Configuration
 
-> **Series:** K8S | **Notebook:** 11 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 11 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Running Dynatrace Alongside Other Monitoring Tools
 Many organizations run multiple monitoring tools during migrations or for specialized use cases. This notebook covers patterns for running Dynatrace alongside tools like New Relic, Datadog, or Prometheus without conflicts.
@@ -332,18 +332,18 @@ To exclude namespaces from log collection (e.g., other monitoring tool namespace
 ```dql
 // Verify which namespaces have Dynatrace-monitored pods
 fetch dt.entity.cloud_application_instance
-| expand labels = entity.labels
-| filter contains(labels, "dynatrace")
+| expand tag = tags
+| filter contains(toString(tag), "dynatrace")
 | summarize count = count(), by:{entity.name}
 | sort count desc
 | limit 20
 ```
 
 ```dql
-// Check if version information is being detected
+// Check if version information is being detected (via tags)
 fetch dt.entity.service
-| filter isNotNull(service.version)
-| fields entity.name, service.version
+| filter isNotNull(tags)
+| fields entity.name, tags
 | sort entity.name asc
 | limit 30
 ```

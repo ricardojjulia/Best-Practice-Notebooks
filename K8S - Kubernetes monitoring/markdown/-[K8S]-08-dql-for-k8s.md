@@ -1,6 +1,6 @@
 # DQL Queries for Kubernetes
 
-> **Series:** K8S | **Notebook:** 8 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 8 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Advanced Query Patterns for Kubernetes Data
 This notebook provides a comprehensive reference of DQL queries for Kubernetes monitoring. From basic entity queries to complex performance analysis, these patterns help you extract insights from your Kubernetes data.
@@ -83,55 +83,49 @@ fetch dt.entity.kubernetes_node
 
 | Metric | Description | Unit |
 |--------|-------------|------|
-| `dt.containers.cpu.usage_percent` | Container CPU vs limit | Percent |
-| `dt.containers.memory.usage_percent` | Container memory vs limit | Percent |
+| `dt.kubernetes.container.cpu_usage` | Container CPU usage | Millicores |
+| `dt.kubernetes.container.memory_working_set` | Container memory (active) | Bytes |
+| `dt.kubernetes.container.requests_cpu` | CPU requests | Millicores |
+| `dt.kubernetes.container.requests_memory` | Memory requests | Bytes |
+| `dt.kubernetes.container.limits_cpu` | CPU limits | Millicores |
+| `dt.kubernetes.container.limits_memory` | Memory limits | Bytes |
 | `dt.containers.cpu.throttled_time` | CPU throttle time | Nanoseconds |
-| `dt.containers.memory.working_set_bytes` | Working memory | Bytes |
-| `dt.kubernetes.workload.requests_cpu` | CPU requests | Millicores |
-| `dt.kubernetes.workload.requests_memory` | Memory requests | Bytes |
+| `dt.kubernetes.node.cpu_usage` | Node CPU usage | Millicores |
+| `dt.kubernetes.node.memory_usage` | Node memory usage | Bytes |
 
 ```dql
 // Container CPU usage - top consumers
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpu = avg(value), by:{dt.entity.container_group_instance}
-| sort avgCpu desc
+timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.container_group_instance}
+| sort avgCpuMillicores desc
 | limit 15
 ```
 
 ```dql
 // Container memory usage approaching limits
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.usage_percent"
-| summarize avgMem = avg(value), by:{dt.entity.container_group_instance}
-| filter avgMem > 80
-| sort avgMem desc
+timeseries avgMemBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{dt.entity.container_group_instance}
+| fieldsAdd avgMemBytesValue = arrayAvg(avgMemBytes)
+| sort avgMemBytesValue desc
 ```
 
 ```dql
 // CPU throttling detection
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.throttled_time"
-| summarize totalThrottle = sum(value), by:{dt.entity.container_group_instance}
-| filter totalThrottle > 0
-| sort totalThrottle desc
+timeseries totalThrottle = sum(dt.containers.cpu.throttled_time), from:-1h, by:{dt.entity.container_group_instance}
+| fieldsAdd totalThrottleValue = arrayAvg(totalThrottle)
+| filter totalThrottleValue > 0
+| sort totalThrottleValue desc
 | limit 15
 ```
 
 ```dql
 // Namespace-level resource usage
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpuUsage = avg(value), by:{k8s.namespace.name}
-| sort avgCpuUsage desc
+timeseries avgCpuUsageMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.namespace.name}
+| sort avgCpuUsageMillicores desc
 | limit 15
 ```
 
 ```dql
 // Resource requests by namespace (capacity planning)
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.workload.requests_cpu"
-| summarize avgCpuRequests = avg(value), by:{k8s.namespace.name}
+timeseries avgCpuRequests = avg(dt.kubernetes.workload.requests_cpu), from:-1h, by:{k8s.namespace.name}
 | sort avgCpuRequests desc
 | limit 15
 ```
@@ -142,7 +136,7 @@ fetch dt.metrics
 
 ```dql
 // Error logs by namespace
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR"
 | filter isNotNull(k8s.namespace.name)
 | summarize errorCount = count(), by:{k8s.namespace.name}
@@ -152,7 +146,7 @@ fetch logs
 
 ```dql
 // Kubernetes events - warnings only
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "Warning")
 | filter matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s")
 | fields timestamp, content
@@ -162,7 +156,7 @@ fetch logs
 
 ```dql
 // Pod crashes and restarts
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "CrashLoopBackOff") or matchesPhrase(content, "BackOff")
 | fields timestamp, content
 | sort timestamp desc
@@ -171,7 +165,7 @@ fetch logs
 
 ```dql
 // OOM events
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "OOMKilled") or matchesPhrase(content, "Out of memory")
 | fields timestamp, content
 | sort timestamp desc
@@ -193,7 +187,7 @@ fetch logs, from: now() - 24h
 
 ```dql
 // Service response times in K8s
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(k8s.namespace.name)
 | summarize 
@@ -207,7 +201,7 @@ fetch spans
 
 ```dql
 // Error rate by service
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(k8s.namespace.name)
 | summarize 
@@ -222,7 +216,7 @@ fetch spans
 
 ```dql
 // Slow traces (>1 second)
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server" and duration > 1000000000
 | filter isNotNull(k8s.namespace.name)
 | fields timestamp, trace.id, k8s.namespace.name, span.name, duration
@@ -232,7 +226,7 @@ fetch spans
 
 ```dql
 // Request throughput by namespace
-fetch spans
+fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(k8s.namespace.name)
 | summarize requestCount = count(), by:{k8s.namespace.name}
@@ -246,24 +240,21 @@ fetch spans
 
 ```dql
 // High CPU workloads with their names
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpu = avg(value), by:{dt.entity.cloud_application}
-| filter avgCpu > 50
+timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.cloud_application}
+| fieldsAdd avgCpuMillicoresValue = arrayAvg(avgCpuMillicores)
 | lookup [fetch dt.entity.cloud_application | fields id, entity.name], sourceField:dt.entity.cloud_application, lookupField:id
-| fields entity.name, avgCpu
-| sort avgCpu desc
+| fields entity.name, avgCpuMillicoresValue
+| sort avgCpuMillicoresValue desc
 ```
 
 ```dql
 // Nodes with high utilization
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.node.cpu_usage"
-| summarize avgNodeCpu = avg(value), by:{dt.entity.kubernetes_node}
-| filter avgNodeCpu > 70
+timeseries avgNodeCpu = avg(dt.kubernetes.node.cpu_usage), from:-1h, by:{dt.entity.kubernetes_node}
+| fieldsAdd avgNodeCpuValue = arrayAvg(avgNodeCpu)
+| filter avgNodeCpuValue > 70
 | lookup [fetch dt.entity.kubernetes_node | fields id, entity.name], sourceField:dt.entity.kubernetes_node, lookupField:id
-| fields entity.name, avgNodeCpu
-| sort avgNodeCpu desc
+| fields entity.name, avgNodeCpuValue
+| sort avgNodeCpuValue desc
 ```
 
 <a id="dashboard-queries"></a>
@@ -292,10 +283,8 @@ fetch logs, from: now() - 24h
 
 ```dql
 // Top namespaces by CPU (bar chart)
-fetch dt.metrics
-| filter metric.key == "dt.containers.cpu.usage_percent"
-| summarize avgCpu = avg(value), by:{k8s.namespace.name}
-| sort avgCpu desc
+timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.namespace.name}
+| sort avgCpuMillicores desc
 | limit 10
 ```
 
@@ -305,11 +294,9 @@ fetch dt.metrics
 
 ```dql
 // High memory usage alert query
-fetch dt.metrics
-| filter metric.key == "dt.containers.memory.usage_percent"
-| summarize avgMem = avg(value), by:{dt.entity.container_group_instance}
-| filter avgMem > 90
-| summarize alertCount = count()
+timeseries avgMemBytes = avg(dt.kubernetes.container.memory_working_set), from:-1h, by:{dt.entity.container_group_instance}
+| fieldsAdd avgMemBytesValue = arrayAvg(avgMemBytes)
+
 ```
 
 ```dql

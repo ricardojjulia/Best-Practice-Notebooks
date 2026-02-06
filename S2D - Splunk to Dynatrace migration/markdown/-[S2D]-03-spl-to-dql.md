@@ -89,7 +89,7 @@ index=application sourcetype=app_logs host=app-server-01 | head 100
 
 ```dql
 // Simple log search with host filter
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(host.name, "app-server-01")
 | limit 100
 ```
@@ -105,7 +105,7 @@ index=application level=ERROR | stats count by host | sort -count
 
 ```dql
 // Error log count by host
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR"
 | summarize count = count(), by:{host.name}
 | sort count desc
@@ -122,7 +122,7 @@ index=application | timechart span=5m count by level
 
 ```dql
 // Time-series count by log level
-fetch logs
+fetch logs, from:-24h
 | makeTimeseries count = count(), by:{loglevel}, interval:5m
 ```
 
@@ -139,7 +139,7 @@ index=application "connection timeout"
 
 ```dql
 // Search for phrase in log content
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "connection timeout")
 | limit 50
 ```
@@ -155,7 +155,7 @@ index=application level IN ("ERROR", "WARN", "FATAL")
 
 ```dql
 // Filter for multiple log levels
-fetch logs
+fetch logs, from:-1h
 | filter in(loglevel, {"ERROR", "WARN", "FATAL"})
 | summarize count = count(), by:{loglevel}
 ```
@@ -171,7 +171,7 @@ index=application NOT level="DEBUG"
 
 ```dql
 // Exclude DEBUG level logs
-fetch logs
+fetch logs, from:-1h
 | filter loglevel != "DEBUG"
 | summarize count = count(), by:{loglevel}
 ```
@@ -187,7 +187,7 @@ index=application (host="app-01" OR host="app-02") AND level="ERROR"
 
 ```dql
 // Combined AND/OR conditions
-fetch logs
+fetch logs, from:-1h
 | filter (matchesPhrase(host.name, "app-01") OR matchesPhrase(host.name, "app-02"))
 | filter loglevel == "ERROR"
 | limit 100
@@ -206,7 +206,7 @@ index=application | stats count, avg(response_time), max(response_time) by host
 
 ```dql
 // Multiple aggregations by host
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(response_time)
 | summarize 
     count = count(),
@@ -226,7 +226,7 @@ index=application | stats count(eval(level="ERROR")) as errors, count as total b
 
 ```dql
 // Conditional count - errors vs total
-fetch logs
+fetch logs, from:-1h
 | summarize 
     errors = countIf(loglevel == "ERROR"),
     total = count(),
@@ -247,7 +247,7 @@ index=application | rex field=_raw "user=(?<username>\w+)"
 
 ```dql
 // Extract username from log content
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "user=")
 | parse content, "LD 'user=' WORD:username"
 | summarize count = count(), by:{username}
@@ -265,7 +265,7 @@ index=application | rex field=_raw "status=(?<status>\d+)" | rex field=_raw "dur
 
 ```dql
 // Extract multiple fields from structured log
-fetch logs
+fetch logs, from:-1h
 | parse content, "LD 'status=' INT:status LD 'duration=' INT:duration"
 | filter isNotNull(status) AND isNotNull(duration)
 | summarize avg_duration = avg(duration), by:{status}
@@ -284,7 +284,7 @@ index=application level=ERROR | timechart span=1m count by host
 
 ```dql
 // Time-series error count by host
-fetch logs
+fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | makeTimeseries count = count(), by:{host.name}, interval:1m
 ```

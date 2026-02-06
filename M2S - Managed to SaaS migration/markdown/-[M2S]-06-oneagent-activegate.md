@@ -375,13 +375,13 @@ Verify metrics are flowing:
 
 ```dql
 // Check for recent CPU metrics
-timeseries avg(dt.host.cpu.usage), by:{dt.entity.host}
+timeseries avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 | limit 10
 ```
 
 ```dql
 // Verify logs are flowing
-fetch logs
+fetch logs, from:-1h
 | summarize logCount = count(), by:{time_bucket = bin(timestamp, 5m)}
 | sort time_bucket desc
 | limit 12

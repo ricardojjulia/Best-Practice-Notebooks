@@ -293,7 +293,7 @@ After migration, verify dashboards are working:
 ```dql
 // Verify data exists for dashboard queries
 // Run sample queries from your dashboards to confirm data availability
-fetch logs
+fetch logs, from:-1h
 | summarize count()
 | fieldsAdd status = if(`count()` > 0, then: "Data available", else: "No data")
 ```

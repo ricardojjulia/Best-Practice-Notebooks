@@ -157,7 +157,7 @@ When logs include trace_id:
 
 ```dql
 // Find logs with trace correlation
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(trace_id)
 | fields timestamp, trace_id, span_id, content, loglevel
 | sort timestamp desc
@@ -166,7 +166,7 @@ fetch logs
 
 ```dql
 // Find logs for a specific trace
-fetch logs
+fetch logs, from:-1h
 | filter trace_id == "REPLACE_WITH_TRACE_ID"
 | fields timestamp, span_id, content, loglevel
 | sort timestamp asc

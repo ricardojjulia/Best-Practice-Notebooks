@@ -471,7 +471,7 @@ kubectl -n flux-system get events --sort-by='.lastTimestamp'
 
 ```dql
 // Monitor GitOps-related events in the cluster
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "argocd") or matchesPhrase(content, "flux")
 | fields timestamp, content
 | sort timestamp desc
@@ -480,7 +480,7 @@ fetch logs
 
 ```dql
 // Track DynaKube configuration changes
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "dynakube") and (matchesPhrase(content, "updated") or matchesPhrase(content, "created") or matchesPhrase(content, "deleted"))
 | fields timestamp, content
 | sort timestamp desc

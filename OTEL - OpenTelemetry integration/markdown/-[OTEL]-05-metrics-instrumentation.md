@@ -289,13 +289,13 @@ provider = MeterProvider(metric_readers=[reader])
 
 ```dql
 // Query OTel metrics in Dynatrace
-timeseries avg(http.server.request.duration), by:{http.method}
+timeseries avg(http.server.request.duration), from:-1h, by:{http.method}
 | limit 10
 ```
 
 ```dql
 // Request rate by status
-timeseries rate = sum(http.server.request.count), by:{http.status_code}
+timeseries rate = sum(http.server.request.count), from:-1h, by:{http.status_code}
 | limit 10
 ```
 

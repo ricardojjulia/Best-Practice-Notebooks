@@ -208,7 +208,7 @@ For environments where SVG doesn't render
 
 ```dql
 // Test namespace-based access
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | summarize count = count(), by:{k8s.namespace.name}
 | sort count desc
@@ -216,7 +216,7 @@ fetch logs
 
 ```dql
 // Test host group access
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(dt.host_group.id)
 | summarize count = count(), by:{dt.host_group.id}
 | sort count desc
@@ -224,7 +224,7 @@ fetch logs
 
 ```dql
 // Verify accessible data distribution
-fetch logs
+fetch logs, from:-1h
 | summarize 
     total = count(),
     withSecurityContext = countIf(isNotNull(dt.security_context)),

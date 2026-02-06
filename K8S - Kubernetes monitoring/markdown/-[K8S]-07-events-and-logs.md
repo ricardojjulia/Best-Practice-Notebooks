@@ -100,7 +100,7 @@ Configure which events to ingest:
 
 ```dql
 // Recent Kubernetes events
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s")
 | fields timestamp, content
 | sort timestamp desc
@@ -109,7 +109,7 @@ fetch logs
 
 ```dql
 // Warning events only
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "Warning")
 | filter matchesPhrase(log.source, "kubernetes") or matchesPhrase(log.source, "k8s")
 | fields timestamp, content
@@ -157,7 +157,7 @@ spec:
 
 ```dql
 // Container logs by namespace
-fetch logs
+fetch logs, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | summarize logCount = count(), by:{k8s.namespace.name}
 | sort logCount desc
@@ -166,7 +166,7 @@ fetch logs
 
 ```dql
 // Error logs with Kubernetes context
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "ERROR" or loglevel == "SEVERE"
 | filter isNotNull(k8s.namespace.name)
 | fields timestamp, k8s.namespace.name, k8s.pod.name, content
@@ -234,7 +234,7 @@ pipelines:
 
 ```dql
 // Failed scheduling events
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "FailedScheduling")
 | fields timestamp, content
 | sort timestamp desc
@@ -243,7 +243,7 @@ fetch logs
 
 ```dql
 // Pod restart events (BackOff, CrashLoopBackOff)
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "BackOff") or matchesPhrase(content, "CrashLoopBackOff")
 | fields timestamp, content
 | sort timestamp desc
@@ -252,7 +252,7 @@ fetch logs
 
 ```dql
 // Volume mount failures
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "FailedMount") or matchesPhrase(content, "FailedAttachVolume")
 | fields timestamp, content
 | sort timestamp desc
@@ -313,7 +313,7 @@ fetch logs, from: now() - 1h
 
 ```dql
 // Exception and error messages
-fetch logs
+fetch logs, from:-1h
 | filter matchesPhrase(content, "Exception") or matchesPhrase(content, "error") or matchesPhrase(content, "failed")
 | filter isNotNull(k8s.namespace.name)
 | fields timestamp, k8s.namespace.name, k8s.pod.name, content

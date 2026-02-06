@@ -79,13 +79,13 @@ Every DQL query starts with a `fetch` command specifying the data source.
 
 ```dql
 // Fetch logs (most common)
-fetch logs
+fetch logs, from:-1h
 | limit 10
 ```
 
 ```dql
 // Fetch spans (distributed traces)
-fetch spans
+fetch spans, from:-1h
 | limit 10
 ```
 
@@ -97,7 +97,7 @@ fetch dt.entity.host
 
 ```dql
 // Fetch problems
-fetch dt.davis.problems
+fetch dt.davis.problems, from:-24h
 | limit 10
 ```
 
@@ -120,14 +120,14 @@ Use `filter` to narrow results. Filter as early as possible for performance.
 
 ```dql
 // Filter by equality
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "error"
 | limit 20
 ```
 
 ```dql
 // Filter with multiple conditions (AND)
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "error"
 | filter timestamp > now() - 1h
 | limit 20
@@ -135,21 +135,21 @@ fetch logs
 
 ```dql
 // Filter with OR condition
-fetch logs
+fetch logs, from:-1h
 | filter loglevel == "error" or loglevel == "warn"
 | limit 20
 ```
 
 ```dql
 // Filter using IN for multiple values
-fetch logs
+fetch logs, from:-1h
 | filter in(loglevel, {"error", "warn", "fatal"})
 | limit 20
 ```
 
 ```dql
 // Filter with string matching
-fetch logs
+fetch logs, from:-1h
 | filter contains(content, "timeout")
 | limit 20
 ```
@@ -174,14 +174,14 @@ Use `fields` to select specific columns. This improves readability and performan
 
 ```dql
 // Select specific fields from logs
-fetch logs
+fetch logs, from:-1h
 | fields timestamp, loglevel, log.source, content
 | limit 20
 ```
 
 ```dql
 // Create calculated fields
-fetch spans
+fetch spans, from:-1h
 | fields span.name, 
          duration,
          duration_ms = duration / 1000000.0
@@ -206,7 +206,7 @@ fetch dt.entity.host
 
 ```dql
 // fieldsAdd keeps existing fields and adds new ones
-fetch spans
+fetch spans, from:-1h
 | fieldsAdd duration_ms = duration / 1000000.0
 | fields span.name, duration, duration_ms
 | limit 10
