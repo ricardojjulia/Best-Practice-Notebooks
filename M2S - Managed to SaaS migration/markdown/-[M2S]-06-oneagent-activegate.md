@@ -1,6 +1,6 @@
 # OneAgent and ActiveGate Migration
 
-> **Series:** M2S | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
 
 Agent migration is the core technical step. OneAgents must be reconfigured to communicate with SaaS instead of Managed.
 
@@ -23,11 +23,13 @@ Before starting this notebook, you should have:
 
 | Requirement | Description |
 |-------------|-------------|
-| Completed M2S-01 to M2S-05 | Configurations migrated |
+| Completed M2S-01 to M2S-05 | Configurations migrated via [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) or alternative tooling |
 | SaaS tenant ready | Tenant provisioned and accessible |
 | Network connectivity | Hosts can reach SaaS or ActiveGate |
 | Deployment tokens | SaaS installer tokens created |
 | Maintenance window | Scheduled for migration |
+
+> **Important:** Migrate configurations (M2S-05) **before** redirecting agents. The [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) should have deployed foundational settings (management zones, tags, service detection rules) to your SaaS tenant before agents start reporting.
 
 ---
 

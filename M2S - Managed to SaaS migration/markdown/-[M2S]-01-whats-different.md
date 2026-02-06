@@ -1,6 +1,6 @@
 # What's Different in SaaS
 
-> **Series:** M2S | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
 
 Congratulations on your new Dynatrace SaaS tenant! This notebook series guides you through migrating your monitoring from Managed to SaaS.
 
@@ -225,7 +225,7 @@ Or use the Dynatrace UI: Navigate to **Manage → Deployment status → ActiveGa
 ```dql
 // Check OneAgent versions across hosts
 fetch dt.entity.host
-| summarize hostCount = count(), by:{oneAgentVersion}
+| summarize hostCount = count(), by:{installerVersion}
 | sort hostCount desc
 ```
 
@@ -234,32 +234,55 @@ fetch dt.entity.host
 
 ### The SaaS Upgrade Assistant
 
-Dynatrace provides the **SaaS Upgrade Assistant** app to help automate your migration:
+Dynatrace provides the **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** app to automate your migration from Managed to SaaS. This is the **recommended primary tool** for most migrations.
 
 | Feature | Description |
 |---------|-------------|
-| **Migration Planning** | Automated discovery and assessment |
-| **Configuration Export** | Bulk export of settings and dashboards |
-| **Progress Tracking** | Visual migration status dashboard |
-| **Validation Checks** | Pre and post-migration validation |
+| **Automated Configuration Import** | Export configurations from Managed and upload to SaaS—most settings and dashboards migrate automatically |
+| **Selective Import** | Smart dependency-aware import lets you choose which configurations to deploy per wave |
+| **Dashboard Ownership Migration** | Automatically updates dashboard owners from Managed to SaaS user identifiers |
+| **Entity ID Adjustment** | Handles entity ID changes between environments automatically |
+| **Progress Tracking** | Real-time upgrade status with deployment result downloads (CSV) |
+| **Bulk Editing** | Edit and correct failed configurations individually or in bulk mode |
+| **Preview Changes** | Review all changes before deploying to ensure accuracy |
 
-> **Tip:** Contact your Dynatrace account team to access the SaaS Upgrade Assistant app.
+#### How It Works
+
+1. **Export** configuration from your Managed Cluster Management Console
+2. **Upload** the configuration archive to the SaaS Upgrade Assistant app in your target SaaS tenant
+3. **Review** imported configurations—grouped by type with error highlighting
+4. **Edit** any failed or incompatible configurations (single or bulk mode)
+5. **Deploy** selected configurations to your SaaS environment
+6. **Track** progress and download deployment result reports
+
+#### Version Alignment Requirement
+
+> **Important:** For best results, align your Managed cluster and SaaS environment to the **same major version** (e.g., both 1.294.x). Mismatched versions can cause false-positive migration failures. The SaaS Upgrade Assistant requires **Dynatrace Managed version 1.294 or later**.
+
+#### IAM Requirements
+
+Users need the `upgrade-assistant:environments:write` IAM policy assigned in Account Management to use the SaaS Upgrade Assistant.
+
+> **Tip:** See the full documentation at [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) and contact your Dynatrace account team for guided migration support.
 
 ### Migration Tooling Options
 
-| Tool | Best For |
-|------|----------|
-| **SaaS Upgrade Assistant** | Guided migration with UI |
-| **Monaco** | Configuration-as-code approach |
-| **Terraform** | Infrastructure-as-code environments |
-| **Settings API** | Custom migration scripts |
+| Tool | Best For | Approach |
+|------|----------|----------|
+| **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** | Most migrations—guided UI-based migration | Export from Managed, import via app |
+| **Monaco** | Configuration-as-code standardized deployments | YAML-based config management |
+| **Terraform** | Infrastructure-as-code environments | Dynatrace Terraform provider |
+| **Settings API** | Custom automation scripts | Direct API export/import |
+
+> **Warning:** Avoid mixing tooling approaches. For example, Monaco YAML templates can conflict with the SaaS Upgrade Assistant. Choose one primary method for consistency.
 
 ### Immediate Actions
 
 1. **Run the assessment queries** - Document your Managed environment size
 2. **Verify network connectivity** - Can you reach your SaaS tenant?
 3. **Create API tokens** - On both Managed and SaaS
-4. **Review the checklist** - Identify any gaps
+4. **Install the SaaS Upgrade Assistant** - On your target SaaS tenant
+5. **Review the checklist** - Identify any gaps
 
 ### Continue the Series
 
@@ -269,6 +292,9 @@ Dynatrace provides the **SaaS Upgrade Assistant** app to help automate your migr
 
 ### Additional Resources
 
+- [SaaS Upgrade Assistant Documentation](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)
+- [SaaS Upgrade Assistant on Dynatrace Hub](https://www.dynatrace.com/hub/detail/saas-upgrade-assistant/)
+- [Upgrading from Dynatrace Managed to SaaS](https://www.dynatrace.com/platform/saas-upgrade/)
 - [Dynatrace SaaS Documentation](https://docs.dynatrace.com/)
 - [Grail Data Lakehouse](https://docs.dynatrace.com/docs/platform/grail)
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
@@ -283,9 +309,10 @@ In this notebook, you learned:
 - Key changes to expect in your SaaS tenant
 - Important limitations and requirements
 - How to assess your current Managed environment
-- Available migration tools
+- The SaaS Upgrade Assistant as the primary migration tool
+- Available migration tooling options
 
-> **Key Takeaway:** Your SaaS tenant uses Grail, which means new capabilities but also some changes in how you work. Understanding these differences upfront helps you plan a successful migration.
+> **Key Takeaway:** Your SaaS tenant uses Grail, which means new capabilities but also some changes in how you work. The [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) automates the majority of configuration migration—start by installing it on your SaaS tenant.
 
 ---
 

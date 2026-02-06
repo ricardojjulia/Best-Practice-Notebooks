@@ -1,6 +1,6 @@
 # Migration Framework Overview
 
-> **Series:** M2S | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
 
 Migrating from Dynatrace Managed to SaaS is not a single action—it's a journey. The Dynatrace Migration Framework provides a structured approach that has been validated across hundreds of successful migrations.
 
@@ -151,7 +151,7 @@ fetch dt.entity.host | summarize hosts = count()
 
 <a id="phase-2-upgrade"></a>
 ## 4. Phase 2: Upgrade
-The Upgrade phase is where the actual migration happens.
+The Upgrade phase is where the actual migration happens. The **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** is the primary tool for this phase.
 
 ### Stage 4: Prepare
 
@@ -164,6 +164,7 @@ The Upgrade phase is where the actual migration happens.
 | Create API tokens | With required scopes |
 | Set up users | IAM configuration |
 | Prepare ActiveGates | For agent routing |
+| **Install SaaS Upgrade Assistant** | **On target SaaS tenant, assign `upgrade-assistant:environments:write` IAM policy** |
 
 #### Network Preparation Checklist
 
@@ -176,13 +177,19 @@ The Upgrade phase is where the actual migration happens.
 
 **Objective:** Perform the actual migration.
 
-| Activity | Sequence |
-|----------|----------|
-| Deploy Environment ActiveGate | First |
-| Migrate configurations | Second |
-| Redirect OneAgents | Third |
-| Verify data flow | Fourth |
-| Migrate synthetic monitors | Fifth |
+The [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) automates the majority of configuration migration:
+
+| Activity | Sequence | Tool |
+|----------|----------|------|
+| Deploy Environment ActiveGate | First | Manual |
+| **Export configuration from Managed** | **Second** | **SaaS Upgrade Assistant** |
+| **Upload and review in SaaS** | **Third** | **SaaS Upgrade Assistant** |
+| **Deploy configurations (selective import)** | **Fourth** | **SaaS Upgrade Assistant** |
+| Redirect OneAgents | Fifth | Manual / automated |
+| Verify data flow | Sixth | DQL validation |
+| Migrate synthetic monitors | Seventh | Manual |
+
+> **Tip:** The SaaS Upgrade Assistant supports **selective import**—you can deploy configurations in waves, choosing which configuration types to include or exclude per deployment. Smart dependency management automatically adds or removes dependent configurations.
 
 ### Stage 6: Integrate
 
@@ -192,7 +199,7 @@ The Upgrade phase is where the actual migration happens.
 |------------------|------------------|
 | ITSM webhooks | Update URLs to SaaS endpoints |
 | CI/CD pipelines | Update API endpoints and tokens |
-| Custom dashboards | Export/import or recreate |
+| Custom dashboards | SaaS Upgrade Assistant or recreate |
 | Third-party tools | Reconfigure connections |
 
 ---
@@ -317,16 +324,16 @@ Involve Dynatrace Professional Services and your account team early in planning.
 Complete discovery before making migration decisions. Unknown dependencies cause issues.
 
 ### 3. Plan Configuration
-Document every setting that needs migration. Use the Settings API to export configurations.
+Document every setting that needs migration. Use the [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) to export and review all configurations before deploying.
 
 ### 4. Test Incrementally
-Validate each phase before proceeding. Don't stack untested changes.
+Validate each phase before proceeding. The SaaS Upgrade Assistant's **selective import** supports a waved approach—deploy configuration types incrementally.
 
 ### 5. Communicate Broadly
 Keep all stakeholders informed. Surprises damage trust.
 
 ### 6. Validate Completely
-Verify all data flows post-migration. Use DQL to confirm expected data.
+Verify all data flows post-migration. Use the SaaS Upgrade Assistant's deployment result downloads (CSV) alongside DQL validation queries to confirm expected data.
 
 ---
 
@@ -336,13 +343,20 @@ Real-world migrations have revealed important insights:
 
 ### The 90/10 Rule
 
-> **Key Learning:** 90% of configurations can be migrated automatically using the SaaS Upgrade Assistant and Terraform/Monaco. The remaining 10% (manual configurations and scripts) often takes 90% of the time.
+> **Key Learning:** 90% of configurations can be migrated automatically using the [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) and Terraform/Monaco. The remaining 10% (manual configurations, credentials, and custom scripts) often takes 90% of the time.
+
+The SaaS Upgrade Assistant handles the bulk of this—dashboards, settings, alert policies, and more. Focus your manual effort on non-portable items like Credentials Vault entries, problem notification webhooks, and cloud platform integration credentials.
 
 ### Tenant Consolidation Limits
 
 When consolidating multiple Managed tenants into a single SaaS tenant:
 - **Maximum host count limit: 25,000** per tenant
 - If this limit is exceeded, split into multiple SaaS tenants
+- The SaaS Upgrade Assistant may encounter issues with **identical configuration names** when consolidating tenants—use Monaco instead in this scenario
+
+### Version Alignment
+
+> **Important:** Align your Managed cluster and SaaS environment to the **same major version** (e.g., both 1.294.x) when using the SaaS Upgrade Assistant. Version mismatches cause false-positive configuration failures.
 
 ### SSO/SAML Configuration
 
@@ -371,6 +385,7 @@ When consolidating multiple Managed tenants into a single SaaS tenant:
 2. **Identify phases** - If phased, define the migration waves
 3. **Build timeline** - Rough schedule for each phase
 4. **Assign ownership** - Who leads each stage?
+5. **Install the SaaS Upgrade Assistant** - Prepare on your target SaaS tenant
 
 ### Continue the Series
 
@@ -380,6 +395,8 @@ When consolidating multiple Managed tenants into a single SaaS tenant:
 
 ### Additional Resources
 
+- [SaaS Upgrade Assistant Documentation](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)
+- [Upgrading from Dynatrace Managed to SaaS](https://www.dynatrace.com/platform/saas-upgrade/)
 - [Dynatrace Documentation](https://docs.dynatrace.com/)
 - [Settings API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/settings)
 - [ActiveGate Deployment](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate)
@@ -392,11 +409,12 @@ In this notebook, you learned:
 
 - The three-phase migration framework (Plan, Upgrade, Run)
 - The nine stages within the framework
+- How the SaaS Upgrade Assistant fits into Phase 2 (Upgrade)
 - Key activities for each stage
 - How to choose between Big Bang and Phased approaches
 - The 6 best practices for successful migration
 
-> **Key Takeaway:** A structured framework reduces risk and increases success probability. Choose your approach based on environment size, risk tolerance, and available resources.
+> **Key Takeaway:** A structured framework reduces risk and increases success probability. The [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) is your primary tool during the Upgrade phase—it automates configuration export, import, and tracking.
 
 ---
 

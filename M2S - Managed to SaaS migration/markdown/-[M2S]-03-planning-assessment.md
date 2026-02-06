@@ -1,6 +1,6 @@
 # Planning and Assessment
 
-> **Series:** M2S | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
 
 The Plan phase is critical—most migration problems stem from incomplete discovery or unclear strategy. This notebook guides you through systematic planning.
 
@@ -112,7 +112,32 @@ Based on your discovery, choose your approach:
 | > 2000 hosts, complex integrations | Phased by region/application |
 | Strict compliance requirements | Phased with extended validation |
 
-### 3.2 Licensing Considerations
+### 3.2 Migration Tooling Decision
+
+Choose your primary migration tooling early—**do not mix approaches**:
+
+| Tool | Best For | Prerequisites |
+|------|----------|---------------|
+| **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** | Most migrations—UI-based, automated | Managed v1.294+, same major version alignment |
+| **Monaco** | Config-as-code environments, tenant consolidation | Monaco CLI installed, environment YAML files |
+| **Terraform** | IaC-driven organizations | Dynatrace Terraform provider configured |
+| **Settings API** | Custom scripted migrations | API tokens with read/write scopes |
+
+> **Important:** The [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) is the recommended tool for most migrations. It handles export, import, dependency management, and progress tracking in a single app. However, if you are consolidating multiple Managed tenants with **identical configuration names**, use Monaco instead—the SaaS Upgrade Assistant may have difficulty resolving name conflicts in this scenario.
+
+### 3.3 Version Alignment Planning
+
+If using the SaaS Upgrade Assistant, verify version compatibility:
+
+| Check | Requirement |
+|-------|-------------|
+| **Managed cluster version** | Must be **1.294 or later** for SaaS Upgrade Assistant support |
+| **Version alignment** | Same major version recommended (e.g., Managed 1.294.x ↔ SaaS 1.294.x) |
+| **Impact of mismatch** | Mismatched versions cause false-positive configuration failures during import |
+
+> **Tip:** Check your Managed cluster version in Cluster Management Console → Overview. Plan a Managed cluster update if needed before starting the SaaS Upgrade Assistant export.
+
+### 3.4 Licensing Considerations
 
 > **Important:** Dual licensing and contract alignment are critical considerations for migration planning.
 
@@ -129,7 +154,7 @@ Based on your discovery, choose your approach:
 - Understand any temporary cost implications
 - Plan the decommissioning of Managed licenses
 
-### 3.3 Historic Data Considerations
+### 3.5 Historic Data Considerations
 
 > **🚨 Critical:** Historic monitoring data cannot be migrated from Managed to SaaS.
 
@@ -140,7 +165,7 @@ Based on your discovery, choose your approach:
 | Trace history | ❌ Cannot migrate |
 | Problem history | ❌ Cannot migrate |
 | User session data | ❌ Cannot migrate |
-| Configurations | ✅ Can migrate via API |
+| Configurations | ✅ Can migrate via SaaS Upgrade Assistant or API |
 
 **Planning implications:**
 - Start SaaS data collection before decommissioning Managed
@@ -148,7 +173,7 @@ Based on your discovery, choose your approach:
 - Export any critical reports before shutdown
 - Maintain Managed access for historical reference (if needed)
 
-### 3.4 Success Criteria Definition
+### 3.6 Success Criteria Definition
 
 Define measurable success criteria:
 
@@ -160,20 +185,21 @@ Define measurable success criteria:
 | Alert functionality | Test alerts received | Notification test |
 | Dashboard accuracy | All tiles showing data | Visual inspection |
 | Integration health | All webhooks functioning | Integration tests |
+| Config migration | All deployable configs imported | SaaS Upgrade Assistant deploy results |
 
-### 3.5 Timeline Planning
+### 3.7 Timeline Planning
 
 | Phase | Duration | Key Milestones |
 |-------|----------|----------------|
-| Plan | Week 1-2 | Discovery complete, strategy approved |
-| Prepare | Week 3 | SaaS tenant ready, network configured |
-| Execute | Week 4 | Agents migrated, configs applied |
-| Validate | Week 5 | All success criteria met |
+| Plan | Week 1-2 | Discovery complete, strategy approved, tooling selected |
+| Prepare | Week 3 | SaaS tenant ready, SaaS Upgrade Assistant installed, network configured |
+| Execute | Week 4 | Config exported/imported via SaaS Upgrade Assistant, agents migrated |
+| Validate | Week 5 | All success criteria met, deploy results reviewed |
 | Optimize | Week 6+ | Tuning and feature adoption |
 
 > **Best Practice:** Minimize the dual-run period to reduce complexity and cost, but allow enough time for proper validation.
 
-### 3.6 Stakeholder Matrix
+### 3.8 Stakeholder Matrix
 
 | Stakeholder | Role | Communication Frequency |
 |-------------|------|------------------------|
@@ -264,11 +290,12 @@ Follow this proven sequence for successful migration:
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
 | Network connectivity issues | Medium | High | Pre-test connectivity, have rollback |
-| Configuration mismatch | Medium | Medium | Thorough discovery, validation queries |
+| Configuration mismatch | Medium | Medium | Use SaaS Upgrade Assistant preview, validate before deploy |
 | Integration failures | Medium | High | Test integrations early, document endpoints |
 | Data gaps during migration | Low | Medium | Parallel operation period |
 | User access issues | Low | Medium | SSO configuration testing |
 | Performance degradation | Low | High | Monitor during migration, capacity planning |
+| Version mismatch (SaaS Upgrade Assistant) | Medium | Medium | Align Managed cluster to same major version as SaaS |
 
 ### 5.2 Go/No-Go Checklist
 
@@ -278,6 +305,9 @@ Before proceeding to Execute phase:
 |------------|--------|
 | Discovery documented | [ ] |
 | Strategy approved | [ ] |
+| **Migration tooling selected** | [ ] |
+| **SaaS Upgrade Assistant installed (if applicable)** | [ ] |
+| **Managed cluster version verified (1.294+)** | [ ] |
 | Network connectivity verified | [ ] |
 | SaaS tenant provisioned | [ ] |
 | API tokens created | [ ] |
@@ -294,9 +324,11 @@ Before proceeding to Execute phase:
 
 1. **Complete discovery API calls** - Run all API commands in this notebook
 2. **Document configurations** - Create configuration inventory spreadsheet
-3. **Define success criteria** - Get stakeholder agreement
-4. **Create timeline** - Schedule phases and milestones
-5. **Identify risks** - Complete risk assessment
+3. **Select migration tooling** - [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) recommended for most scenarios
+4. **Verify Managed version** - Ensure cluster is v1.294+ for SaaS Upgrade Assistant compatibility
+5. **Define success criteria** - Get stakeholder agreement
+6. **Create timeline** - Schedule phases and milestones
+7. **Identify risks** - Complete risk assessment
 
 ### Continue the Series
 
@@ -306,6 +338,8 @@ Before proceeding to Execute phase:
 
 ### Planning Resources
 
+- [SaaS Upgrade Assistant Documentation](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)
+- [Upgrading from Dynatrace Managed to SaaS](https://www.dynatrace.com/platform/saas-upgrade/)
 - [Dynatrace API Documentation](https://docs.dynatrace.com/docs/dynatrace-api)
 - [Settings API Reference](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/settings)
 - [ActiveGate Sizing](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate/installation/activegate-sizing)
@@ -318,11 +352,13 @@ In this notebook, you learned:
 
 - How to conduct thorough environment discovery using the Entities API
 - API calls for building entity inventory from Managed environments
+- How to select the right migration tooling (SaaS Upgrade Assistant recommended)
+- Version alignment requirements for the SaaS Upgrade Assistant
 - Configuration categories requiring migration
 - How to define success criteria and timeline
 - Risk assessment methodology
 
-> **Key Takeaway:** Thorough planning prevents migration problems. Invest time in discovery—every unknown configuration is a potential issue during execution.
+> **Key Takeaway:** Thorough planning prevents migration problems. Invest time in discovery—every unknown configuration is a potential issue during execution. Select the [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) as your primary tool early, and verify version compatibility before starting.
 
 ---
 

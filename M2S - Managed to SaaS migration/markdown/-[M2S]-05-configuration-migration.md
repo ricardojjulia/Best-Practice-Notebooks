@@ -1,20 +1,21 @@
 # Configuration Migration
 
-> **Series:** M2S | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
 
-Configuration migration is often the most time-consuming part of a Managed-to-SaaS migration. A systematic approach ensures nothing is missed.
+Configuration migration is often the most time-consuming part of a Managed-to-SaaS migration. The **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** automates the bulk of this work, but a systematic approach ensures nothing is missed.
 
 ---
 
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Configuration Categories](#configuration-categories)
-3. [Settings API Migration](#settings-api-migration)
-4. [Dashboard Migration](#dashboard-migration)
-5. [Alerting Migration](#alerting-migration)
-6. [Automation Migration](#automation-migration)
-7. [Configuration Migration Checklist](#configuration-migration-checklist)
+2. [SaaS Upgrade Assistant Workflow](#saas-upgrade-assistant-workflow)
+3. [Configuration Categories](#configuration-categories)
+4. [Settings API Migration](#settings-api-migration)
+5. [Dashboard Migration](#dashboard-migration)
+6. [Alerting Migration](#alerting-migration)
+7. [Automation Migration](#automation-migration)
+8. [Configuration Migration Checklist](#configuration-migration-checklist)
 
 ---
 
@@ -48,10 +49,10 @@ By the end of this notebook, you will:
 
 | Category | Migration Method |
 |----------|------------------|
-| Settings (via API) | Export/Import via Settings API |
-| Dashboards | Export JSON, Import to SaaS |
-| Management Zones | Settings API or manual |
-| Alerting profiles | Manual recreation (endpoint changes) |
+| Settings (via API) | SaaS Upgrade Assistant or Settings API |
+| Dashboards | SaaS Upgrade Assistant or JSON export/import |
+| Management Zones | SaaS Upgrade Assistant, Settings API, or manual |
+| Alerting profiles | SaaS Upgrade Assistant or manual recreation |
 | Notifications | Recreate (new webhook URLs) |
 | Automations/Workflows | Recreate in SaaS Automations app |
 
@@ -61,15 +62,121 @@ Choose the right tool for your migration complexity:
 
 | Tool | Best For | Description |
 |------|----------|-------------|
+| **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** | **Most migrations (recommended)** | Automated export/import with UI, selective import, progress tracking, bulk editing |
 | **Monaco** | Configuration as Code | Version-controlled configuration management, ideal for standardized deployments |
-| **Dynatrace Migration Assistant** | Guided migration | Built-in tooling for common migration scenarios |
 | **Terraform** | Infrastructure as Code | Dynatrace Terraform provider for programmatic management |
 | **Settings API** | Custom automation | Direct API calls for maximum flexibility |
 | **Manual** | Non-portable items | Credentials Vault, Cloud Platform Integrations |
 
-### Monaco for Migration
+> **Warning:** Do not mix tooling approaches. Monaco YAML templates can conflict with the SaaS Upgrade Assistant. Choose one primary method for consistency.
 
-Monaco (Monitoring as Code) is particularly effective for configuration migration:
+---
+
+<a id="saas-upgrade-assistant-workflow"></a>
+## 2. SaaS Upgrade Assistant Workflow
+
+The **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** is a Dynatrace app that automates the majority of configuration migration. It handles dashboards, settings, alert policies, custom metrics, request attributes, network zones, and Settings 2.0 objects.
+
+### Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Managed version** | 1.294 or later |
+| **Version alignment** | Same major version on Managed and SaaS recommended (e.g., both 1.294.x) |
+| **IAM policy** | `upgrade-assistant:environments:write` assigned to migration users |
+| **Token scopes** | `Read network zones`, `Write network zones`, `Capture request data` |
+
+### Step-by-Step Workflow
+
+#### Step 1: Export from Managed
+
+1. Sign into the **Cluster Management Console** on your Managed cluster
+2. Navigate to **Environments** and select the target environment
+3. Select **Export Configuration** and confirm
+4. The configuration archive is stored locally
+
+#### Step 2: Upload to SaaS
+
+1. Open the **SaaS Upgrade Assistant** app in your target SaaS tenant
+2. Upload the exported configuration archive
+3. The app validates the archive signature and processes all configurations
+
+#### Step 3: Review Configurations
+
+The app groups configurations by type with clear status indicators:
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| **Ready** | Configuration can be deployed as-is | No action needed |
+| **Failed** | Configuration has errors | Edit to fix, or exclude from deployment |
+| **Deployed** | Already deployed to SaaS | No action needed |
+
+- Failed configurations are highlighted with full error messages (JSON-formatted)
+- Cyclic dependency detection helps resolve configuration conflicts
+
+#### Step 4: Edit Failed Configurations
+
+Two editing modes are available:
+
+| Mode | Use Case |
+|------|----------|
+| **Single mode** | Fix individual configurations with the edit form |
+| **Bulk mode** | Update hundreds of configurations at once (e.g., updating all dashboard owners) |
+
+> **Tip:** Use **Preview Changes** to verify edits before deploying. The app retains original values for rollback reference.
+
+#### Step 5: Selective Import (Waved Approach)
+
+The Smart Selective Import lets you deploy in waves:
+
+1. **Select configuration types** to include or exclude per deployment
+2. **Smart dependency management** automatically adds or removes dependent configurations
+3. **Deploy incrementally** — start with foundational configs (management zones, tags), then build up
+
+**Recommended wave order:**
+
+| Wave | Configuration Types |
+|------|---------------------|
+| 1 | Management zones, auto-tagging rules, host groups |
+| 2 | Service detection, request attributes, deep monitoring settings |
+| 3 | Alerting profiles, anomaly detection, SLOs |
+| 4 | Dashboards, remaining configurations |
+
+#### Step 6: Deploy and Track
+
+1. Deploy selected configurations to SaaS
+2. Monitor real-time progress via the upgrade status tracker
+3. Download **deployment results** as CSV for auditing and validation
+4. Review per-deployment and cumulative deployment summaries
+
+### What the SaaS Upgrade Assistant Handles
+
+| Configuration Type | Supported |
+|--------------------|-----------|
+| Dashboards (with owner migration) | ✅ |
+| Settings 2.0 objects | ✅ |
+| Alert policies | ✅ |
+| Custom metrics | ✅ |
+| Request attributes | ✅ |
+| Network zones | ✅ |
+| Web/mobile user action configs | ✅ |
+| Notification templates | ✅ |
+
+### What Still Requires Manual Migration
+
+Even with the SaaS Upgrade Assistant, these items need manual handling:
+
+| Item | Why |
+|------|-----|
+| Credentials Vault entries | Security isolation—cannot be exported |
+| Cloud platform integration credentials | Must be re-entered in SaaS |
+| Problem notification webhooks | Endpoint URLs change for SaaS |
+| API tokens | Tenant-specific—generate new ones |
+| Synthetic private locations | Infrastructure-specific deployment |
+
+### Monaco for Migration (Alternative)
+
+Monaco (Monitoring as Code) is an alternative when the SaaS Upgrade Assistant is not suitable (e.g., tenant consolidation with name conflicts):
 
 ```bash
 # Download configurations from Managed
@@ -83,13 +190,7 @@ monaco deploy \
   --project managed-export
 ```
 
-**Advantages of Monaco:**
-- Version-controlled configuration history
-- Handles dependencies between configurations
-- Supports bulk export/import
-- Enables configuration validation before deployment
-
-### Terraform Provider
+### Terraform Provider (Alternative)
 
 For organizations using Infrastructure as Code:
 
@@ -434,15 +535,16 @@ If you have scripts calling Dynatrace APIs:
 ---
 
 <a id="next-steps"></a>
-## 7. Next Steps
+## 8. Next Steps
 
 ### Immediate Actions
 
-1. **Export all settings** - Use Settings API to export each schema
-2. **Transform configurations** - Update entity references and IDs
-3. **Import to SaaS** - Apply configurations to target
-4. **Recreate notifications** - Set up integrations with new URLs
-5. **Validate** - Confirm all settings are working
+1. **Export configurations** - Use the [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) to export from Managed
+2. **Upload and review** - Upload archive to SaaS and review configuration status
+3. **Deploy in waves** - Use selective import to deploy foundational configs first
+4. **Fix failed configs** - Use bulk or single edit mode for any failures
+5. **Recreate notifications** - Set up integrations with new SaaS URLs
+6. **Download deploy results** - CSV reports for auditing and validation
 
 ### Continue the Series
 
@@ -452,6 +554,8 @@ If you have scripts calling Dynatrace APIs:
 
 ### Configuration Resources
 
+- [SaaS Upgrade Assistant Documentation](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)
+- [SaaS Upgrade Assistant on Dynatrace Hub](https://www.dynatrace.com/hub/detail/saas-upgrade-assistant/)
 - [Settings API Reference](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/settings)
 - [Dashboard API](https://docs.dynatrace.com/docs/dynatrace-api/configuration-api/dashboards-api)
 - [Automations Documentation](https://docs.dynatrace.com/docs/platform-modules/automations)
@@ -462,13 +566,15 @@ If you have scripts calling Dynatrace APIs:
 
 In this notebook, you learned:
 
+- The SaaS Upgrade Assistant workflow for automated configuration migration
 - Configuration categories and their migration methods
-- How to use the Settings API for export/import
-- Dashboard migration and transformation requirements
+- How to use selective import for waved deployments
+- How to handle failed configurations with bulk and single edit modes
+- Dashboard migration and ownership transformation
 - Why notifications must be recreated
 - Automation migration considerations
 
-> **Key Takeaway:** Not all configurations can be directly migrated. Settings API handles most items, but notifications and automations require recreation due to endpoint changes.
+> **Key Takeaway:** The [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) automates the majority of configuration migration—dashboards, settings, alert policies, and more. Use it as your primary tool, then handle non-portable items (credentials, webhooks) manually.
 
 ---
 

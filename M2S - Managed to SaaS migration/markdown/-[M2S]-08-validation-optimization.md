@@ -1,6 +1,6 @@
 # Validation and Optimization
 
-> **Series:** M2S | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
 
 Validation is the final and most critical phase. A migration isn't complete until all success criteria are verified and stakeholders sign off.
 
@@ -71,7 +71,20 @@ By the end of this notebook, you will:
 
 <a id="migration-validation"></a>
 ## 2. Migration Validation
-### 2.1 Entity Count Validation
+### 2.1 SaaS Upgrade Assistant Deploy Results
+
+If you used the [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) for configuration migration, start validation by reviewing its deployment results:
+
+| Validation Step | How |
+|-----------------|-----|
+| **Download deploy results** | Download the CSV from the SaaS Upgrade Assistant—available per-deployment and as a cumulative summary |
+| **Review failed configurations** | Check for any configurations that failed during import and resolve them |
+| **Verify configuration counts** | Compare the number of exported vs. successfully deployed configurations |
+| **Check configuration types** | Ensure all expected configuration types (dashboards, settings, alert policies) are present |
+
+> **Tip:** The SaaS Upgrade Assistant's deploy result CSV can be filtered in any spreadsheet tool to quickly identify failures by configuration type, status, or error message.
+
+### 2.2 Entity Count Validation
 
 Compare entity counts between Managed (documented during planning) and SaaS:
 
@@ -303,6 +316,8 @@ Replace manual processes with workflows:
 
 | Category | Checkpoint | Status |
 |----------|------------|--------|
+| **SaaS Upgrade Assistant** | Deploy results reviewed (all configs deployed or resolved) | [ ] |
+| **SaaS Upgrade Assistant** | Failed configurations fixed or excluded with justification | [ ] |
 | **Entities** | All hosts reporting | [ ] |
 | **Entities** | All services discovered | [ ] |
 | **Entities** | All applications configured | [ ] |
@@ -334,6 +349,7 @@ After successful validation:
 | 1 | Confirm no agents pointing to Managed | Immediate |
 | 2 | Keep Managed for comparison | 2-4 weeks |
 | 3 | Export final Managed data | Before shutdown |
+| 4 | Archive SaaS Upgrade Assistant deploy results | Before shutdown |
 | 4 | Decommission Managed cluster | After validation period |
 
 ### 6.4 Documentation Updates
@@ -346,6 +362,7 @@ Update your documentation:
 | Architecture diagrams | New network topology |
 | Onboarding guides | SaaS-specific instructions |
 | Disaster recovery | Updated recovery procedures |
+| Migration records | SaaS Upgrade Assistant deploy result CSVs archived |
 
 ---
 
@@ -370,11 +387,11 @@ Congratulations on completing the M2S migration series!
 
 | Notebook | Achievement |
 |----------|-------------|
-| M2S-01 | Understood benefits and motivation |
+| M2S-01 | Understood SaaS differences and the SaaS Upgrade Assistant |
 | M2S-02 | Learned the migration framework |
-| M2S-03 | Completed planning and assessment |
+| M2S-03 | Completed planning, assessment, and tooling selection |
 | M2S-04 | Designed architecture and network |
-| M2S-05 | Migrated configurations |
+| M2S-05 | Migrated configurations via SaaS Upgrade Assistant |
 | M2S-06 | Migrated agents |
 | M2S-07 | Addressed security and privacy |
 | M2S-08 | Validated and optimized |
@@ -391,9 +408,12 @@ Your migration is complete, but the journey continues:
 
 ### Additional Resources
 
+- [SaaS Upgrade Assistant Documentation](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)
+- [Upgrading from Dynatrace Managed to SaaS](https://www.dynatrace.com/platform/saas-upgrade/)
 - [Dynatrace Documentation](https://docs.dynatrace.com/)
 - [Dynatrace Community](https://community.dynatrace.com/)
 - [Dynatrace University](https://university.dynatrace.com/)
+- [Dynatrace Community: Upgrade to SaaS](https://community.dynatrace.com/t5/Upgrade-to-SaaS/bd-p/upgrade_to_saas)
 
 ---
 
@@ -401,13 +421,13 @@ Your migration is complete, but the journey continues:
 
 In this final notebook, you learned:
 
-- How to validate migration completeness
+- How to validate migration completeness using SaaS Upgrade Assistant deploy results
 - DQL queries for data quality verification
 - Performance optimization techniques
 - SaaS feature adoption planning
 - Migration completion procedures
 
-> **Key Takeaway:** A migration is only complete when all success criteria are validated and stakeholders sign off. Take time to verify everything before decommissioning Managed.
+> **Key Takeaway:** A migration is only complete when all success criteria are validated and stakeholders sign off. Review the [SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/) deploy results alongside DQL validation queries before decommissioning Managed.
 
 ---
 
