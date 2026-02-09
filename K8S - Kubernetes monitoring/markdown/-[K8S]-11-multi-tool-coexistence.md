@@ -1,6 +1,6 @@
 # Multi-Tool Coexistence & Advanced Configuration
 
-> **Series:** K8S | **Notebook:** 11 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Running Dynatrace Alongside Other Monitoring Tools
 Many organizations run multiple monitoring tools during migrations or for specialized use cases. This notebook covers patterns for running Dynatrace alongside tools like New Relic, Datadog, or Prometheus without conflicts.

@@ -1,6 +1,6 @@
 # Specialized Monitoring Scenarios
 
-> **Series:** K8S | **Notebook:** 12 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 ## NGINX Ingress, CSI Driver, and Resource Tuning
 This notebook covers specialized monitoring scenarios including NGINX Ingress Controller instrumentation, CSI Driver architecture, and resource sizing guidelines for Dynatrace components.

@@ -51,6 +51,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 - [K8S-10: Metadata Telemetry Enrichment](K8S%20-%20Kubernetes%20monitoring/markdown/-[K8S]-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
 - [K8S-11: Multi-Tool Coexistence](K8S%20-%20Kubernetes%20monitoring/markdown/-[K8S]-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
 - [K8S-12: Specialized Monitoring](K8S%20-%20Kubernetes%20monitoring/markdown/-[K8S]-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
+- [K8S-13: Kafka Monitoring with Kpow](K8S%20-%20Kubernetes%20monitoring/markdown/-[K8S]-13-kafka-monitoring-with-kpow.md) — Kafka observability using Kpow Prometheus metrics
 
 ### [M2S - Managed to SaaS migration](M2S%20-%20Managed%20to%20SaaS%20migration/README.md)
 Guide for migrating from Dynatrace Managed to Dynatrace SaaS.

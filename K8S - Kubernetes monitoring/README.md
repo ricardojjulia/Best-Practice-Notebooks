@@ -22,6 +22,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 10. [Metadata Telemetry Enrichment](markdown/-[K8S]-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
 11. [Multi-Tool Coexistence](markdown/-[K8S]-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
 12. [Specialized Monitoring](markdown/-[K8S]-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
+13. [Kafka Monitoring with Kpow](markdown/-[K8S]-13-kafka-monitoring-with-kpow.md) — Kafka observability using Kpow Prometheus metrics
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
