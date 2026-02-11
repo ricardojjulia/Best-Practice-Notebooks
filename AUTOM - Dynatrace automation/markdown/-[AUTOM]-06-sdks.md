@@ -1,6 +1,6 @@
 # Dynatrace SDKs
 
-> **Series:** AUTOM | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 Dynatrace provides official SDKs for programmatic access to the platform. These SDKs are auto-generated from OpenAPI specifications, ensuring they stay current with API changes.
 
@@ -12,6 +12,7 @@ Dynatrace provides official SDKs for programmatic access to the platform. These 
 2. [TypeScript SDK](#typescript-sdk)
 3. [Python SDK](#python-sdk)
 4. [Common Patterns](#common-patterns)
+5. [MCP Server Integration](#mcp-server-integration)
 
 ---
 
@@ -427,8 +428,61 @@ def generate_host_report():
 
 ---
 
+<a id="mcp-server-integration"></a>
+## 5. MCP Server Integration
+
+### Dynatrace MCP Server
+
+The [Dynatrace MCP Server](https://docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-intelligence-integrations/dynatrace-mcp) provides an alternative to traditional SDKs for AI-assisted workflows. It implements the Model Context Protocol (MCP), allowing AI assistants to interact with Dynatrace programmatically.
+
+### Setup
+
+```bash
+# Install and run via npx
+npx -y @dynatrace-oss/dynatrace-mcp-server@latest
+```
+
+### Configuration (Claude Code / AI Assistants)
+
+```json
+{
+  "mcpServers": {
+    "dynatrace": {
+      "command": "npx",
+      "args": ["-y", "@dynatrace-oss/dynatrace-mcp-server@latest"],
+      "env": {
+        "DYNATRACE_ENVIRONMENT_URL": "https://{tenant}.apps.dynatrace.com",
+        "DYNATRACE_API_TOKEN": "<token>"
+      }
+    }
+  }
+}
+```
+
+### MCP Server Capabilities
+
+| Capability | Description |
+|------------|-------------|
+| **DQL Queries** | Execute DQL queries against Grail |
+| **Entity Discovery** | Find and explore entities by name or type |
+| **Problem Analysis** | Retrieve Davis problems and events |
+| **Event Ingestion** | Send custom events into Grail |
+| **Natural Language** | AI assistants translate prompts to DQL |
+
+### When to Use MCP vs SDKs
+
+| Scenario | Tool Choice |
+|----------|-------------|
+| AI-assisted development | MCP Server |
+| Custom application | TypeScript/Python SDK |
+| Automated pipeline | SDK with CI/CD |
+| Interactive triage | MCP Server with Claude or Copilot |
+| Batch processing | SDK |
+
+---
+
 <a id="next-steps"></a>
-## 6. Next Steps
+## 7. Next Steps
 
 ### When to Use SDKs
 
@@ -439,6 +493,7 @@ def generate_host_report():
 | Config deployment | Monaco or Terraform |
 | Integration app | SDK |
 | Complex logic | SDK with JavaScript/Python |
+| AI-assisted access | MCP Server |
 
 ### Continue the Series
 
@@ -452,6 +507,7 @@ def generate_host_report():
 - [TypeScript SDK Documentation](https://developer.dynatrace.com/develop/sdks/client-libraries/)
 - [Python SDK on PyPI](https://pypi.org/project/dt-sdk/)
 - [API Reference](https://docs.dynatrace.com/docs/dynatrace-api)
+- [MCP Server Documentation](https://docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-intelligence-integrations/dynatrace-mcp)
 
 ---
 
@@ -462,9 +518,10 @@ In this notebook, you learned:
 - How to use the TypeScript and Python SDKs
 - Common patterns for queries, settings, and entities
 - Building custom CLI tools and reporting scripts
+- Dynatrace MCP Server for AI-assisted programmatic access
 - Best practices for SDK usage
 
-> **Key Takeaway:** SDKs provide the most flexibility for custom applications. Use them when you need programmatic access, complex logic, or integration with other systems. For simple config management, Monaco or Terraform are often simpler.
+> **Key Takeaway:** SDKs provide the most flexibility for custom applications. Use them when you need programmatic access, complex logic, or integration with other systems. For AI-assisted workflows, consider the MCP Server. For simple config management, Monaco or Terraform are often simpler.
 
 ---
 

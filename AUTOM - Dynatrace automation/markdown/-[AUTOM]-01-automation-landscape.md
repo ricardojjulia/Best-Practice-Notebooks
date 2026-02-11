@@ -1,6 +1,6 @@
 # Automation Landscape
 
-> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/11/2026
 
 Dynatrace provides multiple ways to automate configuration management and operational tasks. This series covers all major automation options, helping you choose the right approach for your needs.
 
@@ -11,7 +11,8 @@ Dynatrace provides multiple ways to automate configuration management and operat
 1. [Introduction](#introduction)
 2. [Choosing the Right Tool](#choosing-the-right-tool)
 3. [Decision Framework](#decision-framework)
-4. [API Token Scopes Reference](#api-token-scopes-reference)
+4. [Authentication & Token Reference](#api-token-scopes-reference)
+5. [Emerging Capabilities](#emerging-capabilities)
 
 ---
 
@@ -22,7 +23,7 @@ Before starting this series, ensure you have:
 | Requirement | Description |
 |-------------|-------------|
 | Dynatrace SaaS tenant | Active tenant with admin access |
-| API Token | Token with appropriate scopes for automation |
+| Authentication | Access token, platform token, or OAuth client (see [Authentication & Token Reference](#api-token-scopes-reference)) |
 | Basic familiarity | Understanding of Dynatrace configuration concepts |
 
 ---
@@ -143,7 +144,7 @@ Built-in automation engine for event-driven actions within Dynatrace.
 | **Configuration** | UI or YAML |
 | **Features** | Triggers, actions, conditions, JavaScript |
 | **Use Case** | Auto-remediation, notifications, integrations |
-| **Documentation** | [Workflows Documentation](https://docs.dynatrace.com/docs/platform-modules/automations/workflows) |
+| **Documentation** | [Workflows Documentation](https://docs.dynatrace.com/docs/analyze-explore-automate/workflows) |
 
 ### Dynatrace SDKs
 
@@ -246,16 +247,29 @@ These tools aren't mutually exclusive. Common combinations:
 ---
 
 <a id="api-token-scopes-reference"></a>
-## API Token Scopes Reference
-Each automation tool requires specific API token scopes:
+## Authentication & Token Reference
 
-| Tool | Required Scopes |
-|------|----------------|
-| **Settings API** | `settings.read`, `settings.write` |
-| **Monaco** | `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig` |
-| **Terraform** | `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig` |
-| **Workflows** | Built-in (no external token needed) |
-| **SDKs** | Depends on operations performed |
+Dynatrace supports three types of credentials for automation tools. Which you need depends on the tool and the resources you manage.
+
+### Token Types
+
+| Token Type | Description | Use Case |
+|------------|-------------|----------|
+| **Access Token (Classic)** | Scope-based token with explicit permissions (e.g., `settings.read`) | Settings API, Monaco, Terraform (settings/classic) |
+| **Platform Token** | Long-lived token bound to a user's permissions; simpler to create | Same as access token, but scopes are limited to user's existing permissions |
+| **OAuth Client** | Client ID + secret exchanged for short-lived tokens | **Required** for Terraform automation, document, and IAM resources |
+
+### Tool Authentication Matrix
+
+| Tool | Access/Platform Token | OAuth Client | Notes |
+|------|----------------------|--------------|-------|
+| **Settings API** | `settings.read`, `settings.write` | N/A | Direct REST calls |
+| **Monaco** | `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig` | N/A | CLI tool |
+| **Terraform** (settings/classic) | `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig` | N/A | IaC for config objects |
+| **Terraform** (automation/documents) | N/A | `automation:workflows:read/write`, `document:documents:read/write` | OAuth **required** |
+| **Terraform** (account management) | N/A | IAM scopes + `DT_ACCOUNT_ID` | OAuth **required** |
+| **Workflows** | Built-in (no external token needed) | N/A | Platform feature |
+| **SDKs** | Depends on operations performed | N/A | Client libraries |
 
 ### Token Best Practices
 
@@ -265,6 +279,50 @@ Each automation tool requires specific API token scopes:
 | Environment-specific | Separate tokens per environment |
 | Rotation | Rotate tokens regularly |
 | Secret storage | Use HashiCorp Vault, AWS Secrets Manager, etc. |
+| Platform tokens | Prefer over classic access tokens for simpler management |
+| OAuth for automation | Use OAuth clients when managing Workflows or Documents via Terraform |
+
+> **Key Distinction:** Platform tokens work within the user's existing permissions (a scope only grants access if the user already has that permission). OAuth clients operate with their own independent scopes, making them more suitable for service accounts and CI/CD pipelines.
+
+---
+
+<a id="emerging-capabilities"></a>
+## 5. Emerging Capabilities
+
+### Dynatrace Intelligence Agents
+
+Announced at Perform 2026, **Dynatrace Intelligence** is an agentic operations system that fuses deterministic and agentic AI. Intelligence Agents transform insights into autonomous outcomes across IT and business operations.
+
+| Aspect | Details |
+|--------|----------|
+| **Type** | Agentic AI layer built into the platform |
+| **Capabilities** | Autonomous SRE, security, and development agents |
+| **Integration** | Works through Dynatrace Workflows for agentic workflows |
+| **Governance** | Built-in guardrails for supervised or autonomous operation |
+| **Use Case** | Auto-prevention, auto-remediation, auto-optimization |
+
+> **Note:** Dynatrace Intelligence Agents represent a shift from rule-based automation (Workflows, Monaco, Terraform) to AI-driven autonomous operations. They complement existing tools rather than replacing them.
+
+### Dynatrace MCP Server
+
+The [Dynatrace MCP Server](https://docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-intelligence-integrations/dynatrace-mcp) implements the Model Context Protocol (MCP), enabling AI assistants (Claude, GitHub Copilot, Amazon Q) to interact with Dynatrace using natural language.
+
+| Aspect | Details |
+|--------|----------|
+| **Type** | Open-source MCP server |
+| **Access** | AI assistants can query problems, metrics, traces, logs, topology |
+| **Use Case** | AI-assisted development, triage, incident management |
+| **Documentation** | [MCP Server Documentation](https://docs.dynatrace.com/docs/dynatrace-intelligence/dynatrace-intelligence-integrations/dynatrace-mcp) |
+
+### How Emerging Capabilities Fit
+
+| Automation Maturity | Approach |
+|---------------------|----------|
+| **Manual** | Settings API, one-off scripts |
+| **Automated** | Monaco, Terraform, CI/CD pipelines |
+| **Supervised** | Workflows with human approval gates |
+| **Autonomous** | Intelligence Agents with guardrails |
+| **AI-Assisted** | MCP Server for developer and SRE tooling |
 
 ---
 

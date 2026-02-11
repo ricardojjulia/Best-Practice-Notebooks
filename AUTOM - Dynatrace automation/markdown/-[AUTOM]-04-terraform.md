@@ -1,6 +1,6 @@
 # Terraform Provider
 
-> **Series:** AUTOM | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 02/11/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -24,9 +24,21 @@ Before starting this notebook, ensure you have:
 | Requirement | Description |
 |-------------|-------------|
 | Terraform CLI | Version 1.0+ installed |
-| API Token | Token with `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig` |
+| Authentication | One of: **Access Token** (classic), **Platform Token**, or **OAuth Client** (see [Provider Configuration](#provider-configuration)) |
 | Tenant URL | Your Dynatrace SaaS tenant URL |
 | HCL Knowledge | Basic familiarity with Terraform syntax |
+
+### Authentication Methods
+
+The Dynatrace Terraform provider supports three authentication methods:
+
+| Method | Use Case | Key |
+|--------|----------|-----|
+| **Access Token (Classic)** | Settings API, classic config resources | `dt_api_token` |
+| **Platform Token** | User-friendly alternative; works within user's permissions | `dt_api_token` (same parameter) |
+| **OAuth Client** | **Required** for Automation, Document, and Account Management resources | `dt_client_id` + `dt_client_secret` |
+
+> **Important:** If you manage Workflows, Documents, or IAM resources via Terraform, you **must** configure OAuth client credentials in addition to (or instead of) an access/platform token.
 
 ---
 
@@ -93,9 +105,14 @@ terraform version
 
 <a id="provider-configuration"></a>
 ## 3. Provider Configuration
-### Basic Setup
 
-Create a `main.tf` file:
+The Dynatrace Terraform provider supports three authentication methods. Which you need depends on the resources you manage.
+
+### Method 1: Access Token or Platform Token
+
+Use for **Settings API** and **classic configuration** resources (management zones, auto-tags, alerting, SLOs, synthetic monitors, etc.).
+
+**Access tokens** (classic) require explicit scopes like `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig`. **Platform tokens** are a newer, user-friendly alternative — they work within the assigned user's permissions, so a selected scope only grants access if that user has the respective permission.
 
 ```hcl
 terraform {
@@ -109,8 +126,50 @@ terraform {
 
 provider "dynatrace" {
   dt_env_url   = var.dynatrace_url
-  dt_api_token = var.dynatrace_token
+  dt_api_token = var.dynatrace_token  # Access token or platform token
 }
+```
+
+### Method 2: OAuth Client Credentials
+
+**Required** for Automation (Workflows), Document, and Account Management resources. The provider exchanges your client ID and secret for short-lived OAuth access tokens automatically.
+
+```hcl
+provider "dynatrace" {
+  dt_env_url   = var.dynatrace_url
+  dt_api_token = var.dynatrace_token  # For settings/classic resources
+
+  # OAuth credentials — required for automation, document, and IAM resources
+  automation_client_id     = var.automation_client_id
+  automation_client_secret = var.automation_client_secret
+}
+```
+
+> **Tip:** If you only manage automation/document resources, you can omit `dt_api_token` and use OAuth alone.
+
+### Method 3: Environment Variables (Recommended for CI/CD)
+
+Instead of hardcoding values, set environment variables:
+
+| Variable | Purpose |
+|----------|---------|
+| `DYNATRACE_ENV_URL` or `DT_ENV_URL` | Tenant URL |
+| `DYNATRACE_API_TOKEN` or `DT_API_TOKEN` | Access token or platform token |
+| `DT_CLIENT_ID` | OAuth client ID (automation/documents) |
+| `DT_CLIENT_SECRET` | OAuth client secret |
+| `DT_ACCOUNT_ID` | Account UUID (for account-level IAM resources) |
+
+```bash
+export DT_ENV_URL="https://abc12345.live.dynatrace.com"
+export DT_API_TOKEN="dt0c01.XXXX..."
+export DT_CLIENT_ID="dt0s02.XXXX"
+export DT_CLIENT_SECRET="dt0s02.XXXX.YYYY..."
+```
+
+When environment variables are set, the provider block can be minimal:
+
+```hcl
+provider "dynatrace" {}
 ```
 
 ### Variables File
@@ -124,22 +183,55 @@ variable "dynatrace_url" {
 }
 
 variable "dynatrace_token" {
-  description = "Dynatrace API token"
+  description = "Dynatrace access token or platform token"
   type        = string
   sensitive   = true
 }
+
+variable "automation_client_id" {
+  description = "OAuth client ID for automation resources"
+  type        = string
+  default     = ""
+}
+
+variable "automation_client_secret" {
+  description = "OAuth client secret for automation resources"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
 ```
 
-### Environment-Specific Values
+### Which Authentication for Which Resources?
 
-Create `terraform.tfvars`:
+| Resource Category | Access/Platform Token | OAuth Client |
+|-------------------|-----------------------|--------------|
+| Settings 2.0 (management zones, auto-tags, etc.) | Yes | No |
+| Classic config (dashboards, alerting, etc.) | Yes | No |
+| Synthetic monitors, SLOs | Yes | No |
+| **Automation (Workflows, scheduling)** | No | **Required** |
+| **Documents (notebooks, dashboards v2)** | No | **Required** |
+| **Account Management (IAM, policies)** | No | **Required** (`DT_ACCOUNT_ID` also needed) |
 
-```hcl
-dynatrace_url   = "https://abc12345.live.dynatrace.com"
-dynatrace_token = "<your-api-token>"
-```
+### Creating an OAuth Client
 
-> **Security:** Never commit `terraform.tfvars` with real tokens. Use environment variables or secret management.
+1. Go to **Account Management** > **Identity & Access Management** > **OAuth clients**
+2. Create a new client with the required scopes:
+
+| Scope | Purpose |
+|-------|---------|
+| `automation:workflows:read` | Read workflow definitions |
+| `automation:workflows:write` | Create/update workflows |
+| `automation:rules:read` | Read scheduling rules |
+| `automation:rules:write` | Create/update scheduling rules |
+| `document:documents:read` | Read documents |
+| `document:documents:write` | Create/update documents |
+| `document:documents:delete` | Delete documents |
+
+3. Copy the generated **client ID** and **client secret** immediately — the secret is only shown once
+4. Store credentials securely (vault, CI/CD secrets, etc.)
+
+> **Security:** Never commit OAuth client secrets or API tokens to version control. Use environment variables, HashiCorp Vault, AWS Secrets Manager, or your CI/CD platform's secret store.
 
 ---
 

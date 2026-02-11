@@ -1,6 +1,6 @@
 # Migration Automation
 
-> **Series:** AUTOM | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 Configuration migration is the process of transferring Dynatrace settings from one environment to another. This is common in tenant consolidation, Managed-to-SaaS migration, and disaster recovery scenarios.
 
@@ -327,7 +327,9 @@ For Managed-to-SaaS migrations, Dynatrace provides a guided tool.
 
 ### Post-Migration Validation
 
-Run these DQL queries on the target tenant:
+Run these DQL queries on the target tenant to verify entity counts:
+
+> **Note:** The `fetch dt.settings` data object may not be available in all environments. If these queries return errors, use the Settings API validation script shown below instead.
 
 ```dql
 // Count management zones

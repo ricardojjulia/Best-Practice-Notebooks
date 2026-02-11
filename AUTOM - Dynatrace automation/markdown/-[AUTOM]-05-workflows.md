@@ -1,6 +1,6 @@
 # Dynatrace Workflows
 
-> **Series:** AUTOM | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 Dynatrace Workflows is a built-in automation engine that enables event-driven actions directly within the platform. Unlike external tools, workflows run inside Dynatrace with full access to observability data.
 
@@ -14,6 +14,7 @@ Dynatrace Workflows is a built-in automation engine that enables event-driven ac
 4. [Actions and Integrations](#actions-and-integrations)
 5. [Auto-Remediation Patterns](#auto-remediation-patterns)
 6. [Best Practices](#best-practices)
+7. [Recent Enhancements](#recent-enhancements)
 
 ---
 
@@ -397,8 +398,40 @@ tasks:
 
 ---
 
+<a id="recent-enhancements"></a>
+## 7. Recent Enhancements
+
+### New Workflow Features (2025-2026)
+
+Dynatrace has added several capabilities to the Workflows engine:
+
+| Feature | Description |
+|---------|-------------|
+| **Sub-workflows** | Call reusable workflows from within other workflows for modular automation |
+| **Approval Requests** | Built-in human approval gates for governed automation |
+| **Workflow Drafts** | Save work-in-progress workflows without deploying them |
+| **Simple Workflows** | Quickly automate single-step tasks (e.g., send a Slack notification) at no additional cost |
+| **Persistent Execution Data** | Retain execution history for analysis and refinement |
+| **Real-time Notifications** | Get notified when workflows complete or fail |
+| **ServiceNow Integration** | Six pre-built integrations for incident creation, CMDB enrichment |
+
+### Dynatrace Intelligence Agents
+
+With Dynatrace Intelligence (announced Perform 2026), workflows can now host **agentic workflows** that use Intelligence Agents for autonomous operations:
+
+| Capability | Description |
+|------------|-------------|
+| **Agentic Workflows** | AI agents execute decisions within workflow tasks |
+| **Closed-loop Remediation** | Agents can autonomously resolve issues with guardrails |
+| **SRE Agents** | Specialized agents for incident triage and resolution |
+| **Governance** | Human oversight controls for supervised or autonomous modes |
+
+> **Note:** Intelligence Agents build on top of the Workflows engine. Existing workflow patterns remain valid; Agents add an AI reasoning layer for autonomous decision-making.
+
+---
+
 <a id="next-steps"></a>
-## 7. Next Steps
+## 8. Next Steps
 
 ### Workflows vs External Automation
 
@@ -417,9 +450,9 @@ tasks:
 
 ### Additional Resources
 
-- [Workflows Documentation](https://docs.dynatrace.com/docs/platform-modules/automations/workflows)
-- [Workflow Actions Reference](https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions)
-- [JavaScript Task Reference](https://docs.dynatrace.com/docs/platform-modules/automations/workflows/actions/javascript)
+- [Workflows Documentation](https://docs.dynatrace.com/docs/analyze-explore-automate/workflows)
+- [Workflow Actions Reference](https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions)
+- [JavaScript Task Reference](https://docs.dynatrace.com/docs/analyze-explore-automate/workflows/actions/javascript)
 
 ---
 
