@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ | **Notebook:** 8 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Overview
 
@@ -117,8 +117,10 @@ Segment:
 | Pattern | Supported? | Notes |
 |---------|------------|-------|
 | `starts-with` | Yes | Must have at least one preceding character |
-| `contains` | No | Not supported |
-| `ends-with` | No | Not supported |
+| `contains` | No | Not supported in segment filter conditions |
+| `ends-with` | No | Not supported in segment filter conditions |
+
+> **Important**: The `contains` restriction applies to **signal data** filters (logs, spans, events). For **entity type** includes, `tags contains 'value'` is valid because it checks tag membership, not substring matching.
 
 <a id="segment-design-patterns"></a>
 ## Segment Design Patterns
@@ -134,7 +136,7 @@ includes:
     filter: "tags contains 'team:platform'"
   
   - type: logs
-    filter: "host.group starts-with 'platform-'"
+    filter: "dt.host_group.id starts-with 'platform-'"
   
   - type: spans
     filter: "service.name starts-with 'platform-'"
@@ -152,10 +154,10 @@ includes:
     filter: "tags contains 'app:checkout'"
   
   - type: logs
-    filter: "service.name contains 'checkout'"
+    filter: "k8s.namespace.name == 'checkout'"
   
   - type: spans
-    filter: "service.name contains 'checkout'"
+    filter: "service.name starts-with 'checkout-'"
 ```
 
 ### Pattern 3: Environment-Based Segment
@@ -174,7 +176,7 @@ includes:
     filter: "tags contains 'environment:${env}'"
   
   - type: logs
-    filter: "host.group starts-with 'prod-'"
+    filter: "dt.host_group.id starts-with 'prod-'"
 ```
 
 <a id="leveraging-oneagent-enrichments"></a>
@@ -183,7 +185,7 @@ OneAgent automatically enriches signals with metadata for precise filtering:
 
 | Enrichment | Source | Example Use |
 |------------|--------|-------------|
-| `host.group` | Host group configuration | Filter by host group |
+| `dt.host_group.id` | Host group configuration | Filter by host group |
 | `k8s.namespace.name` | Kubernetes namespace | Filter by namespace |
 | `k8s.cluster.name` | Kubernetes cluster | Filter by cluster |
 | `cloud.provider` | Cloud detection | Filter by AWS/Azure/GCP |
@@ -195,7 +197,7 @@ OneAgent automatically enriches signals with metadata for precise filtering:
 ```yaml
 includes:
   - type: logs
-    filter: "host.group == 'prod-web-tier'"
+    filter: "dt.host_group.id == 'prod-web-tier'"
   
   - type: dt.entity.host
     filter: "hostGroup == 'prod-web-tier'"
@@ -241,7 +243,7 @@ includes:
 ```dql
 // Test host group filtering (simulating segment rule)
 fetch dt.entity.host
-| filter hostGroup starts-with "prod-"
+| filter startsWith(hostGroup, "prod-")
 | fields entity.name, hostGroup, tags
 | limit 20
 ```
@@ -292,11 +294,13 @@ Segments are governed by existing access controls - users only see data they're 
 
 Continue with the ORGNZ series:
 - **ORGNZ-09**: Enterprise Patterns
+- **ORGNZ-10**: Advanced Segment Definitions
 
 ## References
 
-- [Grail Segments](https://docs.dynatrace.com/docs/platform/grail/segments)
+- [Grail Segments](https://docs.dynatrace.com/docs/manage/segments)
 - [Entity Model](https://docs.dynatrace.com/docs/platform/entities)
+- [Segment Limits](https://docs.dynatrace.com/docs/manage/segments/reference/segments-reference-limits)
 - [Segments blog post](https://www.dynatrace.com/news/blog/segments-empower-centralized-teams-to-dynamically-organize-data-at-petabyte-scale/)
 
 ---

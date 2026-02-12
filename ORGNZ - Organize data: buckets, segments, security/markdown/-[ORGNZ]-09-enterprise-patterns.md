@@ -1,6 +1,6 @@
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ | **Notebook:** 9 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Overview
 
@@ -278,8 +278,8 @@ fetch logs, from:-1h
 ```dql
 // Audit bucket retention settings
 fetch dt.system.buckets
-| fields bucket.name, bucket.table, bucket.retentionDays
-| sort bucket.table asc, bucket.retentionDays desc
+| fields name, dt.system.table, retention_days
+| sort dt.system.table asc, retention_days desc
 ```
 
 <a id="best-practices-summary"></a>
@@ -308,6 +308,7 @@ The ORGNZ series covered:
 | ORGNZ-07 | Advanced Permissions | Record and field-level patterns |
 | ORGNZ-08 | Grail Segments | Dynamic data organization |
 | ORGNZ-09 | Enterprise Patterns | Combined approaches at scale |
+| ORGNZ-10 | Advanced Segment Definitions | Filter syntax, enrichment, variables, troubleshooting |
 
 ## References
 

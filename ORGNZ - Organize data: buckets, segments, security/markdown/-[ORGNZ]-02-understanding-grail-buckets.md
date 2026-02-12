@@ -1,6 +1,6 @@
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Overview
 
@@ -169,7 +169,7 @@ fetch logs, bucket:{"default_logs"}
 
 ```dql
 // Query from multiple buckets simultaneously
-fetch logs, bucket: {"default_logs", "audit_logs", "security_logs"}
+fetch logs, bucket:{"default_logs", "audit_logs", "security_logs"}
 | limit 100
 ```
 
