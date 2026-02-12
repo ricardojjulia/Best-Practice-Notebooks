@@ -1,6 +1,6 @@
 # ORGNZ-04: Permissions in Grail Overview
 
-> **Series:** ORGNZ | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Overview
 

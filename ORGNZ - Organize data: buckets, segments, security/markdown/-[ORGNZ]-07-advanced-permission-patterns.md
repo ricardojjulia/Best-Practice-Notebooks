@@ -1,6 +1,6 @@
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Overview
 
@@ -19,9 +19,10 @@ This notebook covers advanced permission patterns including record-level permiss
 2. [Record-Level Policy Examples](#record-level-policy-examples)
 3. [Field-Level Access](#field-level-access)
 4. [Combined Permission Patterns](#combined-permission-patterns)
-5. [Enterprise Architecture Patterns](#enterprise-architecture-patterns)
-6. [Testing Permissions](#testing-permissions)
-7. [Best Practices](#best-practices)
+5. [Policy Boundaries](#policy-boundaries)
+6. [Enterprise Architecture Patterns](#enterprise-architecture-patterns)
+7. [Testing Permissions](#testing-permissions)
+8. [Best Practices](#best-practices)
 
 ---
 
@@ -35,6 +36,7 @@ This notebook covers advanced permission patterns including record-level permiss
 By the end of this notebook, you will:
 - Implement record-level permissions using various attributes
 - Understand field-level access restrictions
+- Use policy boundaries for reusable condition management
 - Combine bucket, record, and field-level policies
 - Design enterprise-scale permission architectures
 
@@ -62,9 +64,10 @@ For environments where SVG doesn't render
 | `storage:k8s.cluster.name` | Kubernetes cluster | `= 'main-cluster'` |
 | `storage:host.name` | Host name | `= 'web-server-01'` |
 | `storage:dt.host_group.id` | Host group | `STARTSWITH 'prod-'` |
-| `storage:service.name` | Service name | `= 'checkout'` |
 | `storage:aws.account.id` | AWS account | `= '123456789012'` |
 | `storage:gcp.project.id` | GCP project | `= 'my-project'` |
+| `storage:azure.subscription` | Azure subscription | `= 'sub-id'` |
+| `storage:azure.resource.group` | Azure resource group | `= 'my-rg'` |
 | `storage:dt.security_context` | Custom context | `MATCH ('team-*')` |
 
 <a id="record-level-policy-examples"></a>
@@ -180,6 +183,61 @@ Multiple teams share a bucket with security context isolation:
 }
 ```
 
+<a id="policy-boundaries"></a>
+## Policy Boundaries
+
+**Policy boundaries** decouple the "what" (policy) from the "where" (conditions), enabling reusable condition sets that can be applied across multiple policies.
+
+### What Are Boundaries?
+
+| Aspect | Description |
+|--------|-------------|
+| **Purpose** | Bundle conditions for reuse across multiple policies |
+| **Scope** | Record-level and resource-level restrictions |
+| **Relationship** | Always used together with a policy — boundaries alone don't restrict anything |
+| **Limit** | Maximum 10 restrictions per boundary |
+
+### How Boundaries Work
+
+While **policies** define _which features and data_ users can access, **boundaries** define _where_ users can access them:
+
+```
+Policy: ALLOW storage:logs:read, storage:metrics:read, storage:spans:read
+Boundary: storage:k8s.namespace.name = "production"
+           storage:dt.host_group.id STARTSWITH "prod-"
+```
+
+When assigned together, the user gets read access to logs, metrics, and spans — but only for production namespace data on production host groups.
+
+### Boundary Rules
+
+| Rule | Detail |
+|------|--------|
+| No AND operator | Each line is one condition (implicitly AND-combined) |
+| No logical operators | For complex logic, use policy templating |
+| Reusable | Same boundary can be applied to multiple policies |
+| Max 10 restrictions | Create additional boundaries if more are needed |
+
+### Creating Boundaries
+
+1. Go to **Account Management** > **Identity & access management** > **Policy management**
+2. Select the **Boundaries** tab
+3. Select **Create boundary**
+4. Enter boundary name and conditions (one per line)
+5. Save and assign to group policies
+
+### Example: Regional Boundary
+
+```
+# EU Region Boundary
+storage:bucket-name STARTSWITH "eu_"
+storage:azure.subscription = "eu-subscription-id"
+```
+
+This boundary can then be applied alongside any policy (logs access, metrics access, etc.) to restrict all data access to the EU region.
+
+> **Tip:** Use boundaries when you have the same set of conditions (e.g., "production only" or "EU region only") that need to apply to multiple policies. This avoids duplicating conditions across every policy definition.
+
 <a id="enterprise-architecture-patterns"></a>
 ## Enterprise Architecture Patterns
 ### Tiered Access Model
@@ -202,6 +260,8 @@ For environments where SVG doesn't render
 |--------|---------|---------|--------|
 | EU | eu_* | region:eu | bucket-name STARTSWITH 'eu_' AND security_context MATCH ('region:eu*') |
 | US | us_* | region:us | bucket-name STARTSWITH 'us_' AND security_context MATCH ('region:us*') |
+
+> **Tip:** Use policy boundaries to define regional restrictions once, then apply the same boundary to all team policies within that region.
 
 <a id="testing-permissions"></a>
 ## Testing Permissions
@@ -238,6 +298,7 @@ fetch logs, from:-1h
 |----------|----------|
 | Start with least privilege | Grant minimum required access |
 | Use groups, not individuals | Easier management, consistent access |
+| Use policy boundaries for reuse | Avoid duplicating conditions across policies |
 | Document all policies | Audit trail and governance |
 | Test policies before deployment | Prevent access issues |
 | Regular access reviews | Remove unnecessary permissions |
@@ -252,6 +313,7 @@ Continue with the ORGNZ series:
 ## References
 
 - [Configure advanced permissions with security context](https://docs.dynatrace.com/docs/platform/grail/organize-data/advanced-permission-setup)
+- [Policy boundaries](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/iam-policy-boundaries)
 - [IAM policy reference](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policystatements)
 - [Enhance data management with Grail](https://www.dynatrace.com/news/blog/enhance-data-management-with-grail-ultimate-guide-to-custom-buckets-and-security-policies/)
 

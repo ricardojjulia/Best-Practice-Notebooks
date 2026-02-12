@@ -1,6 +1,6 @@
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Overview
 
@@ -186,6 +186,7 @@ This series covers data organization in depth:
 | ORGNZ-07 | Advanced Permissions | Record-level and field-based access |
 | ORGNZ-08 | Grail Segments | Dynamic data organization |
 | ORGNZ-09 | Enterprise Patterns | Combined approaches and best practices |
+| ORGNZ-10 | Advanced Segment Definitions | Filter syntax, enrichment, variables, troubleshooting |
 
 ## Next Steps
 

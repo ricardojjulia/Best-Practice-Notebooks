@@ -1,6 +1,6 @@
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Overview
 
@@ -203,7 +203,7 @@ fetch logs, from:-1h
 // Check for hierarchical security context patterns
 fetch logs, from:-1h
 | filter isNotNull(dt.security_context)
-| filter dt.security_context matches "finance/*"
+| filter startsWith(dt.security_context, "finance/")
 | summarize count = count(), by:{dt.security_context}
 | sort count desc
 ```

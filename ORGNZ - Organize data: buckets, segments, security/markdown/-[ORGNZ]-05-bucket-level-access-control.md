@@ -1,6 +1,6 @@
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Overview
 
