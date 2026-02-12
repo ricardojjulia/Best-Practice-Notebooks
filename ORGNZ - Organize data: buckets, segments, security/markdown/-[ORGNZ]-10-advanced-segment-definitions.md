@@ -1,6 +1,6 @@
 # ORGNZ-10: Advanced Segment Definitions
 
-> **Series:** ORGNZ | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/06/2026
+> **Series:** ORGNZ | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/12/2026
 
 ## Overview
 
@@ -53,33 +53,37 @@ Segment filter conditions define which data a segment includes. Understanding th
 
 | Operator | Example | Notes |
 |----------|---------|-------|
-| `==` (equals) | `k8s.namespace.name == "production"` | Exact match, best performance |
+| `=` (equals) | `k8s.namespace.name = "production"` | Exact match, best performance |
 | `!=` (not equals) | `k8s.namespace.name != "kube-system"` | Exclude specific values |
 | `starts-with` | `dt.host_group.id = $platform*` | Prefix match with wildcard `*` |
 | `IN` | `k8s.namespace.name IN ("prod", "staging")` | Match any value in list |
 | `NOT IN` | `k8s.namespace.name NOT IN ("kube-system")` | Exclude list of values |
 
-> **Important:** `contains` and `ends-with` patterns are **NOT supported** in segment filter conditions. Only `starts-with` prefix patterns work. Structure your naming conventions to use prefixes (e.g., `prod-web-tier` not `web-tier-prod`).
+> **Important — operator availability depends on data type:**
+> - **Signal data includes** (logs, spans, events, metrics) support `=`, `!=`, `contains`, `not contains`, `starts with`, `ends with`, `IN`, and `NOT IN`.
+> - **Classic entity includes** (`dt.entity.*`) only support `=` (with optional prefix wildcard `*`) and `in()`. `contains` and `ends-with` are **not available** for entity includes.
+>
+> For cross-signal consistency, prefer prefix-based naming conventions (e.g., `prod-web-tier` not `web-tier-prod`) so `starts-with` works everywhere.
 
 ### Field Access Patterns
 
 | Pattern | Example | Use Case |
 |---------|---------|----------|
-| Direct field | `k8s.namespace.name == "production"` | Primary Grail Fields |
+| Direct field | `k8s.namespace.name = "production"` | Primary Grail Fields |
 | Tag matching | `matchesValue(tags, "env:production")` | Entity tags |
-| Entity name | `entity.name == "my-service"` | Specific entity |
-| Host group | `dt.host_group.id == "prod-web"` | Host group filtering |
-| JSON field | `content$.uri == "/health"` | Nested JSON in log content |
+| Entity name | `entity.name = "my-service"` | Specific entity |
+| Host group | `dt.host_group.id = "prod-web"` | Host group filtering (signal data) |
+| JSON field | `content$.uri = "/health"` | Nested JSON in log content |
 
 ### Combining Conditions
 
 - **AND** — Multiple conditions within a single include are AND-combined:
   ```
-  k8s.namespace.name == "production" AND k8s.cluster.name == "main-cluster"
+  k8s.namespace.name = "production" AND k8s.cluster.name = "main-cluster"
   ```
 - **OR** — Use the `or` keyword within a single include (you cannot have multiple includes for the same data type):
   ```
-  k8s.namespace.name == "production" OR k8s.namespace.name == "staging"
+  k8s.namespace.name = "production" OR k8s.namespace.name = "staging"
   ```
 
 ### Test Your Filter Conditions
@@ -97,12 +101,14 @@ fetch logs, from:-1h
 ```
 
 ```dql
-// Test segment filter: host group prefix filtering on entities
-// Simulates what a segment with dt.host_group.id starts-with "prod" would return
+// Test segment filter: host group filtering on host entities
+// Lists hosts and their host group associations (dt.host_group.id is a signal field, not an entity field)
+// Note: Smartscape on Grail uses smartscapeNodes HOST as the preferred entity query method
 fetch dt.entity.host
-| fieldsAdd hg = toString(dt.host_group.id)
-| filter isNotNull(hg)
-| fields entity.name, hg, tags
+| expand hg_id = belongs_to[dt.entity.host_group]
+| fieldsAdd hg_name = entityName(hg_id, type:"dt.entity.host_group")
+| filter isNotNull(hg_id)
+| fields entity.name, hg_id, hg_name, tags
 | limit 20
 ```
 
@@ -120,14 +126,14 @@ A segment can have **only one include block per data type**. You cannot define t
 
 | Data Type | Category | Example Filter |
 |-----------|----------|----------------|
-| `logs` | Signal data | `k8s.namespace.name == "prod"` |
+| `logs` | Signal data | `k8s.namespace.name = "prod"` |
 | `spans` | Signal data | `service.name starts-with "checkout"` |
-| `events` | Signal data | `event.type == "CUSTOM_INFO"` |
-| `bizevents` | Signal data | `event.provider == "my-app"` |
+| `events` | Signal data | `event.type = "CUSTOM_INFO"` |
+| `bizevents` | Signal data | `event.provider = "my-app"` |
 | `dt.entity.host` | Classic entity | `tags contains "env:prod"` |
 | `dt.entity.service` | Classic entity | `entity.name starts-with "payment"` |
 | `dt.entity.process_group` | Classic entity | `relationship: runsOn dt.entity.host` |
-| `dt.entity.kubernetes_cluster` | Classic entity | `entity.name == "main-cluster"` |
+| `dt.entity.kubernetes_cluster` | Classic entity | `entity.name = "main-cluster"` |
 
 ### How Conditions Apply Per Data Type
 
@@ -165,7 +171,7 @@ Primary Grail Fields are infrastructure-related fields that are **automatically 
 | **Kubernetes Cluster** | `k8s.cluster.name` | K8s integration |
 | **Kubernetes Namespace** | `k8s.namespace.name` | K8s integration |
 | **AWS Account** | `aws.account.id` | AWS integration |
-| **Azure Subscription** | `azure.subscription.id` | Azure integration |
+| **Azure Subscription** | `azure.subscription` | Azure integration |
 | **GCP Project** | `gcp.project.id` | GCP integration |
 
 > **Best Practice:** Always prefer Primary Grail Fields in segment definitions. They are indexed, automatically enriched, and consistent across all signal types.
@@ -190,6 +196,8 @@ When Primary Grail Fields don't align with how your organization wants to segmen
 - Example: `primary_tags.stage=prod`, `primary_tags.team=platform`
 - Set via host properties, environment variables (`DT_TAGS`), or OpenPipeline
 - Propagated across all data points, similar to Primary Grail Fields
+
+> **Limitation:** Primary Grail Tags do not yet enrich Kubernetes metrics or events. They work for logs, spans, and topology data. Check the [Dynatrace documentation](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/metadata-automation/k8s-metadata-telemetry-enrichment) for the latest supported signal types.
 
 ### Enrichment Approaches
 
@@ -271,7 +279,8 @@ The variable definition is a DQL query. The columns in the result set determine 
 
 | Rule | Detail |
 |------|--------|
-| Maximum values | 2,000 per variable |
+| Maximum values in dropdown | 10,000 per variable |
+| Selected values per segment | 100 maximum |
 | Wildcard | Allowed **after** variable name: `$cluster*` (starts-with) |
 | No wildcard in names | Variable names and values cannot contain `*` |
 | Permissions | Users must have read access to entities queried by the variable DQL |
@@ -285,6 +294,7 @@ The following queries demonstrate how to create variable definitions for common 
 // Variable DQL: List available host groups
 // First column (host_group) = primary variable shown in dropdown
 // Second column (id) = secondary variable for filter conditions
+// Note: Smartscape on Grail alternative: smartscapeNodes HOST_GROUP
 fetch dt.entity.host_group
 | fields host_group = entity.name, id
 | sort host_group asc
@@ -293,6 +303,7 @@ fetch dt.entity.host_group
 ```dql
 // Variable DQL: List Kubernetes namespaces
 // Primary: namespace (dropdown), Secondary: tag (usable in filters)
+// Note: Smartscape on Grail alternative: smartscapeNodes K8S_NAMESPACE
 fetch dt.entity.cloud_application_namespace
 | fields namespace = entity.name
 | fieldsAdd tag = concat("Namespace:", namespace)
@@ -302,6 +313,7 @@ fetch dt.entity.cloud_application_namespace
 ```dql
 // Variable DQL: Extract tag values for segment variable creation
 // Extracts unique "App" values from host tags with [Environment]App prefix
+// Note: Smartscape on Grail alternative: smartscapeNodes HOST
 fetch dt.entity.host
 | expand tag = tags
 | filter startsWith(tag, "[Environment]App")
@@ -311,12 +323,65 @@ fetch dt.entity.host
 | sort App asc
 ```
 
+```python
+// Variable DQL: Extract CloudFoundry Organization from process group tags
+// Creates variables: $value (org name), $id (process group ID), $AppTag (full tag string)
+// Note: Smartscape on Grail alternative: smartscapeNodes PROCESS_GROUP
+fetch dt.entity.process_group
+| fields tags, id
+| expand tags
+| parse tags, """((LD:tag (!<<'\\' ':') LD:value)|LD:tag)"""
+| fields tag = replaceString(tag, """\:""", ":"), value = replaceString(value, """\:""", ":"), id
+| filter toString(tag) == "[CloudFoundry]Organization"
+| fields value, id
+| fieldsAdd AppTag = concat("[CloudFoundry]Organization:", value)
+| dedup value
+```
+
+### Multi-Include Segment Pattern: Tag-Based Variables
+
+The CloudFoundry query above creates three variables from process group tags:
+
+| Variable | Example Value | Use |
+|----------|---------------|-----|
+| `$value` | `TeamA` | Display in dropdown |
+| `$id` | `PROCESS_GROUP-1234567` | Filter signal data by entity ID |
+| `$AppTag` | `[CloudFoundry]Organization:TeamA` | Match entity tags |
+
+Use these variables across **multiple includes** to build a segment that filters both entity and signal data:
+
+![Multi-Include Segment Pattern](images/multi-include-segment-pattern.svg)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Include Type | Filter | Category |
+|-------------|--------|----------|
+| Process Group | tags = $AppTag | Entity include (anchor) |
+| Process Group Instance | instance_of Process Group | Entity include (relationship traversal) |
+| Host | runs Process Group | Entity include (relationship traversal) |
+| Service | runs_on Process Group | Entity include (relationship traversal) |
+| Spans | dt.entity.process_group in ($id) | Signal include (entity ID filter) |
+| Logs | dt.entity.process_group in ($id) | Signal include (entity ID filter) |
+| Metrics | dt.entity.process_group in ($id) | Signal include (entity ID filter) |
+| Events | dt.entity.process_group in ($id) | Signal include (entity ID filter) |
+For environments where SVG doesn't render
+-->
+
+| Include Type | Filter | How It Works |
+|-------------|--------|--------------|
+| **Process Group** | `tags = $AppTag` | Matches process groups by tag |
+| **Process Group Instance** | `instance_of Process Group` | Relationship traversal — includes instances of matched process groups |
+| **Host** | `runs Process Group` | Relationship traversal — includes hosts running matched process groups |
+| **Service** | `runs_on Process Group` | Relationship traversal — includes services on matched process groups |
+| **Spans** | `dt.entity.process_group in ($id)` | Signal include — filters spans by process group entity ID |
+
+> **Key Insight:** This pattern bridges entity and signal data in a single segment. Entity includes use tag matching and relationship traversal to cascade across the topology, while signal includes use the entity ID variable to filter spans, logs, and metrics directly. This is especially powerful when Primary Grail Fields are not available for your use case and you need to segment by application-level metadata like CloudFoundry organizations or custom tags.
+
 ### Using Variables in Filter Conditions
 
 After defining a variable query, reference the columns in your segment filter:
 
 ```
-Filter: dt.host_group.id == $host_group OR dt.entity.host_group == $id
+Filter: dt.host_group.id = $host_group OR dt.entity.host_group = $id
 ```
 
 Where `$host_group` references the primary variable (first column) and `$id` references the secondary variable (second column).
@@ -357,6 +422,7 @@ Use DQL to parse the host group name and extract each dimension as a variable:
 ```dql
 // Parse host group naming convention to extract dimensions
 // Convention: <platform>_<app>_<stage>
+// Note: Smartscape on Grail alternative: smartscapeNodes HOST_GROUP
 fetch dt.entity.host_group
 | parse entity.name, """LD:platform '_' LD:app '_' LD:stage"""
 | fields entity.name, platform, app, stage
@@ -393,10 +459,10 @@ fetch dt.entity.host_group
 | Segment | Filter Condition | Notes |
 |---------|-----------------|-------|
 | Platform | `dt.host_group.id = $platform*` | Matches host groups starting with selected platform |
-| App | `dt.host_group.id = *$app*` | Matches host groups containing selected app |
-| Stage | `dt.host_group.id = *_$stage` | Matches host groups ending with selected stage |
+| App | `dt.host_group.id contains $app` | Matches host groups containing selected app (signal includes only) |
+| Stage | `dt.host_group.id ends-with _$stage` | Matches host groups ending with selected stage (signal includes only) |
 
-> **Note:** The `*$app*` pattern uses wildcards on both sides. Remember that segment wildcards support `starts-with` patterns. For middle-of-string matching, verify this works in your environment by testing with the segment preview.
+> **Note:** `contains` and `ends-with` operators are available for signal data includes (logs, spans, events, metrics) but **not** for classic entity includes. For entity includes, use `starts-with` (prefix wildcard) patterns. Always test with the segment preview before deploying.
 
 ### Step 4: Validate Across Signal Types
 
@@ -426,7 +492,8 @@ After creating the segments, validate they filter correctly across:
 | `storage:filter-segments:read` | View and use segments | Dynatrace Standard User |
 | `storage:filter-segments:write` | Create and edit segments | Dynatrace Standard User |
 | `storage:filter-segments:share` | Share with others | Dynatrace Standard User |
-| `storage:filter-segments:delete` | Delete segments | Dynatrace Professional User |
+| `storage:filter-segments:delete` | Delete segments | Dynatrace Standard User |
+| `storage:filter-segments:admin` | Manage segment permissions | Dynatrace Professional User |
 
 ### Governance Recommendations
 
@@ -451,7 +518,7 @@ When you select a segment in one Dynatrace app (e.g., Logs), the selection **per
 | **Notebooks** | Full | Segment selector at top of notebook |
 | **Logs** | Full | Filters all log queries |
 | **Distributed Traces** | Full | Filters span queries |
-| **Problems** | Full | Filters problem list |
+| **Problems** | Full | Requires events include with `event.kind = "DAVIS_PROBLEM"` |
 | **SLOs** | Full | Filters SLO evaluation scope |
 | **Site Reliability Guardian** | Full | Filters validation scope |
 | **Workflows** | Full | Available in workflow DQL steps |
@@ -469,10 +536,10 @@ When you select a segment in one Dynatrace app (e.g., Logs), the selection **per
 
 | Limitation | Detail | Workaround |
 |------------|--------|------------|
-| **No Davis events/problems support** | Segments cannot filter `dt.davis.events` or `dt.davis.problems` | Use IAM boundaries for Davis event access control |
+| **Davis problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
 | **Single relationship traversal** | Entity relationships can only traverse one hop | Target specific entity types directly in includes |
 | **Inclusions only, no exclusions** | Cannot say "everything EXCEPT team-X" | Explicitly include what you want (MZ supported exclusions; segments do not) |
-| **No contains/ends-with wildcards** | Only `starts-with` prefix patterns work | Structure naming conventions to use prefixes |
+| **Entity includes: no contains/ends-with** | Classic entity includes only support `=` and prefix wildcards; `contains` and `ends-with` are not available | Use prefix-based naming conventions; signal includes support broader operators |
 | **1 include per data type** | Cannot have two `logs` include blocks | Combine conditions with `OR` within a single include |
 | **Max 20 includes per segment** | Hard limit on rule count | Consolidate rules; use variables for flexibility |
 | **Max 10 expressions per filter** | Limits filter complexity | Use OpenPipeline to pre-enrich data with simpler filter fields |
@@ -499,7 +566,7 @@ When you select a segment in one Dynatrace app (e.g., Logs), the selection **per
 Every segment filter condition is injected into every query the user runs. Keep conditions simple:
 
 1. **Prefer Primary Grail Fields** — They are indexed and optimized for filtering
-2. **Use exact matches** — `==` is faster than `starts-with`
+2. **Use exact matches** — `=` is faster than `starts-with`
 3. **Minimize expressions** — Fewer conditions = better query performance
 4. **Use OpenPipeline pre-processing** — If conditions would be complex, pre-enrich a simple field (like `dt.security_context`) and filter on that instead
 5. **Narrow scope first** — Start with the most restrictive condition in AND combinations
@@ -527,6 +594,7 @@ Every segment filter condition is injected into every query the user runs. Keep 
 ```dql
 // Discover: Find the most common tag keys across hosts
 // Use these to plan segment filter conditions
+// Note: Smartscape on Grail alternative: smartscapeNodes HOST
 fetch dt.entity.host
 | expand tag = tags
 | summarize count = count(), by:{tag}
@@ -548,7 +616,7 @@ fetch logs, from:-1h
 
 In this notebook you learned:
 
-1. **Filter condition syntax** — Operators (`==`, `!=`, `starts-with`), field access, AND/OR logic
+1. **Filter condition syntax** — Operators (`=`, `!=`, `starts-with`, `contains`), field access, AND/OR logic
 2. **Data type include rules** — One include per type, conditions scoped to queried data type
 3. **Primary Grail Fields** — Which metadata propagates across all signals (and which doesn't)
 4. **Enrichment approaches** — Dedicated vs shared infrastructure, host properties vs DT_TAGS
@@ -556,7 +624,7 @@ In this notebook you learned:
 6. **Host group-based segments** — Parsing naming conventions, one segment per dimension
 7. **Visibility and sharing** — Public vs unlisted, governance model
 8. **Cross-app integration** — Persistence, dashboard vs tile-level segments
-9. **Limitations and troubleshooting** — Davis events, no exclusions, performance tips
+9. **Limitations and troubleshooting** — Davis problem event includes, entity operator restrictions, performance tips
 
 ## Series Summary
 
@@ -580,6 +648,7 @@ In this notebook you learned:
 - [Variables in Segments](https://docs.dynatrace.com/docs/manage/segments/concepts/segments-concepts-variables)
 - [Segment Limits](https://docs.dynatrace.com/docs/manage/segments/reference/segments-reference-limits)
 - [Segments in DQL Queries](https://docs.dynatrace.com/docs/manage/segments/concepts/segments-concepts-queries)
+- [Supported Data Types in Segments](https://docs.dynatrace.com/docs/manage/segments/reference/segments-reference-data-types)
 - [Segments Blog: Cut Through the Noise](https://www.dynatrace.com/news/blog/cut-through-the-noise-with-segments-simple-powerful-and-dynamic-data-filtering/)
 - [Segments Blog: Empower Centralized Teams](https://www.dynatrace.com/news/blog/segments-empower-centralized-teams-to-dynamically-organize-data-at-petabyte-scale/)
 
