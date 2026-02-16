@@ -1,6 +1,6 @@
 # CI/CD Integration
 
-> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 02/14/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -11,12 +11,17 @@ CI/CD integration brings software development practices to Dynatrace configurati
 1. [Introduction](#introduction)
 2. [GitOps Fundamentals](#gitops-fundamentals)
 3. [GitHub Actions](#github-actions)
+   - [Terraform with Combined Auth](#terraform-combined-auth)
+   - [Vault Integration](#vault-integration)
+   - [Policy-as-Code Gates](#policy-as-code)
+   - [Drift Detection](#drift-detection)
+   - [Reusable Workflows](#reusable-workflows)
 4. [GitLab CI/CD](#gitlab-cicd)
 5. [ArgoCD Integration](#argocd-integration)
 6. [FluxCD Integration](#fluxcd-integration)
 7. [Dynatrace Operator GitOps Patterns](#dynatrace-operator-gitops-patterns)
 8. [Best Practices](#best-practices)
-9. [Dynatrace Configuration Change](#dynatrace-configuration-change)
+9. [Next Steps](#next-steps)
 
 ---
 
@@ -29,7 +34,13 @@ Before starting this notebook, ensure you have:
 | CI/CD Platform | GitHub Actions, GitLab CI, or Jenkins |
 | Monaco or Terraform | One of the config-as-code tools |
 | Git Repository | For storing configurations |
-| API Token | Stored as CI/CD secret |
+| Authentication | API Token + Platform Token for full coverage (see [AUTOM-04](./-%5BAUTOM%5D-04-terraform.ipynb)) |
+| HashiCorp Vault | *Optional* — for runtime credential retrieval instead of static CI/CD secrets |
+| OPA / Conftest | *Optional* — for policy-as-code gates in pipelines |
+
+### Token Types Reminder
+
+As of Dynatrace Terraform provider **v1.88.0**, synthetic monitors and SLOs require a classic **API Token** (`dt0c01`). For full resource coverage in pipelines, use **Platform Token + API Token** together. See [AUTOM-04: Provider Configuration](./-%5BAUTOM%5D-04-terraform.ipynb) for details.
 
 ---
 
@@ -39,8 +50,12 @@ By the end of this notebook, you will:
 
 - Understand GitOps principles for Dynatrace
 - Know how to set up CI/CD pipelines for config deployment
-- Be able to implement pull request workflows
-- Handle multi-environment deployments
+- Be able to implement pull request workflows with plan-as-PR-comment
+- Handle multi-environment deployments with combined auth
+- Integrate HashiCorp Vault for runtime credential retrieval
+- Implement policy-as-code gates with OPA/Conftest and Sentinel
+- Set up automated drift detection workflows
+- Create reusable GitHub Actions workflows for multi-team organizations
 
 ---
 
@@ -209,9 +224,10 @@ jobs:
 
 ---
 
-### Terraform Workflow
+<a id="terraform-combined-auth"></a>
+### Terraform Workflow with Combined Auth
 
-For Terraform-based deployments:
+For Terraform-based deployments, use **Platform Token + API Token** together for full resource coverage. The provider automatically routes each resource to the correct token.
 
 ```yaml
 name: Terraform Dynatrace
@@ -225,6 +241,9 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       
@@ -235,24 +254,392 @@ jobs:
       
       - name: Terraform Init
         run: terraform init
-        env:
-          TF_VAR_dynatrace_url: ${{ secrets.DT_URL }}
-          TF_VAR_dynatrace_token: ${{ secrets.DT_TOKEN }}
       
       - name: Terraform Plan
+        id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
+        run: terraform plan -no-color -out=tfplan
         env:
-          TF_VAR_dynatrace_url: ${{ secrets.DT_URL }}
-          TF_VAR_dynatrace_token: ${{ secrets.DT_TOKEN }}
+          DYNATRACE_ENV_URL: ${{ secrets.DT_ENV_URL }}
+          DYNATRACE_PLATFORM_TOKEN: ${{ secrets.DT_PLATFORM_TOKEN }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+      
+      - name: Post Plan to PR
+        if: github.event_name == 'pull_request'
+        uses: borchero/terraform-plan-comment@v2
+        with:
+          token: ${{ github.token }}
+          planfile: tfplan
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
         env:
-          TF_VAR_dynatrace_url: ${{ secrets.DT_URL }}
-          TF_VAR_dynatrace_token: ${{ secrets.DT_TOKEN }}
+          DYNATRACE_ENV_URL: ${{ secrets.DT_ENV_URL }}
+          DYNATRACE_PLATFORM_TOKEN: ${{ secrets.DT_PLATFORM_TOKEN }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
 ```
+
+| Secret | Token Type | Covers |
+|--------|-----------|--------|
+| `DT_PLATFORM_TOKEN` | `dt0s16.xxxx` | Settings 2.0 + Gen3 Platform (workflows, documents, segments) |
+| `DT_API_TOKEN` | `dt0c01.xxxx` | Synthetic monitors, SLOs (v1.88.0 requirement) |
+| `DT_ENV_URL` | — | Tenant URL |
+
+> **Why combined auth?** A single API Token cannot manage Gen3 resources. A single Platform Token cannot manage synthetics/SLOs (removed in v1.88.0). Using both together gives the pipeline full coverage.
+
+---
+
+<a id="vault-integration"></a>
+### Vault Integration for Runtime Credentials
+
+For enterprise environments with **short-lived tokens** (e.g., 24-hour expiration), retrieve credentials at runtime from **HashiCorp Vault** instead of storing them as static CI/CD secrets.
+
+```yaml
+name: Terraform with Vault Credentials
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write       # Required for OIDC → Vault JWT auth
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Retrieve Dynatrace credentials from Vault
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          method: jwt
+          role: dynatrace-deployer
+          secrets: |
+            secret/data/dynatrace/prod platform_token | DYNATRACE_PLATFORM_TOKEN ;
+            secret/data/dynatrace/prod api_token | DYNATRACE_API_TOKEN ;
+            secret/data/dynatrace/prod env_url | DYNATRACE_ENV_URL
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -out=tfplan
+        env:
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+        env:
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+```
+
+**Vault path structure per team per tenant:**
+
+```
+secret/
+└── dynatrace/
+    ├── dev/
+    │   ├── platform_token    # dt0s16 for dev tenant
+    │   ├── api_token         # dt0c01 for dev tenant
+    │   └── env_url           # https://dev.live.dynatrace.com
+    ├── prod/
+    │   ├── platform_token
+    │   ├── api_token
+    │   └── env_url
+    └── teams/
+        ├── payments/         # Team-specific OAuth clients
+        │   ├── client_id
+        │   └── client_secret
+        └── platform/
+            ├── client_id
+            └── client_secret
+```
+
+> **Why Vault?** Static GitHub Secrets don't expire. If your organization uses 24-hour token rotation or needs audit trails for credential access, Vault provides runtime retrieval with automatic expiration and access logging.
+
+---
+
+<a id="policy-as-code"></a>
+### Policy-as-Code Gates (OPA / Sentinel)
+
+Add governance checks to your pipeline using **OPA/Conftest** (open-source) or **Sentinel** (Terraform Enterprise/Cloud).
+
+#### OPA/Conftest — Resource Type Allowlist
+
+Restrict which Dynatrace resource types a team can create:
+
+**policy/allowed_resources.rego:**
+
+```rego
+package main
+
+# Only allow these Dynatrace resource types
+allowed_resources := {
+  "dynatrace_alerting",
+  "dynatrace_autotag_v2",
+  "dynatrace_management_zone_v2",
+  "dynatrace_maintenance"
+}
+
+deny[msg] {
+  resource := input.planned_values.root_module.resources[_]
+  startswith(resource.type, "dynatrace_")
+  not allowed_resources[resource.type]
+  msg := sprintf("Resource type '%s' is not in the allowlist", [resource.type])
+}
+```
+
+#### OPA/Conftest — Mandatory Team Tagging
+
+Ensure all resources include team ownership metadata:
+
+**policy/mandatory_tags.rego:**
+
+```rego
+package main
+
+deny[msg] {
+  resource := input.planned_values.root_module.resources[_]
+  resource.type == "dynatrace_autotag_v2"
+  not resource.values.name
+  msg := "Auto-tag resources must have a name"
+}
+
+deny[msg] {
+  resource := input.planned_values.root_module.resources[_]
+  startswith(resource.type, "dynatrace_")
+  not has_team_ownership(resource)
+  msg := sprintf("Resource '%s' must include team ownership metadata", [resource.address])
+}
+
+has_team_ownership(resource) {
+  contains(resource.values.name, resource.values.team_name)
+}
+```
+
+#### Pipeline Integration
+
+```yaml
+# Add after terraform plan step
+- name: Install Conftest
+  run: |
+    wget -q https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz
+    tar xzf conftest_Linux_x86_64.tar.gz
+    sudo mv conftest /usr/local/bin/
+
+- name: Run Policy Checks
+  run: |
+    terraform show -json tfplan > tfplan.json
+    conftest test tfplan.json --policy policy/
+```
+
+#### Sentinel (Terraform Enterprise / Cloud)
+
+For teams using **TFE**, Sentinel policies enforce governance at the workspace level:
+
+```python
+# sentinel/restrict_resource_types.sentinel
+import "tfplan/v2" as tfplan
+
+allowed_types = [
+  "dynatrace_alerting",
+  "dynatrace_autotag_v2",
+  "dynatrace_management_zone_v2",
+]
+
+main = rule {
+  all tfplan.resource_changes as _, rc {
+    rc.type in allowed_types or not (rc.type matches "dynatrace_.*")
+  }
+}
+```
+
+---
+
+<a id="drift-detection"></a>
+### Drift Detection Workflow
+
+Schedule automatic drift detection to catch manual UI changes ("ClickOps") that bypass your Terraform pipeline:
+
+```yaml
+name: Drift Detection
+
+on:
+  schedule:
+    - cron: '0 6 * * 1-5'   # Every weekday at 6am UTC
+  workflow_dispatch: {}       # Allow manual trigger
+
+jobs:
+  detect-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Check for Drift
+        id: drift
+        run: |
+          set +e
+          terraform plan -detailed-exitcode -no-color 2>&1 | tee drift-output.txt
+          echo "exitcode=$?" >> "$GITHUB_OUTPUT"
+        env:
+          DYNATRACE_ENV_URL: ${{ secrets.DT_ENV_URL }}
+          DYNATRACE_PLATFORM_TOKEN: ${{ secrets.DT_PLATFORM_TOKEN }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+
+      - name: Create Issue on Drift
+        if: steps.drift.outputs.exitcode == '2'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const drift = fs.readFileSync('drift-output.txt', 'utf8').slice(-3000);
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Dynatrace configuration drift detected',
+              body: `Scheduled drift detection found changes not in Terraform state.\n\n\`\`\`\n${drift}\n\`\`\`\n\nSomeone may have made manual changes in the Dynatrace UI.`,
+              labels: ['drift', 'dynatrace']
+            });
+```
+
+> **Exit codes:** `terraform plan -detailed-exitcode` returns `0` = no changes, `1` = error, `2` = drift detected. This lets your pipeline take different actions based on the result.
+
+---
+
+<a id="reusable-workflows"></a>
+### Reusable GitHub Actions Workflows
+
+For organizations managing multiple Dynatrace tenants or LOB repositories, create **reusable workflows** that any repo can call:
+
+**.github/workflows/terraform-dynatrace.yml** (in a shared workflow repo):
+
+```yaml
+name: Terraform Dynatrace (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: false
+        type: string
+        default: '.'
+      terraform_version:
+        required: false
+        type: string
+        default: '1.6.0'
+    secrets:
+      DT_ENV_URL:
+        required: true
+      DT_PLATFORM_TOKEN:
+        required: true
+      DT_API_TOKEN:
+        required: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -out=tfplan
+        env:
+          DYNATRACE_ENV_URL: ${{ secrets.DT_ENV_URL }}
+          DYNATRACE_PLATFORM_TOKEN: ${{ secrets.DT_PLATFORM_TOKEN }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+
+      - name: Post Plan to PR
+        if: github.event_name == 'pull_request'
+        uses: borchero/terraform-plan-comment@v2
+        with:
+          token: ${{ github.token }}
+          planfile: tfplan
+
+  apply:
+    needs: plan
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        env:
+          DYNATRACE_ENV_URL: ${{ secrets.DT_ENV_URL }}
+          DYNATRACE_PLATFORM_TOKEN: ${{ secrets.DT_PLATFORM_TOKEN }}
+          DYNATRACE_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+          DYNATRACE_HTTP_OAUTH_PREFERENCE: "true"
+```
+
+**Calling the reusable workflow** from a LOB repo:
+
+```yaml
+# .github/workflows/deploy.yml (in dt-lob-payments repo)
+name: Deploy Dynatrace Config
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  terraform:
+    uses: my-org/dt-templates/.github/workflows/terraform-dynatrace.yml@main
+    with:
+      working_directory: terraform/
+    secrets:
+      DT_ENV_URL: ${{ secrets.DT_ENV_URL }}
+      DT_PLATFORM_TOKEN: ${{ secrets.DT_PLATFORM_TOKEN }}
+      DT_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+```
+
+> **Multi-tenant pattern:** For organizations with 5+ tenants, the reusable workflow is called once per environment with different secrets, providing a consistent deployment experience across all tenants.
 
 ---
 
@@ -731,6 +1118,9 @@ kubectl create secret generic dynakube \
 | **Token rotation** | Rotate tokens regularly |
 | **Least privilege** | Minimal token scopes |
 | **External Secrets** | Use ESO, SOPS, or Sealed Secrets for K8s |
+| **Vault for runtime creds** | Retrieve tokens at pipeline runtime instead of static CI/CD secrets |
+| **Combined auth** | Use Platform Token + API Token for full resource coverage (v1.88.0) |
+| **Policy-as-code** | OPA/Conftest or Sentinel to enforce resource allowlists and mandatory tagging |
 
 ### Workflow Design
 
@@ -738,10 +1128,13 @@ kubectl create secret generic dynakube \
 |----------|-------------|
 | **Validate first** | Always validate before deploy |
 | **Dry run PRs** | Show what would change |
+| **Plan as PR comment** | Post `terraform plan` output directly on PRs for reviewer context |
 | **Staged rollout** | Dev → Staging → Production |
 | **Manual gates** | Require approval for production |
 | **Rollback plan** | Know how to revert changes |
 | **Health checks** | Verify deployment success |
+| **Drift detection** | Schedule `terraform plan -detailed-exitcode` to catch ClickOps |
+| **Reusable workflows** | `workflow_call` for consistent deployment across repos |
 
 ### GitOps Tool Selection
 
@@ -851,6 +1244,9 @@ Send deployment events to Dynatrace:
 - [Dynatrace Operator](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 - [Monaco GitHub Repository](https://github.com/dynatrace/dynatrace-configuration-as-code)
 - [External Secrets Operator](https://external-secrets.io/)
+- [OPA/Conftest](https://www.conftest.dev/)
+- [Sentinel Documentation](https://developer.hashicorp.com/sentinel)
+- [HashiCorp Vault Action](https://github.com/hashicorp/vault-action)
 
 ---
 
@@ -860,12 +1256,16 @@ In this notebook, you learned:
 
 - GitOps fundamentals for Dynatrace configuration
 - Setting up GitHub Actions and GitLab CI/CD pipelines
+- **Combined auth** (Platform Token + API Token) for full resource coverage in Terraform pipelines
+- **Vault integration** for runtime credential retrieval with short-lived tokens
+- **Policy-as-code gates** using OPA/Conftest and Sentinel for governance enforcement
+- **Drift detection** workflows to catch manual UI changes
+- **Reusable workflows** (`workflow_call`) for multi-team organizations
 - ArgoCD integration with External Secrets for token management
 - FluxCD with HelmRelease and SOPS for secret encryption
 - Dynatrace Operator GitOps patterns for multi-cluster and multi-tenant environments
-- Best practices for security and workflow design
 
-> **Key Takeaway:** CI/CD integration transforms Dynatrace config management into a software development workflow. For Kubernetes environments, GitOps tools like ArgoCD and FluxCD enable declarative management of both Dynatrace configuration and the Dynatrace Operator itself.
+> **Key Takeaway:** CI/CD integration transforms Dynatrace config management into a software development workflow. For full resource coverage, use combined auth (Platform Token + API Token). For enterprise governance, add Vault for secrets, OPA/Sentinel for policy enforcement, and scheduled drift detection to catch ClickOps.
 
 ---
 

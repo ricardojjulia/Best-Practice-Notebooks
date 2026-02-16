@@ -24,21 +24,23 @@ Before starting this notebook, ensure you have:
 | Requirement | Description |
 |-------------|-------------|
 | Terraform CLI | Version 1.0+ installed |
-| Authentication | One of: **Access Token** (classic), **Platform Token**, or **OAuth Client** (see [Provider Configuration](#provider-configuration)) |
+| Authentication | One or more of: **API Token** (classic), **Platform Token**, or **OAuth Client** (see [Provider Configuration](#provider-configuration)) |
 | Tenant URL | Your Dynatrace SaaS tenant URL |
 | HCL Knowledge | Basic familiarity with Terraform syntax |
 
-### Authentication Methods
+### Authentication Methods — Three Token Types
 
-The Dynatrace Terraform provider supports three authentication methods:
+The Dynatrace Terraform provider supports three authentication methods. Each covers a different set of resources:
 
-| Method | Use Case | Key |
-|--------|----------|-----|
-| **Access Token (Classic)** | Settings API, classic config resources | `dt_api_token` |
-| **Platform Token** | User-friendly alternative; works within user's permissions | `dt_api_token` (same parameter) |
-| **OAuth Client** | **Required** for Automation, Document, and Account Management resources | `dt_client_id` + `dt_client_secret` |
+| Token Type | Format | Covers | Cannot Cover |
+|------------|--------|--------|-------------|
+| **API Token** (classic) | `dt0c01.xxxx` | Settings 2.0, Synthetics, SLOs | Gen3 Platform (workflows, documents, segments) |
+| **Platform Token** | `dt0s16.xxxx` | Settings 2.0 + Gen3 Platform | Synthetics, SLOs (removed in v1.88.0) |
+| **OAuth Client** | Client ID + Secret | Gen3 Platform, IAM | Settings 2.0, Synthetics, SLOs (removed in v1.88.0) |
 
-> **Important:** If you manage Workflows, Documents, or IAM resources via Terraform, you **must** configure OAuth client credentials in addition to (or instead of) an access/platform token.
+> **Important (v1.88.0):** As of Dynatrace Terraform provider **v1.88.0**, OAuth-based authentication (including Platform Tokens acting as OAuth) **can no longer manage synthetic monitors or SLO definitions**. These resources require a classic **API Token** with the appropriate scopes. When both tokens are configured, the provider automatically uses the correct one for each resource.
+
+> **Recommended setup:** Use **Platform Token + API Token** together for full resource coverage. The Platform Token handles Settings 2.0 and Gen3 resources; the API Token handles Synthetics and SLOs.
 
 ---
 
@@ -108,11 +110,11 @@ terraform version
 
 The Dynatrace Terraform provider supports three authentication methods. Which you need depends on the resources you manage.
 
-### Method 1: Access Token or Platform Token
+### Method 1: API Token (Classic)
 
-Use for **Settings API** and **classic configuration** resources (management zones, auto-tags, alerting, SLOs, synthetic monitors, etc.).
+Use for **Settings 2.0** resources and resources that require classic API token auth (synthetic monitors).
 
-**Access tokens** (classic) require explicit scopes like `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig`. **Platform tokens** are a newer, user-friendly alternative — they work within the assigned user's permissions, so a selected scope only grants access if that user has the respective permission.
+API tokens require explicit scopes like `settings.read`, `settings.write`, `ExternalSyntheticIntegration`.
 
 ```hcl
 terraform {
@@ -126,13 +128,26 @@ terraform {
 
 provider "dynatrace" {
   dt_env_url   = var.dynatrace_url
-  dt_api_token = var.dynatrace_token  # Access token or platform token
+  dt_api_token = var.dynatrace_token  # Classic API token (dt0c01.xxxx)
 }
 ```
 
-### Method 2: OAuth Client Credentials
+### Method 2: Platform Token
 
-**Required** for Automation (Workflows), Document, and Account Management resources. The provider exchanges your client ID and secret for short-lived OAuth access tokens automatically.
+**Platform Tokens** (`dt0s16.xxxx`) are a newer token type that bridges Settings 2.0 and Gen3 Platform in a single credential. They work within the assigned user's permissions.
+
+```hcl
+provider "dynatrace" {
+  # Platform Token handles Settings 2.0 + Gen3 Platform resources
+  # Set via DYNATRACE_ENV_URL and DYNATRACE_PLATFORM_TOKEN env vars
+}
+```
+
+**Key env var:** `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` tells the provider to use the Platform Token for OAuth-based resources (workflows, documents, segments) in addition to Settings 2.0.
+
+### Method 3: OAuth Client Credentials
+
+**Required** for Automation (Workflows), Document, and Account Management (IAM) resources. The provider exchanges your client ID and secret for short-lived OAuth access tokens automatically.
 
 ```hcl
 provider "dynatrace" {
@@ -147,71 +162,57 @@ provider "dynatrace" {
 
 > **Tip:** If you only manage automation/document resources, you can omit `dt_api_token` and use OAuth alone.
 
-### Method 3: Environment Variables (Recommended for CI/CD)
+### Method 4: Combined Auth — Full Coverage (Recommended)
 
-Instead of hardcoding values, set environment variables:
+For **full resource coverage**, use **Platform Token + API Token** together. The provider automatically uses the correct token for each resource type:
+
+```hcl
+# provider.tf — Combined auth for full coverage
+provider "dynatrace" {
+  # Auth is read from environment variables automatically.
+  # The provider uses the correct token for each resource type.
+}
+```
+
+```bash
+# --- Platform Token (covers Settings 2.0 + Gen3 Platform) ---
+export DYNATRACE_ENV_URL="https://abc12345.live.dynatrace.com"
+export DYNATRACE_PLATFORM_TOKEN="dt0s16.xxxx.yyyy"
+export DYNATRACE_HTTP_OAUTH_PREFERENCE=true
+
+# --- API Token (covers Synthetics — v1.88.0 requirement) ---
+export DYNATRACE_API_TOKEN="dt0c01.xxxx.yyyy"
+```
+
+| Resource | Token Used |
+|----------|------------|
+| Settings 2.0 (auto-tags, management zones, alerting) | Platform Token |
+| Gen3 Platform (workflows, documents, segments) | Platform Token (via OAuth) |
+| SLO definitions (`dynatrace_slo_v2`) | Platform Token (Settings 2.0 — `builtin:monitoring.slo`) |
+| Synthetic monitors (`dynatrace_http_monitor`) | **API Token** (v1.88.0) |
+
+### Environment Variables — Complete Reference
 
 | Variable | Purpose |
 |----------|---------|
 | `DYNATRACE_ENV_URL` or `DT_ENV_URL` | Tenant URL |
-| `DYNATRACE_API_TOKEN` or `DT_API_TOKEN` | Access token or platform token |
-| `DT_CLIENT_ID` | OAuth client ID (automation/documents) |
+| `DYNATRACE_API_TOKEN` or `DT_API_TOKEN` | Classic API token (`dt0c01`) |
+| `DYNATRACE_PLATFORM_TOKEN` | Platform token (`dt0s16`) |
+| `DYNATRACE_HTTP_OAUTH_PREFERENCE` | Set to `true` to use Platform Token for Gen3 resources |
+| `DT_CLIENT_ID` | OAuth client ID (for automation/document/IAM resources) |
 | `DT_CLIENT_SECRET` | OAuth client secret |
-| `DT_ACCOUNT_ID` | Account UUID (for account-level IAM resources) |
-
-```bash
-export DT_ENV_URL="https://abc12345.live.dynatrace.com"
-export DT_API_TOKEN="dt0c01.XXXX..."
-export DT_CLIENT_ID="dt0s02.XXXX"
-export DT_CLIENT_SECRET="dt0s02.XXXX.YYYY..."
-```
-
-When environment variables are set, the provider block can be minimal:
-
-```hcl
-provider "dynatrace" {}
-```
-
-### Variables File
-
-Create a `variables.tf` file:
-
-```hcl
-variable "dynatrace_url" {
-  description = "Dynatrace environment URL"
-  type        = string
-}
-
-variable "dynatrace_token" {
-  description = "Dynatrace access token or platform token"
-  type        = string
-  sensitive   = true
-}
-
-variable "automation_client_id" {
-  description = "OAuth client ID for automation resources"
-  type        = string
-  default     = ""
-}
-
-variable "automation_client_secret" {
-  description = "OAuth client secret for automation resources"
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-```
+| `DT_ACCOUNT_ID` | Account UUID (required for account-level IAM resources) |
 
 ### Which Authentication for Which Resources?
 
-| Resource Category | Access/Platform Token | OAuth Client |
-|-------------------|-----------------------|--------------|
-| Settings 2.0 (management zones, auto-tags, etc.) | Yes | No |
-| Classic config (dashboards, alerting, etc.) | Yes | No |
-| Synthetic monitors, SLOs | Yes | No |
-| **Automation (Workflows, scheduling)** | No | **Required** |
-| **Documents (notebooks, dashboards v2)** | No | **Required** |
-| **Account Management (IAM, policies)** | No | **Required** (`DT_ACCOUNT_ID` also needed) |
+| Resource Category | API Token | Platform Token | OAuth Client |
+|-------------------|-----------|----------------|-------------|
+| Settings 2.0 (management zones, auto-tags, alerting, SLOs) | Yes | Yes | No |
+| Synthetic monitors | **Yes (required)** | No (v1.88.0) | No (v1.88.0) |
+| Gen3: Workflows, scheduling | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
+| Gen3: Documents (dashboards, notebooks) | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
+| Gen3: Segments | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
+| Account Management (IAM, policies, groups) | No | No | **Yes** (`DT_ACCOUNT_ID` also needed) |
 
 ### Creating an OAuth Client
 
@@ -227,11 +228,17 @@ variable "automation_client_secret" {
 | `document:documents:read` | Read documents |
 | `document:documents:write` | Create/update documents |
 | `document:documents:delete` | Delete documents |
+| `storage:filter-segments:read` | Read segments |
+| `storage:filter-segments:write` | Write segments |
+| `settings:objects:read` | Read settings (if IAM policy allows) |
+| `settings:objects:write` | Write settings (if IAM policy allows) |
 
 3. Copy the generated **client ID** and **client secret** immediately — the secret is only shown once
 4. Store credentials securely (vault, CI/CD secrets, etc.)
 
 > **Security:** Never commit OAuth client secrets or API tokens to version control. Use environment variables, HashiCorp Vault, AWS Secrets Manager, or your CI/CD platform's secret store.
+
+> **Note on scope formats:** API token scopes use dot notation (`settings.read`, `settings.write`). OAuth scopes and IAM policy actions use colon notation (`settings:objects:read`, `settings:objects:write`). These are different identifiers for the same capability in different auth contexts.
 
 ---
 
@@ -378,6 +385,145 @@ resource "dynatrace_http_monitor" "homepage" {
           value = ">=400"
           pass_if_found = false
         }
+      }
+    }
+  }
+}
+```
+
+---
+
+### Gen3 Platform Resources
+
+Gen3 resources require **Platform Token** (with `DYNATRACE_HTTP_OAUTH_PREFERENCE=true`) or **OAuth Client Credentials**.
+
+#### Automation Workflow
+
+```hcl
+resource "dynatrace_automation_workflow" "problem_email" {
+  title       = "Problem Email Notification"
+  description = "Sends an email when a Davis problem opens"
+  private     = false
+
+  trigger {
+    event {
+      active = true
+      config {
+        davis_problem {
+          categories {
+            error = true
+          }
+          entity_tags = {
+            Environment = "production"
+          }
+          entity_tags_match = "all"
+          on_problem_close  = false
+        }
+      }
+    }
+  }
+
+  tasks {
+    task {
+      name        = "send_email"
+      description = "Send email notification"
+      action      = "dynatrace.email:email-action"
+      active      = true
+      input = jsonencode({
+        to      = ["team@example.com"]
+        subject = "Dynatrace Problem: {{event()['event.name']}}"
+        body    = "Problem detected.\nName: {{event()['event.name']}}\nSeverity: {{event()['event.category']}}"
+      })
+      position {
+        x = 0
+        y = 1
+      }
+    }
+  }
+}
+```
+
+#### Grail Dashboard (Document)
+
+```hcl
+resource "dynatrace_document" "team_dashboard" {
+  type    = "dashboard"
+  name    = "Production Overview"
+  private = false
+  content = jsonencode({
+    version = 13
+    variables = []
+    tiles = {
+      "tile-1" = {
+        type  = "data"
+        title = "Error Rate"
+        query = "timeseries avg(dt.service.request.failure_rate), by:{dt.entity.service}"
+      }
+    }
+    layouts = {
+      "tile-1" = { x = 0, y = 0, w = 12, h = 6 }
+    }
+  })
+}
+```
+
+#### Grail Notebook (Document)
+
+```hcl
+resource "dynatrace_document" "runbook" {
+  type    = "notebook"
+  name    = "Incident Runbook"
+  private = false
+  content = jsonencode({
+    version = "3"
+    sections = [
+      {
+        id    = "section-1"
+        type  = "markdown"
+        title = "Investigation Steps"
+        content = "## Step 1: Check Error Rate\nRun the query below to identify affected services."
+      },
+      {
+        id    = "section-2"
+        type  = "dql"
+        title = "Error Rate by Service"
+        content = "timeseries avg(dt.service.request.failure_rate), by:{dt.entity.service}"
+      }
+    ]
+  })
+}
+```
+
+#### Segment (Gen3 Management Zone Replacement)
+
+```hcl
+resource "dynatrace_segment" "production_services" {
+  name            = "Production Services"
+  description     = "All services in the production environment"
+  is_public       = true
+  include_filter  = "fetch dt.entity.service | filter tags = \"Environment:production\""
+}
+```
+
+#### Maintenance Window
+
+```hcl
+resource "dynatrace_maintenance" "weekly_patch" {
+  enabled = true
+  name    = "Weekly Patch Window"
+  type    = "PLANNED"
+  suppression = "DONT_DETECT_PROBLEMS"
+
+  schedule {
+    type = "WEEKLY"
+    weekly_recurrence {
+      day_of_week    = "SUNDAY"
+      time_window {
+        start_time = "02:00"
+        end_time   = "04:00"
+      }
+      recurrence_range {
+        start_date = "2026-01-01"
       }
     }
   }
@@ -573,6 +719,100 @@ resource "dynatrace_alerting" "alerts" {
   }
 }
 ```
+
+---
+
+### Modules with Governance Inputs
+
+For multi-team environments, modules can enforce governance through input validation, mandatory tags, and scoping:
+
+```hcl
+# modules/alerting-profile/variables.tf
+
+variable "team_name" {
+  type        = string
+  description = "Name of the team owning this alerting profile"
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9-]{2,20}$", var.team_name))
+    error_message = "Team name must be lowercase alphanumeric with hyphens, 3-21 characters."
+  }
+}
+
+variable "management_zone_name" {
+  type        = string
+  description = "Management zone to scope this profile to (required)"
+  validation {
+    condition     = length(var.management_zone_name) > 0
+    error_message = "Management zone name is required."
+  }
+}
+
+variable "environment" {
+  type        = string
+  description = "Target environment"
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "Environment must be one of: dev, staging, prod."
+  }
+}
+
+variable "error_delay_minutes" {
+  type    = number
+  default = 0
+  validation {
+    condition     = contains([0, 5, 10, 15, 30], var.error_delay_minutes)
+    error_message = "Error delay must be one of: 0, 5, 10, 15, 30 minutes."
+  }
+}
+```
+
+This pattern ensures teams cannot create unscoped or untagged resources — governance is built into the module itself.
+
+### IAM Policy Management via Terraform
+
+The Dynatrace Terraform provider can manage IAM policies, groups, and bindings. This enables **schema-level access restrictions** — something API tokens cannot do.
+
+> **Important:** Managing IAM resources requires OAuth client credentials with `DT_ACCOUNT_ID`. API tokens cannot manage IAM.
+
+```hcl
+# Create a policy that restricts a team to specific settings schemas
+resource "dynatrace_iam_policy" "team_settings" {
+  name            = "Payments Team - Settings Access"
+  environment     = var.dynatrace_environment_id
+  statement_query = <<-EOT
+    ALLOW settings:objects:read, settings:objects:write
+      WHERE settings:schemaId IN (
+        "builtin:alerting.profile",
+        "builtin:problem.notifications",
+        "builtin:maintenance-window"
+      );
+  EOT
+}
+
+# Create an IAM group for the team
+resource "dynatrace_iam_group" "payments_team" {
+  name        = "Payments Team"
+  description = "IAM group for the Payments team"
+}
+
+# Bind the policy to the group
+resource "dynatrace_iam_policy_bindings_v2" "payments_binding" {
+  group       = dynatrace_iam_group.payments_team.id
+  policy_id   = dynatrace_iam_policy.team_settings.id
+  environment = var.dynatrace_environment_id
+}
+```
+
+IAM policies support multiple condition operators:
+
+| Operator | Example | Use Case |
+|----------|---------|----------|
+| `IN` | `settings:schemaId IN ("builtin:alerting.profile", ...)` | Explicit list |
+| `startsWith` | `settings:schemaId startsWith "builtin:alerting"` | Schema family |
+| `contains` | `settings:schemaId contains "custom"` | Substring match |
+| `=` | `storage:bucket.name = "team_logs"` | Data isolation |
+
+> **Key insight:** The API token scope `settings.write` grants access to ALL schemas. IAM policies with `WHERE settings:schemaId` clauses (using the IAM action `settings:objects:write`) are the only way to restrict schema access at the platform level.
 
 ---
 

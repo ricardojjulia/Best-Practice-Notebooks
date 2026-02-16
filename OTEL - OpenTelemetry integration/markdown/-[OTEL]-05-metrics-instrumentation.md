@@ -1,6 +1,6 @@
 # Metrics Instrumentation
 
-> **Series:** OTEL | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Creating Custom Metrics with OpenTelemetry
 OpenTelemetry metrics provide quantitative measurements of your application's behavior over time. This notebook covers metric types, instrumentation patterns, and integration with Dynatrace.
@@ -345,7 +345,8 @@ In this notebook, you learned:
 
 - [OTel Metrics Specification](https://opentelemetry.io/docs/specs/otel/metrics/)
 - [OTel Python Metrics](https://opentelemetry.io/docs/instrumentation/python/manual/#metrics)
-- [Dynatrace Metrics Ingest](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-metrics)
+- [Dynatrace OTLP Metrics Ingest](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/otlp-api/ingest-otlp-metrics)
+- [Configure OTLP Metrics](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/otlp-api/ingest-otlp-metrics/configure-otlp-metrics)
 
 ---
 

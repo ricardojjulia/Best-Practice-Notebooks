@@ -19,6 +19,7 @@ Organizing data in Dynatrace Grail using buckets, segments, and security context
 7. [Advanced Permission Patterns](markdown/-[ORGNZ]-07-advanced-permission-patterns.md) — Record and field-level permissions
 8. [Grail Segments](markdown/-[ORGNZ]-08-grail-segments.md) — Logical data filtering with segments
 9. [Enterprise Patterns](markdown/-[ORGNZ]-09-enterprise-patterns.md) — Combining mechanisms for enterprise governance
+10. [Advanced Segment Definitions](markdown/-[ORGNZ]-10-advanced-segment-definitions.md) — Complex segment filters with multi-include patterns
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.

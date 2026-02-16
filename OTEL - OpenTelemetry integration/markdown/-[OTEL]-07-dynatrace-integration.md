@@ -1,6 +1,6 @@
 # Dynatrace OTLP Integration
 
-> **Series:** OTEL | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** OTEL | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Complete Setup for OpenTelemetry with Dynatrace
 This notebook provides end-to-end configuration for sending OpenTelemetry data to Dynatrace, including authentication, endpoints, and verification.
@@ -15,8 +15,9 @@ This notebook provides end-to-end configuration for sending OpenTelemetry data t
 4. [Direct SDK Export](#direct-sdk-export)
 5. [Entity Mapping](#entity-mapping)
 6. [Span Attributes for Dynatrace](#span-attributes-for-dynatrace)
-7. [Verification](#verification)
-8. [Hybrid with OneAgent](#hybrid-with-oneagent)
+7. [OTLP Metric Dimensions](#otlp-metric-dimensions)
+8. [Verification](#verification)
+9. [Hybrid with OneAgent](#hybrid-with-oneagent)
 
 ---
 
@@ -32,12 +33,16 @@ This notebook provides end-to-end configuration for sending OpenTelemetry data t
 ## 1. Dynatrace OTLP Endpoints
 ### SaaS Endpoints
 
-| Signal | gRPC Endpoint | HTTP Endpoint |
-|--------|---------------|---------------|
-| All | `{env-id}.live.dynatrace.com:443` | `https://{env-id}.live.dynatrace.com/api/v2/otlp` |
-| Traces | Same | `https://{env-id}.live.dynatrace.com/api/v2/otlp/v1/traces` |
-| Metrics | Same | `https://{env-id}.live.dynatrace.com/api/v2/otlp/v1/metrics` |
-| Logs | Same | `https://{env-id}.live.dynatrace.com/api/v2/otlp/v1/logs` |
+Dynatrace supports **OTLP/HTTP only** for native ingest. gRPC is not supported for direct ingest — use a Collector to convert gRPC to HTTP.
+
+| Signal | HTTP Endpoint |
+|--------|---------------|
+| All (base) | `https://{env-id}.live.dynatrace.com/api/v2/otlp` |
+| Traces | `https://{env-id}.live.dynatrace.com/api/v2/otlp/v1/traces` |
+| Metrics | `https://{env-id}.live.dynatrace.com/api/v2/otlp/v1/metrics` |
+| Logs | `https://{env-id}.live.dynatrace.com/api/v2/otlp/v1/logs` |
+
+> **Important:** gRPC is **not supported** for direct Dynatrace ingest. If your SDKs use gRPC, route through a Collector with an `otlp` gRPC receiver and `otlphttp` exporter. See [Transform OTLP gRPC](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/grpc).
 
 ### ActiveGate Endpoints
 
@@ -46,6 +51,18 @@ For on-premises or network-restricted environments:
 | Signal | Endpoint |
 |--------|----------|
 | All | `https://{activegate-host}:9999/e/{env-id}/api/v2/otlp` |
+
+### Dynatrace Collector Distribution
+
+Dynatrace provides its own **Collector distribution** with verified, production-ready components:
+
+| Aspect | Detail |
+|--------|--------|
+| Image | `ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector` |
+| Features | Pre-configured for Dynatrace, upstream-compatible, monthly releases |
+| Docs | [Dynatrace Collector](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector) |
+
+> **Tip:** The Dynatrace Collector distribution is recommended for production deployments. It includes verified components and stays current with upstream releases.
 
 ### Environment ID
 
@@ -96,17 +113,20 @@ Authorization: Api-Token <your-full-token>
 ## 3. Collector Configuration
 ### Image Versioning Best Practice
 
-> ⚠️ **Important:** Always pin your OTel Collector image to a specific version. Using `latest` can cause unexpected behavior during upgrades.
+> **Important:** Always pin your OTel Collector image to a specific version. Using `latest` can cause unexpected behavior during upgrades.
 
 ```yaml
-# ❌ Avoid - Non-deterministic deployments
+# Avoid - Non-deterministic deployments
 image: otel/opentelemetry-collector-contrib:latest
 
-# ✅ Recommended - Pin to specific version
-image: otel/opentelemetry-collector-contrib:0.96.0
+# Recommended - Pin to a specific version
+image: otel/opentelemetry-collector-contrib:0.120.0
+
+# Or use the Dynatrace distribution
+image: ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector:latest
 ```
 
-Check the [OpenTelemetry Collector releases](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) for the current stable version.
+Check the [OpenTelemetry Collector releases](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) or [Dynatrace Collector releases](https://github.com/Dynatrace/dynatrace-otel-collector/releases) for the current stable version.
 
 ### Complete Collector Config for Dynatrace
 
@@ -326,6 +346,43 @@ with tracer.start_as_current_span("checkout") as span:
     span.set_attribute("order.total", order_total)
 ```
 
+<a id="otlp-metric-dimensions"></a>
+## 7. OTLP Metric Dimensions
+
+### Advanced OTLP Metric Dimensions (January 2026)
+
+Dynatrace introduced an opt-in setting for **advanced OTLP metric dimensions**:
+
+| Feature | Details |
+|---------|---------|
+| **Primary Grail Fields** | Metrics can carry Primary Grail Fields as dimensions |
+| **Higher Cardinality** | Increased cardinality limits for metric dimensions |
+| **Faster Queries** | Performance improvements for high-cardinality metrics |
+| **Special Characters** | Dimension names can include slashes and other special characters |
+
+> **Warning:** After enabling advanced OTLP metric dimensions, OTLP metrics will **no longer** be automatically enriched with the `dt.entity.service` dimension. If you use `dt.entity.service` in SLOs, alerts, or dashboards, update your queries to filter using the underlying attributes (e.g., `service.name`) instead.
+
+### Scope Attributes as Dimensions
+
+When **Add Meter name and version as metric dimensions** is enabled:
+- `otel.scope.name` (instrumentation library/scope name)
+- `otel.scope.version` (instrumentation library/scope version)
+
+These are automatically added as dimensions to ingested OTLP metrics.
+
+### OTLP Auto-Configuration for Kubernetes
+
+Dynatrace Operator (v1.8+) supports **automatic OTLP exporter configuration** for K8s workloads:
+
+| Feature | Details |
+|---------|---------|
+| **Auto-injection** | Environment variables injected into application pods at startup |
+| **Routing** | Traffic routes through in-cluster ActiveGate if available |
+| **Control** | Per-pod opt-in/out via `otlp-exporter-configuration.dynatrace.com/inject` annotation |
+| **Docs** | [OTLP Auto-Config](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/extend-observability-k8s/otlp-auto-config) |
+
+For more details, see [Configure OTLP Metrics Ingestion](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/otlp-api/ingest-otlp-metrics/configure-otlp-metrics).
+
 ```dql
 // Verify OTel traces are arriving
 fetch spans, from:-1h
@@ -354,7 +411,7 @@ fetch spans, from:-1h
 ```
 
 <a id="verification"></a>
-## 7. Verification
+## 8. Verification
 ### Verify Data in Dynatrace
 
 1. **Services**: Go to **Services** - OTel services appear with OTel icon
@@ -381,7 +438,7 @@ fetch spans, from:-1h
 | Partial data | Network timeout | Check batch size, retry config |
 
 <a id="hybrid-with-oneagent"></a>
-## 8. Hybrid with OneAgent
+## 9. Hybrid with OneAgent
 ### Using OTel + OneAgent
 
 | Scenario | Recommendation |
@@ -424,12 +481,14 @@ set_global_textmap(CompositePropagator([
 
 In this notebook, you learned:
 
-- Dynatrace OTLP endpoints for SaaS and ActiveGate
+- Dynatrace OTLP endpoints (HTTP only — gRPC requires Collector)
+- Dynatrace OTel Collector distribution for production deployments
 - API token creation with required scopes
 - Complete Collector configuration
 - Direct SDK export configuration
 - Entity mapping and resource attributes
 - Span attributes that enhance Dynatrace analysis
+- OTLP metric dimensions changes and auto-configuration
 - Verification and troubleshooting
 - Hybrid deployment with OneAgent
 
@@ -437,9 +496,12 @@ In this notebook, you learned:
 
 ## References
 
-- [Dynatrace OpenTelemetry](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry)
-- [OTLP Ingest API](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-ingest)
-- [Entity Mapping](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-entities)
+- [Dynatrace OpenTelemetry](https://docs.dynatrace.com/docs/ingest-from/opentelemetry)
+- [OTLP API Endpoints](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/otlp-api)
+- [Dynatrace Collector](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector)
+- [Configure OTLP Metrics](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/otlp-api/ingest-otlp-metrics/configure-otlp-metrics)
+- [OTLP Auto-Config for K8s](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/extend-observability-k8s/otlp-auto-config)
+- [Ensure Success with OTel](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/troubleshooting)
 
 ---
 
