@@ -1,6 +1,6 @@
 # OpenTelemetry Fundamentals
 
-> **Series:** OTEL | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Introduction to OpenTelemetry and Dynatrace
 OpenTelemetry (OTel) is the industry-standard framework for collecting telemetry data. Dynatrace fully supports OpenTelemetry through native OTLP ingestion, allowing you to leverage OTel instrumentation while benefiting from Dynatrace's AI-powered analytics.
@@ -163,6 +163,8 @@ Structured event records correlated with traces.
 ## 5. Semantic Conventions
 Semantic conventions define standard attribute names for consistent telemetry.
 
+> **Note:** OpenTelemetry semantic conventions are evolving. HTTP conventions were **stabilized in 2023** with new names (see migration tables below). Database conventions are also migrating. SDKs support a gradual transition via the `OTEL_SEMCONV_STABILITY_OPT_IN` environment variable. Both old and new names may coexist during migration.
+
 ### Resource Attributes
 
 | Attribute | Example | Description |
@@ -170,25 +172,33 @@ Semantic conventions define standard attribute names for consistent telemetry.
 | `service.name` | `checkout-api` | Logical service name |
 | `service.version` | `1.2.3` | Service version |
 | `service.namespace` | `production` | Service namespace |
-| `deployment.environment` | `prod` | Deployment environment |
+| `deployment.environment.name` | `prod` | Deployment environment |
+
+> **Note:** `deployment.environment` was renamed to `deployment.environment.name` in the stable resource semantic conventions.
 
 ### HTTP Span Attributes
 
-| Attribute | Example | Description |
-|-----------|---------|-------------|
-| `http.method` | `GET` | HTTP method |
-| `http.url` | `https://api.example.com/users` | Full URL |
-| `http.status_code` | `200` | Response status code |
-| `http.route` | `/users/{id}` | Route template |
+| Old (Legacy) | Stable | Description |
+|--------------|--------|-------------|
+| `http.method` | `http.request.method` | HTTP method |
+| `http.url` | `url.full` | Full URL |
+| `http.status_code` | `http.response.status_code` | Response status code |
+| `http.route` | `url.path` / `http.route` | URL path or route template |
+| `http.target` | `url.path` + `url.query` | Request target |
+| `http.host` | `server.address` | Server hostname |
+
+> **Tip:** Use `OTEL_SEMCONV_STABILITY_OPT_IN=http` to emit only stable names, or `http/dup` to emit both old and new during migration. See the [HTTP semconv migration guide](https://opentelemetry.io/docs/specs/semconv/non-normative/http-migration/).
 
 ### Database Span Attributes
 
-| Attribute | Example | Description |
-|-----------|---------|-------------|
-| `db.system` | `postgresql` | Database type |
-| `db.name` | `users_db` | Database name |
-| `db.statement` | `SELECT * FROM users` | Query |
-| `db.operation` | `SELECT` | Operation type |
+| Old (Legacy) | Stable | Description |
+|--------------|--------|-------------|
+| `db.name` | `db.namespace` | Database name/namespace |
+| `db.statement` | `db.query.text` | Query statement |
+| `db.operation` | `db.operation.name` | Operation type |
+| `db.system` | `db.system` | Database type (unchanged) |
+
+> **Tip:** Use `OTEL_SEMCONV_STABILITY_OPT_IN=database` for stable database names. See the [DB semconv migration guide](https://opentelemetry.io/docs/specs/semconv/non-normative/db-migration/).
 
 ### Kubernetes Attributes
 
@@ -202,12 +212,14 @@ Semantic conventions define standard attribute names for consistent telemetry.
 ## 6. Dynatrace OTel Integration
 ### OTLP Endpoints
 
-Dynatrace accepts OTLP data via:
+Dynatrace accepts OTLP data natively via **HTTP only** (gRPC is not supported for direct ingest):
 
-| Protocol | Endpoint |
-|----------|----------|
-| **gRPC** | `https://{your-env}.live.dynatrace.com/api/v2/otlp` |
-| **HTTP** | `https://{your-env}.live.dynatrace.com/api/v2/otlp` |
+| Protocol | Endpoint | Notes |
+|----------|----------|-------|
+| **HTTP** | `https://{your-env}.live.dynatrace.com/api/v2/otlp` | Recommended for direct ingest |
+| **gRPC** | Not supported for direct Dynatrace ingest | Use a Collector to convert gRPC → HTTP |
+
+> **Important:** If your application uses gRPC to export OTLP data, route it through an OpenTelemetry Collector configured with an `otlp` gRPC receiver and an `otlphttp` exporter to Dynatrace. See [Transform OTLP gRPC](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/grpc).
 
 ### Authentication
 
@@ -311,8 +323,8 @@ In this notebook, you learned:
 - How OTel compares to proprietary agents
 - Core OTel components: API, SDK, Collector
 - Signal types: traces, metrics, logs
-- Semantic conventions for consistent telemetry
-- Dynatrace OTLP integration configuration
+- Semantic conventions for consistent telemetry (including the stable HTTP and DB naming migration)
+- Dynatrace OTLP integration configuration (HTTP only — gRPC requires Collector)
 - When to use OTel vs. OneAgent
 
 ---
@@ -320,9 +332,11 @@ In this notebook, you learned:
 ## References
 
 - [OpenTelemetry Official Docs](https://opentelemetry.io/docs/)
-- [Dynatrace OpenTelemetry Integration](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry)
+- [Dynatrace OpenTelemetry Integration](https://docs.dynatrace.com/docs/ingest-from/opentelemetry)
 - [OTLP Specification](https://opentelemetry.io/docs/specs/otlp/)
 - [Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
+- [HTTP Semconv Migration Guide](https://opentelemetry.io/docs/specs/semconv/non-normative/http-migration/)
+- [DB Semconv Migration Guide](https://opentelemetry.io/docs/specs/semconv/non-normative/db-migration/)
 
 ---
 

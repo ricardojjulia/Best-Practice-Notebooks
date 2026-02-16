@@ -1,6 +1,6 @@
 # Logs and Events
 
-> **Series:** OTEL | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Integrating Logs with OpenTelemetry
 OpenTelemetry logs bridge traditional logging with distributed tracing, enabling correlation between log events and traces. This notebook covers log instrumentation, correlation, and best practices.
@@ -368,7 +368,7 @@ In this notebook, you learned:
 
 - [OTel Logs Specification](https://opentelemetry.io/docs/specs/otel/logs/)
 - [Filelog Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver)
-- [Dynatrace Log Ingest](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-logs)
+- [Dynatrace OTel Log Ingest](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/getting-started/logs/ingest)
 
 ---
 

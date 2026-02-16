@@ -1,6 +1,6 @@
 # OpenTelemetry Collector Architecture
 
-> **Series:** OTEL | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Understanding the OTel Collector Pipeline
 The OpenTelemetry Collector is the backbone of OTel deployments—a vendor-agnostic service for receiving, processing, and exporting telemetry data. This notebook covers its architecture, components, and configuration.
@@ -248,7 +248,8 @@ Extensions provide operational capabilities for the Collector itself.
 | `health_check` | Liveness/readiness endpoints |
 | `pprof` | Go profiling data |
 | `zpages` | Debug pages for pipelines |
-| `memory_ballast` | Pre-allocate memory (deprecated) |
+
+> **Note:** The `memory_ballast` extension is **deprecated** and was removed from default Helm chart configurations. Use the `GOMEMLIMIT` environment variable instead (set to ~80% of the container memory limit). See [Collector discussion #9264](https://github.com/open-telemetry/opentelemetry-collector/discussions/9264).
 
 ### Configuration
 

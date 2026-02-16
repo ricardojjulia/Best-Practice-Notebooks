@@ -1,6 +1,6 @@
 # Collector Deployment Patterns
 
-> **Series:** OTEL | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Deploying the OpenTelemetry Collector
 The OTel Collector can be deployed in various patterns depending on your infrastructure. This notebook covers deployment modes, Kubernetes configurations, and best practices for production.
@@ -64,6 +64,8 @@ For environments where SVG doesn't render
 ## 2. Agent Mode (Sidecar/DaemonSet)
 ### DaemonSet Configuration
 
+> **Important:** Always pin your Collector image to a specific version. Using `latest` can cause unexpected behavior during upgrades. Check the [OpenTelemetry Collector releases](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) for the current stable version.
+
 ```yaml
 apiVersion: apps/v1
 kind: DaemonSet
@@ -81,7 +83,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: otel/opentelemetry-collector-contrib:latest
+          image: otel/opentelemetry-collector-contrib:0.120.0
           args:
             - --config=/conf/otel-collector-config.yaml
           ports:
@@ -118,7 +120,7 @@ spec:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: http://localhost:4317
     - name: otel-collector
-      image: otel/opentelemetry-collector-contrib:latest
+      image: otel/opentelemetry-collector-contrib:0.120.0
       args:
         - --config=/conf/otel-collector-config.yaml
       ports:

@@ -122,6 +122,7 @@ Organizing data in Dynatrace Grail using buckets, segments, and security context
 - [ORGNZ-07: Advanced Permission Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-[ORGNZ]-07-advanced-permission-patterns.md) — Record and field-level permissions
 - [ORGNZ-08: Grail Segments](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-[ORGNZ]-08-grail-segments.md) — Logical data filtering with segments
 - [ORGNZ-09: Enterprise Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-[ORGNZ]-09-enterprise-patterns.md) — Combining mechanisms for enterprise governance
+- [ORGNZ-10: Advanced Segment Definitions](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-[ORGNZ]-10-advanced-segment-definitions.md) — Complex segment filters with multi-include patterns
 
 ### [OTEL - OpenTelemetry integration](OTEL%20-%20OpenTelemetry%20integration/README.md)
 Integrating OpenTelemetry with Dynatrace for observability.

@@ -1,6 +1,6 @@
 # Troubleshooting OTel Pipelines
 
-> **Series:** OTEL | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Debugging OpenTelemetry Data Flows
 When telemetry data doesn't arrive as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic techniques, and resolution steps for OpenTelemetry pipelines.
@@ -468,7 +468,7 @@ In this notebook, you learned:
 
 - [Collector Troubleshooting](https://opentelemetry.io/docs/collector/troubleshooting/)
 - [SDK Debugging](https://opentelemetry.io/docs/instrumentation/python/troubleshooting/)
-- [Dynatrace OTel Troubleshooting](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-troubleshooting)
+- [Dynatrace OTel Troubleshooting](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/troubleshooting)
 
 ---
 

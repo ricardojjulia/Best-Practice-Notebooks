@@ -184,7 +184,9 @@ curl http://localhost:3000/metrics/v1
 
 ### How Dynatrace Scrapes Prometheus Metrics
 
-Dynatrace collects metrics from any Kubernetes pod annotated with `metrics.dynatrace.com/scrape: "true"`. The Dynatrace Operator automatically discovers these pods and scrapes their Prometheus endpoints, enriching the metrics with Kubernetes topology information.
+Dynatrace collects metrics from any Kubernetes pod annotated with `metrics.dynatrace.com/scrape: "true"`. The Dynatrace Operator's ActiveGate connects directly to annotated pods and scrapes their Prometheus endpoints, enriching the metrics with Kubernetes topology information.
+
+> **Important:** The ActiveGate must be deployed **inside** the monitored Kubernetes cluster for annotation-based scraping to work. An ActiveGate running outside the cluster cannot reach pod endpoints that require RBAC or network-level access.
 
 ### Required Pod Annotations
 
@@ -194,7 +196,8 @@ Dynatrace collects metrics from any Kubernetes pod annotated with `metrics.dynat
 | `metrics.dynatrace.com/port` | No | First TCP port | Port where metrics are exposed |
 | `metrics.dynatrace.com/path` | No | `/metrics` | Path to the metrics endpoint |
 | `metrics.dynatrace.com/secure` | No | `"false"` | Use HTTPS for scraping |
-| `metrics.dynatrace.com/filter` | No | - | Include only metrics matching pattern |
+| `metrics.dynatrace.com/insecure_skip_verify` | No | `"false"` | Skip TLS certificate verification (self-signed certs) |
+| `metrics.dynatrace.com/filter` | No | - | Include/exclude metrics matching pattern (supports `*` wildcard) |
 
 ### Applying Annotations to Kpow
 
@@ -251,8 +254,8 @@ Ensure Prometheus scraping is enabled in your Dynatrace environment:
 
 ```dql
 // Verify Kpow metrics are being ingested
-timeseries avg(broker_count), from:-1h
-| fieldsAdd brokers = arrayAvg(avg(broker_count))
+timeseries brokerCount = avg(broker_count), from:-1h
+| fieldsAdd avgBrokers = arrayAvg(brokerCount)
 ```
 
 <a id="querying-kpow-metrics-with-dql"></a>
@@ -384,7 +387,7 @@ fetch events, from:-24h
 <a id="alerting-on-kafka-health"></a>
 ## 6. Alerting on Kafka Health
 
-Kpow does not provide its own alerting — it delegates to external tools. With Dynatrace ingesting Kpow metrics, you can use Dynatrace Workflows for alerting.
+Kpow does not provide its own alerting — it delegates to external tools. With Dynatrace ingesting Kpow metrics, you can use Dynatrace metric events, Workflows, and the new Dynatrace Intelligence Agents for alerting and automated response.
 
 ### Recommended Alert Thresholds
 
@@ -409,7 +412,7 @@ Create metric events in Dynatrace for automated alerting:
 | Field | Consumer Lag Example |
 |-------|---------------------|
 | **Summary** | Kafka consumer lag critical |
-| **Type** | Metric key | `group_offset_lag` |
+| **Metric key** | `group_offset_lag` |
 | **Aggregation** | Average |
 | **Threshold** | 100,000 |
 | **Violating samples** | 3 of 5 (sliding window) |
@@ -426,6 +429,14 @@ Connect metric events to Dynatrace Workflows for automated response:
 | Broker count drops | Page on-call, trigger runbook |
 | URP > 0 sustained | Alert Kafka admin team |
 | Connector task fails | Auto-restart connector via API |
+
+### Dynatrace Intelligence Agents
+
+Announced at Perform 2026, Dynatrace Intelligence Agents can automate incident response by reasoning over real-time causal context. For Kafka scenarios, this means:
+
+- **SRE Agents** can correlate Kpow consumer lag spikes with upstream service errors detected by OneAgent
+- **Automated triage** links Kafka health metrics to Davis AI root-cause analysis
+- **Cross-domain correlation** connects Kafka platform metrics (via Kpow) with application traces and Kubernetes events
 
 > **Tip:** See **WFLOW-01** through **WFLOW-09** for comprehensive Dynatrace Workflow configuration patterns.
 
