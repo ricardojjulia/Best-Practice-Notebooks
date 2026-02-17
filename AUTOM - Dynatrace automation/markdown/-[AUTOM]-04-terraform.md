@@ -1,6 +1,6 @@
 # Terraform Provider
 
-> **Series:** AUTOM | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 02/11/2026
+> **Series:** AUTOM | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 02/17/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -14,6 +14,7 @@ The Dynatrace Terraform provider enables infrastructure-as-code management of Dy
 4. [Resource Types](#resource-types)
 5. [State Management](#state-management)
 6. [Advanced Patterns](#advanced-patterns)
+7. [Governance Architecture](#governance-architecture)
 
 ---
 
@@ -112,9 +113,7 @@ The Dynatrace Terraform provider supports three authentication methods. Which yo
 
 ### Method 1: API Token (Classic)
 
-Use for **Settings 2.0** resources and resources that require classic API token auth (synthetic monitors).
-
-API tokens require explicit scopes like `settings.read`, `settings.write`, `ExternalSyntheticIntegration`.
+Use for **Settings 2.0** resources and resources that require classic API token auth (synthetic monitors, SLOs, legacy config APIs).
 
 ```hcl
 terraform {
@@ -132,6 +131,40 @@ provider "dynatrace" {
 }
 ```
 
+#### API Token Scopes — Full Access Reference
+
+To manage **all** resources that require API Token authentication, create a token with the following scopes:
+
+| Scope | Purpose |
+|-------|---------|
+| `settings.read` | Read Settings 2.0 objects |
+| `settings.write` | Create/update Settings 2.0 objects |
+| `ReadConfig` | Read legacy configuration API |
+| `WriteConfig` | Write legacy configuration API |
+| `CaptureRequestData` | Request attributes and data privacy |
+| `ExternalSyntheticIntegration` | Synthetic monitors (v1 API) |
+| `activeGateTokenManagement.create` | Create ActiveGate tokens |
+| `activeGateTokenManagement.read` | Read ActiveGate tokens |
+| `activeGateTokenManagement.write` | Update/revoke ActiveGate tokens |
+| `apiTokens.read` | Read API tokens |
+| `apiTokens.write` | Create/update API tokens |
+| `attacks.read` | Read Application Security attacks |
+| `attacks.write` | Write Application Security attacks |
+| `credentialVault.read` | Read credential vault entries |
+| `credentialVault.write` | Create/update credential vault entries |
+| `entities.read` | Read monitored entities |
+| `extensions.write` | Upload Extensions 2.0 |
+| `extensionEnvironment.read` | Read extension environment config |
+| `extensionEnvironment.write` | Write extension environment config |
+| `networkZones.read` | Read network zones |
+| `networkZones.write` | Create/update network zones |
+| `securityProblems.read` | Read security problems |
+| `securityProblems.write` | Update security problems |
+| `slo.read` | Read SLO definitions |
+| `slo.write` | Create/update SLO definitions |
+
+> **Principle of least privilege:** For production, grant only the scopes your pipeline actually needs. The table above represents the **full-access superset** as documented in the [Terraform Registry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs). A pipeline managing only Settings 2.0 resources needs only `settings.read` + `settings.write`.
+
 ### Method 2: Platform Token
 
 **Platform Tokens** (`dt0s16.xxxx`) are a newer token type that bridges Settings 2.0 and Gen3 Platform in a single credential. They work within the assigned user's permissions.
@@ -144,6 +177,10 @@ provider "dynatrace" {
 ```
 
 **Key env var:** `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` tells the provider to use the Platform Token for OAuth-based resources (workflows, documents, segments) in addition to Settings 2.0.
+
+> **How `DYNATRACE_HTTP_OAUTH_PREFERENCE` works:** When set to `true` and OAuth/Platform Token credentials are provided, the provider **prefers REST endpoints that support OAuth** over API Token endpoints. When not set (or `false`), the provider defaults to API Token authentication. Not all resources support OAuth — for example, `dynatrace_json_dashboard` can only be configured using API Tokens regardless of this setting.
+
+> **Settings object ownership:** When a settings object is created using Platform Token or OAuth credentials, the owner is set to the credential owner. By default, the object is **private** — only the owner can read/modify it. Use the `dynatrace_settings_permissions` resource to manage access modifiers.
 
 ### Method 3: OAuth Client Credentials
 
@@ -198,7 +235,7 @@ export DYNATRACE_API_TOKEN="dt0c01.xxxx.yyyy"
 | `DYNATRACE_ENV_URL` or `DT_ENV_URL` | Tenant URL |
 | `DYNATRACE_API_TOKEN` or `DT_API_TOKEN` | Classic API token (`dt0c01`) |
 | `DYNATRACE_PLATFORM_TOKEN` | Platform token (`dt0s16`) |
-| `DYNATRACE_HTTP_OAUTH_PREFERENCE` | Set to `true` to use Platform Token for Gen3 resources |
+| `DYNATRACE_HTTP_OAUTH_PREFERENCE` | Set to `true` to prefer OAuth endpoints for Platform Token / OAuth resources |
 | `DT_CLIENT_ID` | OAuth client ID (for automation/document/IAM resources) |
 | `DT_CLIENT_SECRET` | OAuth client secret |
 | `DT_ACCOUNT_ID` | Account UUID (required for account-level IAM resources) |
@@ -213,28 +250,65 @@ export DYNATRACE_API_TOKEN="dt0c01.xxxx.yyyy"
 | Gen3: Documents (dashboards, notebooks) | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
 | Gen3: Segments | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
 | Account Management (IAM, policies, groups) | No | No | **Yes** (`DT_ACCOUNT_ID` also needed) |
+| Legacy dashboards (`dynatrace_json_dashboard`) | **Yes (only)** | No | No |
 
 ### Creating an OAuth Client
 
 1. Go to **Account Management** > **Identity & Access Management** > **OAuth clients**
-2. Create a new client with the required scopes:
+2. Create a new client with the required scopes (see table below)
+3. Copy the generated **client ID** and **client secret** immediately — the secret is only shown once
+4. Store credentials securely (vault, CI/CD secrets, etc.)
+5. Ensure the **service user's groups** grant the same scopes as the OAuth client for all target environments
+
+#### OAuth Client Scopes — Full Access Reference
+
+To manage **all** resources that require OAuth authentication, create an OAuth client with the following scopes:
 
 | Scope | Purpose |
 |-------|---------|
+| **Settings** | |
+| `settings:objects:read` | Read settings objects |
+| `settings:objects:write` | Create/update settings objects |
+| `settings:objects:admin` | Admin — manage all settings objects |
+| **Automation** | |
 | `automation:workflows:read` | Read workflow definitions |
 | `automation:workflows:write` | Create/update workflows |
+| `automation:workflows:admin` | Admin — manage all workflows |
+| `automation:calendars:read` | Read scheduling calendars |
+| `automation:calendars:write` | Create/update scheduling calendars |
 | `automation:rules:read` | Read scheduling rules |
 | `automation:rules:write` | Create/update scheduling rules |
-| `document:documents:read` | Read documents |
+| **Documents** | |
+| `document:documents:read` | Read documents (dashboards, notebooks) |
 | `document:documents:write` | Create/update documents |
 | `document:documents:delete` | Delete documents |
+| `document:trash.documents:delete` | Permanently delete trashed documents |
+| `document:direct-shares:read` | Read document shares |
+| `document:direct-shares:write` | Create/update document shares |
+| `document:direct-shares:delete` | Delete document shares |
+| **OpenPipeline** | |
+| `openpipeline:configurations:read` | Read OpenPipeline configurations |
+| `openpipeline:configurations:write` | Create/update OpenPipeline configs |
+| **SLO** | |
+| `slo:slos:read` | Read SLO definitions |
+| `slo:slos:write` | Create/update SLO definitions |
+| `slo:objective-templates:read` | Read SLO objective templates |
+| **Storage** | |
+| `storage:bizevents:read` | Read business events |
+| `storage:bucket-definitions:read` | Read Grail bucket definitions |
+| `storage:bucket-definitions:write` | Create/update Grail bucket definitions |
 | `storage:filter-segments:read` | Read segments |
-| `storage:filter-segments:write` | Write segments |
-| `settings:objects:read` | Read settings (if IAM policy allows) |
-| `settings:objects:write` | Write settings (if IAM policy allows) |
+| `storage:filter-segments:write` | Create/update segments |
+| `storage:filter-segments:share` | Share segments |
+| `storage:filter-segments:delete` | Delete segments |
+| `storage:filter-segments:admin` | Admin — manage all segments |
+| **Account Management (IAM)** | |
+| `account-idm-read` | Read IAM users, groups, service users |
+| `account-idm-write` | Create/update IAM users, groups, service users |
+| `iam-policies-management` | Create/update/delete IAM policies |
+| `account-env-read` | Read account environment metadata |
 
-3. Copy the generated **client ID** and **client secret** immediately — the secret is only shown once
-4. Store credentials securely (vault, CI/CD secrets, etc.)
+> **Principle of least privilege:** The table above is the **full-access superset** from the [Terraform Registry](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs). For production, grant only the scopes your pipeline requires. A pipeline managing only workflows needs `automation:workflows:read` + `automation:workflows:write`.
 
 > **Security:** Never commit OAuth client secrets or API tokens to version control. Use environment variables, HashiCorp Vault, AWS Secrets Manager, or your CI/CD platform's secret store.
 
@@ -816,6 +890,102 @@ IAM policies support multiple condition operators:
 
 ---
 
+<a id="governance-architecture"></a>
+## 7. Governance Architecture
+
+### Token Scoping & the Synthetic Access Problem
+
+A common enterprise requirement is **scoped API access** — allowing Team A to manage only their Synthetic monitors via Terraform while preventing them from modifying Team B's monitors. Today, Dynatrace does not provide object-level or team-scoped API access for Synthetic Monitors because they are managed via the **Classic API v1**, not the modern platform APIs.
+
+Here is why each token approach fails for scoped Synthetic access:
+
+| Token Approach | Why It Fails for Synthetic Scoping |
+|----------------|-----------------------------------|
+| **Platform Token** (cluster page) | Cannot express v1 Synthetic permissions — those APIs are not covered by platform scopes |
+| **OAuth Client** | The v1 Synthetic API **does not accept OAuth bearer tokens**. It requires a classic API token (`dt0c01`) with `ExternalSyntheticIntegration` scope. OAuth works for Gen3/platform resources only. |
+| **Personal Access Token** | Still a classic API token — scopes are broad and environment-wide |
+| **Environment Token** | Cannot be restricted to specific objects or teams. This is how classic tokens work by design. |
+
+> **Key insight:** There is no supported way today to say "Team A can manage only their Synthetic monitors via API." For Gen3/platform resources (workflows, documents, segments, Settings 2.0), Service User + OAuth provides genuinely scoped access through IAM policies. Synthetics remain the gap.
+
+### Dual-Auth: Bridging Gen3 and v1
+
+When a pipeline manages both Gen3 resources (scoped via OAuth) and v1 resources (synthetics, requiring a classic API token), use **dual authentication**:
+
+```hcl
+provider "dynatrace" {
+  dt_env_url       = var.dynatrace_env_url
+
+  # Service User + OAuth — for Gen3/platform resources (scoped via IAM)
+  dt_client_id     = var.dt_client_id
+  dt_client_secret = var.dt_client_secret
+  dt_account_id    = var.dt_account_id
+
+  # Classic API Token — still required for v1 resources (synthetics)
+  dt_api_token     = var.dynatrace_api_token
+}
+```
+
+The service user's group memberships and IAM policies provide **real, scoped access** for Gen3 resources. The classic API token covers synthetics with compensating controls (see workaround patterns below).
+
+> **Migration timeline:** Dynatrace has been progressively migrating features off v1 APIs. When Synthetic monitoring moves to platform APIs with IAM policy-aware services, the OAuth client will cover it and the dual-auth requirement disappears. Track [Dynatrace release notes](https://docs.dynatrace.com/docs/whats-new) for updates.
+
+---
+
+### Synthetic Monitor Workaround Patterns
+
+Since OAuth and Sentinel cannot solve scoped Synthetic access via the v1 API, these are the realistic enterprise patterns:
+
+#### Pattern 1: Brokered Self-Service (Recommended)
+
+Teams submit **declarative requests** (YAML, Terraform variables, or JSON) describing their desired Synthetic monitors. A **central pipeline** owns the environment-wide API token, validates team intent, and applies synthetics on their behalf.
+
+```
+Team Repo                          Central Terraform Repo
+──────────                        ─────────────────────
+Teams declare desired              Owns environment-wide
+  synthetics (YAML/vars)             API token
+  ↓                                  ↓
+No Dynatrace credentials          Sentinel/OPA enforces:
+  in team repos                    - team ownership tags
+                                   - naming conventions
+                                   - MZ scoping
+                                   - allowed locations
+                                     ↓
+                                   Applies on behalf of teams
+                                     ↓
+                                   Dynatrace
+                                   - Management Zones for visibility
+                                   - Audit via tags
+```
+
+> **Key principle:** Teams never get direct API access. They get **intent-based self-service**, not credentials.
+
+#### Pattern 2: Management Zone Fencing (Soft Isolation)
+
+Every Synthetic monitor must include a mandatory tag (e.g., `team=payments`) and be bound to a management zone. Terraform modules hard-code the MZ ID and naming prefix. Sentinel or OPA ensures the team repo can only reference its own MZ.
+
+> **Limitation:** This is **policy enforcement**, not permission enforcement. A compromised pipeline token still has full environment-wide access.
+
+#### Pattern 3: Split Environments (True Isolation)
+
+One Dynatrace environment per business unit, platform, or trust boundary. Synthetic API tokens become effectively scoped by environment since each environment has its own token. This is heavy-handed but the **only way to get true security isolation** for Synthetic monitors today. Recommended in regulated or multi-tenant scenarios.
+
+#### Pattern 4: UI Self-Service + API Read-Only
+
+Teams create Synthetic monitors via the Dynatrace UI, where RBAC applies and scoping works. The Terraform pipeline is limited to **reads, drift reporting, and configuration auditing** — not writes. This avoids distributing broad write tokens entirely.
+
+#### What Does Not Work
+
+These approaches **do not** overcome the v1 API limitation:
+
+- Per-team OAuth clients for Synthetics (OAuth works for Gen3, not v1 APIs)
+- Sentinel-only enforcement without pipeline architecture (Sentinel constrains Terraform plans, not API permissions)
+- Terraform modules alone without CI governance (modules can be bypassed without pipeline guardrails)
+- Expecting platform tokens to cover Classic API endpoints
+
+---
+
 ### Best Practices
 
 | Practice | Description |
@@ -826,6 +996,7 @@ IAM policies support multiple condition operators:
 | **Version pinning** | Pin provider versions |
 | **Plan before apply** | Always review plan output |
 | **Meaningful names** | Resource names should be descriptive |
+| **Synthetic access** | Use brokered self-service for v1 API resources; never distribute environment-wide write tokens to teams |
 
 ### Common Issues
 
@@ -839,7 +1010,7 @@ IAM policies support multiple condition operators:
 ---
 
 <a id="next-steps"></a>
-## 7. Next Steps
+## 8. Next Steps
 
 ### Terraform Export Utility
 
@@ -867,6 +1038,7 @@ terraform-provider-dynatrace-export \
 - [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs)
 - [Provider GitHub Repository](https://github.com/dynatrace-oss/terraform-provider-dynatrace)
 - [Terraform Style Guide](https://developer.hashicorp.com/terraform/language/style)
+- [Dynatrace OAuth Client Guide](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/guides/create-oauth-client)
 
 ---
 
@@ -874,12 +1046,15 @@ terraform-provider-dynatrace-export \
 
 In this notebook, you learned:
 
-- How to configure the Dynatrace Terraform provider
-- Creating resources like management zones, auto-tags, and SLOs
+- How to configure the Dynatrace Terraform provider with three authentication methods
+- Creating resources like management zones, auto-tags, SLOs, and Gen3 platform resources
 - State management and drift detection
-- Advanced patterns with modules and workspaces
+- Advanced patterns with modules, workspaces, and governance inputs
+- Why Synthetic monitors require classic API tokens (v1 API limitation) and workaround patterns
+- IAM policy management for schema-level access restrictions
+- Brokered self-service as the recommended pattern for governed Synthetic access
 
-> **Key Takeaway:** Terraform excels when you need state management, drift detection, or integration with other infrastructure. For Dynatrace-only config management, Monaco is often simpler.
+> **Key Takeaway:** Use Service User + OAuth for Gen3 resources where IAM provides real scoped access. For Synthetic monitors (v1 API), use brokered self-service with compensating controls — never distribute environment-wide write tokens directly to teams.
 
 ---
 

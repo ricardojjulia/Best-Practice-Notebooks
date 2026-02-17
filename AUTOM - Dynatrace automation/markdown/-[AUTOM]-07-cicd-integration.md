@@ -1,6 +1,6 @@
 # CI/CD Integration
 
-> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 02/14/2026
+> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 02/17/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -21,7 +21,8 @@ CI/CD integration brings software development practices to Dynatrace configurati
 6. [FluxCD Integration](#fluxcd-integration)
 7. [Dynatrace Operator GitOps Patterns](#dynatrace-operator-gitops-patterns)
 8. [Best Practices](#best-practices)
-9. [Next Steps](#next-steps)
+9. [Governance Architecture](#governance-architecture)
+10. [Next Steps](#next-steps)
 
 ---
 
@@ -353,7 +354,7 @@ secret/
     ├── dev/
     │   ├── platform_token    # dt0s16 for dev tenant
     │   ├── api_token         # dt0c01 for dev tenant
-    │   └── env_url           # https://dev.live.dynatrace.com
+    │   └── env_url           # https://{dev-tenant}.live.dynatrace.com
     ├── prod/
     │   ├── platform_token
     │   ├── api_token
@@ -447,7 +448,7 @@ has_team_ownership(resource) {
 
 #### Sentinel (Terraform Enterprise / Cloud)
 
-For teams using **TFE**, Sentinel policies enforce governance at the workspace level:
+For teams using **TFE** (now HCP Terraform), Sentinel policies enforce governance at the workspace level:
 
 ```python
 # sentinel/restrict_resource_types.sentinel
@@ -465,6 +466,8 @@ main = rule {
   }
 }
 ```
+
+> **Important — Sentinel Limitations:** Sentinel evaluates Terraform **plans** — it does not grant or restrict Dynatrace API access at runtime. It cannot reduce the permissions of a token that has broad scope. If a pipeline token can write all Synthetic monitors, Sentinel cannot narrow that. Use **Dynatrace IAM policies** (see **AUTOM-04: IAM Policy Management**) for platform-level access control, and Sentinel for pipeline-level governance. Sentinel only runs in **HCP Terraform** — it is not available in open-source Terraform, GitHub Actions, or plain CI runners. For non-HCP environments, use **OPA/Conftest** as shown above.
 
 ---
 
@@ -1121,6 +1124,9 @@ kubectl create secret generic dynakube \
 | **Vault for runtime creds** | Retrieve tokens at pipeline runtime instead of static CI/CD secrets |
 | **Combined auth** | Use Platform Token + API Token for full resource coverage (v1.88.0) |
 | **Policy-as-code** | OPA/Conftest or Sentinel to enforce resource allowlists and mandatory tagging |
+| **State file access** | Lock down HCP Terraform workspace permissions — state files may contain OAuth credentials |
+| **Two-pipeline model** | Separate IAM management (central team) from config management (LOB teams) |
+| **Single SA writer** | Only the pipeline SA writes to production; all humans get read-only access |
 
 ### Workflow Design
 
@@ -1205,8 +1211,121 @@ Add deployment notifications:
 
 ---
 
+<a id="governance-architecture"></a>
+## 9. Governance Architecture
+
+The previous sections covered individual governance tools (Vault, OPA, Sentinel, drift detection). This section synthesizes them into a cohesive **enterprise governance architecture** for Dynatrace configuration management.
+
+### The Two-Pipeline Model
+
+Enterprise Dynatrace governance requires **two distinct pipelines** with separate identities, scopes, and cadences:
+
+#### Pipeline A — IAM Pipeline ("Who can do what")
+
+| Aspect | Detail |
+|--------|--------|
+| **Owner** | Central Platform / Observability team |
+| **Identity** | Service User + OAuth client scoped to IAM resources |
+| **Manages** | Groups, policies, policy bindings, environment-level permissions (`dynatrace_iam_*`) |
+| **Governance** | Sentinel/OPA prevents privilege escalation (no `account:admin`, no cross-team bindings) |
+| **Cadence** | Infrequent — runs when teams onboard, roles change, or environments are provisioned |
+| **Repo** | `dt-global-config` or equivalent central IAM repo |
+
+#### Pipeline B — Configuration Pipeline ("The actual work")
+
+| Aspect | Detail |
+|--------|--------|
+| **Owner** | Per-team / per-LOB (via middleman repo or brokered self-service) |
+| **Identity** | Service User + OAuth client scoped to the config domains Pipeline A granted |
+| **Manages** | Workflows, dashboards, segments, alerting profiles, auto-tags, management zones |
+| **Auth** | Dual-auth (OAuth + API token) when synthetics are in scope |
+| **Governance** | Sentinel/OPA enforces naming, tagging, MZ boundaries, allowed resource types |
+| **Cadence** | Frequent — runs on every config change promotion through environments |
+| **Repo** | `dt-lob-<lobname>` or team-specific config repos |
+
+Pipeline B **can only do what Pipeline A has granted**. Its OAuth client's effective permissions are bounded by the IAM policies, group memberships, and environment scoping that Pipeline A defined.
+
+```
+Pipeline A (IAM)                        Pipeline B (Config)
+─────────────────                       ──────────────────
+Platform team manages                   LOB teams submit PRs
+  ↓                                       ↓
+Creates service users,                  Middleman repo validates
+groups, policies, OAuth clients           ↓
+  ↓                                     Sentinel/OPA enforces boundaries
+Dynatrace IAM                            ↓
+  ↓                                     OAuth client (scoped by Pipeline A)
+Grants scoped permissions    ──────→      ↓
+                                        Dynatrace Config
+                                        (+ brokered API token for synthetics)
+```
+
+> **Key principle:** Pipeline A creates the identities and permissions. Pipeline B operates under those grants. Separation of concerns between access governance and configuration management.
+
+---
+
+### Operational Model: Single SA Writer
+
+In practice, the two-pipeline architecture produces a clear operational rule: **all human users have read-only access in production, and only one service account can write.**
+
+Teams build and validate configuration in a **dev/test tenant** where they have UI write access. Once tested, the provisioning pipeline — running as the single SA (service account) — promotes that configuration to production. No human ClickOps in prod, and a single auditable write path.
+
+```
+Dev Tenant                              Prod Tenant
+──────────                              ───────────
+Humans: read + write (UI)               Humans: read-only
+  ↓                                       ↑
+Teams build & test config               Pipeline promotes tested config
+  ↓                                       ↑
+Pipeline B validates    ──────────────→ SA user writes (only writer)
+```
+
+This model works with or without Sentinel. It directly addresses the access scoping challenge: within a single tenant, you cannot easily separate write access between teams for v1 resources. By splitting dev (where humans create) from prod (where only the pipeline writes), you get isolation through environment boundaries rather than token scoping. The SA's credentials live in Vault or HCP Terraform — never in human hands.
+
+### Defense-in-Depth Governance Layers
+
+No single tool provides complete governance. Enterprise Dynatrace configuration management uses **layered controls** where each layer compensates for the limitations of the others:
+
+| Layer | Role | Tool / Mechanism |
+|-------|------|-----------------|
+| **Dynatrace IAM** | Source of truth for access control | IAM policies, groups, bindings (see **AUTOM-04**) |
+| **Service User + OAuth** | Scoped pipeline identity for Gen3 resources | OAuth client credentials |
+| **Dual Auth (OAuth + API)** | Full coverage when pipeline manages both Gen3 and v1 resources | Combined provider config |
+| **Sentinel / OPA** | Governance guardrails on what Terraform can do | Policy-as-code (see above) |
+| **Vault** | Runtime credential management with expiration and audit | HashiCorp Vault (see above) |
+| **PR Review + CODEOWNERS** | Human approval gate | GitHub/GitLab branch protection |
+| **Module Allowlists** | Only approved Terraform modules in use | Sentinel module restrictions or repo-level controls |
+| **State File Access Control** | Prevent credential extraction from Terraform state | HCP Terraform workspace permissions |
+
+> **State file risk:** If a team can read the state of a middleman workspace in HCP Terraform, they could potentially extract the OAuth client credentials or see IAM bindings they should not access. Lock down workspace-level permissions in HCP Terraform appropriately.
+
+### What Sentinel / OPA Can and Cannot Do
+
+| Sentinel / OPA CAN | Sentinel / OPA CANNOT |
+|----|-----|
+| Restrict which Terraform modules and resource types may be used | Integrate with Dynatrace IAM at runtime |
+| Enforce naming conventions, tagging, and MZ boundaries | Reduce the runtime permissions of a Dynatrace token |
+| Prevent privilege escalation in IAM-as-code | Replace Dynatrace RBAC / IAM policies |
+| Validate team-to-object ownership in brokered self-service | Run outside HCP Terraform (Sentinel only — use OPA/Conftest for CI) |
+
+> Sentinel does not _grant_ access. Sentinel decides whether Terraform is _allowed to grant_ access. Dynatrace IAM remains the source of truth for what the pipeline identity can actually do.
+
+### Framing for Security Reviewers
+
+When presenting this architecture to security teams or auditors, document the v1 Synthetic limitation as an **accepted platform constraint with compensating controls**:
+
+1. **Gen3/platform resources** — genuinely scoped via Service User + OAuth + IAM policies
+2. **v1 Synthetic monitors** — brokered API token access through central pipeline (teams never hold the token directly)
+3. **Pipeline guardrails** — Sentinel/OPA enforce naming, tagging, MZ boundaries, and resource type restrictions
+4. **Credential management** — Vault provides runtime retrieval, automatic expiration, and access audit logging
+5. **Audit trail** — Git history + PR reviews + Dynatrace audit logs provide full change traceability
+
+This framing is much stronger than trying to pretend the v1 API scoping gap does not exist. It demonstrates a mature, defense-in-depth approach to a known platform limitation.
+
+---
+
 <a id="next-steps"></a>
-## 9. Next Steps
+## 10. Next Steps
 
 ### Deployment Event Tracking
 
@@ -1247,6 +1366,7 @@ Send deployment events to Dynatrace:
 - [OPA/Conftest](https://www.conftest.dev/)
 - [Sentinel Documentation](https://developer.hashicorp.com/sentinel)
 - [HashiCorp Vault Action](https://github.com/hashicorp/vault-action)
+- [Dynatrace OAuth Client Guide](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/guides/create-oauth-client)
 
 ---
 
@@ -1259,13 +1379,17 @@ In this notebook, you learned:
 - **Combined auth** (Platform Token + API Token) for full resource coverage in Terraform pipelines
 - **Vault integration** for runtime credential retrieval with short-lived tokens
 - **Policy-as-code gates** using OPA/Conftest and Sentinel for governance enforcement
+- **Sentinel limitations** — it governs Terraform plans, not Dynatrace API permissions at runtime
 - **Drift detection** workflows to catch manual UI changes
 - **Reusable workflows** (`workflow_call`) for multi-team organizations
 - ArgoCD integration with External Secrets for token management
 - FluxCD with HelmRelease and SOPS for secret encryption
 - Dynatrace Operator GitOps patterns for multi-cluster and multi-tenant environments
+- **Two-pipeline model**: Pipeline A (IAM) creates identities, Pipeline B (Config) applies configuration under those grants
+- **Single SA writer**: only the pipeline SA writes to production; humans develop in dev/test
+- **Defense-in-depth**: layered governance from Dynatrace IAM through Sentinel/OPA, Vault, PR gates, and state file controls
 
-> **Key Takeaway:** CI/CD integration transforms Dynatrace config management into a software development workflow. For full resource coverage, use combined auth (Platform Token + API Token). For enterprise governance, add Vault for secrets, OPA/Sentinel for policy enforcement, and scheduled drift detection to catch ClickOps.
+> **Key Takeaway:** CI/CD integration transforms Dynatrace config management into a software development workflow. Use a two-pipeline model to separate IAM governance from configuration management. Enforce single-SA-writer in production. Layer Vault, OPA/Sentinel, and Dynatrace IAM policies for defense-in-depth — no single tool provides complete governance.
 
 ---
 
