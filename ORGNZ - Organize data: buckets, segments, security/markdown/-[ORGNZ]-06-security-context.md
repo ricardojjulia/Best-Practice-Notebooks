@@ -1,6 +1,6 @@
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** ORGNZ | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@ If permissions on deployment-level attributes or bucket level are insufficient, 
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:logs:read`, OpenPipeline configuration access |
+| **Knowledge** | Completed ORGNZ-05 (Bucket-Level Access Control) |
+| **Data** | Logs with `dt.security_context` field (or ability to configure) |
 
 ---
 
@@ -175,38 +179,7 @@ ALLOW storage:logs:read WHERE storage:dt.security_context = "crn-70400-team";
 <a id="querying-security-context"></a>
 ## Querying Security Context
 
-```dql
-// View logs with security context
-fetch logs, from:-1h
-| filter isNotNull(dt.security_context)
-| fields timestamp, content, dt.security_context
-| limit 20
-```
-
-```dql
-// Summarize data by security context
-fetch logs, from:-1h
-| filter isNotNull(dt.security_context)
-| summarize recordCount = count(), by:{dt.security_context}
-| sort recordCount desc
-| limit 20
-```
-
-```dql
-// Filter logs by specific security context
-fetch logs, from:-1h
-| filter dt.security_context == "team:platform"
-| limit 50
-```
-
-```dql
-// Check for hierarchical security context patterns
-fetch logs, from:-1h
-| filter isNotNull(dt.security_context)
-| filter startsWith(dt.security_context, "finance/")
-| summarize count = count(), by:{dt.security_context}
-| sort count desc
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-06 LAB** for hands-on practice with these concepts.
 
 <a id="security-context-patterns"></a>
 ## Security Context Patterns

@@ -1,6 +1,6 @@
 # ORGNZ-03: Bucket Strategy and Design
 
-> **Series:** ORGNZ | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@ A well-defined bucket strategy optimizes query performance, controls costs, and 
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:bucket-definitions:read`, `storage:logs:read` |
+| **Knowledge** | Completed ORGNZ-02 (Understanding Grail Buckets) |
+| **Data** | At least 1 hour of log data |
 
 ---
 
@@ -164,26 +168,7 @@ Cost: Chargeback to Finance cost center
 <a id="analyzing-bucket-usage"></a>
 ## Analyzing Bucket Usage
 
-```dql
-// Analyze log volume by bucket over last 24 hours
-fetch logs, from:-1h
-| summarize recordCount = count(), by:{dt.system.bucket}
-| sort recordCount desc
-```
-
-```dql
-// Track log ingest trends by bucket over time
-fetch logs, from:-1h
-| summarize recordCount = count(), by:{time_bucket = bin(timestamp, 1h), dt.system.bucket}
-| sort time_bucket desc
-```
-
-```dql
-// Compare bucket retention configurations
-fetch dt.system.buckets
-| fields name, dt.system.table, retention_days
-| sort retention_days desc
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-03 LAB** for hands-on practice with these concepts.
 
 <a id="bucket-strategy-considerations"></a>
 ## Bucket Strategy Considerations
