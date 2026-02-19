@@ -1,6 +1,6 @@
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:buckets:read`, `storage:logs:read` |
+| **Knowledge** | Completed ORGNZ-01 (Introduction) |
+| **Data** | At least 1 hour of log data across default buckets |
 
 ---
 
@@ -145,41 +149,12 @@ Dynatrace provides default buckets with varying retention:
 <a id="querying-bucket-information"></a>
 ## Querying Bucket Information
 
-```dql
-// List all buckets with retention and status
-fetch dt.system.buckets
-| fields name, display_name, dt.system.table, retention_days, estimated_uncompressed_bytes
-| sort dt.system.table asc, name asc
-```
+> **Lab Exercise:** Complete Exercise 1 in **ORGNZ-02 LAB** for hands-on practice with this concept.
 
 <a id="querying-data-from-buckets"></a>
 ## Querying Data from Buckets
 
-```dql
-// Query logs from default bucket (implicit)
-fetch logs, from:-1h
-| limit 10
-```
-
-```dql
-// Query logs from a specific custom bucket
-fetch logs, bucket:{"default_logs"}
-| limit 10
-```
-
-```dql
-// Query from multiple buckets simultaneously
-fetch logs, bucket:{"default_logs", "audit_logs", "security_logs"}
-| limit 100
-```
-
-```dql
-// Filter by bucket within query
-fetch logs, from:-1h
-| filter dt.system.bucket == "default_logs"
-| filter loglevel == "ERROR"
-| limit 50
-```
+> **Lab Exercise:** Complete Exercises 2-3 in **ORGNZ-02 LAB** for hands-on practice with these concepts.
 
 <a id="bucket-characteristics"></a>
 ## Bucket Characteristics

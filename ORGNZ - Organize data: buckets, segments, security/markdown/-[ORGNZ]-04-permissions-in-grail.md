@@ -9,7 +9,11 @@ Dynatrace provides a comprehensive permission model for Grail that applies to al
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | Account admin or IAM policy management access |
+| **Knowledge** | Completed ORGNZ-03 (Bucket Strategy) |
+| **Data** | None required (conceptual overview) |
 
 ---
 

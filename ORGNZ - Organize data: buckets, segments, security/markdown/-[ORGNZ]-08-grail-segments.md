@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:filter-segments:read`, `storage:logs:read`, `storage:entities:read` |
+| **Knowledge** | Completed ORGNZ-07 (Advanced Permissions) |
+| **Data** | At least 1 hour of log, span, and entity data |
 
 ---
 
@@ -240,31 +244,7 @@ includes:
 <a id="testing-segments"></a>
 ## Testing Segments
 
-```dql
-// Test host group filtering (simulating segment rule)
-fetch dt.entity.host
-| filter startsWith(hostGroup, "prod-")
-| fields entity.name, hostGroup, tags
-| limit 20
-```
-
-```dql
-// Test tag-based filtering
-fetch dt.entity.service
-| expand tags
-| filter contains(tags,  "team:platform")
-| fields entity.name, tags
-| limit 20
-```
-
-```dql
-// Test log filtering by host group
-fetch logs, from:-1h
-| filter startsWith(host.group,"prod-")
-| summarize count = count(), by:{host.group}
-| sort count desc
-| limit 10
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-08 LAB** for hands-on practice with these concepts.
 
 <a id="segments-and-access-control"></a>
 ## Segments and Access Control

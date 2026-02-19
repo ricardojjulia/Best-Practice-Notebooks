@@ -1,6 +1,6 @@
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@ Dynatrace Grail organizes data in **buckets**, **tables**, and **views** to ensu
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:buckets:read`, `storage:logs:read` |
+| **Knowledge** | Basic Dynatrace navigation |
+| **Data** | At least 1 hour of log data |
 
 ---
 
@@ -130,28 +134,7 @@ Grail supports permissions at multiple levels:
 <a id="exploring-your-data-organization"></a>
 ## Exploring Your Data Organization
 
-```dql
-// List all buckets in your environment
-fetch dt.system.buckets
-| fields name, display_name, dt.system.table, retention_days, estimated_uncompressed_bytes
-| sort dt.system.table asc, name asc
-```
-
-```dql
-// Summarize data volume by bucket
-fetch logs, from:-1h
-| summarize recordCount = count(), by:{dt.system.bucket}
-| sort recordCount desc
-```
-
-```dql
-// Check for records with security context
-fetch logs, from:-1h
-| filter isNotNull(dt.security_context)
-| summarize count = count(), by:{dt.security_context}
-| sort count desc
-| limit 20
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-01 LAB** for hands-on practice with these concepts.
 
 <a id="organization-decision-framework"></a>
 ## Organization Decision Framework

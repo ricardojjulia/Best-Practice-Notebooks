@@ -1,6 +1,6 @@
 # ORGNZ-10: Advanced Segment Definitions
 
-> **Series:** ORGNZ | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/12/2026
+> **Series:** ORGNZ | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -90,27 +90,7 @@ Segment filter conditions define which data a segment includes. Understanding th
 
 Before creating a segment, always validate your filter conditions with DQL. Run the equivalent filter clause as a DQL query to verify the results match your expectations.
 
-```dql
-// Test segment filter: K8s namespace filtering on logs
-// Simulates what a segment with k8s.namespace.name == "production" would return
-fetch logs, from:-1h
-| filter isNotNull(k8s.namespace.name)
-| summarize count = count(), by:{k8s.namespace.name}
-| sort count desc
-| limit 20
-```
-
-```dql
-// Test segment filter: host group filtering on host entities
-// Lists hosts and their host group associations (dt.host_group.id is a signal field, not an entity field)
-// Note: Smartscape on Grail uses smartscapeNodes HOST as the preferred entity query method
-fetch dt.entity.host
-| expand hg_id = belongs_to[dt.entity.host_group]
-| fieldsAdd hg_name = entityName(hg_id, type:"dt.entity.host_group")
-| filter isNotNull(hg_id)
-| fields entity.name, hg_id, hg_name, tags
-| limit 20
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
 
 <a id="data-type-include-rules"></a>
 
@@ -226,39 +206,7 @@ For dedicated infrastructure, enrich hosts via **Deployment Status** → select 
 
 Before building segments, verify that the fields you plan to filter on actually exist on your signal data. Fields with 0% coverage need enrichment via OneAgent configuration or OpenPipeline.
 
-```dql
-// Audit: Check which Primary Grail Fields are populated on log data
-// Fields with 0% coverage need enrichment before they can be used in segments
-fetch logs, from:-1h
-| summarize
-    total = count(),
-    with_namespace = countIf(isNotNull(k8s.namespace.name)),
-    with_cluster = countIf(isNotNull(k8s.cluster.name)),
-    with_host_group = countIf(isNotNull(dt.host_group.id)),
-    with_security_ctx = countIf(isNotNull(dt.security_context))
-| fieldsAdd
-    ns_pct = round(toDouble(with_namespace) / toDouble(total) * 100, decimals: 1),
-    cluster_pct = round(toDouble(with_cluster) / toDouble(total) * 100, decimals: 1),
-    hg_pct = round(toDouble(with_host_group) / toDouble(total) * 100, decimals: 1),
-    sec_pct = round(toDouble(with_security_ctx) / toDouble(total) * 100, decimals: 1)
-```
-
-```dql
-// Audit: Verify enrichment fields on span data
-// Spans require application restart to pick up new enrichment
-fetch spans, from:-1h
-| summarize
-    total = count(),
-    with_namespace = countIf(isNotNull(k8s.namespace.name)),
-    with_cluster = countIf(isNotNull(k8s.cluster.name)),
-    with_host_group = countIf(isNotNull(dt.host_group.id)),
-    with_service = countIf(isNotNull(dt.entity.service))
-| fieldsAdd
-    ns_pct = round(toDouble(with_namespace) / toDouble(total) * 100, decimals: 1),
-    cluster_pct = round(toDouble(with_cluster) / toDouble(total) * 100, decimals: 1),
-    hg_pct = round(toDouble(with_host_group) / toDouble(total) * 100, decimals: 1),
-    svc_pct = round(toDouble(with_service) / toDouble(total) * 100, decimals: 1)
-```
+> **Lab Exercise:** Complete Exercises 3-4 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
 
 <a id="advanced-variable-patterns"></a>
 
@@ -290,53 +238,7 @@ The variable definition is a DQL query. The columns in the result set determine 
 
 The following queries demonstrate how to create variable definitions for common use cases.
 
-```dql
-// Variable DQL: List available host groups
-// First column (host_group) = primary variable shown in dropdown
-// Second column (id) = secondary variable for filter conditions
-// Note: Smartscape on Grail alternative: smartscapeNodes HOST_GROUP
-fetch dt.entity.host_group
-| fields host_group = entity.name, id
-| sort host_group asc
-```
-
-```dql
-// Variable DQL: List Kubernetes namespaces
-// Primary: namespace (dropdown), Secondary: tag (usable in filters)
-// Note: Smartscape on Grail alternative: smartscapeNodes K8S_NAMESPACE
-fetch dt.entity.cloud_application_namespace
-| fields namespace = entity.name
-| fieldsAdd tag = concat("Namespace:", namespace)
-| sort namespace asc
-```
-
-```dql
-// Variable DQL: Extract tag values for segment variable creation
-// Extracts unique "App" values from host tags with [Environment]App prefix
-// Note: Smartscape on Grail alternative: smartscapeNodes HOST
-fetch dt.entity.host
-| expand tag = tags
-| filter startsWith(tag, "[Environment]App")
-| parse tag, "LD ':' LD:App"
-| fields App, tag
-| dedup App
-| sort App asc
-```
-
-```python
-// Variable DQL: Extract CloudFoundry Organization from process group tags
-// Creates variables: $value (org name), $id (process group ID), $AppTag (full tag string)
-// Note: Smartscape on Grail alternative: smartscapeNodes PROCESS_GROUP
-fetch dt.entity.process_group
-| fields tags, id
-| expand tags
-| parse tags, """((LD:tag (!<<'\\' ':') LD:value)|LD:tag)"""
-| fields tag = replaceString(tag, """\:""", ":"), value = replaceString(value, """\:""", ":"), id
-| filter toString(tag) == "[CloudFoundry]Organization"
-| fields value, id
-| fieldsAdd AppTag = concat("[CloudFoundry]Organization:", value)
-| dedup value
-```
+> **Lab Exercise:** Complete Exercises 5-6 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
 
 ### Multi-Include Segment Pattern: Tag-Based Variables
 
@@ -419,14 +321,7 @@ Create a **separate segment for each dimension** (platform, app, stage). This gi
 
 Use DQL to parse the host group name and extract each dimension as a variable:
 
-```dql
-// Parse host group naming convention to extract dimensions
-// Convention: <platform>_<app>_<stage>
-// Note: Smartscape on Grail alternative: smartscapeNodes HOST_GROUP
-fetch dt.entity.host_group
-| parse entity.name, """LD:platform '_' LD:app '_' LD:stage"""
-| fields entity.name, platform, app, stage
-```
+> **Lab Exercise:** Complete Exercise 9 in **ORGNZ-10 LAB** for hands-on practice with this concept.
 
 ### Step 2: Create Variable DQL for Each Dimension
 
@@ -591,26 +486,7 @@ Every segment filter condition is injected into every query the user runs. Keep 
 
 ### Discover Available Filter Candidates
 
-```dql
-// Discover: Find the most common tag keys across hosts
-// Use these to plan segment filter conditions
-// Note: Smartscape on Grail alternative: smartscapeNodes HOST
-fetch dt.entity.host
-| expand tag = tags
-| summarize count = count(), by:{tag}
-| sort count desc
-| limit 30
-```
-
-```dql
-// Test: Simulate a combined segment filter on logs
-// Combines host group and namespace filtering to verify expected results
-fetch logs, from:-1h
-| filter isNotNull(dt.host_group.id) and isNotNull(k8s.namespace.name)
-| summarize count = count(), by:{dt.host_group.id, k8s.namespace.name}
-| sort count desc
-| limit 20
-```
+> **Lab Exercise:** Complete Exercises 10-11 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
 
 ## Summary
 

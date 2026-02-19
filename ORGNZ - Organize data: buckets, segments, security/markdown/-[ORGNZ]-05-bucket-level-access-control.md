@@ -1,6 +1,6 @@
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@ Bucket-level access control provides a straightforward way to isolate data by te
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:bucket-definitions:read`, `storage:logs:read` |
+| **Knowledge** | Completed ORGNZ-04 (Permissions in Grail) |
+| **Data** | At least 1 hour of log data |
 
 ---
 
@@ -181,25 +185,7 @@ ALLOW storage:logs:read, storage:metrics:read, storage:spans:read;
 <a id="verifying-bucket-access"></a>
 ## Verifying Bucket Access
 
-```dql
-// List buckets you have access to
-fetch dt.system.buckets
-| fields name, display_name, dt.system.table, retention_days
-| sort name asc
-```
-
-```dql
-// Query data from specific bucket to verify access
-fetch logs, bucket: "team_platform_logs"
-| limit 10
-```
-
-```dql
-// Check data distribution across accessible buckets
-fetch logs, from:-1h
-| summarize count = count(), by:{dt.system.bucket}
-| sort count desc
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-05 LAB** for hands-on practice with these concepts.
 
 <a id="best-practices"></a>
 ## Best Practices

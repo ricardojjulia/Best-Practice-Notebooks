@@ -1,6 +1,6 @@
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@ This notebook brings together buckets, segments, and security context into compr
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | `storage:bucket-definitions:read`, `storage:logs:read`, `storage:filter-segments:read` |
+| **Knowledge** | Completed ORGNZ-08 (Grail Segments) |
+| **Data** | At least 1 hour of log and entity data |
 
 ---
 
@@ -256,31 +260,7 @@ For environments where SVG doesn't render
 <a id="auditing-your-organization"></a>
 ## Auditing Your Organization
 
-```dql
-// Audit bucket distribution
-fetch logs, from:-1h
-| summarize 
-    recordCount = count(),
-    by:{dt.system.bucket}
-| sort recordCount desc
-```
-
-```dql
-// Audit security context coverage
-fetch logs, from:-1h
-| summarize 
-    total = count(),
-    withContext = countIf(isNotNull(dt.security_context)),
-    withoutContext = countIf(isNull(dt.security_context))
-| fieldsAdd coverage = round(toDouble(withContext) / toDouble(total) * 100, decimals: 2)
-```
-
-```dql
-// Audit bucket retention settings
-fetch dt.system.buckets
-| fields name, dt.system.table, retention_days
-| sort dt.system.table asc, retention_days desc
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-09 LAB** for hands-on practice with these concepts.
 
 <a id="best-practices-summary"></a>
 ## Best Practices Summary

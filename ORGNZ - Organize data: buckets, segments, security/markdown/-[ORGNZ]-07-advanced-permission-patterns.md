@@ -1,6 +1,6 @@
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -9,7 +9,11 @@ This notebook covers advanced permission patterns including record-level permiss
 ## Prerequisites
 
 | Requirement | Details |
-|---
+|-------------|----------|
+| **Dynatrace Environment** | SaaS environment with Grail enabled |
+| **Permissions** | Account admin or IAM policy management access |
+| **Knowledge** | Completed ORGNZ-06 (Security Context) |
+| **Data** | At least 1 hour of log data |
 
 ---
 
@@ -266,31 +270,7 @@ For environments where SVG doesn't render
 <a id="testing-permissions"></a>
 ## Testing Permissions
 
-```dql
-// Test namespace-based access
-fetch logs, from:-1h
-| filter isNotNull(k8s.namespace.name)
-| summarize count = count(), by:{k8s.namespace.name}
-| sort count desc
-```
-
-```dql
-// Test host group access
-fetch logs, from:-1h
-| filter isNotNull(dt.host_group.id)
-| summarize count = count(), by:{dt.host_group.id}
-| sort count desc
-```
-
-```dql
-// Verify accessible data distribution
-fetch logs, from:-1h
-| summarize 
-    total = count(),
-    withSecurityContext = countIf(isNotNull(dt.security_context)),
-    withNamespace = countIf(isNotNull(k8s.namespace.name)),
-    withHostGroup = countIf(isNotNull(dt.host_group.id))
-```
+> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-07 LAB** for hands-on practice with these concepts.
 
 <a id="best-practices"></a>
 ## Best Practices
