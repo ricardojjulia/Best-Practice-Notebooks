@@ -1,9 +1,9 @@
 # Specialized Monitoring Scenarios
 
-> **Series:** K8S | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 02/24/2026
 
-## NGINX Ingress, CSI Driver, and Resource Tuning
-This notebook covers specialized monitoring scenarios including NGINX Ingress Controller instrumentation, CSI Driver architecture, and resource sizing guidelines for Dynatrace components.
+## NGINX Ingress, CSI Driver, Resource Tuning, and StatsD Ingestion
+This notebook covers specialized monitoring scenarios including NGINX Ingress Controller instrumentation, CSI Driver architecture, resource sizing guidelines, and StatsD metric ingestion on Kubernetes.
 
 ---
 
@@ -14,7 +14,8 @@ This notebook covers specialized monitoring scenarios including NGINX Ingress Co
 3. [CSI Driver Resource Configuration](#csi-driver-resource-configuration)
 4. [Component Sizing Guidelines](#component-sizing-guidelines)
 5. [Telemetry Ingest Configuration](#telemetry-ingest-configuration)
-6. [Troubleshooting Specialized Scenarios](#troubleshooting-specialized-scenarios)
+6. [StatsD Metrics Ingestion on Kubernetes](#statsd-metrics-ingestion)
+7. [Troubleshooting Specialized Scenarios](#troubleshooting-specialized-scenarios)
 
 ---
 
@@ -24,7 +25,7 @@ This notebook covers specialized monitoring scenarios including NGINX Ingress Co
 |-------------|----------|
 | **Dynatrace Environment** | SaaS with Kubernetes monitoring |
 | **Kubernetes Cluster** | Dynatrace Operator v1.0+ installed |
-| **NGINX Ingress** | ingress-nginx controller (for Section 2) |
+| **NGINX Ingress** | ingress-nginx controller (for Section 1) |
 | **Knowledge** | Completed K8S-01 through K8S-02 |
 
 <a id="nginx-ingress-controller-monitoring"></a>
@@ -291,8 +292,151 @@ fetch spans, from:-1h
 | limit 15
 ```
 
+<a id="statsd-metrics-ingestion"></a>
+## 6. StatsD Metrics Ingestion on Kubernetes
+
+### The Challenge
+
+Many applications emit custom metrics using the StatsD protocol (UDP port 8125). On VMs, Dynatrace OneAgent includes a built-in StatsD daemon — but this feature is **not available** when OneAgent is deployed on Kubernetes via the Dynatrace Operator.
+
+### Ingestion Approaches for Kubernetes
+
+| Approach | Works on K8s? | Notes |
+|----------|---------------|-------|
+| **OpenTelemetry Collector** | **Yes** | Recommended. Officially supported and documented by Dynatrace. |
+| **OneAgent StatsD daemon** | No | Only available on VM/host installs |
+| **ActiveGate remote StatsD** | No | Containerized ActiveGate lacks the required extension module |
+| **Telegraf + Dynatrace plugin** | Yes | Works but not officially documented by Dynatrace |
+
+### Recommended: OpenTelemetry Collector with StatsD Receiver
+
+Deploy an OTel Collector that listens for StatsD traffic, converts it to OTLP, and ships it to Dynatrace.
+
+**Step 1: Create the collector configuration**
+
+```yaml
+# otelcol-config.yaml (stored as a ConfigMap)
+receivers:
+  statsd:
+    endpoint: "0.0.0.0:8125"
+    timer_histogram_mapping:
+      - statsd_type: "histogram"
+        observer_type: "histogram"
+        histogram: {}
+      - statsd_type: "timer"
+        observer_type: "histogram"
+        histogram: {}
+
+processors:
+  batch: {}
+
+exporters:
+  otlphttp:
+    endpoint: "${DT_ENDPOINT}" # https://<env-id>.live.dynatrace.com/api/v2/otlp
+    headers:
+      Authorization: "Api-Token ${DT_API_TOKEN}"
+
+service:
+  pipelines:
+    metrics:
+      receivers: [statsd]
+      processors: [batch]
+      exporters: [otlphttp]
+```
+
+**Step 2: Deploy the collector in Kubernetes**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector-statsd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector-statsd
+  template:
+    metadata:
+      labels:
+        app: otel-collector-statsd
+    spec:
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:0.96.0
+          args: ["--config=/conf/otelcol-config.yaml"]
+          ports:
+            - containerPort: 8125
+              protocol: UDP
+          env:
+            - name: DT_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: dynatrace-secret
+                  key: endpoint
+            - name: DT_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: dynatrace-secret
+                  key: api-token
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      volumes:
+        - name: config
+          configMap:
+            name: otel-collector-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector-statsd
+spec:
+  selector:
+    app: otel-collector-statsd
+  ports:
+    - name: statsd-udp
+      protocol: UDP
+      port: 8125
+      targetPort: 8125
+```
+
+**Step 3: Point StatsD clients at the collector service**
+
+```yaml
+# In your application deployment
+env:
+  - name: STATSD_HOST
+    value: "otel-collector-statsd"
+  - name: STATSD_PORT
+    value: "8125"
+```
+
+### Requirements
+
+| Requirement | Details |
+|-------------|----------|
+| **API Token** | `metrics.ingest` scope |
+| **Environment URL** | `https://<env-id>.live.dynatrace.com` |
+| **Collector Image** | `otel/opentelemetry-collector-contrib` (includes StatsD receiver) |
+
+> **Tip:** You can also use the Dynatrace Collector image or build a custom collector with the OpenTelemetry Builder. The key requirement is the StatsD receiver component.
+
+### Verifying StatsD Metrics in Dynatrace
+
+After deploying the collector and pointing StatsD clients at it, verify metrics are flowing:
+
+```python
+// Verify StatsD metrics are being ingested via OTel Collector
+// StatsD metrics arrive as OTLP metrics — query them by metric key prefix
+timeseries values = avg(statsd.my_app.request_count), from:-1h
+| fieldsAdd avgValue = arrayAvg(values)
+| sort avgValue desc
+| limit 10
+```
+
 <a id="troubleshooting-specialized-scenarios"></a>
-## 6. Troubleshooting Specialized Scenarios
+## 7. Troubleshooting Specialized Scenarios
 ### NGINX Ingress Issues
 
 | Issue | Cause | Solution |
@@ -323,6 +467,24 @@ kubectl -n dynatrace get pods -l app.kubernetes.io/component=csi-driver
 kubectl -n dynatrace logs -l app.kubernetes.io/component=csi-driver -c server
 ```
 
+### StatsD Ingestion Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| No metrics arriving | Wrong collector image | Use `otel/opentelemetry-collector-contrib` (not base) |
+| UDP traffic not reaching collector | Missing Service or wrong protocol | Ensure Service specifies `protocol: UDP` |
+| Metrics visible but unnamed | Missing metric prefix | Configure StatsD client to include application prefix |
+| Token errors in collector logs | Wrong scope | Token needs `metrics.ingest` scope |
+
+```bash
+# Check OTel collector logs for StatsD errors
+kubectl logs -l app=otel-collector-statsd --tail=50
+
+# Test UDP connectivity to the collector
+kubectl run statsd-test --rm -it --image=busybox -- \
+  sh -c 'echo "test.metric:1|c" | nc -u -w1 otel-collector-statsd 8125'
+```
+
 ### Resource Exhaustion
 
 | Symptom | Component | Action |
@@ -341,6 +503,7 @@ In this notebook, you learned:
 - **CSI Driver resource configuration** with per-container limits
 - **Component sizing guidelines** for all Dynatrace components
 - **Telemetry ingest configuration** for multi-protocol support
+- **StatsD ingestion on Kubernetes** via the OpenTelemetry Collector (the only supported approach for K8s)
 - **Troubleshooting** common specialized monitoring issues
 
 ---
@@ -351,6 +514,8 @@ In this notebook, you learned:
 - [CSI Driver Configuration](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/csi-driver)
 - [Dynatrace Operator Helm Chart](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
 - [Telemetry Ingest](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-ingest)
+- [Send StatsD Metrics to Dynatrace](https://docs.dynatrace.com/docs/ingest-from/extend-dynatrace/extend-metrics/ingestion-methods/statsd)
+- [Ingest StatsD Data with the OpenTelemetry Collector](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/statsd)
 
 ---
 
