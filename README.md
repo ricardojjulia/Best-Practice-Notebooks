@@ -64,6 +64,21 @@ Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
 - [M2S-07: Security & Privacy](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-[M2S]-07-security-privacy.md) — Security considerations for migration
 - [M2S-08: Validation & Optimization](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-[M2S]-08-validation-optimization.md) — Validating and optimizing post-migration
 
+### [MOBL - Mobile monitoring](MOBL%20-%20Mobile%20monitoring/README.md)
+Dynatrace mobile Real User Monitoring (RUM) for iOS, Android, and cross-platform frameworks.
+- [MOBL-01: Mobile Monitoring Fundamentals](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-01-fundamentals.md) — Mobile RUM architecture, supported platforms, and beacon data flow
+- [MOBL-02: iOS SDK Setup](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-02-sdk-setup-ios.md) — Installing and configuring the Dynatrace SDK for Swift and SwiftUI
+- [MOBL-03: Android SDK Setup](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-03-sdk-setup-android.md) — Setting up Dynatrace RUM for Android with Gradle
+- [MOBL-04: Cross-Platform Frameworks](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-04-cross-platform-frameworks.md) — Instrumenting Flutter, React Native, Cordova, Xamarin, and .NET MAUI
+- [MOBL-05: User Action Tracking](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-05-user-action-tracking.md) — Capturing auto-detected and custom user interactions
+- [MOBL-06: Crash Reporting & ANR Detection](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-06-crash-reporting.md) — Automatic crash capture, symbolication, and grouping
+- [MOBL-07: Network Request Monitoring](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-07-network-request-monitoring.md) — HTTP(S) request visibility and timing breakdown
+- [MOBL-08: Session Replay for Mobile](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-08-session-replay.md) — Visual session recording with privacy masking
+- [MOBL-09: Session Properties & Data Privacy](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-09-session-properties-and-privacy.md) — Custom session enrichment and GDPR/CCPA compliance
+- [MOBL-10: DQL for Mobile Analytics](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-10-dql-for-mobile.md) — Query reference for mobile entities, crashes, and performance
+- [MOBL-11: Dashboards & Alerting](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-11-dashboards-and-alerting.md) — KPI dashboards with anomaly detection and metric event alerts
+- [MOBL-12: Advanced Instrumentation](MOBL%20-%20Mobile%20monitoring/markdown/-[MOBL]-12-advanced-instrumentation.md) — Custom events, nested actions, A/B testing, and multi-app strategies
+
 ### [MZ2POL - Management Zone to Policy migration](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/README.md)
 Tools and guidance for migrating from Management Zones to Policy-based access control.
 - [MZ2POL-00: SDK MZ Analysis Tool](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-[MZ2POL]-00-sdk-mz-analysis-tool.md) — Analyze existing management zones
