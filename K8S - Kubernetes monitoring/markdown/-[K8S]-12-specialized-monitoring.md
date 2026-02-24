@@ -310,7 +310,19 @@ Many applications emit custom metrics using the StatsD protocol (UDP port 8125).
 
 ### Recommended: OpenTelemetry Collector with StatsD Receiver
 
-Deploy an OTel Collector that listens for StatsD traffic, converts it to OTLP, and ships it to Dynatrace.
+Deploy a dedicated OTel Collector that listens for StatsD traffic, converts it to OTLP, and ships it to Dynatrace. The collector is **shared infrastructure** — it gets its own Deployment, separate from your application pods.
+
+### Deployment Pattern Options
+
+| Pattern | When to Use | Notes |
+|---------|-------------|-------|
+| **Cluster-wide Deployment** | Most common starting point | Single Deployment in a `monitoring` namespace. All apps send StatsD via FQDN. |
+| **Per-namespace Deployment** | Isolated teams/environments | One collector per namespace. More isolation, more overhead. |
+| **DaemonSet** | Very high metric volume | One pod per node. Avoids cross-node traffic. Overkill for most StatsD use cases. |
+
+> **Recommendation:** Start with a cluster-wide Deployment in a dedicated `monitoring` or `observability` namespace. The platform/infra team manages the collector independently from application deployments.
+
+### Step-by-Step Setup
 
 **Step 1: Create the collector configuration**
 
@@ -344,13 +356,19 @@ service:
       exporters: [otlphttp]
 ```
 
-**Step 2: Deploy the collector in Kubernetes**
+**Step 2: Deploy the collector in a dedicated namespace**
 
 ```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-collector-statsd
+  namespace: monitoring
 spec:
   replicas: 1
   selector:
@@ -391,6 +409,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector-statsd
+  namespace: monitoring
 spec:
   selector:
     app: otel-collector-statsd
@@ -401,16 +420,28 @@ spec:
       targetPort: 8125
 ```
 
-**Step 3: Point StatsD clients at the collector service**
+**Step 3: Point StatsD clients at the collector using the FQDN**
+
+Since the collector lives in the `monitoring` namespace, apps in other namespaces must use the fully qualified service name:
 
 ```yaml
-# In your application deployment
+# In your application deployment (any namespace)
 env:
   - name: STATSD_HOST
-    value: "otel-collector-statsd"
+    value: "otel-collector-statsd.monitoring.svc.cluster.local"
   - name: STATSD_PORT
     value: "8125"
 ```
+
+> **Note:** No application code changes are needed — just the env var configuration. The collector is managed independently from your application lifecycle.
+
+### Ownership Model
+
+| Component | Owner | Namespace |
+|-----------|-------|-----------|
+| OTel Collector Deployment | Platform / Infra team | `monitoring` |
+| Collector ConfigMap + Secret | Platform / Infra team | `monitoring` |
+| Application `STATSD_HOST` env var | App team | App namespace |
 
 ### Requirements
 
