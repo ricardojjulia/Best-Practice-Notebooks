@@ -1,6 +1,6 @@
 # Policy Authoring and Management
 
-> **Series:** IAMADM | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** IAMADM | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 02/25/2026
 
 ## Mastering Dynatrace Policy Syntax
 Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can perform. This notebook provides a comprehensive guide to policy authoring, from basic syntax to advanced patterns.
@@ -531,6 +531,7 @@ With policies defined, complete your access control setup:
 1. **IAMADM-05: Boundary Design Patterns** - Control what entities users can see
 2. **IAMADM-06: User Lifecycle and Provisioning** - Automate user management
 3. **IAMADM-07: Audit Logging and Compliance** - Monitor policy effectiveness
+4. **IAMADM-10: Templated Policy-Group Assignments** - Reusable parameterized policies for team/environment scoping at scale
 
 ### Policy Checklist
 

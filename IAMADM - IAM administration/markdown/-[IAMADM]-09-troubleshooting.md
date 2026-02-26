@@ -1,6 +1,6 @@
 # Troubleshooting Access Issues
 
-> **Series:** IAMADM | **Notebook:** 9 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** IAMADM | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/25/2026
 
 ## Systematic Diagnosis of IAM Problems
 Access issues are among the most common support requests. This notebook provides a systematic methodology for diagnosing and resolving IAM-related problems including permission denials, policy conflicts, and boundary issues.
@@ -475,6 +475,7 @@ Congratulations! You've completed the IAMADM series.
 | **07: Audit and Compliance** | Audit queries, SOC2/SOX/HIPAA |
 | **08: Multi-Environment** | Account vs env, break-glass |
 | **09: Troubleshooting** | Methodology, common issues |
+| **10: Templated Policy-Group Assignments** | Parameterized policies, IAM API bindings, Monaco |
 
 ### Ongoing Maintenance
 

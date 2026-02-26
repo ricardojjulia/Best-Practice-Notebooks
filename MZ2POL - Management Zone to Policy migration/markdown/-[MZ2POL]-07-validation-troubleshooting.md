@@ -1,6 +1,6 @@
 # MZ2POL-07: Validation and Troubleshooting
 
-> **Series:** MZ2POL | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL | **Notebook:** 8 of 9 | **Created:** December 2025 | **Last Updated:** 02/25/2026
 
 ## Overview
 
@@ -461,6 +461,7 @@ Congratulations on completing the MZ2POL migration series. You have:
 - ✅ Implemented segments (MZ2POL-05)
 - ✅ Executed the migration (MZ2POL-06)
 - ✅ Validated and can troubleshoot (MZ2POL-07)
+- ✅ Templated policies for scale (MZ2POL-08)
 
 <a id="additional-resources"></a>
 ## Additional Resources
@@ -468,6 +469,7 @@ Congratulations on completing the MZ2POL migration series. You have:
 - [Dynatrace Community - Boundaries + Policies Best Practices](https://community.dynatrace.com/t5/Open-Q-A/Boundaries-Policies-Best-Practices-Advice/td-p/284808)
 - [Segments Documentation](https://docs.dynatrace.com/docs/manage/segments/concepts/segments-concepts-queries)
 - [IAM Policy Reference](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policystatements)
+- [Policy Templating](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policy-templating)
 
 ---
 

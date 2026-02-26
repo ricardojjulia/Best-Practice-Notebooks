@@ -1,6 +1,6 @@
 # MZ2POL-04: Policies and Boundaries
 
-> **Series:** MZ2POL | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 02/25/2026
 
 ## Overview
 
@@ -690,12 +690,18 @@ Continue to **MZ2POL-05: Segments Implementation** to:
 - Replace MZ data filtering with Segments
 - Configure cross-app filtering
 
+For large-scale migrations with many Management Zones, see **MZ2POL-08: Templated Policies for MZ Migration** to:
+- Convert MZ patterns to parameterized policy templates
+- Automate bulk policy binding via IAM API
+- Validate migrated access with DQL queries
+
 <a id="additional-resources"></a>
 ## Additional Resources
 - [Working with Policies](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies)
 - [IAM Policy Reference](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policystatements)
 - [Policy Boundaries Documentation](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/iam-policy-boundaries)
 - [Grant Access with Security Context](https://docs.dynatrace.com/docs/manage/identity-access-management/use-cases/access-security-context)
+- [Policy Templating](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policy-templating)
 
 ---
 
