@@ -133,27 +133,36 @@ A finalized personas table with clear labels and one-line scope descriptions.
 
 #### Finding Available Configuration Schemas
 
-Before auditing permissions, you need to know which schemas exist. Every settings screen in Dynatrace is backed by a schema (e.g., `builtin:anomaly-detection.metric-events`). You can discover these in three ways:
+Before auditing permissions, you need to know which schemas exist. Every settings screen in the **classic (Gen2) Dynatrace UI** is backed by a schema (e.g., `builtin:anomaly-detection.metric-events`). These schemas are still in use today but will eventually be phased out as Gen3 **apps** fully replace them. Gen3 apps have their own independent access control via `app:` permissions (covered in Goal 4).
+
+Until that transition is complete, you still need to audit and manage classic schema-level permissions. You can discover schemas in three ways:
 
 1. **In the UI** — Navigate to **Settings** and open any settings page. The **Schema ID** and **Schema Group** appear in the upper-right corner of the page.
 2. **Via search** — Use the settings search bar to find schemas by keyword (e.g., search "alerting" to find all alerting-related schemas).
 3. **Via the API** — Call `GET /api/v2/settings/schemas` (requires `settings.read` scope) to get the full list programmatically.
 
-The following Dynatrace App function retrieves all schemas. This runs inside a Dynatrace App (not in a notebook):
+The following code retrieves all schemas programmatically. Paste it into a **notebook code cell** (JavaScript/TypeScript) to run it directly:
 
 ```javascript
-// Dynatrace App function — requires an OAuth client with settings.read scope
 import { settingsSchemasClient } from "@dynatrace-sdk/client-classic-environment-v2";
-
 export default async function() {
+    const includeCriteria = ['']; // filter by raw text here
     const data = await settingsSchemasClient.getAvailableSchemaDefinitions();
-    return data.items.map(schema => ({
-        id: schema.schemaId,
-        name: schema.displayName
-    }));
+    const schemaSet = data.items;
+    const schemas = schemaSet.filter(schema =>
+        includeCriteria.some(substring => schema.schemaId.includes(substring))
+    );
+    const result = [];
+    for (const schema of schemas) {
+        const id = schema.schemaId;
+        const displayName = schema.displayName;
+        result.push({ id, displayName });
+    }
+    return result;
 }
 ```
 
+> **Tip:** Set `includeCriteria` to filter results — e.g., `['anomaly', 'alerting']` to find only anomaly detection and alerting schemas. Use `['']` to return all schemas.
 
 <a id="goal-2-active-directory"></a>
 
@@ -194,6 +203,8 @@ A mapping table showing each persona, its AD group, and the provisioning method:
 
 ### Goal 3: Audit the Dynatrace UI for Configuration Permissions
 
+This goal covers **classic (Gen2) settings schemas** — the configuration screens found under Settings in Dynatrace. These schemas are still actively used but are being progressively replaced by Gen3 apps with independent access control (see Goal 4 for app-level permissions).
+
 Walk through the Dynatrace settings UI and catalog which configuration schemas each persona needs access to. This is the most time-intensive goal — budget 1-2 hours for a thorough audit.
 
 **How to build the audit table:**
@@ -210,7 +221,7 @@ Walk through the Dynatrace settings UI and catalog which configuration schemas e
 
 #### Reference: Schema Audit Table
 
-Create your own table and update the personas for your organization. Below is a starter template with common schemas:
+Create your own table and update the personas for your organization. Below is a starter template with common **classic (Gen2) schemas**. As Gen3 apps replace these settings screens, update your policies to use `app:` permissions instead:
 
 | Functionality | Schema ID | Schema Group | Standard User | Power User | SRE - Scoped | SRE - Platform | Admin |
 |---|---|---|:---:|:---:|:---:|:---:|:---:|
@@ -268,23 +279,44 @@ Walk through the Dynatrace left-hand navigation and fill in this matrix:
 | Security Overview | Hidden | Hidden | View | Full |
 | Release Management | View | View | View + Manage | Full |
 
-Gen3 UI policies use `app:` permissions. For example:
+Gen3 UI policies use three services together:
+
+- `app-engine:apps:run` — Controls whether a persona can **see** an app in the navigation. Works for both Gen3 apps and Gen2 classic screens. Use `shared:app-id` to target specific apps.
+- `document:` — Controls what the persona can **do** with dashboards and notebooks (read, write, create, delete, share)
+- `environment:roles:viewer` — Grants baseline read access to the environment
 
 ```
-// Grant access to the Notebooks app
-ALLOW app:dynatrace.notebooks:run;
+// Grant baseline environment viewer role
+ALLOW environment:roles:viewer;
 
-// Grant access to Dashboards (view only — no create)
-ALLOW app:dynatrace.dashboards:run;
-DENY app:dynatrace.dashboards:create;
+// Make specific Gen3 apps visible
+ALLOW app-engine:apps:run WHERE shared:app-id IN ("dynatrace.notebooks", "dynatrace.dashboards");
+
+// Grant access to a Gen2 (classic) screen
+ALLOW app-engine:apps:run WHERE shared:app-id IN ("dynatrace.classic.synthetic");
+
+// Allow viewing documents but not creating new ones
+ALLOW document:documents:read;
+DENY document:documents:create;
 ```
 
-See **IAM-04: Policy Authoring** for the full `app:` permission syntax.
+> **Key distinction:** `app-engine:apps:run` controls app visibility for both Gen3 apps (e.g., `dynatrace.dashboards`) and Gen2 classic screens (e.g., `dynatrace.classic.synthetic`). `document:documents:read` lets the persona open and view dashboard/notebook content. Both are needed for a persona to use dashboards.
+
+#### Discovering Installed Apps
+
+To build your visibility matrix, you need to know which apps are installed. Use the **App Engine Registry API** to get a complete list of active, runnable apps in your environment:
+
+```bash
+GET /platform/app-engine/registry/v1/apps?include-deactivated=false&include-non-runnable=false&include-all-app-versions=false
+```
+
+This requires a bearer token with appropriate scopes. The response includes every app's ID (e.g., `dynatrace.dashboards`, `dynatrace.notebooks`, `dynatrace.classic.synthetic`) — use these IDs directly in your `app-engine:apps:run WHERE shared:app-id` policy statements.
+
+See **IAM-04: Policy Authoring** for the full `app-engine:apps:run` and `document:` permission syntax.
 
 #### Deliverable
 
 A completed app visibility matrix. This becomes the basis for your **UI policies**.
-
 
 <a id="goal-5-data-requirements"></a>
 
@@ -331,30 +363,34 @@ For each persona, create one policy per domain (UI, Data, Config). Use the schem
 ```
 // GLOBAL-Standard-Config
 // Standard Users: read-only access to all settings, no write
-ALLOW settings:objects:read;
+ALLOW settings:objects:read, settings:schemas:read;
 DENY settings:objects:write;
 ```
 
 ```
 // GLOBAL-PowerUser-Config
-// Power Users: read all settings, write only alerting and anomaly detection
-ALLOW settings:objects:read;
-ALLOW settings:objects:write
-  WHERE settings:schema-id = "builtin:anomaly-detection.metric-events";
-ALLOW settings:objects:write
-  WHERE settings:schema-id = "builtin:alerting.profile";
-ALLOW settings:objects:write
-  WHERE settings:schema-id = "group:preferences";
+// Power Users: read all settings, write only alerting and notifications
+ALLOW settings:objects:read, settings:schemas:read;
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "builtin:alerting.profile";
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "builtin:problem.notifications";
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "group:preferences";
 ```
 
 ```
 // ORG1-SRE-Config (use templated policy from IAM-10 if multiple orgs)
 // SREs: full settings access scoped by schema group
-ALLOW settings:objects:read;
-ALLOW settings:objects:write
-  WHERE settings:schema-id IN ("group:host-monitoring",
-    "group:anomaly-detection", "group:failure-detection",
-    "group:processes-and-containers");
+ALLOW settings:objects:read, settings:schemas:read;
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "group:host-monitoring";
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "group:anomaly-detection";
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "group:failure-detection";
+ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
+  WHERE settings:schemaId startsWith "group:processes-and-containers";
 ```
 
 > **Scaling tip:** If you have multiple orgs that need the same SRE config policy with different data scopes, create a **templated policy** with `${bindParam:team}` and bind it per-group. See **IAM-10**.
@@ -362,7 +398,6 @@ ALLOW settings:objects:write
 #### Deliverable
 
 A policy statement (or template reference from **IAM-10**) for each persona covering configuration access. You should have 3 policies per persona (UI + Data + Config) = typically 15-21 policy documents total.
-
 
 <a id="writing-policies"></a>
 
@@ -374,8 +409,7 @@ Now that you have deliverables from all six goals, assemble the actual policies.
 
 Every persona needs at least one policy in each domain:
 
-**UI Policy** — Controls which Dynatrace apps and views the persona can access.
-
+**UI Policy** — Controls which Dynatrace apps the persona can see in the navigation (`app-engine:apps:run` service with `shared:app-id`), baseline environment access (`environment:roles:viewer`), and what they can do with documents like dashboards and notebooks (`document:` service).
 
 **Data Policy** — Controls which data (metrics, logs, traces, events) is returned when the persona queries the platform. Scoped by boundaries, buckets, or security context.
 
@@ -419,10 +453,16 @@ For each persona, compose three policy documents using your deliverables from Go
 
 ```
 // GLOBAL-Standard-UI
-ALLOW app:dynatrace.dashboards:run;
-ALLOW app:dynatrace.notebooks:run;
-DENY app:dynatrace.settings:run;
-DENY app:dynatrace.account-management:run;
+// Baseline environment access
+ALLOW environment:roles:viewer;
+// App visibility (Gen3 apps)
+ALLOW app-engine:apps:run WHERE shared:app-id IN ("dynatrace.dashboards", "dynatrace.notebooks");
+// Hide admin-level apps
+DENY app-engine:apps:run WHERE shared:app-id IN ("dynatrace.settings", "dynatrace.account-management");
+// Document permissions (dashboards, notebooks)
+ALLOW document:documents:read;
+DENY document:documents:write;
+DENY document:documents:delete;
 ```
 
 ```
@@ -435,12 +475,11 @@ ALLOW storage:events:read;
 
 ```
 // GLOBAL-Standard-Config
-ALLOW settings:objects:read;
+ALLOW settings:objects:read, settings:schemas:read;
 DENY settings:objects:write;
 ```
 
 > **Review checkpoint:** Before binding policies to groups, have a second person review each policy statement. A misplaced DENY in the default user group can lock everyone out of a capability.
-
 
 <a id="naming-standards"></a>
 
