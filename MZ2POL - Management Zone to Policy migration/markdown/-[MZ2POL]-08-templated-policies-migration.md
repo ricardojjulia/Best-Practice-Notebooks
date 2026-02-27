@@ -350,7 +350,7 @@ During validation, keep both access models active:
 
 For full validation procedures, see **MZ2POL-07: Validation and Troubleshooting**.
 
-For comprehensive template syntax and patterns, see **IAMADM-10: Templated Policy-Group Assignments**.
+For comprehensive template syntax and patterns, see **IAM-10: Templated Policy-Group Assignments**.
 
 ---
 
@@ -368,7 +368,7 @@ In this notebook, you learned:
 ## Next Steps
 
 - **MZ2POL-07: Validation and Troubleshooting** — Full validation procedures and ongoing maintenance
-- **IAMADM-10: Templated Policy-Group Assignments** — Deep dive on template syntax, Monaco automation, and advanced patterns
+- **IAM-10: Templated Policy-Group Assignments** — Deep dive on template syntax, Monaco automation, and advanced patterns
 
 ---
 

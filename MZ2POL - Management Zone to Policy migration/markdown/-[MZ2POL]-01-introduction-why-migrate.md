@@ -6,7 +6,7 @@
 
 This notebook introduces the migration from **Management Zones (MZs)** in classic Dynatrace to the modern **Policies, Boundaries, and Segments** framework. Understanding why this migration is necessary and what benefits it brings is essential for planning a successful transition.
 
-> **Note:** This series is for organizations **migrating from existing Management Zones**. If you're setting up IAM governance from scratch (greenfield), see the **IAMADM** series for comprehensive IAM administration guidance.
+> **Note:** This series is for organizations **migrating from existing Management Zones**. If you're setting up IAM governance from scratch (greenfield), see the **IAM** series for comprehensive IAM administration guidance.
 
 
 ---

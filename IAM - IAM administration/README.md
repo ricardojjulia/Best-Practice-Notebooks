@@ -1,0 +1,30 @@
+# IAM - IAM administration
+
+Comprehensive guide to identity and access management in Dynatrace.
+
+> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+
+## Structure
+- NOTEBOOKS/ — Dynatrace notebook JSON files
+- PDFs/ — Printable versions of each notebook
+- markdown/ — Markdown exports of the notebooks
+
+## Notebook Lineup
+1. [Governance Foundations](markdown/-[IAM]-01-governance-foundations.md) — IAM governance principles and strategy
+2. [SSO & Authentication](markdown/-[IAM]-02-sso-authentication.md) — Single sign-on and authentication setup
+3. [Group Architecture](markdown/-[IAM]-03-group-architecture.md) — Designing group structures
+4. [Policy Authoring](markdown/-[IAM]-04-policy-authoring.md) — Writing and managing policies
+5. [Boundary Design](markdown/-[IAM]-05-boundary-design.md) — Defining access boundaries
+6. [User Lifecycle](markdown/-[IAM]-06-user-lifecycle.md) — Managing user provisioning and deprovisioning
+7. [Audit & Compliance](markdown/-[IAM]-07-audit-compliance.md) — Auditing access and ensuring compliance
+8. [Multi-Environment](markdown/-[IAM]-08-multi-environment.md) — IAM across multiple environments
+9. [Troubleshooting](markdown/-[IAM]-09-troubleshooting.md) — Diagnosing and resolving IAM issues
+10. [Templated Policy Assignments](markdown/-[IAM]-10-templated-policy-assignments.md) — Policy templates and bulk assignments
+
+## Usage
+1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
+2. Start with Governance Foundations for an overview, then explore specific IAM topics as needed.
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

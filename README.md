@@ -25,17 +25,18 @@ Comprehensive guide to automating Dynatrace configuration and operations.
 - [AUTOM-07: CI/CD Integration](AUTOM%20-%20Dynatrace%20automation/markdown/-[AUTOM]-07-cicd-integration.md) — Integrating Dynatrace into CI/CD pipelines
 - [AUTOM-08: Migration Automation](AUTOM%20-%20Dynatrace%20automation/markdown/-[AUTOM]-08-migration-automation.md) — Automating configuration migrations
 
-### [IAMADM - IAM administration](IAMADM%20-%20IAM%20administration/README.md)
+### [IAM - IAM administration](IAM%20-%20IAM%20administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
-- [IAMADM-01: Governance Foundations](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-01-governance-foundations.md) — IAM governance principles and strategy
-- [IAMADM-02: SSO & Authentication](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-02-sso-authentication.md) — Single sign-on and authentication setup
-- [IAMADM-03: Group Architecture](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-03-group-architecture.md) — Designing group structures
-- [IAMADM-04: Policy Authoring](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-04-policy-authoring.md) — Writing and managing policies
-- [IAMADM-05: Boundary Design](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-05-boundary-design.md) — Defining access boundaries
-- [IAMADM-06: User Lifecycle](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-06-user-lifecycle.md) — Managing user provisioning and deprovisioning
-- [IAMADM-07: Audit & Compliance](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-07-audit-compliance.md) — Auditing access and ensuring compliance
-- [IAMADM-08: Multi-Environment](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-08-multi-environment.md) — IAM across multiple environments
-- [IAMADM-09: Troubleshooting](IAMADM%20-%20IAM%20administration/markdown/-[IAMADM]-09-troubleshooting.md) — Diagnosing and resolving IAM issues
+- [IAM-01: Governance Foundations](IAM%20-%20IAM%20administration/markdown/-[IAM]-01-governance-foundations.md) — IAM governance principles and strategy
+- [IAM-02: SSO & Authentication](IAM%20-%20IAM%20administration/markdown/-[IAM]-02-sso-authentication.md) — Single sign-on and authentication setup
+- [IAM-03: Group Architecture](IAM%20-%20IAM%20administration/markdown/-[IAM]-03-group-architecture.md) — Designing group structures
+- [IAM-04: Policy Authoring](IAM%20-%20IAM%20administration/markdown/-[IAM]-04-policy-authoring.md) — Writing and managing policies
+- [IAM-05: Boundary Design](IAM%20-%20IAM%20administration/markdown/-[IAM]-05-boundary-design.md) — Defining access boundaries
+- [IAM-06: User Lifecycle](IAM%20-%20IAM%20administration/markdown/-[IAM]-06-user-lifecycle.md) — Managing user provisioning and deprovisioning
+- [IAM-07: Audit & Compliance](IAM%20-%20IAM%20administration/markdown/-[IAM]-07-audit-compliance.md) — Auditing access and ensuring compliance
+- [IAM-08: Multi-Environment](IAM%20-%20IAM%20administration/markdown/-[IAM]-08-multi-environment.md) — IAM across multiple environments
+- [IAM-09: Troubleshooting](IAM%20-%20IAM%20administration/markdown/-[IAM]-09-troubleshooting.md) — Diagnosing and resolving IAM issues
+- [IAM-10: Templated Policy Assignments](IAM%20-%20IAM%20administration/markdown/-[IAM]-10-templated-policy-assignments.md) — Policy templates and bulk assignments
 
 ### [K8S - Kubernetes monitoring](K8S%20-%20Kubernetes%20monitoring/README.md)
 Best practices for monitoring Kubernetes with Dynatrace.
