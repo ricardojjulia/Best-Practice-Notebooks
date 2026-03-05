@@ -38,6 +38,7 @@ Enterprise identity and access management administration for Dynatrace.
 - [IAM-09: Troubleshooting](IAM%20-%20IAM%20administration/markdown/-[IAM]-09-troubleshooting.md) — Diagnosing and resolving IAM issues
 - [IAM-10: Templated Policy Assignments](IAM%20-%20IAM%20administration/markdown/-[IAM]-10-templated-policy-assignments.md) — Policy templates and bulk assignments
 - [IAM-11: [WORKSHOP] Policy Persona Simulation](IAM%20-%20IAM%20administration/markdown/-[IAM]-11-[WORKSHOP]-policy-persona.md) — Interactive workshop: simulate policy behavior as different personas
+- [IAM-12: API Provisioning & Validation](IAM%20-%20IAM%20administration/markdown/-[IAM]-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API
 
 ### [K8S - Kubernetes monitoring](K8S%20-%20Kubernetes%20monitoring/README.md)
 Best practices for monitoring Kubernetes with Dynatrace.
