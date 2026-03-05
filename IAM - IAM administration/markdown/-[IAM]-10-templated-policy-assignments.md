@@ -180,7 +180,7 @@ Look for your template policy name (e.g., `tpl-team-data-reader`) in the respons
 
 ```bash
 curl -X GET \
-  'https://api.dynatrace.com/iam/v1/repo/account/<ACCOUNT_UUID>/groups' \
+  'https://api.dynatrace.com/iam/v1/accounts/<ACCOUNT_UUID>/groups' \
   -H 'Authorization: Bearer <TOKEN>'
 ```
 
@@ -497,7 +497,7 @@ In this notebook, you learned:
 - **IAM-07: Audit Logging and Compliance** — Set up ongoing audit monitoring for policy bindings
 - **AUTOM-03: Monaco** — Full Monaco configuration automation workflow
 - **MZ2POL-08: Templated Policies for MZ Migration** — Apply templates to MZ migration at scale
-- **IAM-11: Policy Persona Workshop** — Map organizational personas to policy templates using a structured design methodology. Includes a complete **end-to-end provisioning script** that creates groups, policies (UI + Data + Config), and templated bindings for a four-persona model via the IAM API.
+- **IAM-11: Policy Persona Workshop** — Map organizational personas to policy templates using a structured design methodology. Design your persona model, then use **IAM-12** for the provisioning scripts that creates groups, policies (UI + Data + Config), and templated bindings for a four-persona model via the IAM API.
 
 ---
 

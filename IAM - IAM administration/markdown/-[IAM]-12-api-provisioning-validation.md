@@ -256,7 +256,7 @@ api_post() {
   local payload="$2"
   local description="$3"
 
-  echo "  Creating: ${description}..."
+  echo "  Creating: ${description}..." >&2
   RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
     "${API_BASE}${endpoint}" \
     -H "Authorization: Bearer ${TOKEN}" \
@@ -267,10 +267,10 @@ api_post() {
   BODY=$(echo "${RESPONSE}" | sed '$d')
 
   if [[ "${HTTP_CODE}" =~ ^2 ]]; then
-    echo "    OK (HTTP ${HTTP_CODE})"
+    echo "    OK (HTTP ${HTTP_CODE})" >&2
     echo "${BODY}"
   else
-    echo "    FAILED (HTTP ${HTTP_CODE}): ${BODY}"
+    echo "    FAILED (HTTP ${HTTP_CODE}): ${BODY}" >&2
     return 1
   fi
 }
@@ -283,7 +283,7 @@ api_get() {
 }
 
 extract_uuid() {
-  echo "$1" | jq -r '.uuid // .id // empty'
+  echo "$1" | jq -r '.uuid // .id // empty' 2>/dev/null
 }
 
 PERSONA_COUNT=${#PERSONA_LABELS[@]}
@@ -313,7 +313,7 @@ RESULT=$(api_post \
   "All ${PERSONA_COUNT} groups")
 
 for i in $(seq 0 $((PERSONA_COUNT - 1))); do
-  GROUP_UUIDS[$i]=$(echo "${RESULT}" | jq -r ".[$i].uuid // empty")
+  GROUP_UUIDS[$i]=$(echo "${RESULT}" | jq -r ".[$i].uuid // empty" 2>/dev/null)
 done
 
 echo ""
@@ -459,7 +459,7 @@ echo "=============================="
 echo ""
 echo "--- All Policies ---"
 api_get "/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" | jq -r \
-  '.policies[] | "  \(.uuid)  \(.name)"'
+  '.policies[] | "  \(.uuid)  \(.name)"' 2>/dev/null
 
 echo ""
 echo "--- Templated Data Policy Bindings ---"
@@ -469,7 +469,7 @@ api_get "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${TPL_DATA_UUID}" \
 echo ""
 echo "--- All Groups ---"
 api_get "/iam/v1/accounts/${ACCOUNT_UUID}/groups" | jq -r \
-  '.[] | select(.name | startswith("DT-")) | "  \(.uuid)  \(.name)"'
+  '.[] | select(.name | startswith("DT-")) | "  \(.uuid)  \(.name)"' 2>/dev/null
 
 # ---------------------------------------------------------------------------
 # SUMMARY
