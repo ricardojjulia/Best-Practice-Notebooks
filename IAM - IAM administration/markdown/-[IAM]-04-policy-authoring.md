@@ -62,7 +62,7 @@ Group: dt-checkout-editors
 ## 2. Policy Statement Syntax
 Every policy contains one or more **statements** that define allowed actions.
 
-![Policy Statement Anatomy](images/policy-statement-anatomy.svg)
+![Policy Statement Anatomy](images/policy-statement-anatomy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Description | Example |
 |-----------|-------------|----------|
@@ -231,7 +231,7 @@ ALLOW storage:spans:read WHERE storage:bucket.name IN ("checkout_spans", "shared
 
 <a id="common-policy-patterns"></a>
 ## 5. Common Policy Patterns
-![Policy Decision Tree](images/policy-decision-tree.svg)
+![Policy Decision Tree](images/policy-decision-tree.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Need | Policy Type | Recommendation |
 |------|-------------|----------------|

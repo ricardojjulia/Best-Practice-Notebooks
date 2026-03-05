@@ -35,7 +35,7 @@ Access issues are among the most common support requests. This notebook provides
 ## 1. Troubleshooting Methodology
 Follow a systematic approach to diagnose access issues.
 
-![Troubleshooting Decision Tree](images/troubleshooting-decision-tree.svg)
+![Troubleshooting Decision Tree](images/troubleshooting-decision-tree.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Question | If Yes | If No |
 |------|----------|--------|-------|

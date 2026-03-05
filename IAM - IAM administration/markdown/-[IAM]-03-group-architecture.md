@@ -61,7 +61,7 @@ Groups are assigned:
 ## 2. Group Hierarchy Patterns
 Choose a structure that matches your organization and scales appropriately.
 
-![Group Hierarchy Patterns](images/group-hierarchy-patterns.svg)
+![Group Hierarchy Patterns](images/group-hierarchy-patterns.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pattern | Structure | Best For |
 |---------|-----------|----------|
@@ -186,7 +186,7 @@ Consistent naming makes groups discoverable and self-documenting.
 ## 4. SAML Group Mapping
 Federating groups from your Identity Provider (IdP) automates user provisioning and ensures consistent access.
 
-![SAML Group Mapping](images/saml-group-mapping.svg)
+![SAML Group Mapping](images/saml-group-mapping.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
 |------|-----------|--------|

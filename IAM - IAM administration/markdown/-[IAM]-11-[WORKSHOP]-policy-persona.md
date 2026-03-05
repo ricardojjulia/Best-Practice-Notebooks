@@ -1,6 +1,6 @@
 # IAM-11: Policy Persona Workshop
 
-> **Series:** IAM | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 03/05/2026
 
 ## Overview
 
@@ -9,7 +9,6 @@ Every enterprise has distinct roles — application developers, SREs, platform e
 This workshop walks you through a structured, six-goal process to design that model for your organization. You will identify personas, align them with your identity provider, audit the Dynatrace UI for schema-level permissions, define data boundaries, and compose the policies that enforce your design.
 
 > **Workshop Format:** This is a hands-on planning exercise that synthesizes concepts from **IAM-01** through **IAM-10**. Work through each goal sequentially, filling in the templates for your organization. Bring your AD team, security lead, and platform owners into the conversation.
-
 
 ---
 
@@ -27,10 +26,10 @@ This workshop walks you through a structured, six-goal process to design that mo
 4. [Naming Standards](#naming-standards)
 5. [Policy Flow and Examples](#policy-flow)
 6. [Validating Your Design](#validating-design)
-7. [Appendix](#appendix)
+7. [End-to-End Provisioning Script — Putting It All Together](#provisioning-script)
+8. [Appendix](#appendix)
 
 ---
-
 
 ## Prerequisites
 
@@ -66,7 +65,7 @@ Every company is different. The size of the user population and the division of 
 
 * **DEFAULT USER permissions apply to everyone** — Any permission granted to the default user group affects every user in your organization, including new hires provisioned via SCIM. Audit this group first. See **IAM-04** for policy evaluation order.
 
-* **DENY trumps any ALLOW** — A single DENY statement overrides all ALLOW statements for the same resource, regardless of which group it comes from. Be extremely cautious placing DENY in broadly-scoped groups. This is covered in detail in **IAM-04: Policy Authoring**.
+* **DENY trumps any ALLOW — use it sparingly** — A single DENY statement overrides all ALLOW statements for the same resource, regardless of which group it comes from. This means DENY in a broadly-scoped group (like Standard Users or Default Users) will **break composability** — a user who belongs to both Standard and Power User groups would be blocked by the Standard group's DENY, even though the Power User group grants ALLOW. **Use implicit deny instead:** simply omit the ALLOW for permissions you don't want to grant. Reserve explicit DENY only for narrowing a broad ALLOW within the *same* policy (e.g., "ALLOW write on all schemas EXCEPT this sensitive one"). This is covered in detail in **IAM-04: Policy Authoring**.
 
 * **At minimum, distinguish "Standard" and "Power User" tiers** — Standard users view data and dashboards; power users can modify alerting thresholds, create workflows, and change configuration. Only trained individuals should hold power-user or admin access.
 
@@ -75,7 +74,6 @@ Every company is different. The size of the user population and the division of 
 * **Balance group count vs. administrative overhead** — More groups give finer control but require more maintenance (policy updates, membership reviews, SCIM mappings). Too few groups force you to over-grant. Aim for 5-10 groups in a typical mid-size deployment. See **IAM-03: Group Architecture** for patterns.
 
 * **Use templated policies to scale** — When multiple teams need similar permissions with different scopes, use `${bindParam:...}` parameters instead of duplicating policies. See **IAM-10: Templated Policy Assignments**.
-
 
 <a id="procedure"></a>
 
@@ -289,15 +287,15 @@ Gen3 UI policies use three services together:
 // Grant baseline environment viewer role
 ALLOW environment:roles:viewer;
 
-// Make specific Gen3 apps visible
+// Make specific Gen3 apps visible — apps not listed here are implicitly hidden
 ALLOW app-engine:apps:run WHERE shared:app-id IN ("dynatrace.notebooks", "dynatrace.dashboards");
 
 // Grant access to a Gen2 (classic) screen
 ALLOW app-engine:apps:run WHERE shared:app-id IN ("dynatrace.classic.synthetic");
 
-// Allow viewing documents but not creating new ones
+// Allow viewing documents only — write/create/delete are implicitly denied
+// (do NOT use DENY here — it would override ALLOWs from other groups)
 ALLOW document:documents:read;
-DENY document:documents:create;
 ```
 
 > **Key distinction:** `app-engine:apps:run` controls app visibility for both Gen3 apps (e.g., `dynatrace.dashboards`) and Gen2 classic screens (e.g., `dynatrace.classic.synthetic`). `document:documents:read` lets the persona open and view dashboard/notebook content. Both are needed for a persona to use dashboards.
@@ -362,9 +360,9 @@ For each persona, create one policy per domain (UI, Data, Config). Use the schem
 
 ```
 // GLOBAL-Standard-Config
-// Standard Users: read-only access to all settings, no write
+// Standard Users: read-only access to all settings
+// Write access is implicitly denied — no ALLOW means no access
 ALLOW settings:objects:read, settings:schemas:read;
-DENY settings:objects:write;
 ```
 
 ```
@@ -455,14 +453,11 @@ For each persona, compose three policy documents using your deliverables from Go
 // GLOBAL-Standard-UI
 // Baseline environment access
 ALLOW environment:roles:viewer;
-// App visibility (Gen3 apps)
+// App visibility — only these apps appear in the navigation
+// All other apps (Settings, Account Management, etc.) are implicitly hidden
 ALLOW app-engine:apps:run WHERE shared:app-id IN ("dynatrace.dashboards", "dynatrace.notebooks");
-// Hide admin-level apps
-DENY app-engine:apps:run WHERE shared:app-id IN ("dynatrace.settings", "dynatrace.account-management");
-// Document permissions (dashboards, notebooks)
+// Document permissions — read only; write/create/delete are implicitly denied
 ALLOW document:documents:read;
-DENY document:documents:write;
-DENY document:documents:delete;
 ```
 
 ```
@@ -475,9 +470,13 @@ ALLOW storage:events:read;
 
 ```
 // GLOBAL-Standard-Config
+// Read-only access to all settings — write is implicitly denied
 ALLOW settings:objects:read, settings:schemas:read;
-DENY settings:objects:write;
 ```
+
+> **Why no DENY?** These policies rely on **implicit deny** — if a permission is not ALLOWed, it is denied by default. This is critical for composability: a Standard User who is *also* added to a Power User or SRE group will correctly inherit the additional ALLOWs from those groups. If this policy contained `DENY settings:objects:write`, that DENY would **override** the Power User's `ALLOW settings:objects:write` and the user would be locked out of configuration — even though the intent was to grant them elevated access.
+>
+> **When to use DENY:** Reserve DENY for narrowing a broad ALLOW within the *same* policy — for example, "ALLOW write on all schemas EXCEPT this sensitive one." Never place DENY in a broadly-assigned group (like Default Users) where it would block permissions granted by other groups.
 
 > **Review checkpoint:** Before binding policies to groups, have a second person review each policy statement. A misplaced DENY in the default user group can lock everyone out of a capability.
 
@@ -587,6 +586,417 @@ fetch logs, from:-7d
 | limit 50
 
 ```
+
+<a id="provisioning-script"></a>
+
+## End-to-End Provisioning Script — Putting It All Together
+
+The following shell script demonstrates the complete provisioning workflow — from creating groups and policies through binding everything together. It implements the four-persona model designed in this workshop using the Dynatrace Account Management API.
+
+> **Important:** Replace all dummy values in the **CONFIGURATION** section with your actual values before running. Every customizable value is defined in that single block — the execution logic below it does not need editing.
+
+### What the Script Creates
+
+| Step | Resource | Count | Details |
+|------|----------|-------|---------|
+| 1 | Groups | 4 | Standard, PowerUser, SRE, Admin |
+| 2 | Static policies | 9 | 4 UI + 4 Config + 1 Admin-Data |
+| 3 | Templated data policy | 1 | `tpl-team-data-reader` with `${bindParam:team}` |
+| 4 | Bindings | 14 | 4 UI + 4 Config + 1 Admin-Data + 5 Templated-Data |
+| 5 | Verification | — | List all policies and bindings |
+
+### API Reference
+
+| Operation | Method | Endpoint |
+|-----------|--------|----------|
+| Create group | POST | `/iam/v1/repo/account/{accountUuid}/groups` |
+| Create policy | POST | `/iam/v1/repo/{levelType}/{levelId}/policies` |
+| Bind policy to group | POST | `/iam/v1/repo/{levelType}/{levelId}/bindings/{policyUuid}` |
+| List policies | GET | `/iam/v1/repo/{levelType}/{levelId}/policies` |
+| List bindings | GET | `/iam/v1/repo/{levelType}/{levelId}/bindings/{policyUuid}` |
+
+### The Script
+
+```bash
+#!/usr/bin/env bash
+# =============================================================================
+# IAM End-to-End Provisioning Script
+# =============================================================================
+# Creates groups, policies (UI + Data + Config), and bindings for a
+# four-persona model: Standard User, Power User, SRE, and Admin.
+#
+# Prerequisites:
+#   - curl and jq installed
+#   - OAuth bearer token with account-iam-admin scope
+#
+# Usage:
+#   1. Edit the CONFIGURATION section below (all values are there)
+#   2. chmod +x provision-iam.sh
+#   3. ./provision-iam.sh
+#
+# Reference: IAM-10 (Templated Policy Assignments), IAM-04 (Policy Authoring)
+# =============================================================================
+set -euo pipefail
+
+# #############################################################################
+#                         CONFIGURATION
+# #############################################################################
+# Edit ONLY this section. The execution logic below does not need changes.
+# #############################################################################
+
+# --- Connection --------------------------------------------------------------
+ACCOUNT_UUID="1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d"      # Dynatrace account UUID
+ENVIRONMENT_ID="abc12345"                                    # Environment ID
+API_BASE="https://api.dynatrace.com"                         # Account Management API base
+TOKEN="dt0c01.SAMPLE.REPLACE_WITH_YOUR_OAUTH_BEARER_TOKEN"   # OAuth bearer token
+
+# --- Personas ----------------------------------------------------------------
+# Parallel arrays: same index = same persona. Add/remove personas by editing
+# all four arrays consistently.
+PERSONA_LABELS=("Standard"      "PowerUser"      "SRE"            "Admin")
+PERSONA_SCOPES=("GLOBAL"        "GLOBAL"         "GLOBAL"         "GLOBAL")
+
+GROUP_NAMES=(
+  "DT-GLOBAL-StandardUsers"
+  "DT-GLOBAL-PowerUsers"
+  "DT-GLOBAL-SREs"
+  "DT-GLOBAL-Admins"
+)
+GROUP_DESCRIPTIONS=(
+  "Standard Users — view dashboards and run queries"
+  "Power Users — modify alerting, create notebooks and workflows"
+  "SREs — full ops access scoped by team"
+  "Admins — full platform management (break-glass)"
+)
+
+# --- UI Policies (one statementQuery per persona) ----------------------------
+# Controls which apps each persona sees and what they can do with documents.
+# Uses implicit deny — apps/actions not listed are hidden/blocked.
+STANDARD_APPS='"dynatrace.dashboards", "dynatrace.notebooks"'
+POWER_APPS='"dynatrace.dashboards", "dynatrace.notebooks", "dynatrace.automations"'
+
+UI_POLICIES=(
+  # Standard: view dashboards and notebooks only
+  "ALLOW environment:roles:viewer; ALLOW app-engine:apps:run WHERE shared:app-id IN (${STANDARD_APPS}); ALLOW document:documents:read;"
+  # Power User: create dashboards, notebooks, and workflows
+  "ALLOW environment:roles:viewer; ALLOW app-engine:apps:run WHERE shared:app-id IN (${POWER_APPS}); ALLOW document:documents:read; ALLOW document:documents:write; ALLOW document:documents:create;"
+  # SRE: all apps, full document control
+  "ALLOW environment:roles:viewer; ALLOW app-engine:apps:run; ALLOW document:documents:read; ALLOW document:documents:write; ALLOW document:documents:create; ALLOW document:documents:delete;"
+  # Admin: all apps, full document control + sharing
+  "ALLOW environment:roles:viewer; ALLOW app-engine:apps:run; ALLOW document:documents:read; ALLOW document:documents:write; ALLOW document:documents:create; ALLOW document:documents:delete; ALLOW document:documents:share;"
+)
+
+# --- Config Policies (one statementQuery per persona) ------------------------
+# Controls which settings schemas each persona can read/write.
+# Add schema prefixes to grant write access; read is granted to all.
+POWER_SCHEMAS=(
+  "builtin:alerting.profile"
+  "builtin:problem.notifications"
+  "group:preferences"
+)
+SRE_SCHEMAS=(
+  "group:host-monitoring"
+  "group:anomaly-detection"
+  "group:failure-detection"
+  "group:processes-and-containers"
+)
+
+# Build config policy statements from schema arrays
+_build_config_policy() {
+  local base="ALLOW settings:objects:read; ALLOW settings:schemas:read;"
+  local schemas=("$@")
+  for prefix in "${schemas[@]}"; do
+    base+=" ALLOW settings:objects:write WHERE settings:schemaId startsWith \"${prefix}\";"
+  done
+  echo "${base}"
+}
+
+CONFIG_POLICIES=(
+  # Standard: read-only (write implicitly denied)
+  "ALLOW settings:objects:read; ALLOW settings:schemas:read;"
+  # Power User: read all + write specific schemas
+  "$(_build_config_policy "${POWER_SCHEMAS[@]}")"
+  # SRE: read all + write monitoring schemas
+  "$(_build_config_policy "${SRE_SCHEMAS[@]}")"
+  # Admin: full settings access
+  "ALLOW settings:objects:read; ALLOW settings:schemas:read; ALLOW settings:objects:write;"
+)
+
+# --- Data Policies -----------------------------------------------------------
+# Templated policy: one template, bound per-team with ${bindParam:team}
+TPL_DATA_NAME="tpl-team-data-reader"
+TPL_DATA_DESC="Parameterized: team-scoped read access to logs, spans, metrics, and events"
+TPL_DATA_STATEMENT='ALLOW storage:logs:read WHERE storage:dt.security_context = "${bindParam:team}"; ALLOW storage:spans:read WHERE storage:dt.security_context = "${bindParam:team}"; ALLOW storage:metrics:read; ALLOW storage:events:read;'
+
+# Admin data policy: unrestricted (no security context filter)
+ADMIN_DATA_NAME="GLOBAL-Admin-Data"
+ADMIN_DATA_DESC="Admins: unrestricted data access across all buckets and security contexts"
+ADMIN_DATA_STATEMENT="ALLOW storage:logs:read; ALLOW storage:spans:read; ALLOW storage:metrics:read; ALLOW storage:events:read; ALLOW storage:fieldsets:read;"
+
+# --- Team Bindings -----------------------------------------------------------
+# Teams for SRE templated data policy (SREs get all teams)
+TEAMS=("checkout" "payments" "catalog")
+
+# Default team for Standard and Power User data bindings
+STANDARD_DEFAULT_TEAM="checkout"
+POWER_DEFAULT_TEAM="checkout"
+
+# #############################################################################
+#                    EXECUTION — no edits needed below
+# #############################################################################
+
+# ---------------------------------------------------------------------------
+# HELPER FUNCTIONS
+# ---------------------------------------------------------------------------
+api_post() {
+  local endpoint="$1"
+  local payload="$2"
+  local description="$3"
+
+  echo "  Creating: ${description}..."
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+    "${API_BASE}${endpoint}" \
+    -H "Authorization: Bearer ${TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d "${payload}")
+
+  HTTP_CODE=$(echo "${RESPONSE}" | tail -1)
+  BODY=$(echo "${RESPONSE}" | sed '$d')
+
+  if [[ "${HTTP_CODE}" =~ ^2 ]]; then
+    echo "    OK (HTTP ${HTTP_CODE})"
+    echo "${BODY}"
+  else
+    echo "    FAILED (HTTP ${HTTP_CODE}): ${BODY}"
+    return 1
+  fi
+}
+
+api_get() {
+  local endpoint="$1"
+  curl -s -X GET "${API_BASE}${endpoint}" \
+    -H "Authorization: Bearer ${TOKEN}" \
+    -H "Content-Type: application/json"
+}
+
+extract_uuid() {
+  echo "$1" | jq -r '.uuid // .id // empty'
+}
+
+PERSONA_COUNT=${#PERSONA_LABELS[@]}
+
+# ---------------------------------------------------------------------------
+# PHASE 1: CREATE GROUPS
+# ---------------------------------------------------------------------------
+echo ""
+echo "=============================="
+echo "PHASE 1: Creating Groups"
+echo "=============================="
+
+declare -a GROUP_UUIDS
+for i in $(seq 0 $((PERSONA_COUNT - 1))); do
+  RESULT=$(api_post \
+    "/iam/v1/repo/account/${ACCOUNT_UUID}/groups" \
+    "{\"name\":\"${GROUP_NAMES[$i]}\",\"description\":\"${GROUP_DESCRIPTIONS[$i]}\"}" \
+    "${GROUP_NAMES[$i]}")
+  GROUP_UUIDS[$i]=$(extract_uuid "${RESULT}")
+done
+
+echo ""
+echo "Groups created:"
+for i in $(seq 0 $((PERSONA_COUNT - 1))); do
+  printf "  %-12s %s\n" "${PERSONA_LABELS[$i]}:" "${GROUP_UUIDS[$i]}"
+done
+
+# ---------------------------------------------------------------------------
+# PHASE 2: CREATE POLICIES
+# ---------------------------------------------------------------------------
+echo ""
+echo "=============================="
+echo "PHASE 2: Creating Policies"
+echo "=============================="
+
+declare -a UI_UUIDS CONFIG_UUIDS
+
+for i in $(seq 0 $((PERSONA_COUNT - 1))); do
+  SCOPE="${PERSONA_SCOPES[$i]}"
+  LABEL="${PERSONA_LABELS[$i]}"
+
+  # UI policy
+  POLICY_NAME="${SCOPE}-${LABEL}-UI"
+  RESULT=$(api_post \
+    "/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" \
+    "{\"name\":\"${POLICY_NAME}\",\"description\":\"${LABEL} UI policy\",\"statementQuery\":\"${UI_POLICIES[$i]}\"}" \
+    "${POLICY_NAME}")
+  UI_UUIDS[$i]=$(extract_uuid "${RESULT}")
+
+  # Config policy
+  POLICY_NAME="${SCOPE}-${LABEL}-Config"
+  RESULT=$(api_post \
+    "/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" \
+    "{\"name\":\"${POLICY_NAME}\",\"description\":\"${LABEL} Config policy\",\"statementQuery\":\"${CONFIG_POLICIES[$i]}\"}" \
+    "${POLICY_NAME}")
+  CONFIG_UUIDS[$i]=$(extract_uuid "${RESULT}")
+done
+
+# Templated data policy
+RESULT=$(api_post \
+  "/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" \
+  "{\"name\":\"${TPL_DATA_NAME}\",\"description\":\"${TPL_DATA_DESC}\",\"statementQuery\":\"${TPL_DATA_STATEMENT}\"}" \
+  "${TPL_DATA_NAME} (templated)")
+TPL_DATA_UUID=$(extract_uuid "${RESULT}")
+
+# Admin data policy (unrestricted)
+RESULT=$(api_post \
+  "/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" \
+  "{\"name\":\"${ADMIN_DATA_NAME}\",\"description\":\"${ADMIN_DATA_DESC}\",\"statementQuery\":\"${ADMIN_DATA_STATEMENT}\"}" \
+  "${ADMIN_DATA_NAME}")
+ADMIN_DATA_UUID=$(extract_uuid "${RESULT}")
+
+echo ""
+echo "Policies created:"
+for i in $(seq 0 $((PERSONA_COUNT - 1))); do
+  printf "  %-12s UI=%s  Config=%s\n" "${PERSONA_LABELS[$i]}:" "${UI_UUIDS[$i]}" "${CONFIG_UUIDS[$i]}"
+done
+echo "  Data:        Template=${TPL_DATA_UUID}  Admin=${ADMIN_DATA_UUID}"
+
+# ---------------------------------------------------------------------------
+# PHASE 3: BIND STATIC POLICIES TO GROUPS
+# ---------------------------------------------------------------------------
+echo ""
+echo "=============================="
+echo "PHASE 3: Binding Static Policies"
+echo "=============================="
+
+for i in $(seq 0 $((PERSONA_COUNT - 1))); do
+  LABEL="${PERSONA_LABELS[$i]}"
+
+  # Bind UI
+  api_post "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${UI_UUIDS[$i]}" \
+    "{\"groups\":[\"${GROUP_UUIDS[$i]}\"]}" \
+    "${LABEL}-UI → ${GROUP_NAMES[$i]}"
+
+  # Bind Config
+  api_post "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${CONFIG_UUIDS[$i]}" \
+    "{\"groups\":[\"${GROUP_UUIDS[$i]}\"]}" \
+    "${LABEL}-Config → ${GROUP_NAMES[$i]}"
+done
+
+# Bind Admin data policy (unrestricted — last persona is Admin)
+ADMIN_IDX=$((PERSONA_COUNT - 1))
+api_post "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${ADMIN_DATA_UUID}" \
+  "{\"groups\":[\"${GROUP_UUIDS[$ADMIN_IDX]}\"]}" \
+  "Admin-Data → ${GROUP_NAMES[$ADMIN_IDX]}"
+
+# ---------------------------------------------------------------------------
+# PHASE 4: BIND TEMPLATED DATA POLICY PER TEAM
+# ---------------------------------------------------------------------------
+echo ""
+echo "=============================="
+echo "PHASE 4: Binding Templated Data Policy Per Team"
+echo "=============================="
+
+# SREs get all teams (index 2 = SRE)
+SRE_IDX=2
+for team in "${TEAMS[@]}"; do
+  api_post "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${TPL_DATA_UUID}" \
+    "{\"groups\":[\"${GROUP_UUIDS[$SRE_IDX]}\"],\"parameters\":{\"team\":\"${team}\"}}" \
+    "${TPL_DATA_NAME} (team=${team}) → ${GROUP_NAMES[$SRE_IDX]}"
+done
+
+# Standard Users get their default team (index 0 = Standard)
+api_post "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${TPL_DATA_UUID}" \
+  "{\"groups\":[\"${GROUP_UUIDS[0]}\"],\"parameters\":{\"team\":\"${STANDARD_DEFAULT_TEAM}\"}}" \
+  "${TPL_DATA_NAME} (team=${STANDARD_DEFAULT_TEAM}) → ${GROUP_NAMES[0]}"
+
+# Power Users get their default team (index 1 = PowerUser)
+api_post "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${TPL_DATA_UUID}" \
+  "{\"groups\":[\"${GROUP_UUIDS[1]}\"],\"parameters\":{\"team\":\"${POWER_DEFAULT_TEAM}\"}}" \
+  "${TPL_DATA_NAME} (team=${POWER_DEFAULT_TEAM}) → ${GROUP_NAMES[1]}"
+
+# ---------------------------------------------------------------------------
+# PHASE 5: VERIFY
+# ---------------------------------------------------------------------------
+echo ""
+echo "=============================="
+echo "PHASE 5: Verification"
+echo "=============================="
+
+echo ""
+echo "--- All Policies ---"
+api_get "/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" | jq -r \
+  '.policies[] | "  \(.uuid)  \(.name)"'
+
+echo ""
+echo "--- Templated Data Policy Bindings ---"
+api_get "/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${TPL_DATA_UUID}" \
+  | jq .
+
+echo ""
+echo "--- All Groups ---"
+api_get "/iam/v1/repo/account/${ACCOUNT_UUID}/groups" | jq -r \
+  '.items[] | select(.name | startswith("DT-")) | "  \(.uuid)  \(.name)"'
+
+# ---------------------------------------------------------------------------
+# SUMMARY
+# ---------------------------------------------------------------------------
+echo ""
+echo "=============================="
+echo "PROVISIONING COMPLETE"
+echo "=============================="
+echo ""
+echo "Resources created:"
+echo "  Groups:            ${PERSONA_COUNT}"
+echo "  Static policies:   $((PERSONA_COUNT * 2 + 1))  (${PERSONA_COUNT} UI + ${PERSONA_COUNT} Config + 1 Admin-Data)"
+echo "  Template policies: 1  (${TPL_DATA_NAME})"
+BINDING_COUNT=$((PERSONA_COUNT * 2 + 1 + ${#TEAMS[@]} + 2))
+echo "  Bindings:         ${BINDING_COUNT}"
+echo ""
+echo "Next steps:"
+echo "  1. Add users to groups via SCIM sync or manual assignment"
+echo "  2. Verify access by logging in as each persona"
+echo "  3. Run the DQL audit query from the Validating Your Design section"
+echo "  4. Export to Monaco YAML for policy-as-code (see IAM-10)"
+echo ""
+```
+
+### Configuration Reference
+
+All customizable values live in the **CONFIGURATION** block at the top of the script. The execution logic below it loops through these arrays automatically — no edits needed there.
+
+| Variable | Purpose | Example |
+|----------|---------|---------|
+| `ACCOUNT_UUID` | Your Dynatrace account UUID | `1a2b3c4d-...` |
+| `ENVIRONMENT_ID` | Target environment ID | `abc12345` |
+| `API_BASE` | Account Management API base URL | `https://api.dynatrace.com` |
+| `TOKEN` | OAuth bearer token with `account-iam-admin` scope | `dt0c01.SAMPLE...` |
+| `PERSONA_LABELS` | Short name for each persona (used in policy names) | `("Standard" "PowerUser" "SRE" "Admin")` |
+| `PERSONA_SCOPES` | Naming prefix per persona | `("GLOBAL" "GLOBAL" "GLOBAL" "GLOBAL")` |
+| `GROUP_NAMES` | Dynatrace group name per persona | `("DT-GLOBAL-StandardUsers" ...)` |
+| `GROUP_DESCRIPTIONS` | Human-readable group description | `("Standard Users — ..." ...)` |
+| `STANDARD_APPS` / `POWER_APPS` | App IDs visible to Standard / Power users | `"dynatrace.dashboards", "dynatrace.notebooks"` |
+| `UI_POLICIES` | Full `statementQuery` per persona for UI access | One entry per persona |
+| `POWER_SCHEMAS` / `SRE_SCHEMAS` | Schema prefixes each persona can write | `("builtin:alerting.profile" ...)` |
+| `CONFIG_POLICIES` | Auto-built from schema arrays (or override directly) | One entry per persona |
+| `TPL_DATA_STATEMENT` | Templated data policy with `${bindParam:team}` | `ALLOW storage:logs:read WHERE ...` |
+| `ADMIN_DATA_STATEMENT` | Unrestricted admin data policy | `ALLOW storage:logs:read; ...` |
+| `TEAMS` | Team names for SRE templated bindings | `("checkout" "payments" "catalog")` |
+| `STANDARD_DEFAULT_TEAM` | Default team for Standard User data binding | `"checkout"` |
+| `POWER_DEFAULT_TEAM` | Default team for Power User data binding | `"checkout"` |
+
+### Script Design Notes
+
+**Why no DENY statements?** Every policy uses implicit deny — permissions not ALLOWed are denied by default. This keeps the model composable: a user in both StandardUsers and PowerUsers inherits the union of all ALLOWs from both groups without any DENY conflicts. See the [Tips and Key Principles](#tips-and-principles) section for details.
+
+**Why one templated data policy?** Rather than creating separate data policies for Standard, Power, and SRE personas, they all share `tpl-team-data-reader`. The difference is in the **binding** — each group is bound with a different `team` parameter value. Admin uses a separate unrestricted policy because it needs access to all security contexts.
+
+**Adapting for your organization:**
+- **Add a persona** — append to all parallel arrays (`PERSONA_LABELS`, `GROUP_NAMES`, `GROUP_DESCRIPTIONS`, `UI_POLICIES`, `CONFIG_POLICIES`) and the execution loop handles it automatically
+- **Change visible apps** — edit `STANDARD_APPS` or `POWER_APPS`, or modify `UI_POLICIES` entries directly
+- **Change writable schemas** — edit `POWER_SCHEMAS` or `SRE_SCHEMAS` arrays; the `_build_config_policy` function generates the policy statement
+- **Add teams** — append to the `TEAMS` array
+- **Per-team SRE groups** — create separate groups (`DT-SRE-Checkout`, `DT-SRE-Payments`) and adjust the Phase 4 loop to bind each team to its own group
+- **Bucket isolation** — add `AND storage:bucket.name = "${bindParam:bucket}"` to `TPL_DATA_STATEMENT` (see **IAM-10** Pattern 3)
 
 <a id="appendix"></a>
 

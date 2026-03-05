@@ -63,7 +63,7 @@ Group: dt-checkout-editors
 ## 2. The Three-Domain Model
 Boundaries filter across three domains. A complete boundary typically includes all three.
 
-![Boundary Three Domains](images/boundary-three-domains.svg)
+![Boundary Three Domains](images/boundary-three-domains.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Domain | Controls | Key Field |
 |--------|----------|------------|
@@ -429,7 +429,7 @@ Boundary: environment:management-zone IN ("checkout");
 ## 6. Multi-Tenant Isolation
 For organizations serving multiple customers or business units that require strict isolation.
 
-![Multi-Tenant Isolation](images/multi-tenant-isolation.svg)
+![Multi-Tenant Isolation](images/multi-tenant-isolation.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tenant | Security Context | Isolated Data |
 |--------|------------------|---------------|

@@ -71,7 +71,7 @@ The Gen3 model provides several advantages over legacy Management Zones:
 ## 2. The ABAC Model
 Attribute-Based Access Control (ABAC) evaluates access requests based on attributes rather than static role assignments.
 
-![IAM Governance Framework](images/iam-governance-framework.svg)
+![IAM Governance Framework](images/iam-governance-framework.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Component | Function |
 |-------|-----------|----------|

@@ -30,7 +30,7 @@ Manual user management doesn't scale. This notebook covers user lifecycle automa
 
 Users have a lifecycle from creation to deactivation. Effective management requires automation at each stage.
 
-![User Lifecycle Flow](images/user-lifecycle-flow.svg)
+![User Lifecycle Flow](images/user-lifecycle-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Trigger | Actions |
 |-------|---------|----------|
@@ -65,7 +65,7 @@ Users have a lifecycle from creation to deactivation. Effective management requi
 ## 2. SCIM Provisioning
 SCIM (System for Cross-domain Identity Management) automatically syncs users and groups from your IdP to Dynatrace.
 
-![SCIM Provisioning Flow](images/scim-provisioning-flow.svg)
+![SCIM Provisioning Flow](images/scim-provisioning-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
 |------|-----------|--------|

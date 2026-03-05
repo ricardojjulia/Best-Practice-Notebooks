@@ -1,6 +1,6 @@
 # IAM-10: Templated Policy-Group Assignments
 
-> **Series:** IAM | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 03/05/2026
 
 ## Overview
 
@@ -234,6 +234,8 @@ done
 ```
 
 > **Tip:** A 201 response means the binding was created. A 409 means it already exists.
+
+> **Full working example:** For a complete script that creates groups, policies across all three domains (UI + Data + Config), and binds everything together for a four-persona model, see the **End-to-End Provisioning Script** in **IAM-11: Policy Persona Workshop**.
 
 <a id="monaco-policy-as-code"></a>
 ## 5. Monaco YAML for Policy-as-Code
@@ -495,7 +497,7 @@ In this notebook, you learned:
 - **IAM-07: Audit Logging and Compliance** — Set up ongoing audit monitoring for policy bindings
 - **AUTOM-03: Monaco** — Full Monaco configuration automation workflow
 - **MZ2POL-08: Templated Policies for MZ Migration** — Apply templates to MZ migration at scale
-- **IAM-11: Policy Persona Workshop** — Map organizational personas to policy templates using a structured design methodology
+- **IAM-11: Policy Persona Workshop** — Map organizational personas to policy templates using a structured design methodology. Includes a complete **end-to-end provisioning script** that creates groups, policies (UI + Data + Config), and templated bindings for a four-persona model via the IAM API.
 
 ---
 
