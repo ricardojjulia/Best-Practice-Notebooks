@@ -683,24 +683,54 @@ echo "Report complete."
 
 ## 4. Script 3: Cleanup Test Resources
 
-Use this script to remove groups, policies, and bindings created during testing. It targets resources by name prefix so it won't touch production resources.
+Use this script to remove groups, policies, and bindings created during testing. Run this **before** re-provisioning to avoid duplicate resources.
 
 ```bash
 #!/usr/bin/env bash
 # =============================================================================
 # IAM Cleanup — removes test groups, policies, and bindings
 # =============================================================================
-set -uo pipefail
+# Usage:
+#   ./IAM-CleanUp.sh          # Interactive mode (asks for confirmation)
+#   ./IAM-CleanUp.sh --force  # Delete without confirmation
+#
+# This script runs automatically at the start of IAM-End-to-End-Provisioning.sh
+# but can also be run standalone to clean up test resources.
+# =============================================================================
+set -eo pipefail
+
+FORCE_DELETE=${1:-}  # --force flag to skip confirmation
+
+
+SSO_TOKEN_URL="https://sso.dynatrace.com/sso/oauth2/token"
+OAUTH_CLIENT_ID="dt0s02.YOUR_CLIENT_ID"                                        # Your client ID
+OAUTH_CLIENT_SECRET="dt0s02.YOUR_CLIENT_ID.YOUR_CLIENT_SECRET"                 # Your client secret
+ACCOUNT_UUID="00000000-1111-2222-3333-444444444444"                            # Dynatrace account UUID
+OAUTH_SCOPE="account-idm-read account-idm-write iam-policies-management"
+
+TOKEN_RESPONSE=$(curl -s \
+  --request POST "${SSO_TOKEN_URL}" \
+  --header "Content-Type: application/x-www-form-urlencoded" \
+  --data-urlencode "grant_type=client_credentials" \
+  --data-urlencode "client_id=${OAUTH_CLIENT_ID}" \
+  --data-urlencode "client_secret=${OAUTH_CLIENT_SECRET}" \
+  --data-urlencode "scope=${OAUTH_SCOPE}" \
+  --data-urlencode "resource=urn:dtaccount:${ACCOUNT_UUID}")
+
+TOKEN=$(echo "${TOKEN_RESPONSE}" | jq -r '.access_token // empty')
+EXPIRES_IN=$(echo "${TOKEN_RESPONSE}" | jq -r '.expires_in // "unknown"')
+
+if [[ -z "${TOKEN}" ]]; then
+  echo "ERROR: Failed to acquire token"
+  echo "${TOKEN_RESPONSE}" | jq .
+  exit 1
+fi
+
+echo "Token acquired (expires in ${EXPIRES_IN}s)"
 
 # --- CONFIGURATION -----------------------------------------------------------
-ACCOUNT_UUID="your-account-uuid"
-ENVIRONMENT_ID="your-environment-id"
-API_BASE="https://api.dynatrace.com"
-TOKEN="your-oauth-bearer-token"
-
-# Prefixes to match for deletion (edit to match your test naming)
-GROUP_PREFIX="DT-TEST-"
-POLICY_PREFIXES=("GLOBAL-" "TEST-" "tpl-test-")
+ENVIRONMENT_ID="yhu28601"                                    # Environment ID
+API_BASE="https://api.dynatrace.com"                         # Account Management API base
 
 # --- COLORS ------------------------------------------------------------------
 RED='\033[0;31m'
@@ -713,15 +743,81 @@ echo ""
 echo "=============================================="
 echo "  IAM Cleanup — Removing Test Resources"
 echo "=============================================="
+echo ""
 
 # --- DELETE POLICIES (and their bindings) ------------------------------------
-echo ""
-echo -e "${CYAN}Fetching policies...${NC}"
+echo -e "${CYAN}Deleting test policies...${NC}"
 POLICIES=$(curl -s -X GET \
   "${API_BASE}/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies" \
   -H "Authorization: Bearer ${TOKEN}")
 
-for prefix in "${POLICY_PREFIXES[@]}"; do
+POLICIES_TEMP=$(mktemp)
+echo "${POLICIES}" | jq -r '(.policies // [])[] | select(.name | (startswith("GLOBAL-") or startswith("TEST-") or startswith("tpl-"))) | .uuid' > "$POLICIES_TEMP" 2>/dev/null || true
+
+DELETED_POLICIES=0
+while IFS= read -r puuid; do
+  if [[ -n "$puuid" ]]; then
+    curl -s -o /dev/null -X DELETE \
+      "${API_BASE}/iam/v1/repo/environment/${ENVIRONMENT_ID}/bindings/${puuid}?forceMultiple=true" \
+      -H "Authorization: Bearer ${TOKEN}" 2>/dev/null || true
+    curl -s -o /dev/null -X DELETE \
+      "${API_BASE}/iam/v1/repo/environment/${ENVIRONMENT_ID}/policies/${puuid}?force=true" \
+      -H "Authorization: Bearer ${TOKEN}" 2>/dev/null || true
+    DELETED_POLICIES=$((DELETED_POLICIES + 1))
+  fi
+done < "$POLICIES_TEMP"
+rm -f "$POLICIES_TEMP"
+
+if [[ $DELETED_POLICIES -gt 0 ]]; then
+  echo -e "  ${GREEN}✓${NC} Deleted $DELETED_POLICIES policy/policies"
+fi
+
+# --- DELETE GROUPS -----------------------------------------------------------
+echo ""
+echo -e "${CYAN}Deleting test groups...${NC}"
+GROUPS=$(curl -s -X GET \
+  "${API_BASE}/iam/v1/accounts/${ACCOUNT_UUID}/groups" \
+  -H "Authorization: Bearer ${TOKEN}")
+
+GROUPS_TEMP=$(mktemp)
+echo "${GROUPS}" | jq -r '(if type == "array" then . else (.items // .groups // []) end)[] | select(.name | startswith("DT-TEST-")) | .uuid' > "$GROUPS_TEMP" 2>/dev/null || true
+
+# Check if we have groups to delete
+if [[ -s "$GROUPS_TEMP" ]]; then
+  GROUP_COUNT=$(wc -l < "$GROUPS_TEMP" || echo 0)
+  
+  if [[ "${FORCE_DELETE}" != "--force" ]] && [[ $GROUP_COUNT -gt 0 ]]; then
+    echo "Found $GROUP_COUNT group(s) matching prefix 'DT-TEST-'"
+    read -p "Delete these groups? (yes/no): " -r CONFIRM || CONFIRM=""
+    if [[ "${CONFIRM}" != "yes" ]]; then
+      echo "Aborted by user."
+      rm -f "$GROUPS_TEMP"
+      exit 0
+    fi
+  fi
+  
+  DELETED_GROUPS=0
+  while IFS= read -r guuid; do
+    if [[ -n "$guuid" ]]; then
+      curl -s -o /dev/null -X DELETE \
+        "${API_BASE}/iam/v1/accounts/${ACCOUNT_UUID}/groups/${guuid}" \
+        -H "Authorization: Bearer ${TOKEN}" 2>/dev/null || true
+      DELETED_GROUPS=$((DELETED_GROUPS + 1))
+    fi
+  done < "$GROUPS_TEMP"
+  
+  if [[ $DELETED_GROUPS -gt 0 ]]; then
+    echo -e "  ${GREEN}✓${NC} Deleted $DELETED_GROUPS group(s)"
+  fi
+fi
+
+rm -f "$GROUPS_TEMP"
+
+echo ""
+echo -e "${GREEN}✓ Cleanup complete.${NC}"
+echo ""
+echo "Tip: Run './IAM-CleanUp.sh --force' to skip confirmation, or"
+echo "     './IAM-End-to-End-Provisioning.sh' to auto-cleanup and re-provision."
   echo "${POLICIES}" | jq -r --arg p "${prefix}" \
     '(.policies // [])[] | select(.name | startswith($p)) | .uuid + "|" + .name' \
     2>/dev/null | while IFS='|' read -r puuid pname; do
