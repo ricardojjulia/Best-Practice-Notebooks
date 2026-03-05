@@ -18,6 +18,7 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 5. [Segments Implementation](markdown/-[MZ2POL]-05-segments-implementation.md) — Implementing segments
 6. [Migration Execution](markdown/-[MZ2POL]-06-migration-execution.md) — Executing the migration
 7. [Validation & Troubleshooting](markdown/-[MZ2POL]-07-validation-troubleshooting.md) — Validating and resolving issues
+8. [Templated Policies Migration](markdown/-[MZ2POL]-08-templated-policies-migration.md) — Policy templates for bulk MZ migration
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

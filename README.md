@@ -91,6 +91,7 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 - [MZ2POL-05: Segments Implementation](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-[MZ2POL]-05-segments-implementation.md) — Implementing segments
 - [MZ2POL-06: Migration Execution](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-[MZ2POL]-06-migration-execution.md) — Executing the migration
 - [MZ2POL-07: Validation & Troubleshooting](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-[MZ2POL]-07-validation-troubleshooting.md) — Validating and resolving issues
+- [MZ2POL-08: Templated Policies Migration](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-[MZ2POL]-08-templated-policies-migration.md) — Policy templates for bulk MZ migration
 
 ### [ONBRD - Dynatrace onboarding](ONBRD%20-%20Dynatrace%20onboarding/README.md)
 Step-by-step onboarding series for new Dynatrace users.
