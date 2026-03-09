@@ -57,11 +57,28 @@ With settings-based enrichment, **all signals** receive metadata:
 | Events | Yes | Kubernetes events |
 | Entities | Yes | Smartscape topology |
 
+### Primary Grail Fields and Tags
+
+In addition to settings-based enrichment, Dynatrace automatically propagates certain **Primary Grail Fields** across all signal types. These fields are indexed, require no configuration, and are the foundation for cross-signal data organization:
+
+| Primary Grail Field | DQL Field | Propagation |
+|---------------------|-----------|-------------|
+| Kubernetes Cluster | `k8s.cluster.name` | All signals |
+| Kubernetes Namespace | `k8s.namespace.name` | All signals |
+| Host Group | `dt.host_group.id` | All signals |
+| AWS Account | `aws.account.id` | All signals |
+
+**Primary Grail Tags** (prefix `primary_tags.`) extend this concept for custom dimensions like `primary_tags.app` or `primary_tags.team`. Use them when Primary Grail Fields don't align with your organizational structure (e.g., shared infrastructure hosting multiple applications).
+
+**Cost allocation fields** like `dt.cost.costcenter` and `dt.cost.product` also propagate to service metrics, enabling chargeback reporting across teams.
+
+> **See also:** **ORGNZ-10: Advanced Segment Definitions** covers Primary Grail Fields in depth, including enrichment approaches for dedicated vs. shared infrastructure scenarios.
+
 <a id="enrichment-methods-comparison"></a>
 ## 2. Enrichment Methods Comparison
 Dynatrace offers multiple ways to add Kubernetes metadata. Choose based on your needs:
 
-![Enrichment Methods Comparison](images/enrichment-methods-comparison.svg)
+![Enrichment Methods Comparison](images/enrichment-methods-comparison.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Method | Scope | All Signals? | Recommendation |

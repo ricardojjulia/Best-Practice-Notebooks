@@ -57,7 +57,7 @@ Dynatrace mobile RUM automatically captures:
 
 ## 2. Mobile Monitoring Architecture
 
-![Mobile Monitoring Architecture](images/mobile-monitoring-architecture.svg)
+![Mobile Monitoring Architecture](images/mobile-monitoring-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Role |
@@ -135,7 +135,7 @@ fetch dt.entity.device_application
 
 ## 5. Data Flow: Beacon to Grail
 
-![Beacon Data Flow](images/beacon-data-flow.svg)
+![Beacon Data Flow](images/beacon-data-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Stage | Description |

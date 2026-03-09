@@ -37,7 +37,7 @@ Without organization, Dynatrace environments become difficult to manage:
 
 ### Modern Organization Building Blocks
 
-![Organization Hierarchy](images/organization-hierarchy.svg)
+![Organization Hierarchy](images/organization-hierarchy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Purpose |
 |-------|---------|
@@ -65,7 +65,7 @@ The modern Dynatrace platform (Gen3/Grail) uses a "tag at source" approach rathe
 
 ### The "Enrich at Source" Philosophy
 
-![Modern Tagging Flow](images/tagging-flow.svg)
+![Modern Tagging Flow](images/tagging-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|

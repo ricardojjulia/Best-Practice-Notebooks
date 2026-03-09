@@ -52,7 +52,7 @@ Level 4: Self-healing with learning
 
 ### Auto-Remediation Loop
 
-![Auto-Remediation Loop](images/remediation-loop.svg)
+![Auto-Remediation Loop](images/remediation-loop.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Description |

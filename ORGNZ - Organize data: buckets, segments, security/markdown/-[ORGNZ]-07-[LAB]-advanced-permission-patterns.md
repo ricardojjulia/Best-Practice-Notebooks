@@ -68,7 +68,7 @@ By the end of this notebook, you will:
 
 Record-level permissions filter data at query time based on record attributes:
 
-![Record-Level Permissions Flow](images/record-level-permissions.svg)
+![Record-Level Permissions Flow](images/record-level-permissions.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action |
@@ -241,7 +241,7 @@ This boundary can then be applied alongside any policy (logs access, metrics acc
 > **Tip:** Use boundaries when you have the same set of conditions (e.g., "production only" or "EU region only") that need to apply to multiple policies. This avoids duplicating conditions across every policy definition.
 
 
-![Tiered Access Model](images/tiered-access-model.svg)
+![Tiered Access Model](images/tiered-access-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tier | Role | Access |

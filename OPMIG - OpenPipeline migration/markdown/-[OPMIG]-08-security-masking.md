@@ -44,7 +44,7 @@ By completing this notebook, you will:
 
 Masking executes **first** in the Processing stage, ensuring sensitive data is redacted before any other processing occurs.
 
-![Masking Executes First](images/masking-order.svg)
+![Masking Executes First](images/masking-order.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Contents | PII Status |

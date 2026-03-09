@@ -36,7 +36,7 @@ Before starting this notebook, ensure you have:
 ## 1. Understanding Sensitive Data in Spans
 Distributed traces can inadvertently capture sensitive information:
 
-![Span Security](images/span-security.svg)
+![Span Security](images/span-security.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Risk Area | Examples | Mitigation |
@@ -170,7 +170,7 @@ fetch spans, from:-1h
 ## 3. HTTP Status Code Security Analysis
 HTTP status codes can reveal security-relevant patterns:
 
-![HTTP Security Codes](images/http-security-codes.svg)
+![HTTP Security Codes](images/http-security-codes.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Code | Meaning | Security Relevance |

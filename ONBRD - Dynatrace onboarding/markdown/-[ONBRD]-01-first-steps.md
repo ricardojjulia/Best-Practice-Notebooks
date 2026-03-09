@@ -51,7 +51,7 @@ Your tenant ID is the first part of your Dynatrace URL. For example:
 ## 2. Understanding the Navigation
 Dynatrace uses a left-hand navigation menu organized by function. The platform is built around **Apps**—each capability is an app you can launch.
 
-![Navigation Structure](images/navigation-structure.svg)
+![Navigation Structure](images/navigation-structure.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Area | Description |
 |------|-------------|

@@ -201,7 +201,7 @@ fetch dt.entity.service
 
 <a id="common-issues-and-troubleshooting"></a>
 ## 5. Common Issues and Troubleshooting
-![Troubleshooting Flow](images/troubleshooting-flow.svg)
+![Troubleshooting Flow](images/troubleshooting-flow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Issue | Likely Cause | Solution |

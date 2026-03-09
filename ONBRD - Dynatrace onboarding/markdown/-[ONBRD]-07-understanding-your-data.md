@@ -28,7 +28,7 @@ With OneAgent deployed, Dynatrace has automatically discovered your infrastructu
 ## 1. The Dynatrace Data Model
 Dynatrace organizes data into a unified model:
 
-![Grail Data Model](images/grail-data-model.svg)
+![Grail Data Model](images/grail-data-model.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Data Type | Description | Example |
 |-----------|-------------|---------|
@@ -57,7 +57,7 @@ Dynatrace organizes data into a unified model:
 ## 2. Entities and Relationships
 Dynatrace automatically discovers and relates entities:
 
-![Entity Hierarchy](images/entity-hierarchy.svg)
+![Entity Hierarchy](images/entity-hierarchy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Entity Type | DQL Name | What It Represents |
 |-------------|----------|--------------------|

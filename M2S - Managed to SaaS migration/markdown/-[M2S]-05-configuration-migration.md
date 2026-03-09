@@ -1,6 +1,6 @@
 # Configuration Migration
 
-> **Series:** M2S | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
+> **Series:** M2S | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Configuration migration is often the most time-consuming part of a Managed-to-SaaS migration. The **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** automates the bulk of this work, but a systematic approach ensures nothing is missed.
 
@@ -227,7 +227,7 @@ resource "dynatrace_management_zone_v2" "production" {
 | Notifications | New Webhooks |
 -->
 
-![Configuration Migration Flow](images/m2s-config-migration.svg)
+![Configuration Migration Flow](images/m2s-config-migration.png)
 
 ---
 

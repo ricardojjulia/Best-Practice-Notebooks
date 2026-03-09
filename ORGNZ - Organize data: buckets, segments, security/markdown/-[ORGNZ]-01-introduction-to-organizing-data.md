@@ -58,7 +58,7 @@ Effective data organization in Grail enables:
 ## The Grail Data Model
 Grail organizes data hierarchically with tables (data types), buckets (storage containers), and segments (logical views):
 
-![Grail Data Model](images/grail-data-model.svg)
+![Grail Data Model](images/grail-data-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Examples |
@@ -140,7 +140,7 @@ Grail supports permissions at multiple levels:
 ## Organization Decision Framework
 Use this framework to decide how to organize your data:
 
-![Organization Decision Framework](images/organization-decision-framework.svg)
+![Organization Decision Framework](images/organization-decision-framework.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | YES Answer |

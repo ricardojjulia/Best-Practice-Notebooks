@@ -1,6 +1,6 @@
 # Migration Framework Overview
 
-> **Series:** M2S | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
+> **Series:** M2S | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Migrating from Dynatrace Managed to SaaS is not a single action—it's a journey. The Dynatrace Migration Framework provides a structured approach that has been validated across hundreds of successful migrations.
 
@@ -64,7 +64,7 @@ By the end of this notebook, you will:
 | RUN | Enable, Expand, Optimize | Post-migration success |
 -->
 
-![Migration Framework](images/m2s-migration-framework.svg)
+![Migration Framework](images/m2s-migration-framework.png)
 
 ---
 
@@ -252,7 +252,7 @@ The Run phase ensures long-term success after migration.
 | Best for | Small envs | Large envs |
 -->
 
-![Migration Approaches](images/m2s-migration-approaches.svg)
+![Migration Approaches](images/m2s-migration-approaches.png)
 
 ---
 

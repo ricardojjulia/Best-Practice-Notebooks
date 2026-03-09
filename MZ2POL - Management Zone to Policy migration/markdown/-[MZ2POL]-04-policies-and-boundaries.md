@@ -48,7 +48,7 @@ By the end of this notebook, you will:
 ## 1. Understanding the Relationship
 ### Policies vs Boundaries
 
-![Policy Boundary Relationship](images/policy-boundary-relationship.svg)
+![Policy Boundary Relationship](images/policy-boundary-relationship.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Component | Purpose | Analogy |
@@ -64,7 +64,7 @@ By the end of this notebook, you will:
 
 ### How They Work Together
 
-![Policy vs Boundary](images/policy-vs-boundary.svg)
+![Policy vs Boundary](images/policy-vs-boundary.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Scenario | Policy | Boundary | Result |
@@ -329,7 +329,7 @@ Group: "LOB5-Team" (SAML from AD)
 ## 8. Mapping MZ Access to Policies + Boundaries
 ### Common MZ Permission Patterns
 
-![MZ Pattern Mapping](images/mz-pattern-mapping.svg)
+![MZ Pattern Mapping](images/mz-pattern-mapping.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | MZ Pattern | New Approach |
@@ -583,7 +583,7 @@ ALLOW settings:objects:*
 ALLOW document:documents:read
 ALLOW document:documents:write
 ALLOW document:documents:delete
-ALLOW document:documents:share
+ALLOW document:direct-shares:write
 
 // Read data for dashboards
 ALLOW storage:logs:read

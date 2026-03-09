@@ -37,7 +37,7 @@ In modern microservices architectures, a single user request often travels throu
 - **Dependencies** between services
 - Where **errors** and **latency** occur
 
-![Distributed Tracing Flow](images/distributed-tracing-flow.svg)
+![Distributed Tracing Flow](images/distributed-tracing-flow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
@@ -75,7 +75,7 @@ A **span** represents a single unit of work in a distributed system. Think of it
 ## 3. Span Anatomy
 Every span contains these essential fields:
 
-![Span Anatomy](images/span-anatomy.svg)
+![Span Anatomy](images/span-anatomy.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Field | Description |
@@ -123,7 +123,7 @@ Every span contains these essential fields:
 ## 4. Span Kinds
 The `span.kind` attribute indicates the span's role in the distributed transaction:
 
-![Span Kinds](images/span-kinds.svg)
+![Span Kinds](images/span-kinds.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Kind | Description | Example |
@@ -141,7 +141,7 @@ The `span.kind` attribute indicates the span's role in the distributed transacti
 ## 5. Trace Structure
 A **trace** is a tree of spans connected by parent-child relationships:
 
-![Trace Tree](images/trace-tree.svg)
+![Trace Tree](images/trace-tree.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Service | Operation | Duration | Parent |

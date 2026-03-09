@@ -1,6 +1,6 @@
 # OneAgent and ActiveGate Migration
 
-> **Series:** M2S | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
+> **Series:** M2S | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Agent migration is the core technical step. OneAgents must be reconfigured to communicate with SaaS instead of Managed.
 
@@ -74,7 +74,7 @@ By the end of this notebook, you will:
 | 5 | Final Validation |
 -->
 
-![Migration Sequence](images/m2s-agent-migration-sequence.svg)
+![Migration Sequence](images/m2s-agent-migration-sequence.png)
 
 ---
 
@@ -121,12 +121,7 @@ Invoke-WebRequest -Uri "https://{tenant}.live.dynatrace.com/api/v1/deployment/in
 
 ### 2.3 Verify ActiveGate Connection
 
-```dql
-// ActiveGate validation - use the Entities API v2 or Settings API
-// Note: ActiveGates are not directly queryable via DQL fetch
-// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
-// Or check the ActiveGates page in the Dynatrace UI
-```
+> **Note:** ActiveGates are not directly queryable via DQL. Use the Entities API v2 (`GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")`) or check the **ActiveGates** page in the Dynatrace UI to validate ActiveGate connectivity.
 
 ---
 

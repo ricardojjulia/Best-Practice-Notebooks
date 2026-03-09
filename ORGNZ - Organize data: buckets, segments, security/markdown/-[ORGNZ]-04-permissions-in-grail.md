@@ -55,7 +55,7 @@ Grail supports permissions at multiple granularity levels:
 | **Record** | Individual records by attribute | Filter by host group, namespace, security context |
 | **Field** | Specific fields on records | Mask sensitive fields |
 
-![Permission Hierarchy](images/permission-hierarchy.svg)
+![Permission Hierarchy](images/permission-hierarchy.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Scope |
@@ -158,7 +158,7 @@ ALLOW storage:logs:read WHERE storage:k8s.namespace.name = "production";
 ## How Permissions Work at Query Time
 When a user runs a DQL query, Grail evaluates permissions at each level:
 
-![Query Time Flow](images/query-time-flow.svg)
+![Query Time Flow](images/query-time-flow.png)
 
 Records without defined access are automatically filtered out.
 

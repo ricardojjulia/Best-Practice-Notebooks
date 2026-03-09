@@ -127,7 +127,7 @@ Use pattern matching for complex bucket names:
 ```
 
 
-![Team Isolation Architecture](images/team-isolation-architecture.svg)
+![Team Isolation Architecture](images/team-isolation-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Team | Policy | Bucket |

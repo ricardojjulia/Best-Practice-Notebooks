@@ -84,7 +84,7 @@ Dynatrace automation tools form a hierarchy from low-level APIs to high-level ab
 | Low | Settings API | Direct REST calls |
 -->
 
-![Automation Pyramid](images/autom-pyramid.svg)
+![Automation Pyramid](images/autom-pyramid.png)
 
 ---
 
@@ -220,7 +220,7 @@ Use this flowchart to choose the right automation approach:
 | Building a custom app? | SDK | Monaco |
 -->
 
-![Decision Framework](images/autom-decision-tree.svg)
+![Decision Framework](images/autom-decision-tree.png)
 
 ---
 

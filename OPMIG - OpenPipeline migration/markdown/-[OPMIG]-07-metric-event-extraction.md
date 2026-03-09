@@ -45,7 +45,7 @@ By completing this notebook, you will:
 
 The Extraction stage runs **after** Processing and **before** Storage. It generates:
 
-![Extraction Stage](images/extraction-stage.svg)
+![Extraction Stage](images/extraction-stage.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Extraction Type | Output | Use Case |

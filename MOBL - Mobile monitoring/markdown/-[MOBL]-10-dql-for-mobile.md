@@ -38,7 +38,7 @@ Every query in this notebook targets real mobile monitoring data in Grail and fo
 
 Understanding where mobile data lives in Grail is the foundation for writing effective DQL queries. Unlike traditional APM data that maps neatly to logs and spans, mobile monitoring data is distributed across multiple Grail data objects.
 
-![Mobile DQL Data Model](images/mobile-dql-data-model.svg)
+![Mobile DQL Data Model](images/mobile-dql-data-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Data Source | Description |

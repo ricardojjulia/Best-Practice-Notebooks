@@ -44,7 +44,7 @@ By the end of this notebook, you will:
 ## 1. ABAC Framework Architecture
 ### The Permission Flow
 
-![ABAC Framework](images/abac-framework.svg)
+![ABAC Framework](images/abac-framework.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Component | Purpose | Configured In |

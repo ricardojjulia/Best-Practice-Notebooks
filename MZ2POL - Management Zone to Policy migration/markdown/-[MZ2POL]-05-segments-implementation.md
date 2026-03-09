@@ -74,7 +74,7 @@ By the end of this notebook, you will:
 ## 2. How Segments Work
 ### Query-Time Injection
 
-![Segment Injection](images/segment-injection.svg)
+![Segment Injection](images/segment-injection.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Aspect | Management Zone | Segment |

@@ -35,7 +35,7 @@ This notebook covers sensitive data discovery, OpenPipeline masking configuratio
 ## 1. Sensitive Data Discovery
 Before implementing masking, discover what sensitive data exists in your logs.
 
-![Sensitive Data Classification](images/sensitive-data-classification.svg)
+![Sensitive Data Classification](images/sensitive-data-classification.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Sensitive Data Classification:
@@ -136,7 +136,7 @@ fetch logs, from: now() - 1h
 ## 2. OpenPipeline Masking Configuration
 OpenPipeline provides built-in masking processors to protect sensitive data at ingestion time.
 
-![Masking Pipeline Flow](images/masking-pipeline.svg)
+![Masking Pipeline Flow](images/masking-pipeline.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 OpenPipeline Masking Flow:

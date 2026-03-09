@@ -76,7 +76,7 @@ Effective data organization in Grail enables:
 
 Grail organizes data hierarchically with tables (data types), buckets (storage containers), and segments (logical views):
 
-![Grail Data Model](images/grail-data-model.svg)
+![Grail Data Model](images/grail-data-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Examples |

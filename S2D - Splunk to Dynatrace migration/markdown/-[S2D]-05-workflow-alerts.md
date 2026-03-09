@@ -6,7 +6,7 @@
 
 While Davis Anomaly Detectors are preferred for continuous monitoring, some Splunk alerts are better suited for workflow-based alerting. This notebook explains when and how to use Dynatrace Workflows for alert migration.
 
-![Workflow vs Anomaly Detector](images/workflow-vs-anomaly-detector.svg)
+![Workflow vs Anomaly Detector](images/workflow-vs-anomaly-detector.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Feature | Anomaly Detector | Workflow |

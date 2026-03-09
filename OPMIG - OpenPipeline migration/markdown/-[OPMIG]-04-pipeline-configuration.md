@@ -58,7 +58,7 @@ https://{your-environment}.apps.dynatrace.com/ui/settings/openpipeline
 
 ### OpenPipeline UI Overview
 
-![OpenPipeline UI Overview](images/openpipeline-ui-overview.svg)
+![OpenPipeline UI Overview](images/openpipeline-ui-overview.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | UI Element | Purpose |
@@ -437,7 +437,7 @@ When adding a processor, you configure:
 3. **Processor definition**: What the processor does
 4. **Sample data**: Test data to validate
 
-![Processor Configuration Panel](images/processor-config-panel.svg)
+![Processor Configuration Panel](images/processor-config-panel.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Field | Purpose | Example |
@@ -574,7 +574,7 @@ Dynamic routing sends data to specific pipelines based on matching conditions.
 
 ### Route Evaluation Order
 
-![Dynamic Routing Flow](images/dynamic-routing.svg)
+![Dynamic Routing Flow](images/dynamic-routing.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Condition | Result |

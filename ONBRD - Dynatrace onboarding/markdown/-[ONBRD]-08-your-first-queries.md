@@ -31,7 +31,7 @@ Dynatrace Query Language (DQL) is how you access data in Grail. This notebook in
 ## 1. DQL Basics
 DQL is a **pipeline-based query language**—not SQL. Data flows through a series of commands connected by the pipe (`|`) operator.
 
-![DQL Pipeline](images/dql-pipeline.svg)
+![DQL Pipeline](images/dql-pipeline.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Command | Result |
 |-------|---------|--------|

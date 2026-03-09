@@ -54,7 +54,7 @@ This notebook introduces OpenPipeline, Dynatrace's unified data processing frame
 
 <a id="openpipeline-architecture"></a>
 ## 2. OpenPipeline Architecture
-![OpenPipeline Architecture](images/openpipeline-architecture.svg)
+![OpenPipeline Architecture](images/openpipeline-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Component | Function |

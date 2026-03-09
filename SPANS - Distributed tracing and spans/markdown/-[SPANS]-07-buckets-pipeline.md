@@ -1,6 +1,6 @@
 # 🏗️ Grail Buckets & OpenPipeline
 
-> **Series:** SPANS | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 03/05/2026
 
 ## Data Architecture and Processing for Distributed Traces
 This notebook covers Dynatrace Grail's bucket architecture for span storage, OpenPipeline configuration patterns, and data governance strategies.
@@ -17,8 +17,9 @@ This notebook covers Dynatrace Grail's bucket architecture for span storage, Ope
 6. [Transforming & Enriching Data](#transforming-enriching-data)
 7. [Routing to Different Buckets](#routing-to-different-buckets)
 8. [Sampling Strategies](#sampling-strategies)
-9. [Access Control Patterns](#access-control-patterns)
-10. [Best Practices Summary](#best-practices-summary)
+9. [Measuring Span Traffic per Application](#measuring-span-traffic)
+10. [Access Control Patterns](#access-control-patterns)
+11. [Best Practices Summary](#best-practices-summary)
 
 ---
 
@@ -35,7 +36,7 @@ Before starting this notebook, ensure you have:
 ## 1. Understanding Grail Buckets
 Grail stores observability data in **buckets** - logical containers that provide data isolation, retention control, and access management.
 
-![Grail Buckets Architecture](images/grail-buckets.svg)
+![Grail Buckets Architecture](images/grail-buckets.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Bucket | Retention | Purpose |
@@ -111,7 +112,7 @@ fetch spans, from:-1h
 ## 4. OpenPipeline Concepts
 **OpenPipeline** processes incoming telemetry **before** storage. It enables filtering, transformation, routing, and sampling of span data.
 
-![OpenPipeline Flow](images/openpipeline-flow.svg)
+![OpenPipeline Flow](images/openpipeline-flow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Purpose | Example |
@@ -128,7 +129,7 @@ fetch spans, from:-1h
 
 <a id="filtering-dropping-unwanted-spans"></a>
 ## 5. Filtering & Dropping Unwanted Spans
-![OpenPipeline Actions](images/openpipeline-actions.svg)
+![OpenPipeline Actions](images/openpipeline-actions.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Action | Purpose | Example Config |
@@ -389,11 +390,60 @@ fetch spans, from:-1h
 
 ---
 
+<a id="measuring-span-traffic"></a>
+## 9. Measuring Span Traffic per Application
+
+Understanding how much span data each application generates is critical for effective **data partitioning** and **cost allocation**. Every span has a `dt.ingest.size` attribute that records its byte size at ingestion. By extracting a metric from this field in OpenPipeline, you can track span traffic per application over time.
+
+### Step 1: Verify `dt.ingest.size` Exists
+
+First, confirm that spans carry the `dt.ingest.size` attribute:
+
+
+```dql
+// Verify dt.ingest.size is present on spans
+fetch spans, from:-1h
+| fieldsKeep span.name, dt.ingest.size
+| filter isNotNull(dt.ingest.size)
+| limit 10
+```
+
+### Step 2: Create a Metric Extraction Rule in OpenPipeline
+
+Navigate to **Settings > Process and contextualize > OpenPipeline > Spans** and create a metric extraction rule:
+
+1. Go to the **Pipelines** tab and create a new pipeline (e.g., `General Pipeline`)
+2. In the pipeline, click **Metric Extraction** and add a rule:
+   - **Metric key:** `span.ingest.size.by.app`
+   - **Value field:** `dt.ingest.size`
+   - **Dimension:** `primary_tags.app` (or your organization's app dimension)
+3. Go to **Dynamic Routing** and create a route that sends all spans to this pipeline
+4. Click **Save**
+
+> **Note:** The dimension field (`primary_tags.app`) varies by customer. Use whichever enrichment field identifies applications in your environment.
+
+### Step 3: Query Span Traffic per Application
+
+Once the metric is flowing (allow a few minutes after saving), query it:
+
+
+```dql
+// Span ingest volume per application (after metric extraction is configured)
+timeseries span_ingest = sum(span.ingest.size.by.app), from:-24h, by:{primary_tags.app}
+| fieldsAdd daily_gb = arraySum(span_ingest) / 1073741824
+| sort daily_gb desc
+```
+
+> **Why this matters:** Knowing which applications generate the most span traffic helps you make informed decisions about bucket partitioning, retention policies, sampling strategies, and cost attribution. See **ORGNZ-03: Bucket Strategy and Design** for the complete data partitioning best practice.
+
+
+---
+
 <a id="access-control-patterns"></a>
-## 9. Access Control Patterns
+## 10. Access Control Patterns
 Use bucket-based queries to implement access control patterns.
 
-![Bucket Access Control](images/bucket-access-control.svg)
+![Bucket Access Control](images/bucket-access-control.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Team/Role | Bucket Access | Retention |
@@ -458,6 +508,7 @@ In this notebook, you learned:
 ✅ **Filtering & dropping** unwanted spans (health checks, static assets)  
 ✅ **Transforming & enriching** data with computed fields  
 ✅ **Routing to buckets** by environment and sensitivity  
+✅ **Measuring span traffic** per application using OpenPipeline metric extraction  
 ✅ **Sampling strategies** for high-volume services  
 ✅ **Access control patterns** using bucket-based isolation  
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 360">
   <defs>
     <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#0f172a"/>
@@ -32,41 +32,68 @@
   <rect width="100%" height="100%" fill="url(#bgGrad3)"/>
 
   <!-- Title -->
-  <text x="250" y="35" text-anchor="middle" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="18" font-weight="600">Permission Hierarchy</text>
+  <text x="350" y="32" text-anchor="middle" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="18" font-weight="600">Permission Hierarchy</text>
+
+  <!-- Granularity labels -->
+  <text x="35" y="152" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">Broader</text>
+  <text x="35" y="167" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">scope</text>
+  <text x="35" y="125" fill="#64748b" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle">&#x2190;</text>
+
+  <text x="665" y="152" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">More</text>
+  <text x="665" y="167" fill="#64748b" font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">granular</text>
+  <text x="665" y="125" fill="#64748b" font-family="system-ui, sans-serif" font-size="20" text-anchor="middle">&#x2192;</text>
 
   <!-- Bucket Level -->
-  <rect x="125" y="60" width="250" height="55" rx="8" fill="url(#bucketLevelGrad)" filter="url(#shadow3)"/>
-  <text x="250" y="85" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Bucket Level</text>
-  <text x="250" y="103" text-anchor="middle" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="11">(broadest scope)</text>
+  <rect x="60" y="60" width="140" height="195" rx="8" fill="url(#bucketLevelGrad)" filter="url(#shadow3)"/>
+  <text x="130" y="105" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Bucket</text>
+  <text x="130" y="122" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Level</text>
+  <text x="130" y="145" text-anchor="middle" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="11">(broadest</text>
+  <text x="130" y="160" text-anchor="middle" fill="#fef3c7" font-family="system-ui, sans-serif" font-size="11">scope)</text>
 
-  <!-- Arrow -->
-  <line x1="250" y1="115" x2="250" y2="140" stroke="#475569" stroke-width="3" marker-end="url(#arrowDown)"/>
+  <!-- Arrow Bucket -> Table -->
+  <line x1="200" y1="157" x2="220" y2="157" stroke="#475569" stroke-width="3" marker-end="url(#arrowDown)"/>
 
   <!-- Table Level -->
-  <rect x="125" y="145" width="250" height="55" rx="8" fill="url(#tableLevelGrad)" filter="url(#shadow3)"/>
-  <text x="250" y="170" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Table Level</text>
-  <text x="250" y="188" text-anchor="middle" fill="#ccfbf1" font-family="system-ui, sans-serif" font-size="11">(logs, metrics, spans...)</text>
+  <rect x="225" y="75" width="140" height="165" rx="8" fill="url(#tableLevelGrad)" filter="url(#shadow3)"/>
+  <text x="295" y="112" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Table</text>
+  <text x="295" y="129" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Level</text>
+  <text x="295" y="152" text-anchor="middle" fill="#ccfbf1" font-family="system-ui, sans-serif" font-size="11">(logs, metrics,</text>
+  <text x="295" y="167" text-anchor="middle" fill="#ccfbf1" font-family="system-ui, sans-serif" font-size="11">spans...)</text>
 
-  <!-- Arrow -->
-  <line x1="250" y1="200" x2="250" y2="225" stroke="#475569" stroke-width="3" marker-end="url(#arrowDown)"/>
+  <!-- Arrow Table -> Record -->
+  <line x1="365" y1="157" x2="385" y2="157" stroke="#475569" stroke-width="3" marker-end="url(#arrowDown)"/>
 
   <!-- Record Level -->
-  <rect x="125" y="230" width="250" height="55" rx="8" fill="url(#recordLevelGrad)" filter="url(#shadow3)"/>
-  <text x="250" y="255" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Record Level</text>
-  <text x="250" y="273" text-anchor="middle" fill="#e9d5ff" font-family="system-ui, sans-serif" font-size="11">(by attributes, security context)</text>
+  <rect x="390" y="90" width="140" height="135" rx="8" fill="url(#recordLevelGrad)" filter="url(#shadow3)"/>
+  <text x="460" y="122" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Record</text>
+  <text x="460" y="139" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Level</text>
+  <text x="460" y="162" text-anchor="middle" fill="#e9d5ff" font-family="system-ui, sans-serif" font-size="11">(by attributes,</text>
+  <text x="460" y="177" text-anchor="middle" fill="#e9d5ff" font-family="system-ui, sans-serif" font-size="11">security context)</text>
 
-  <!-- Arrow -->
-  <line x1="250" y1="285" x2="250" y2="310" stroke="#475569" stroke-width="3" marker-end="url(#arrowDown)"/>
+  <!-- Arrow Record -> Field -->
+  <line x1="530" y1="157" x2="550" y2="157" stroke="#475569" stroke-width="3" marker-end="url(#arrowDown)"/>
 
   <!-- Field Level -->
-  <rect x="125" y="315" width="250" height="55" rx="8" fill="url(#fieldLevelGrad)" filter="url(#shadow3)"/>
-  <text x="250" y="340" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Field Level</text>
-  <text x="250" y="358" text-anchor="middle" fill="#fce7f3" font-family="system-ui, sans-serif" font-size="11">(most granular)</text>
+  <rect x="555" y="105" width="90" height="105" rx="8" fill="url(#fieldLevelGrad)" filter="url(#shadow3)"/>
+  <text x="600" y="140" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Field</text>
+  <text x="600" y="157" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Level</text>
+  <text x="600" y="180" text-anchor="middle" fill="#fce7f3" font-family="system-ui, sans-serif" font-size="11">(most</text>
+  <text x="600" y="195" text-anchor="middle" fill="#fce7f3" font-family="system-ui, sans-serif" font-size="11">granular)</text>
 
-  <!-- Granularity indicator -->
-  <text x="410" y="95" fill="#64748b" font-family="system-ui, sans-serif" font-size="24">↑</text>
-  <text x="395" y="120" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Broader</text>
+  <!-- Bottom descriptors -->
+  <rect x="60" y="275" width="140" height="52" rx="6" fill="#1e293b" stroke="#d97706" stroke-width="1"/>
+  <text x="130" y="296" text-anchor="middle" fill="#f59e0b" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Who can access</text>
+  <text x="130" y="312" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">which buckets?</text>
 
-  <text x="410" y="335" fill="#64748b" font-family="system-ui, sans-serif" font-size="24">↓</text>
-  <text x="388" y="360" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">More Granular</text>
+  <rect x="225" y="275" width="140" height="52" rx="6" fill="#1e293b" stroke="#0d9488" stroke-width="1"/>
+  <text x="295" y="296" text-anchor="middle" fill="#14b8a6" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Which data types</text>
+  <text x="295" y="312" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">can they query?</text>
+
+  <rect x="390" y="275" width="140" height="52" rx="6" fill="#1e293b" stroke="#7c3aed" stroke-width="1"/>
+  <text x="460" y="296" text-anchor="middle" fill="#8b5cf6" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Which records</text>
+  <text x="460" y="312" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">are visible?</text>
+
+  <rect x="555" y="275" width="90" height="52" rx="6" fill="#1e293b" stroke="#db2777" stroke-width="1"/>
+  <text x="600" y="296" text-anchor="middle" fill="#ec4899" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Which fields</text>
+  <text x="600" y="312" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">are shown?</text>
 </svg>

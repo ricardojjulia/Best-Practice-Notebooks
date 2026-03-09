@@ -44,7 +44,7 @@ By the end of this notebook, you will:
 
 ### OpenPipeline Architecture Overview
 
-![OpenPipeline Architecture](images/openpipeline-architecture.svg)
+![OpenPipeline Architecture](images/openpipeline-architecture.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Purpose | Components |
@@ -92,7 +92,7 @@ Understanding the fundamental differences helps you plan your migration effectiv
 
 ### Processing Stage Comparison
 
-![Classic vs OpenPipeline Processing](images/classic-vs-openpipeline.svg)
+![Classic vs OpenPipeline Processing](images/classic-vs-openpipeline.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Model | Flow | Key Difference |

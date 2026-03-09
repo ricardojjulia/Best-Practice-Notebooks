@@ -43,7 +43,7 @@ Understanding how data flows through OpenPipeline is essential for designing eff
 
 ### Complete Data Flow
 
-![OpenPipeline Architecture](images/openpipeline-architecture.svg)
+![OpenPipeline Architecture](images/openpipeline-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Components | Description |
@@ -415,7 +415,7 @@ Understanding WHEN entity fields become available is critical for pipeline desig
 
 ### Processing Stage Timeline
 
-![Entity Field Availability Timeline](images/entity-field-timeline.svg)
+![Entity Field Availability Timeline](images/entity-field-timeline.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Entity Fields | What You Can Do |
@@ -598,7 +598,7 @@ fetch logs, from: now() - 24h
 ## Understanding Processing Order
 The order of processing within a pipeline is critical:
 
-![Processing Stage Order](images/processing-order.svg)
+![Processing Stage Order](images/processing-order.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Order | Stage | Purpose |

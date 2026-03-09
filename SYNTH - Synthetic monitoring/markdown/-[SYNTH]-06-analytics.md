@@ -409,7 +409,7 @@ fetch bizevents, from: now() - 30m
 
 ### Dashboard Layout
 
-![Dashboard Layout](images/dashboard-layout.svg)
+![Dashboard Layout](images/dashboard-layout.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Row | Tiles | Content |
 |-----|-------|---------|

@@ -6,7 +6,7 @@
 
 This notebook series provides comprehensive guidance for migrating monitoring capabilities from Splunk to Dynatrace. Whether you're moving dashboards, alerts, reports, or log queries, these notebooks will help you understand the key differences between platforms and make informed translation decisions.
 
-![Migration Overview](images/migration-overview.svg)
+![Migration Overview](images/migration-overview.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Source | Target | Coverage |

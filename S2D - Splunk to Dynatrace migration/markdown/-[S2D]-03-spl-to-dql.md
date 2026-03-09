@@ -6,7 +6,7 @@
 
 This notebook provides a comprehensive guide for translating Splunk SPL (Search Processing Language) queries to Dynatrace DQL (Dynatrace Query Language). While both languages share similar concepts, their syntax and capabilities differ significantly.
 
-![Query Translation Flow](images/query-translation-flow.svg)
+![Query Translation Flow](images/query-translation-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | SPL Step | DQL Equivalent | Notes |

@@ -6,7 +6,7 @@
 
 This notebook explains how to translate Splunk alert conditions into Dynatrace Davis Anomaly Detectors. Understanding the fundamental differences between scheduled queries and continuous monitoring is essential for successful alert migration.
 
-![Splunk vs Dynatrace Alerting](images/splunk-vs-dynatrace-alerting.svg)
+![Splunk vs Dynatrace Alerting](images/splunk-vs-dynatrace-alerting.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Aspect | Splunk | Dynatrace |

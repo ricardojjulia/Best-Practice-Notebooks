@@ -36,7 +36,7 @@ Triggers determine when workflows execute. This notebook covers all trigger type
 | **On-Demand** | Manual execution or API call | Testing, ad-hoc automation |
 | **Event** | Business/custom event ingested | Business process automation |
 
-![Trigger Types Overview](images/trigger-types-overview.svg)
+![Trigger Types Overview](images/trigger-types-overview.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Trigger | Source | Use Case |
@@ -99,7 +99,7 @@ When a Davis problem triggers, you get access to:
 | Problem updated | Root cause/impact changed | Update incident notes |
 | Problem closed | Problem resolved | Close incident, send summary |
 
-![Davis Problem Lifecycle](images/davis-problem-lifecycle.svg)
+![Davis Problem Lifecycle](images/davis-problem-lifecycle.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | State | Description | Typical Workflow Actions |

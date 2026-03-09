@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 03/05/2026
 
 ## Overview
 
@@ -57,6 +57,8 @@ By the end of this notebook, you will:
 | **Query scope** | Storage-level partitioning | Query-time filtering |
 
 > **Key insight**: Buckets store data; segments filter it. Use buckets for retention and cost allocation, segments for dynamic data views.
+
+> **Performance benefit**: Applying a segment also reduces the **scanned bytes** of your queries. Since segments inject filter conditions at query time, only matching data is scanned — meaning fewer bytes read, lower cost, and faster results. This is especially impactful on high-volume buckets where unfiltered queries might hit the 500 GB scan limit.
 
 <a id="segment-use-cases"></a>
 ## Segment Use Cases

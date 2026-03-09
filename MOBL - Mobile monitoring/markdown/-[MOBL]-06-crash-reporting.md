@@ -36,7 +36,7 @@ Mobile app crashes are the single most damaging event for user retention and app
 
 When a mobile app crashes, the Dynatrace SDK captures the crash details and sends them to the backend for processing. The process differs slightly between handled exceptions and unhandled crashes, but the overall flow is the same.
 
-![Crash Reporting Flow](images/crash-reporting-flow.svg)
+![Crash Reporting Flow](images/crash-reporting-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Stage | Description |

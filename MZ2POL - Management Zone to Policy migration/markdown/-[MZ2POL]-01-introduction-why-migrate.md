@@ -72,7 +72,7 @@ The latest Dynatrace platform uses **Grail** as its data lakehouse. Grail:
 ## 2. The New Access Control Model
 The modern Dynatrace access control framework is based on **ABAC (Attribute-Based Access Control)** and consists of three key components:
 
-![MZ vs New Model](images/mz-vs-new-model.svg)
+![MZ vs New Model](images/mz-vs-new-model.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Aspect | Management Zones | Policies + Boundaries + Segments |

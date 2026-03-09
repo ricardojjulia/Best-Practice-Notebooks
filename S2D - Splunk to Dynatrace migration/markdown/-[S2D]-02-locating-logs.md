@@ -8,7 +8,7 @@ Before migrating Splunk objects such as dashboards, alerts, or reports, it is es
 
 This notebook describes the process of determining where the required logs can be found, then validating whether they are present in Dynatrace.
 
-![Log Discovery Process](images/log-discovery-process.svg)
+![Log Discovery Process](images/log-discovery-process.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Output |

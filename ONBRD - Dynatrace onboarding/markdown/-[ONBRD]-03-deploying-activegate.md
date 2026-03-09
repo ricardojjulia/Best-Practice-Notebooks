@@ -43,7 +43,7 @@ ActiveGate is a proxy and routing component that connects your environment to Dy
 
 > **Note:** This notebook covers Environment ActiveGate for Dynatrace SaaS.
 
-![ActiveGate Architecture](images/activegate-architecture.svg)
+![ActiveGate Architecture](images/activegate-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Zone | Component | Connection |
 |------|-----------|------------|
@@ -88,7 +88,7 @@ ActiveGate is a proxy and routing component that connects your environment to Dy
 
 ### Decision Tree
 
-![ActiveGate Decision Tree](images/activegate-decision-tree.svg)
+![ActiveGate Decision Tree](images/activegate-decision-tree.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | Yes → | No → |
 |----------|-------|------|
@@ -183,7 +183,7 @@ For production environments, deploy **at least 2 ActiveGates per network zone**:
 
 Deploy ActiveGates based on network segmentation:
 
-![ActiveGate Placement](images/activegate-placement.svg)
+![ActiveGate Placement](images/activegate-placement.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Zone Type | ActiveGate Location | OneAgent Connection |
 |-----------|--------------------|-----------------|
@@ -310,7 +310,7 @@ Deploying ActiveGate in Kubernetes requires careful consideration of where, how,
 
 ### Deployment Architecture
 
-![ActiveGate Kubernetes Deployment](images/activegate-k8s-deployment.svg)
+![ActiveGate Kubernetes Deployment](images/activegate-k8s-deployment.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Purpose |
 |-----------|----------|---------|

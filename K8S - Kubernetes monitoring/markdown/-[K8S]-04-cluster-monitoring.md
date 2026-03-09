@@ -110,7 +110,7 @@ timeseries avgDiskUsage = avg(dt.host.disk.used.percent), from:-1h, by:{dt.entit
 
 ### Utilization vs. Allocation
 
-![Node Resource Utilization Model](images/node-capacity-utilization.svg)
+![Node Resource Utilization Model](images/node-capacity-utilization.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Description |

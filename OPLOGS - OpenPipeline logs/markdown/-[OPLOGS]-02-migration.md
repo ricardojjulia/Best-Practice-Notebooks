@@ -208,7 +208,7 @@ fetch logs, from: now() - 1h
 
 <a id="common-migration-patterns"></a>
 ## 5. Common Migration Patterns
-![Migration Patterns](images/migration-patterns.svg)
+![Migration Patterns](images/migration-patterns.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pattern | Processor | Matcher | Action |

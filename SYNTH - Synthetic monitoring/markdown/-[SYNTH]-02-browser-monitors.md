@@ -172,7 +172,7 @@ fetch dt.synthetic.events, from: now() - 24h
 
 Browser monitors capture detailed timing metrics based on the W3C Navigation Timing API:
 
-![Navigation Timing](images/navigation-timing.svg)
+![Navigation Timing](images/navigation-timing.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Phase | Metric | Description |
 |-------|--------|-------------|

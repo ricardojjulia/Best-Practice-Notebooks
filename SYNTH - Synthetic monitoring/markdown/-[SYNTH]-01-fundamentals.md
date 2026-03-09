@@ -36,7 +36,7 @@ This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive
 - **SLA Validation**: Verify service level agreements are being met
 - **Third-Party Dependency Monitoring**: Test external APIs and services
 
-![Synthetic Monitoring Flow](images/synthetic-monitoring-flow.svg)
+![Synthetic Monitoring Flow](images/synthetic-monitoring-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Component | Description |
 |-------|-----------|-------------|

@@ -44,7 +44,7 @@ The Dynatrace Operator manages the complete lifecycle of Dynatrace monitoring co
 
 ### Operator Architecture
 
-![DynaKube Operator Architecture](images/dynakube-operator-architecture.svg)
+![DynaKube Operator Architecture](images/dynakube-operator-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Type | Function |

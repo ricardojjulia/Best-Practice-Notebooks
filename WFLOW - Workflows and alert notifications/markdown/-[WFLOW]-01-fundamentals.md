@@ -121,7 +121,7 @@ Dynamic values using Jinja2 syntax:
 
 ### Visual: Workflow Execution Flow
 
-![Workflow Execution Flow](images/workflow-execution-flow.svg)
+![Workflow Execution Flow](images/workflow-execution-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description | Examples |

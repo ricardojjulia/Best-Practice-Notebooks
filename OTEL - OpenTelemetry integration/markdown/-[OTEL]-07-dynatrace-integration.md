@@ -89,7 +89,7 @@ Find your environment ID:
 
 ### Token Format
 
-![Dynatrace API Token Structure](images/dynatrace-token-format.svg)
+![Dynatrace API Token Structure](images/dynatrace-token-format.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Part | Description | Length |

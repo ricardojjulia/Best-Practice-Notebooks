@@ -35,7 +35,7 @@ This notebook explores how Dynatrace enriches logs with entity context (hosts, p
 
 Dynatrace automatically enriches logs with entity context:
 
-![Entity Topology](images/entity-topology.svg)
+![Entity Topology](images/entity-topology.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Entity Topology Model:

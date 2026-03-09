@@ -35,7 +35,7 @@ This notebook covers how to enrich mobile sessions with custom session propertie
 
 ## 1. Custom Session Properties
 
-![Session Properties Architecture](images/session-properties-architecture.svg)
+![Session Properties Architecture](images/session-properties-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Description |
@@ -156,7 +156,7 @@ Dynatrace.identifyUser(null)
 
 ## 3. Data Collection Levels
 
-![Data Privacy Collection Levels](images/data-privacy-collection-levels.svg)
+![Data Privacy Collection Levels](images/data-privacy-collection-levels.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Description | Data Captured |

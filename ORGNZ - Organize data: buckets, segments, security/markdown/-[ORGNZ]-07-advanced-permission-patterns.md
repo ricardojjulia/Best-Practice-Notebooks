@@ -48,7 +48,7 @@ By the end of this notebook, you will:
 ## Record-Level Permissions
 Record-level permissions filter data at query time based on record attributes:
 
-![Record-Level Permissions Flow](images/record-level-permissions.svg)
+![Record-Level Permissions Flow](images/record-level-permissions.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action |
@@ -246,7 +246,7 @@ This boundary can then be applied alongside any policy (logs access, metrics acc
 ## Enterprise Architecture Patterns
 ### Tiered Access Model
 
-![Tiered Access Model](images/tiered-access-model.svg)
+![Tiered Access Model](images/tiered-access-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tier | Role | Access |

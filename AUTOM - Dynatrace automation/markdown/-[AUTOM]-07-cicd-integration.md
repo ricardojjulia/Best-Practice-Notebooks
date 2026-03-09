@@ -85,7 +85,7 @@ By the end of this notebook, you will:
 | 6 | Merge triggers deploy |
 -->
 
-![GitOps Workflow](images/autom-gitops-workflow.svg)
+![GitOps Workflow](images/autom-gitops-workflow.png)
 
 ---
 

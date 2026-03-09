@@ -41,7 +41,7 @@ Integrate Dynatrace workflows with enterprise incident management platforms. Thi
 
 ### Integration Flow
 
-![Incident Management Integration Flow](images/incident-management-flow.svg)
+![Incident Management Integration Flow](images/incident-management-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |

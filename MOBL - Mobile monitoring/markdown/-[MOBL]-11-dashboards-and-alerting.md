@@ -37,7 +37,7 @@ Effective mobile monitoring requires more than raw telemetry -- you need dashboa
 
 A well-designed mobile dashboard answers the question "Is our mobile app healthy right now?" at a glance. Rather than cramming every metric onto a single screen, organize tiles by purpose: health indicators at the top, trends in the middle, and drill-down tables at the bottom.
 
-![Mobile Dashboard Layout](images/mobile-dashboard-layout.svg)
+![Mobile Dashboard Layout](images/mobile-dashboard-layout.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Row | Tile | Type | Purpose |
@@ -108,7 +108,7 @@ Beyond crashes, performance directly impacts user engagement. Slow app launches,
 
 The alerting flow for mobile performance follows a standard pattern from metric detection through notification:
 
-![Mobile Alerting Flow](images/mobile-alerting-flow.svg)
+![Mobile Alerting Flow](images/mobile-alerting-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Stage | Description |

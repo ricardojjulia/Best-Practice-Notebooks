@@ -1,6 +1,6 @@
 # Architecture and Design
 
-> **Series:** M2S | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Architecture design is critical for a successful migration. The key difference between Managed and SaaS is connectivity—your monitored infrastructure must reach Dynatrace SaaS endpoints.
 
@@ -63,7 +63,7 @@ By the end of this notebook, you will:
 | Cloud | SaaS Cluster | Receives all data |
 -->
 
-![Network Architecture](images/m2s-network-architecture.svg)
+![Network Architecture](images/m2s-network-architecture.png)
 
 ---
 
@@ -127,6 +127,17 @@ curl -v https://{tenant-id}.live.dynatrace.com:443
 <a id="network-zones"></a>
 ## 3. Network Zones
 Network Zones provide optimized routing of telemetry data from OneAgents to ActiveGates to SaaS. This is especially important when migrating from Managed.
+
+![Network Zones](images/m2s-network-zones.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Component | Role |
+|-----------|------|
+| Network Zone | Groups ActiveGates and OneAgents by network location |
+| Primary Zone | Default routing target for agents in the zone |
+| Alternative Zone | Failover if primary zone ActiveGates are unavailable |
+For environments where SVG doesn't render
+-->
 
 ### 3.1 What Are Network Zones?
 
@@ -224,7 +235,7 @@ sudo /opt/dynatrace/oneagent/agent/tools/oneagentctl --set-network-zone=datacent
 | Synthetic AG | Private synthetic locations |
 -->
 
-![ActiveGate Deployment](images/m2s-activegate-deployment.svg)
+![ActiveGate Deployment](images/m2s-activegate-deployment.png)
 
 ---
 

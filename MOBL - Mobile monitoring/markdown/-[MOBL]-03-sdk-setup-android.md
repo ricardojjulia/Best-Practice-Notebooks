@@ -67,7 +67,7 @@ While in the Dynatrace UI, review these settings:
 
 The Dynatrace Android Gradle plugin handles bytecode instrumentation at build time. It automatically instruments Activity and Fragment lifecycle events, network requests, and UI interactions without requiring code changes.
 
-![Android Gradle Plugin](images/android-gradle-plugin.svg)
+![Android Gradle Plugin](images/android-gradle-plugin.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 **Dynatrace Android Gradle Plugin Build Flow:**

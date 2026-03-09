@@ -252,7 +252,7 @@ The CloudFoundry query above creates three variables from process group tags:
 
 Use these variables across **multiple includes** to build a segment that filters both entity and signal data:
 
-![Multi-Include Segment Pattern](images/multi-include-segment-pattern.svg)
+![Multi-Include Segment Pattern](images/multi-include-segment-pattern.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Include Type | Filter | Category |

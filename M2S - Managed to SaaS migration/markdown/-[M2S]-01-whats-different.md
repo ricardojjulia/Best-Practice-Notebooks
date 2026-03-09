@@ -1,6 +1,6 @@
 # What's Different in SaaS
 
-> **Series:** M2S | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
+> **Series:** M2S | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Congratulations on your new Dynatrace SaaS tenant! This notebook series guides you through migrating your monitoring from Managed to SaaS.
 
@@ -106,7 +106,7 @@ These capabilities are only available on your new SaaS tenant:
 | Alerting | Classic alerts | Workflows |
 -->
 
-![SaaS Architecture](images/m2s-saas-benefits.svg)
+![SaaS Architecture](images/m2s-saas-benefits.png)
 
 ---
 
@@ -317,3 +317,7 @@ In this notebook, you learned:
 ---
 
 *Continue to **M2S-02: Migration Framework Overview** to learn about the structured approach to migration.*
+
+---
+
+<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>

@@ -39,7 +39,7 @@ The OTel Collector can be deployed in various patterns depending on your infrast
 
 ### Architecture Patterns
 
-![Collector Deployment Modes](images/collector-deployment-modes.svg)
+![Collector Deployment Modes](images/collector-deployment-modes.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 **Agent Mode (DaemonSet):**

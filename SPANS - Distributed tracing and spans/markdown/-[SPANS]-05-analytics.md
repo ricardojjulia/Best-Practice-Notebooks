@@ -30,7 +30,7 @@ Before starting this notebook, ensure you have:
 ## 1. Time-Series with makeTimeseries
 Use `makeTimeseries` to create time-series data for visualization and trend analysis.
 
-![Timeseries Analytics](images/timeseries-analytics.svg)
+![Timeseries Analytics](images/timeseries-analytics.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Function | Purpose | makeTimeseries Support |

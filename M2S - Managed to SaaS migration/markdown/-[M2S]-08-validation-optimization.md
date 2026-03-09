@@ -1,6 +1,6 @@
 # Validation and Optimization
 
-> **Series:** M2S | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
+> **Series:** M2S | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Validation is the final and most critical phase. A migration isn't complete until all success criteria are verified and stakeholders sign off.
 
@@ -65,7 +65,7 @@ By the end of this notebook, you will:
 | Dashboards | All tiles showing data |
 -->
 
-![Validation Checkpoints](images/m2s-validation-checkpoints.svg)
+![Validation Checkpoints](images/m2s-validation-checkpoints.png)
 
 ---
 
@@ -135,12 +135,7 @@ fetch dt.entity.service
 
 ### 2.4 ActiveGate Validation
 
-```dql
-// ActiveGate validation - use the Entities API v2 or Settings API
-// Note: ActiveGates are not directly queryable via DQL fetch
-// Use: GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")
-// Or check the ActiveGates page in the Dynatrace UI
-```
+> **Note:** ActiveGates are not directly queryable via DQL. Use the Entities API v2 (`GET /api/v2/entities?entitySelector=type("ENVIRONMENT_ACTIVE_GATE")`) or check the **ActiveGates** page in the Dynatrace UI to validate ActiveGate connectivity.
 
 ### 2.5 Validation Comparison Table
 
@@ -211,11 +206,12 @@ fetch spans, from:-1h
 ### 3.4 Data Gaps Detection
 
 ```dql
-// Check for metric data continuity over time
-// Use timeseries to query metrics - count hosts with data per time bucket
+// Check metric data continuity — count reporting hosts per 5-minute bucket
+// Drops in host count indicate gaps in metric delivery
 timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
+| fieldsAdd hasData = arrayAvg(avgCpu)
+| filter isNotNull(hasData)
 | summarize hostsWithData = count()
-| limit 1
 ```
 
 ---

@@ -55,7 +55,7 @@ This notebook covers deploying and managing private synthetic locations (ActiveG
 ## 2. Architecture
 Private synthetic locations use ActiveGates deployed within your infrastructure to execute monitors against internal applications:
 
-![Private Location Architecture](images/private-location-architecture.svg)
+![Private Location Architecture](images/private-location-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Function |
 |-----------|----------|----------|

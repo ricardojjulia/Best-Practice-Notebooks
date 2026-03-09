@@ -33,7 +33,7 @@ This notebook covers aggregation functions, time series analysis, statistical pa
 
 <a id="aggregation-functions"></a>
 ## 1. Aggregation Functions
-![Aggregation Functions](images/aggregation-functions.svg)
+![Aggregation Functions](images/aggregation-functions.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Aggregation Functions Reference:

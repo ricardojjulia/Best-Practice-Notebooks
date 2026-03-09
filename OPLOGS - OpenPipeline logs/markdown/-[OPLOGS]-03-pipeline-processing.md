@@ -37,7 +37,7 @@ Parsing extracts structured fields from unstructured log content **at ingestion 
 
 ### DPL (Dynatrace Pattern Language) Matchers
 
-![DPL Matchers](images/dpl-matchers.svg)
+![DPL Matchers](images/dpl-matchers.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 DPL Matchers Reference:

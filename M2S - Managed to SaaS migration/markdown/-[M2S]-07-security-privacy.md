@@ -1,6 +1,6 @@
 # Security and Privacy
 
-> **Series:** M2S | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** M2S | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 Security is often the primary concern when moving to SaaS. This notebook addresses the security model, compliance, and privacy considerations for Dynatrace SaaS.
 
@@ -64,7 +64,7 @@ By the end of this notebook, you will:
 | User Management | Customer |
 -->
 
-![Shared Responsibility Model](images/m2s-security-model.svg)
+![Shared Responsibility Model](images/m2s-security-model.png)
 
 ---
 

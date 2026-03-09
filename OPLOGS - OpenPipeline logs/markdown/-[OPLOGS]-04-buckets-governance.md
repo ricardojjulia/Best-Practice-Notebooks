@@ -56,7 +56,7 @@ fetch logs, from: now() - 24h
 ## 2. Strategic Bucket Design
 Design buckets based on **access patterns**, **retention requirements**, and **cost optimization**.
 
-![Bucket Governance Strategy](images/bucket-governance.svg)
+![Bucket Governance Strategy](images/bucket-governance.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Bucket Governance Strategy:

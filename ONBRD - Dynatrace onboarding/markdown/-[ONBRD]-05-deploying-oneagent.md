@@ -39,7 +39,7 @@ OneAgent is Dynatrace's unified monitoring agent that:
 | **Distributed tracing** | End-to-end transaction visibility |
 | **Log collection** | Collects and forwards log data |
 
-![OneAgent Architecture](images/oneagent-architecture.svg)
+![OneAgent Architecture](images/oneagent-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Function |
 |-----------|----------|----------|
@@ -145,7 +145,7 @@ For Kubernetes environments, use the Dynatrace Operator—the recommended approa
 
 The Dynatrace Operator supports multiple deployment modes. Choose based on your requirements:
 
-![OneAgent Deployment Modes](images/oneagent-deployment-modes.svg)
+![OneAgent Deployment Modes](images/oneagent-deployment-modes.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Mode | Description | Use Case |
 |------|-------------|----------|

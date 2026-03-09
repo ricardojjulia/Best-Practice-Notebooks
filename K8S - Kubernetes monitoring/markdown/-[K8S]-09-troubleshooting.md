@@ -33,7 +33,7 @@ When monitoring doesn't work as expected, systematic troubleshooting is essentia
 ## 1. Troubleshooting Methodology
 ### Systematic Approach
 
-![Troubleshooting Methodology](images/troubleshooting-methodology.svg)
+![Troubleshooting Methodology](images/troubleshooting-methodology.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Purpose |

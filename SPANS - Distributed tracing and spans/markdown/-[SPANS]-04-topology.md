@@ -33,7 +33,7 @@ Before starting this notebook, ensure you have:
 ## 1. Understanding Service Topology
 Service topology shows how your services connect and communicate:
 
-![Service Topology](images/service-topology.svg)
+![Service Topology](images/service-topology.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Services | Function |
@@ -206,7 +206,7 @@ fetch spans, from:-1h
 ## 5. Async Messaging Flows
 Analyze asynchronous messaging patterns using PRODUCER and CONSUMER spans:
 
-![Async Messaging Flow](images/async-messaging.svg)
+![Async Messaging Flow](images/async-messaging.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Span Kind | Service | Action | Destination |
@@ -376,7 +376,7 @@ fetch spans, from:-1h
 ## 8. Critical Path Analysis
 Identify the services and operations that contribute most to end-to-end latency:
 
-![Critical Path Analysis](images/critical-path.svg)
+![Critical Path Analysis](images/critical-path.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Service | Duration | % of Total | Priority |

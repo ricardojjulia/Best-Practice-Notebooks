@@ -185,7 +185,7 @@ fetch dt.entity.service
 ## 4. Migration Priority Matrix
 ### Prioritize Based on Impact and Complexity
 
-![Migration Phases](images/migration-phases.svg)
+![Migration Phases](images/migration-phases.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Priority | Criteria | Examples |

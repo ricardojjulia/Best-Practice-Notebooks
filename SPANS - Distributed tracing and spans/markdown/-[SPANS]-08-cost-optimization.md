@@ -35,7 +35,7 @@ Before starting this notebook, ensure you have:
 ## 1. Understanding Query Costs
 DQL queries consume DDUs (Davis Data Units) based on several factors:
 
-![Query Cost Optimization](images/query-cost-optimization.svg)
+![Query Cost Optimization](images/query-cost-optimization.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Cost Factor | Impact | Optimization |
@@ -103,7 +103,7 @@ Filter on **indexed fields** for best query performance. These fields have optim
 
 ### Commonly Indexed Span Fields
 
-![Indexed vs Non-Indexed Fields](images/indexed-fields.svg)
+![Indexed vs Non-Indexed Fields](images/indexed-fields.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Field | Type | Notes |
@@ -190,7 +190,7 @@ fetch spans, from:-1h
 ## 5. Time Range Optimization
 Always use the smallest time range that meets your needs.
 
-![Time Range Optimization](images/time-range-optimization.svg)
+![Time Range Optimization](images/time-range-optimization.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Time Range | Relative Cost | Use Case |

@@ -89,7 +89,7 @@ Dynatrace auto-instrumentation capabilities differ between platforms and UI fram
 
 Understanding the lifecycle of a user action is critical for interpreting duration metrics and troubleshooting slow interactions.
 
-![User Action Lifecycle](images/user-action-lifecycle.svg)
+![User Action Lifecycle](images/user-action-lifecycle.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Phase | Description |

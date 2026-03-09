@@ -97,7 +97,7 @@ Dynatrace offers two visualization tools:
 
 ### Visualization Types
 
-![Visualization Guide](images/visualization-guide.svg)
+![Visualization Guide](images/visualization-guide.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Show This | Use This Tile |
 |-----------|---------------|
@@ -113,7 +113,7 @@ Dynatrace offers two visualization tools:
 
 <a id="dashboard-patterns"></a>
 ## 4. Dashboard Patterns
-![Dashboard Patterns](images/dashboard-patterns.svg)
+![Dashboard Patterns](images/dashboard-patterns.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pattern | Use Case |
 |---------|----------|

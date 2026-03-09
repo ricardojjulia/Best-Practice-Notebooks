@@ -1,6 +1,6 @@
 # Planning and Assessment
 
-> **Series:** M2S | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 02/06/2026
+> **Series:** M2S | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 03/02/2026
 
 The Plan phase is critical—most migration problems stem from incomplete discovery or unclear strategy. This notebook guides you through systematic planning.
 
@@ -95,7 +95,7 @@ Or navigate in the Dynatrace UI:
 | Users | Document roles and permissions |
 -->
 
-![Discovery Checklist](images/m2s-discovery-checklist.svg)
+![Discovery Checklist](images/m2s-discovery-checklist.png)
 
 ---
 

@@ -79,7 +79,7 @@ OpenTelemetry is a Cloud Native Computing Foundation (CNCF) project, formed from
 
 Dynatrace supports using both OneAgent and OTel together:
 
-![Hybrid Instrumentation](images/hybrid-instrumentation.svg)
+![Hybrid Instrumentation](images/hybrid-instrumentation.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Function |
@@ -97,7 +97,7 @@ For environments where SVG doesn't render
 ## 3. Core Components
 ### OpenTelemetry Architecture
 
-![OpenTelemetry Architecture](images/otel-architecture.svg)
+![OpenTelemetry Architecture](images/otel-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Role |

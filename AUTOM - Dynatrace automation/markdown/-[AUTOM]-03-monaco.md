@@ -354,7 +354,7 @@ delete:
 | 6 | monaco deploy | Apply changes |
 -->
 
-![Monaco Workflow](images/autom-monaco-workflow.svg)
+![Monaco Workflow](images/autom-monaco-workflow.png)
 
 ---
 

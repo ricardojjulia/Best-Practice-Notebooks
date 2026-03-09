@@ -36,7 +36,7 @@ This notebook covers DQL query syntax, filtering, string matching, and DPL (Dyna
 ## 1. DQL Fundamentals
 ### Query Structure
 
-![DQL Pipeline Model](images/dql-pipeline.svg)
+![DQL Pipeline Model](images/dql-pipeline.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 DQL Pipeline Model:

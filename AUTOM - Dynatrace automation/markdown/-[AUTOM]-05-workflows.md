@@ -78,7 +78,7 @@ By the end of this notebook, you will:
 | Variables | Data passed between tasks |
 -->
 
-![Workflow Architecture](images/autom-workflow-architecture.svg)
+![Workflow Architecture](images/autom-workflow-architecture.png)
 
 ### Triggers
 

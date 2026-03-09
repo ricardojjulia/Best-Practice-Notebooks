@@ -471,7 +471,7 @@ Range: 1.0 (lowest) to 5.0 (highest)
 ## Defining Migration Waves
 Organize your migration into manageable waves based on priority scores.
 
-![OpenPipeline Migration Phases](images/migration-phases.svg)
+![OpenPipeline Migration Phases](images/migration-phases.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Phase | Focus | Notebooks |

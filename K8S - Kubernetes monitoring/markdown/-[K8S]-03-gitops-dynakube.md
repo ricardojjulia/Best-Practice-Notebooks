@@ -42,7 +42,7 @@ GitOps enables declarative, version-controlled management of your Dynatrace moni
 
 ### GitOps Workflow for DynaKube
 
-![GitOps Workflow](images/gitops-workflow.svg)
+![GitOps Workflow](images/gitops-workflow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Component |

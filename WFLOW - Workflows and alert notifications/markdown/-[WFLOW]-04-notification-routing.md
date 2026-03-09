@@ -114,7 +114,7 @@ tasks:
 | **MEDIUM** | Slack #alerts |
 | **LOW** | Slack #alerts (business hours only) |
 
-![Severity-Based Notification Routing](images/notification-routing.svg)
+![Severity-Based Notification Routing](images/notification-routing.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Severity | Channel | Action |

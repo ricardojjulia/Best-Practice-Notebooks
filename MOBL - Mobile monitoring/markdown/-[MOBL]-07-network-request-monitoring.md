@@ -79,7 +79,7 @@ The SDK batches captured data and sends it to the Dynatrace cluster at regular i
 
 Understanding the network conditions under which requests are made is critical for diagnosing performance issues. A request that takes 3 seconds over a 2G connection is expected, but the same latency over WiFi signals a backend problem.
 
-![Network Request Waterfall](images/network-request-waterfall.svg)
+![Network Request Waterfall](images/network-request-waterfall.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Phase | Description | Typical Duration |
@@ -147,7 +147,7 @@ A single network request goes through multiple phases, each of which can contrib
 
 One of the most powerful features of Dynatrace mobile monitoring is the ability to correlate a network request on the mobile device with the corresponding backend service trace. This creates end-to-end visibility from the user's finger tap to the database query.
 
-![Mobile-Backend Correlation](images/mobile-backend-correlation.svg)
+![Mobile-Backend Correlation](images/mobile-backend-correlation.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |

@@ -49,7 +49,7 @@ Kubernetes events are first-class objects that record what happened in the clust
 
 ### Event Lifecycle
 
-![Kubernetes Events & Logs Flow](images/k8s-event-log-flow.svg)
+![Kubernetes Events & Logs Flow](images/k8s-event-log-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |

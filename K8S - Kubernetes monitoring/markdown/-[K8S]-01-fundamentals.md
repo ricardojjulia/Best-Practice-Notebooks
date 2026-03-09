@@ -74,7 +74,7 @@ Dynatrace monitors Kubernetes through multiple components:
 
 ### Data Flow
 
-![Kubernetes Monitoring Data Flow](images/k8s-data-flow.svg)
+![Kubernetes Monitoring Data Flow](images/k8s-data-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Function |
@@ -103,7 +103,7 @@ Dynatrace creates entities for each Kubernetes resource and maintains relationsh
 
 ### Entity Relationships
 
-![Kubernetes Entity Relationships](images/k8s-entity-relationships.svg)
+![Kubernetes Entity Relationships](images/k8s-entity-relationships.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Parent Entity | Relationship | Child Entity |

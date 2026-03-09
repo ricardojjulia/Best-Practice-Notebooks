@@ -36,7 +36,7 @@ Setting up IAM before deploying OneAgent or inviting users ensures:
 | **Offboarding** | Disabling IdP account revokes Dynatrace access |
 | **Compliance** | Meet security requirements from the start |
 
-![Recommended Onboarding Order](images/onboarding-order.svg)
+![Recommended Onboarding Order](images/onboarding-order.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Description |
 |------|-------------|
@@ -59,7 +59,7 @@ Dynatrace supports multiple authentication methods:
 
 ### Authentication Flow
 
-![SAML Authentication Flow](images/saml-auth-flow.svg)
+![SAML Authentication Flow](images/saml-auth-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Description |
 |------|-------------|
@@ -134,7 +134,7 @@ Before enabling SSO for all users:
 
 Dynatrace uses a policy-based access control model with the following permission levels:
 
-![Permission Hierarchy](images/permission-hierarchy.svg)
+![Permission Hierarchy](images/permission-hierarchy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Access |
 |-------|--------|

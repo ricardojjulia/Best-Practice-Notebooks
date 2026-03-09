@@ -87,7 +87,7 @@ Visual decision trees for diagnosing and resolving common OpenPipeline issues.
 
 ### Decision Tree 1: Logs Not Appearing
 
-![Troubleshooting Decision Tree](images/troubleshooting-decision-tree.svg)
+![Troubleshooting Decision Tree](images/troubleshooting-decision-tree.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Question | If No | If Yes |
@@ -102,7 +102,7 @@ Visual decision trees for diagnosing and resolving common OpenPipeline issues.
 
 ### Decision Tree 2: Parsing Failures
 
-![Parsing Failures Decision Tree](images/decision-tree-parsing.svg)
+![Parsing Failures Decision Tree](images/decision-tree-parsing.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Question | If Yes (✓) | If No (✗) |
@@ -117,7 +117,7 @@ Visual decision trees for diagnosing and resolving common OpenPipeline issues.
 
 ### Decision Tree 3: Masking Not Working
 
-![Masking Decision Tree](images/decision-tree-masking.svg)
+![Masking Decision Tree](images/decision-tree-masking.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Question | If Found/No | If Not Found/Yes |
@@ -132,7 +132,7 @@ Visual decision trees for diagnosing and resolving common OpenPipeline issues.
 
 ### Decision Tree 4: Performance Problems
 
-![Performance Decision Tree](images/decision-tree-performance.svg)
+![Performance Decision Tree](images/decision-tree-performance.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Issue Type | Symptoms | Solutions | Expected Improvement |

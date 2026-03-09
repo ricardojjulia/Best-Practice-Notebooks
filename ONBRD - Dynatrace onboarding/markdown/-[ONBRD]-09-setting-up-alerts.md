@@ -28,7 +28,7 @@ Dynatrace's DAVIS AI automatically detects problems, but you need to configure w
 ## 1. How DAVIS Problem Detection Works
 DAVIS AI continuously monitors your environment and creates **problems** when anomalies are detected:
 
-![DAVIS Problem Detection Flow](images/davis-problem-flow.svg)
+![DAVIS Problem Detection Flow](images/davis-problem-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|
@@ -63,7 +63,7 @@ Workflows are event-driven automations that can:
 - Execute remediation actions
 - Run on schedules
 
-![Workflow Architecture](images/workflow-architecture.svg)
+![Workflow Architecture](images/workflow-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|
@@ -191,7 +191,7 @@ Use workflow conditions to route alerts to the right teams.
 
 ### Strategy: Condition-Based Routing
 
-![Alert Routing Example](images/alert-routing.svg)
+![Alert Routing Example](images/alert-routing.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Filter | Destination |
 |--------|-------------|

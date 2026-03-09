@@ -33,7 +33,7 @@ Before starting this notebook, ensure you have:
 
 Follow this systematic approach for root cause analysis:
 
-![RCA Workflow](images/rca-workflow.svg)
+![RCA Workflow](images/rca-workflow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Purpose |
@@ -151,7 +151,7 @@ fetch spans, from:-24h
 ## 4. Latency Analysis
 Analyze latency patterns to find performance issues:
 
-![Latency Percentile Guide](images/latency-percentile-guide.svg)
+![Latency Percentile Guide](images/latency-percentile-guide.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Percentile | Description | Impact |
@@ -305,7 +305,7 @@ fetch spans, from:-1h
 ## 7. Identifying Root Cause
 Use these patterns to find the origin of problems:
 
-![Root Cause Identification Checklist](images/root-cause-checklist.svg)
+![Root Cause Identification Checklist](images/root-cause-checklist.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Check | What to Look For | DQL Pattern |

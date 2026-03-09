@@ -39,7 +39,7 @@ This notebook walks through instrumenting **Flutter**, **React Native**, **Cordo
 
 Dynatrace offers dedicated plugins for the most popular cross-platform frameworks. Each plugin wraps the native iOS and Android mobile SDKs, exposing framework-specific APIs and auto-instrumentation hooks.
 
-![Cross-Platform SDK Comparison](images/cross-platform-sdk-comparison.svg)
+![Cross-Platform SDK Comparison](images/cross-platform-sdk-comparison.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Framework | Auto-Instrumentation | Crash Reporting | Session Replay | Custom Actions | Maturity |

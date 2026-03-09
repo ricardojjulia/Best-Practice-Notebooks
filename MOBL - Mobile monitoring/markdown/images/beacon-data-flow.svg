@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 520">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 370">
   <defs>
     <linearGradient id="bPurpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
@@ -25,85 +25,108 @@
   </defs>
 
   <!-- Background -->
-  <rect width="500" height="520" fill="#f8f9fa" rx="10"/>
+  <rect width="700" height="370" fill="#f8f9fa" rx="10"/>
 
   <!-- Title -->
-  <text x="250" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">Beacon Data Flow: Device to Grail</text>
-  <text x="250" y="46" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle">How a user interaction becomes queryable data</text>
+  <text x="350" y="26" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#333" text-anchor="middle">Beacon Data Flow: Device to Grail</text>
+  <text x="350" y="42" font-family="Arial, sans-serif" font-size="11" fill="#666" text-anchor="middle">How a user interaction becomes queryable data</text>
+
+  <!-- Row 1 zone label -->
+  <text x="26" y="110" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="middle" transform="rotate(-90,26,110)">Device</text>
 
   <!-- Step 1: User Interaction -->
-  <rect x="130" y="62" width="240" height="48" rx="8" fill="url(#bPurpleGrad)" filter="url(#bShadow)"/>
-  <circle cx="145" cy="86" r="10" fill="rgba(255,255,255,0.25)"/>
-  <text x="145" y="90" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">1</text>
-  <text x="265" y="83" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">User Interaction</text>
-  <text x="265" y="100" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Tap, swipe, app start</text>
+  <rect x="42" y="60" width="190" height="48" rx="8" fill="url(#bPurpleGrad)" filter="url(#bShadow)"/>
+  <circle cx="57" cy="84" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="57" y="88" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">1</text>
+  <text x="147" y="81" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">User Interaction</text>
+  <text x="147" y="98" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Tap, swipe, app start</text>
 
   <!-- Arrow 1-2 -->
-  <path d="M250,110 L250,128" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
+  <path d="M232,84 L253,84" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
 
   <!-- Step 2: SDK Captures -->
-  <rect x="130" y="132" width="240" height="48" rx="8" fill="url(#bBlueGrad)" filter="url(#bShadow)"/>
-  <circle cx="145" cy="156" r="10" fill="rgba(255,255,255,0.25)"/>
-  <text x="145" y="160" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">2</text>
-  <text x="265" y="153" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">SDK Captures</text>
-  <text x="265" y="170" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Action, timing, context</text>
+  <rect x="255" y="60" width="190" height="48" rx="8" fill="url(#bBlueGrad)" filter="url(#bShadow)"/>
+  <circle cx="270" cy="84" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="270" y="88" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">2</text>
+  <text x="360" y="81" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">SDK Captures</text>
+  <text x="360" y="98" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Action, timing, context</text>
 
   <!-- Arrow 2-3 -->
-  <path d="M250,180 L250,198" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
+  <path d="M445,84 L466,84" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
 
   <!-- Step 3: Beacon Created -->
-  <rect x="130" y="202" width="240" height="48" rx="8" fill="url(#bBlueGrad)" filter="url(#bShadow)"/>
-  <circle cx="145" cy="226" r="10" fill="rgba(255,255,255,0.25)"/>
-  <text x="145" y="230" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">3</text>
-  <text x="265" y="223" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Beacon Created</text>
-  <text x="265" y="240" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">JSON payload batched</text>
+  <rect x="468" y="60" width="190" height="48" rx="8" fill="url(#bBlueGrad)" filter="url(#bShadow)"/>
+  <circle cx="483" cy="84" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="483" y="88" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">3</text>
+  <text x="573" y="81" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Beacon Created</text>
+  <text x="573" y="98" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">JSON payload batched</text>
 
-  <!-- Arrow 3-4 -->
-  <path d="M250,250 L250,268" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
+  <!-- Divider line between rows -->
+  <line x1="42" y1="133" x2="658" y2="133" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Connecting arrow from row 1 to row 2 (step 3 down to step 4) -->
+  <path d="M563,108 L563,130 L350,130 L350,142 L137,142 L137,158" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)" stroke-dasharray="5,3"/>
+
+  <!-- Row 2 zone labels -->
+  <text x="26" y="190" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="middle" transform="rotate(-90,26,190)">Network / Server</text>
 
   <!-- Step 4: Network Send -->
-  <rect x="130" y="272" width="240" height="48" rx="8" fill="url(#bOrangeGrad)" filter="url(#bShadow)"/>
-  <circle cx="145" cy="296" r="10" fill="rgba(255,255,255,0.25)"/>
-  <text x="145" y="300" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">4</text>
-  <text x="265" y="293" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Network Send</text>
-  <text x="265" y="310" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">HTTPS POST to endpoint</text>
+  <rect x="42" y="162" width="190" height="48" rx="8" fill="url(#bOrangeGrad)" filter="url(#bShadow)"/>
+  <circle cx="57" cy="186" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="57" y="190" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">4</text>
+  <text x="147" y="183" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Network Send</text>
+  <text x="147" y="200" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">HTTPS POST to endpoint</text>
 
   <!-- Arrow 4-5 -->
-  <path d="M250,320 L250,338" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
+  <path d="M232,186 L253,186" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
 
   <!-- Step 5: Server Processing -->
-  <rect x="130" y="342" width="240" height="48" rx="8" fill="url(#bBlueGrad)" filter="url(#bShadow)"/>
-  <circle cx="145" cy="366" r="10" fill="rgba(255,255,255,0.25)"/>
-  <text x="145" y="370" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">5</text>
-  <text x="265" y="363" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Server Processing</text>
-  <text x="265" y="380" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Enrichment, symbolication</text>
+  <rect x="255" y="162" width="190" height="48" rx="8" fill="url(#bBlueGrad)" filter="url(#bShadow)"/>
+  <circle cx="270" cy="186" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="270" y="190" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">5</text>
+  <text x="360" y="183" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Server Processing</text>
+  <text x="360" y="200" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Enrichment, symbolication</text>
 
   <!-- Arrow 5-6 -->
-  <path d="M250,390 L250,408" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
+  <path d="M445,186 L466,186" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#bArrow)"/>
 
   <!-- Step 6: Grail Storage -->
-  <rect x="130" y="412" width="240" height="48" rx="8" fill="url(#bGreenGrad)" filter="url(#bShadow)"/>
-  <circle cx="145" cy="436" r="10" fill="rgba(255,255,255,0.25)"/>
-  <text x="145" y="440" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">6</text>
-  <text x="265" y="433" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Grail Storage</text>
-  <text x="265" y="450" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Queryable via DQL</text>
+  <rect x="468" y="162" width="190" height="48" rx="8" fill="url(#bGreenGrad)" filter="url(#bShadow)"/>
+  <circle cx="483" cy="186" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="483" y="190" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">6</text>
+  <text x="573" y="183" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Grail Storage</text>
+  <text x="573" y="200" font-family="Arial, sans-serif" font-size="10" fill="rgba(255,255,255,0.85)" text-anchor="middle">Queryable via DQL</text>
 
-  <!-- Side annotations -->
-  <text x="115" y="90" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="end">Device</text>
-  <text x="115" y="160" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="end">Device</text>
-  <text x="115" y="230" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="end">Device</text>
-  <text x="115" y="300" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="end">Network</text>
-  <text x="115" y="370" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="end">Server</text>
-  <text x="115" y="440" font-family="Arial, sans-serif" font-size="10" fill="#888" text-anchor="end">Server</text>
+  <!-- Detail boxes below each step -->
+  <!-- Device phase details -->
+  <rect x="42" y="230" width="190" height="68" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="137" y="247" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#4f46e5" text-anchor="middle">Steps 1-3: On Device</text>
+  <text x="137" y="263" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Auto-instrumented by SDK</text>
+  <text x="137" y="277" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Batched for efficiency</text>
+  <text x="137" y="291" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Session &amp; device context added</text>
+
+  <!-- Network phase details -->
+  <rect x="255" y="230" width="190" height="68" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="350" y="247" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ea580c" text-anchor="middle">Step 4: Network</text>
+  <text x="350" y="263" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Compressed HTTPS POST</text>
+  <text x="350" y="277" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Retry on failure</text>
+  <text x="350" y="291" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Configurable endpoint</text>
+
+  <!-- Server phase details -->
+  <rect x="468" y="230" width="190" height="68" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="563" y="247" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#16a34a" text-anchor="middle">Steps 5-6: Server</text>
+  <text x="563" y="263" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Crash symbolication</text>
+  <text x="563" y="277" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Entity enrichment</text>
+  <text x="563" y="291" font-family="Arial, sans-serif" font-size="9" fill="#555" text-anchor="middle">Stored in Grail for DQL</text>
 
   <!-- Legend bar -->
-  <rect x="40" y="478" width="420" height="30" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
-  <circle cx="65" cy="493" r="6" fill="#6366f1"/>
-  <text x="78" y="497" font-family="Arial, sans-serif" font-size="10" fill="#333">User action</text>
-  <circle cx="158" cy="493" r="6" fill="#1496ff"/>
-  <text x="171" y="497" font-family="Arial, sans-serif" font-size="10" fill="#333">SDK / Server</text>
-  <circle cx="260" cy="493" r="6" fill="#f97316"/>
-  <text x="273" y="497" font-family="Arial, sans-serif" font-size="10" fill="#333">Network</text>
-  <circle cx="345" cy="493" r="6" fill="#22c55e"/>
-  <text x="358" y="497" font-family="Arial, sans-serif" font-size="10" fill="#333">Storage</text>
+  <rect x="120" y="318" width="460" height="30" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1"/>
+  <circle cx="145" cy="333" r="6" fill="#6366f1"/>
+  <text x="158" y="337" font-family="Arial, sans-serif" font-size="10" fill="#333">User action</text>
+  <circle cx="245" cy="333" r="6" fill="#1496ff"/>
+  <text x="258" y="337" font-family="Arial, sans-serif" font-size="10" fill="#333">SDK / Server</text>
+  <circle cx="355" cy="333" r="6" fill="#f97316"/>
+  <text x="368" y="337" font-family="Arial, sans-serif" font-size="10" fill="#333">Network</text>
+  <circle cx="445" cy="333" r="6" fill="#22c55e"/>
+  <text x="458" y="337" font-family="Arial, sans-serif" font-size="10" fill="#333">Storage</text>
 </svg>

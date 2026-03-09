@@ -120,7 +120,7 @@ Chain multiple HTTP requests with data passing between steps:
 
 ### Multi-Step Workflow Example
 
-![HTTP Monitor Workflow](images/http-monitor-workflow.svg)
+![HTTP Monitor Workflow](images/http-monitor-workflow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Description |
 |------|--------|-------------|

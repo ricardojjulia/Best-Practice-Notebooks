@@ -35,7 +35,7 @@ Before starting this notebook, ensure you have:
 ## 1. DQL is NOT SQL!
 ⚠️ **CRITICAL:** DQL has different syntax from SQL. Memorize these differences:
 
-![DQL Pipeline Model](images/dql-pipeline-spans.svg)
+![DQL Pipeline Model](images/dql-pipeline-spans.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | DQL Stage | Purpose | Example |
@@ -356,7 +356,7 @@ fetch spans, from:-1h
 ## 9. Working with NULL Values
 ⚠️ **DQL uses tri-state boolean logic.** Comparisons with NULL don't work like SQL!
 
-![NULL Handling in DQL](images/null-handling-dql.svg)
+![NULL Handling in DQL](images/null-handling-dql.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Expression | Returns | Explanation |

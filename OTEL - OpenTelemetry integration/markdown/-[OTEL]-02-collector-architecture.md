@@ -61,7 +61,7 @@ The OpenTelemetry Collector is a standalone service that:
 ## 2. Pipeline Architecture
 ### Data Flow
 
-![OpenTelemetry Collector Pipeline](images/collector-pipeline.svg)
+![OpenTelemetry Collector Pipeline](images/collector-pipeline.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Components | Function |

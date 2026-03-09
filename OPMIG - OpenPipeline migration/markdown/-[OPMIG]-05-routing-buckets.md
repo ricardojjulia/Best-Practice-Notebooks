@@ -48,7 +48,7 @@ Dynamic routing is the mechanism that directs incoming data to specific pipeline
 
 ### How Routing Works
 
-![Dynamic Routing Flow](images/dynamic-routing.svg)
+![Dynamic Routing Flow](images/dynamic-routing.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Route | Condition | Target Pipeline |
@@ -199,7 +199,7 @@ Configure:
 ## Cost Optimization Patterns
 ### Pattern 1: Tiered Retention by Severity
 
-![Tiered Bucket Retention Strategy](images/bucket-tiering.svg)
+![Tiered Bucket Retention Strategy](images/bucket-tiering.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Tier | Bucket | Retention | Volume | Impact |
@@ -521,7 +521,7 @@ Default Route:
 
 **Best for:** Organizations with compliance requirements AND cost constraints
 
-![Hybrid Bucket Strategy](images/hybrid-bucket-strategy.svg)
+![Hybrid Bucket Strategy](images/hybrid-bucket-strategy.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Priority | Check | Destinations |
@@ -543,7 +543,7 @@ A single record can be processed by multiple pipelines (up to 5). This enables p
 
 ### Use Case: Extraction + Storage Pipeline
 
-![Multi-Pipeline Processing](images/multi-pipeline-processing.svg)
+![Multi-Pipeline Processing](images/multi-pipeline-processing.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pipeline | Purpose | Output |

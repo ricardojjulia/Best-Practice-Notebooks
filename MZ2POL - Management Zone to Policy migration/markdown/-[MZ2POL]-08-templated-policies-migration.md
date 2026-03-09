@@ -199,7 +199,7 @@ Organizations with 92 MZs cannot bind one at a time via the UI. Use the IAM API 
 Before running bulk binding:
 
 1. **Export MZ list** — Use **MZ2POL-00** SDK tool or Settings API
-2. **Map each MZ to a group UUID** — List groups via `GET /iam/v1/repo/account/{ACCOUNT}/groups`
+2. **Map each MZ to a group UUID** — List groups via `GET /iam/v1/accounts/{ACCOUNT}/groups`
 3. **Map each MZ to a security context value** — This becomes the parameter value
 4. **Choose the appropriate template** — Reader, editor, or three-domain
 

@@ -122,7 +122,7 @@ dynatrace {
 
 Privacy is a critical concern when capturing session replays. Dynatrace provides three masking levels to protect sensitive user data.
 
-![Session Replay Privacy Levels](images/session-replay-privacy-levels.svg)
+![Session Replay Privacy Levels](images/session-replay-privacy-levels.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Privacy Level | Description | What Is Masked |

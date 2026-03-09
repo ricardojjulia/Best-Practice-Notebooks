@@ -43,7 +43,7 @@ Dynatrace provides network-level synthetic monitoring to verify:
 
 Network monitors complement application-level monitoring by testing at different layers of the stack:
 
-![Network Layers](images/network-layers.svg)
+![Network Layers](images/network-layers.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Monitor Type | What It Tests |
 |-------|--------------|---------------|
@@ -87,7 +87,7 @@ Network monitors complement application-level monitoring by testing at different
 
 ### Metrics Captured
 
-![ICMP Monitor Results](images/icmp-monitor-results.svg)
+![ICMP Monitor Results](images/icmp-monitor-results.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Metric | Value | Status |
 |--------|-------|--------|
@@ -313,7 +313,7 @@ Step 3: TCP Port Check
 
 ### Multi-Region Connectivity
 
-![Cross-Region Monitoring](images/cross-region-monitoring.svg)
+![Cross-Region Monitoring](images/cross-region-monitoring.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Source | Protocol | Destination | Purpose |
 |--------|----------|-------------|---------|

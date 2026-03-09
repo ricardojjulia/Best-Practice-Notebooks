@@ -231,7 +231,7 @@ For dashboards currently using MZ filtering:
 
 Recommended: **2-4 weeks** depending on complexity
 
-![Parallel Running](images/parallel-running.svg)
+![Parallel Running](images/parallel-running.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | System | Status | User Experience |
