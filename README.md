@@ -14,6 +14,14 @@ Each topic follows the same structure:
 
 ## Table of Contents
 
+### [ADOPT - Observability adoption & maturity](ADOPT%20-%20Observability%20adoption%20%26%20maturity/README.md)
+Framework for assessing and advancing Dynatrace observability adoption across the organization.
+- [ADOPT-01: Observability Maturity Model](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-[ADOPT]-01-maturity-model.md) — Five-level maturity framework
+- [ADOPT-02: Platform Health Assessment](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-[ADOPT]-02-platform-health-assessment.md) — Evaluating current state and readiness
+- [ADOPT-03: Success Metrics](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-[ADOPT]-03-success-metrics.md) — Defining KPIs and measuring adoption
+- [ADOPT-04: Team Enablement](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-[ADOPT]-04-team-enablement.md) — Training and organization strategies
+- [ADOPT-05: Optimization Roadmap](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-[ADOPT]-05-optimization-roadmap.md) — Building your adoption roadmap
+
 ### [AUTOM - Dynatrace automation](AUTOM%20-%20Dynatrace%20automation/README.md)
 Comprehensive guide to automating Dynatrace configuration and operations.
 - [AUTOM-01: Automation Landscape](AUTOM%20-%20Dynatrace%20automation/markdown/-[AUTOM]-01-automation-landscape.md) — Overview of Dynatrace automation options
@@ -24,6 +32,45 @@ Comprehensive guide to automating Dynatrace configuration and operations.
 - [AUTOM-06: SDKs](AUTOM%20-%20Dynatrace%20automation/markdown/-[AUTOM]-06-sdks.md) — Using Dynatrace SDKs for automation
 - [AUTOM-07: CI/CD Integration](AUTOM%20-%20Dynatrace%20automation/markdown/-[AUTOM]-07-cicd-integration.md) — Integrating Dynatrace into CI/CD pipelines
 - [AUTOM-08: Migration Automation](AUTOM%20-%20Dynatrace%20automation/markdown/-[AUTOM]-08-migration-automation.md) — Automating configuration migrations
+
+### [BIZEV - Business events & funnel analysis](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/README.md)
+Turning business transactions into first-class observability data with Dynatrace Business Events.
+- [BIZEV-01: Business Events Fundamentals](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-[BIZEV]-01-business-events-fundamentals.md) — Business events data model and architecture
+- [BIZEV-02: Instrumentation](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-[BIZEV]-02-instrumentation.md) — Capturing business transaction events
+- [BIZEV-03: Funnel Analysis](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-[BIZEV]-03-funnel-analysis.md) — Analyzing conversion and drop-off patterns
+- [BIZEV-04: Revenue Impact Analysis](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-[BIZEV]-04-revenue-impact.md) — Quantifying business impact
+- [BIZEV-05: KPIs and Metrics](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-[BIZEV]-05-kpis-and-metrics.md) — Business metrics and dashboarding
+- [BIZEV-06: Executive Reporting](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-[BIZEV]-06-executive-reporting.md) — Creating business-focused reports
+
+### [CLOUD - Cloud provider integrations](CLOUD%20-%20Cloud%20provider%20integrations/README.md)
+Monitoring cloud infrastructure and services across AWS, Azure, and GCP with Dynatrace.
+- [CLOUD-01: Cloud Integration Fundamentals](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-01-cloud-integration-fundamentals.md) — Architecture and integration patterns
+- [CLOUD-02: AWS Integration](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-02-aws-integration.md) — Connecting AWS accounts and services
+- [CLOUD-03: AWS EKS Monitoring](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-03-aws-eks-monitoring.md) — Monitoring Kubernetes on EKS
+- [CLOUD-04: AWS Lambda & Serverless Monitoring](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-04-aws-lambda-serverless.md) — Observability for serverless workloads
+- [CLOUD-05: Azure Integration](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-05-azure-integration.md) — Connecting Azure subscriptions
+- [CLOUD-06: GCP Integration](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-06-gcp-integration.md) — Connecting Google Cloud projects
+- [CLOUD-07: CloudWatch Log Ingestion](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-07-cloudwatch-log-ingestion.md) — Ingesting CloudWatch logs via OpenPipeline
+- [CLOUD-08: Multi-Cloud Observability Patterns](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-[CLOUD]-08-multi-cloud-patterns.md) — Managing multi-cloud strategies
+
+### [DASH - Dashboard design & building](DASH%20-%20Dashboard%20design%20%26%20building/README.md)
+Designing and building effective dashboards for different stakeholder audiences.
+- [DASH-01: Dashboard Fundamentals](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-01-dashboard-fundamentals.md) — Dashboards vs notebooks and core concepts
+- [DASH-02: Dashboard Hierarchy](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-02-dashboard-hierarchy.md) — Organizing dashboards for discovery and navigation
+- [DASH-03: Executive Dashboards](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-03-executive-dashboards.md) — KPI dashboards for leadership
+- [DASH-04: Operations Dashboards](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-04-operations-dashboards.md) — Real-time operational view
+- [DASH-05: Engineering Dashboards](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-05-engineering-dashboards.md) — Technical deep-dive dashboards
+- [DASH-06: Variables and Filters](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-06-variables-and-filters.md) — Dynamic dashboard interactions
+- [DASH-07: Sharing and Reporting](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-[DASH]-07-sharing-and-reporting.md) — Distribution and scheduled exports
+
+### [DBMON - Database monitoring](DBMON%20-%20Database%20monitoring/README.md)
+End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
+- [DBMON-01: Database Monitoring Fundamentals](DBMON%20-%20Database%20monitoring/markdown/-[DBMON]-01-database-monitoring-fundamentals.md) — How Dynatrace monitors databases
+- [DBMON-02: SQL Database Monitoring](DBMON%20-%20Database%20monitoring/markdown/-[DBMON]-02-sql-databases.md) — SQL Server, PostgreSQL, Oracle, MySQL
+- [DBMON-03: NoSQL Database Monitoring](DBMON%20-%20Database%20monitoring/markdown/-[DBMON]-03-nosql-databases.md) — MongoDB, DynamoDB, Cassandra, and more
+- [DBMON-04: Cache and Messaging Monitoring](DBMON%20-%20Database%20monitoring/markdown/-[DBMON]-04-cache-and-messaging.md) — Redis, Memcached, RabbitMQ, Kafka
+- [DBMON-05: Query Analysis](DBMON%20-%20Database%20monitoring/markdown/-[DBMON]-05-query-analysis.md) — Performance analysis and optimization
+- [DBMON-06: Dashboards and Alerting](DBMON%20-%20Database%20monitoring/markdown/-[DBMON]-06-dashboards-and-alerting.md) — Database performance dashboards
 
 ### [IAM - IAM administration](IAM%20-%20IAM%20administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
@@ -206,6 +253,17 @@ Automating workflows and configuring alert notifications in Dynatrace.
 - [WFLOW-07: Remediation](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-[WFLOW]-07-remediation.md) — Automated remediation workflows
 - [WFLOW-08: JavaScript & HTTP](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-[WFLOW]-08-javascript-http.md) — JavaScript actions and HTTP requests
 - [WFLOW-09: Governance](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-[WFLOW]-09-governance.md) — Workflow governance and best practices
+
+### [WEBRUM - Web Real User Monitoring](WEBRUM%20-%20Web%20Real%20User%20Monitoring/README.md)
+Client-side monitoring and observability for web applications with session replay and performance metrics.
+- [WEBRUM-01: Web RUM Fundamentals](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-01-rum-fundamentals.md) — RUM architecture and data collection
+- [WEBRUM-02: SPA Instrumentation](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-02-spa-instrumentation.md) — Monitoring single-page applications
+- [WEBRUM-03: Core Web Vitals](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-03-core-web-vitals.md) — LCP, FID, CLS metrics and optimization
+- [WEBRUM-04: Session Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-04-session-analysis.md) — User session insights and funnels
+- [WEBRUM-05: Error Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-05-error-analysis.md) — JavaScript errors and crash detection
+- [WEBRUM-06: Performance Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-06-performance-analysis.md) — Page load and runtime performance
+- [WEBRUM-07: Session Replay](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-07-session-replay.md) — Visual reproduction of user sessions
+- [WEBRUM-08: Dashboards and Alerting](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-[WEBRUM]-08-dashboards-and-alerting.md) — RUM metrics dashboards and alerts
 
 ## How to Use
 
