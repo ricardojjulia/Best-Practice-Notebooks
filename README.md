@@ -201,17 +201,6 @@ Integrating OpenTelemetry with Dynatrace for observability.
 - [OTEL-07: Dynatrace Integration](OTEL%20-%20OpenTelemetry%20integration/markdown/-%5BOTEL%5D-07-dynatrace-integration.md) — Sending OTel data to Dynatrace
 - [OTEL-08: Troubleshooting](OTEL%20-%20OpenTelemetry%20integration/markdown/-%5BOTEL%5D-08-troubleshooting.md) — Diagnosing OpenTelemetry issues
 
-### [SPANS - Distributed tracing and spans](SPANS%20-%20Distributed%20tracing%20and%20spans/README.md)
-Guidance for working with distributed traces and spans in Dynatrace.
-- [SPANS-01: Fundamentals](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-01-fundamentals.md) — Core tracing concepts
-- [SPANS-02: Querying](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-02-querying.md) — Querying spans and traces with DQL
-- [SPANS-03: Troubleshooting](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-03-troubleshooting.md) — Using traces for issue investigation
-- [SPANS-04: Topology](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-04-topology.md) — Service topology from traces
-- [SPANS-05: Analytics](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-05-analytics.md) — Advanced trace analytics
-- [SPANS-06: Security](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-06-security.md) — Span security and data protection
-- [SPANS-07: Buckets & Pipeline](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-07-buckets-pipeline.md) — Storage and processing
-- [SPANS-08: Cost Optimization](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-08-cost-optimization.md) — Optimizing trace ingestion costs
-
 ### [S2D - Splunk to Dynatrace migration](S2D%20-%20Splunk%20to%20Dynatrace%20migration/README.md)
 Guide for migrating monitoring capabilities from Splunk to Dynatrace.
 - [S2D-01: Getting Started](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-01-getting-started.md) — Migration overview and roadmap
@@ -224,6 +213,17 @@ Guide for migrating monitoring capabilities from Splunk to Dynatrace.
 - [S2D-08: Dashboard Migration](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-08-dashboard-migration.md) — Converting Splunk dashboards to Dynatrace
 - [S2D-09: Naming Standards](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-09-naming-standards.md) — Asset naming conventions and organization
 
+### [SPANS - Distributed tracing and spans](SPANS%20-%20Distributed%20tracing%20and%20spans/README.md)
+Guidance for working with distributed traces and spans in Dynatrace.
+- [SPANS-01: Fundamentals](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-01-fundamentals.md) — Core tracing concepts
+- [SPANS-02: Querying](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-02-querying.md) — Querying spans and traces with DQL
+- [SPANS-03: Troubleshooting](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-03-troubleshooting.md) — Using traces for issue investigation
+- [SPANS-04: Topology](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-04-topology.md) — Service topology from traces
+- [SPANS-05: Analytics](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-05-analytics.md) — Advanced trace analytics
+- [SPANS-06: Security](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-06-security.md) — Span security and data protection
+- [SPANS-07: Buckets & Pipeline](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-07-buckets-pipeline.md) — Storage and processing
+- [SPANS-08: Cost Optimization](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-08-cost-optimization.md) — Optimizing trace ingestion costs
+
 ### [SYNTH - Synthetic monitoring](SYNTH%20-%20Synthetic%20monitoring/README.md)
 Series covering Dynatrace Synthetic Monitoring.
 - [SYNTH-01: Fundamentals](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-01-fundamentals.md) — Core synthetic monitoring concepts
@@ -232,6 +232,17 @@ Series covering Dynatrace Synthetic Monitoring.
 - [SYNTH-04: Private Locations](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-04-private-locations.md) — Deploying private synthetic locations
 - [SYNTH-05: Network Monitoring](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-05-network-monitoring.md) — Network performance monitoring
 - [SYNTH-06: Analytics](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-06-analytics.md) — Analyzing synthetic monitoring data
+
+### [WEBRUM - Web Real User Monitoring](WEBRUM%20-%20Web%20Real%20User%20Monitoring/README.md)
+Client-side monitoring and observability for web applications with session replay and performance metrics.
+- [WEBRUM-01: Web RUM Fundamentals](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-01-rum-fundamentals.md) — RUM architecture and data collection
+- [WEBRUM-02: SPA Instrumentation](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-02-spa-instrumentation.md) — Monitoring single-page applications
+- [WEBRUM-03: Core Web Vitals](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-03-core-web-vitals.md) — LCP, FID, CLS metrics and optimization
+- [WEBRUM-04: Session Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-04-session-analysis.md) — User session insights and funnels
+- [WEBRUM-05: Error Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-05-error-analysis.md) — JavaScript errors and crash detection
+- [WEBRUM-06: Performance Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-06-performance-analysis.md) — Page load and runtime performance
+- [WEBRUM-07: Session Replay](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-07-session-replay.md) — Visual reproduction of user sessions
+- [WEBRUM-08: Dashboards and Alerting](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-08-dashboards-and-alerting.md) — RUM metrics dashboards and alerts
 
 ### [WFLOW - Workflows and alert notifications](WFLOW%20-%20Workflows%20and%20alert%20notifications/README.md)
 Automating workflows and configuring alert notifications in Dynatrace.
@@ -244,17 +255,6 @@ Automating workflows and configuring alert notifications in Dynatrace.
 - [WFLOW-07: Remediation](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-07-remediation.md) — Automated remediation workflows
 - [WFLOW-08: JavaScript & HTTP](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-08-javascript-http.md) — JavaScript actions and HTTP requests
 - [WFLOW-09: Governance](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-09-governance.md) — Workflow governance and best practices
-
-### [WEBRUM - Web Real User Monitoring](WEBRUM%20-%20Web%20Real%20User%20Monitoring/README.md)
-Client-side monitoring and observability for web applications with session replay and performance metrics.
-- [WEBRUM-01: Web RUM Fundamentals](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-01-rum-fundamentals.md) — RUM architecture and data collection
-- [WEBRUM-02: SPA Instrumentation](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-02-spa-instrumentation.md) — Monitoring single-page applications
-- [WEBRUM-03: Core Web Vitals](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-03-core-web-vitals.md) — LCP, FID, CLS metrics and optimization
-- [WEBRUM-04: Session Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-04-session-analysis.md) — User session insights and funnels
-- [WEBRUM-05: Error Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-05-error-analysis.md) — JavaScript errors and crash detection
-- [WEBRUM-06: Performance Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-06-performance-analysis.md) — Page load and runtime performance
-- [WEBRUM-07: Session Replay](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-07-session-replay.md) — Visual reproduction of user sessions
-- [WEBRUM-08: Dashboards and Alerting](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-08-dashboards-and-alerting.md) — RUM metrics dashboards and alerts
 
 ## How to Use
 
