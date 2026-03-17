@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="380" viewBox="0 0 700 380">
+  <!-- Background -->
+  <rect width="700" height="380" fill="#1e293b"/>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Automation Tool Comparison</text>
+
+  <!-- Header row -->
+  <rect x="30" y="55" width="120" height="35" fill="#334155"/>
+  <text x="90" y="78" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Tool</text>
+
+  <rect x="150" y="55" width="100" height="35" fill="#334155"/>
+  <text x="200" y="78" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Best For</text>
+
+  <rect x="250" y="55" width="90" height="35" fill="#334155"/>
+  <text x="295" y="78" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Learning</text>
+
+  <rect x="340" y="55" width="90" height="35" fill="#334155"/>
+  <text x="385" y="78" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">CI/CD</text>
+
+  <rect x="430" y="55" width="90" height="35" fill="#334155"/>
+  <text x="475" y="78" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">State Mgmt</text>
+
+  <rect x="520" y="55" width="150" height="35" fill="#334155"/>
+  <text x="595" y="78" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Use Case</text>
+
+  <!-- Settings API Row -->
+  <rect x="30" y="90" width="120" height="45" fill="#6366f1" fill-opacity="0.3"/>
+  <text x="90" y="118" text-anchor="middle" fill="#a5b4fc" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Settings API</text>
+
+  <rect x="150" y="90" width="100" height="45" fill="#0f172a"/>
+  <text x="200" y="112" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Custom</text>
+  <text x="200" y="125" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">scripts</text>
+
+  <rect x="250" y="90" width="90" height="45" fill="#0f172a"/>
+  <text x="295" y="118" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="10">Medium</text>
+
+  <rect x="340" y="90" width="90" height="45" fill="#0f172a"/>
+  <text x="385" y="118" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Manual</text>
+
+  <rect x="430" y="90" width="90" height="45" fill="#0f172a"/>
+  <text x="475" y="118" text-anchor="middle" fill="#ef4444" font-family="Arial, sans-serif" font-size="10">None</text>
+
+  <rect x="520" y="90" width="150" height="45" fill="#0f172a"/>
+  <text x="595" y="118" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">One-off operations</text>
+
+  <!-- Monaco Row -->
+  <rect x="30" y="135" width="120" height="45" fill="#14b8a6" fill-opacity="0.3"/>
+  <text x="90" y="163" text-anchor="middle" fill="#5eead4" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Monaco</text>
+
+  <rect x="150" y="135" width="100" height="45" fill="#0f172a"/>
+  <text x="200" y="157" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Config-as-</text>
+  <text x="200" y="170" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">code</text>
+
+  <rect x="250" y="135" width="90" height="45" fill="#0f172a"/>
+  <text x="295" y="163" text-anchor="middle" fill="#22c55e" font-family="Arial, sans-serif" font-size="10">Low</text>
+
+  <rect x="340" y="135" width="90" height="45" fill="#0f172a"/>
+  <text x="385" y="163" text-anchor="middle" fill="#22c55e" font-family="Arial, sans-serif" font-size="10">Native</text>
+
+  <rect x="430" y="135" width="90" height="45" fill="#0f172a"/>
+  <text x="475" y="163" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="10">Implicit</text>
+
+  <rect x="520" y="135" width="150" height="45" fill="#0f172a"/>
+  <text x="595" y="163" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">GitOps, migrations</text>
+
+  <!-- Terraform Row -->
+  <rect x="30" y="180" width="120" height="45" fill="#8b5cf6" fill-opacity="0.3"/>
+  <text x="90" y="208" text-anchor="middle" fill="#c4b5fd" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Terraform</text>
+
+  <rect x="150" y="180" width="100" height="45" fill="#0f172a"/>
+  <text x="200" y="202" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Full IaC</text>
+  <text x="200" y="215" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">stack</text>
+
+  <rect x="250" y="180" width="90" height="45" fill="#0f172a"/>
+  <text x="295" y="208" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="10">Medium</text>
+
+  <rect x="340" y="180" width="90" height="45" fill="#0f172a"/>
+  <text x="385" y="208" text-anchor="middle" fill="#22c55e" font-family="Arial, sans-serif" font-size="10">Native</text>
+
+  <rect x="430" y="180" width="90" height="45" fill="#0f172a"/>
+  <text x="475" y="208" text-anchor="middle" fill="#22c55e" font-family="Arial, sans-serif" font-size="10">Built-in</text>
+
+  <rect x="520" y="180" width="150" height="45" fill="#0f172a"/>
+  <text x="595" y="208" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Multi-cloud IaC</text>
+
+  <!-- Workflows Row -->
+  <rect x="30" y="225" width="120" height="45" fill="#f97316" fill-opacity="0.3"/>
+  <text x="90" y="253" text-anchor="middle" fill="#fdba74" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Workflows</text>
+
+  <rect x="150" y="225" width="100" height="45" fill="#0f172a"/>
+  <text x="200" y="247" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Event-</text>
+  <text x="200" y="260" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">driven</text>
+
+  <rect x="250" y="225" width="90" height="45" fill="#0f172a"/>
+  <text x="295" y="253" text-anchor="middle" fill="#22c55e" font-family="Arial, sans-serif" font-size="10">Low</text>
+
+  <rect x="340" y="225" width="90" height="45" fill="#0f172a"/>
+  <text x="385" y="253" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">N/A</text>
+
+  <rect x="430" y="225" width="90" height="45" fill="#0f172a"/>
+  <text x="475" y="253" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">N/A</text>
+
+  <rect x="520" y="225" width="150" height="45" fill="#0f172a"/>
+  <text x="595" y="253" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Auto-remediation</text>
+
+  <!-- SDKs Row -->
+  <rect x="30" y="270" width="120" height="45" fill="#3b82f6" fill-opacity="0.3"/>
+  <text x="90" y="298" text-anchor="middle" fill="#93c5fd" font-family="Arial, sans-serif" font-size="11" font-weight="bold">SDKs</text>
+
+  <rect x="150" y="270" width="100" height="45" fill="#0f172a"/>
+  <text x="200" y="292" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Custom</text>
+  <text x="200" y="305" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">apps</text>
+
+  <rect x="250" y="270" width="90" height="45" fill="#0f172a"/>
+  <text x="295" y="298" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="10">Medium</text>
+
+  <rect x="340" y="270" width="90" height="45" fill="#0f172a"/>
+  <text x="385" y="298" text-anchor="middle" fill="#22c55e" font-family="Arial, sans-serif" font-size="10">Yes</text>
+
+  <rect x="430" y="270" width="90" height="45" fill="#0f172a"/>
+  <text x="475" y="298" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Custom</text>
+
+  <rect x="520" y="270" width="150" height="45" fill="#0f172a"/>
+  <text x="595" y="298" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Integration apps</text>
+
+  <!-- Legend -->
+  <rect x="30" y="330" width="200" height="40" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="130" y="350" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Learning Curve:</text>
+  <circle cx="55" cy="360" r="5" fill="#22c55e"/>
+  <text x="75" y="364" fill="#94a3b8" font-family="Arial, sans-serif" font-size="9">Low</text>
+  <circle cx="110" cy="360" r="5" fill="#f59e0b"/>
+  <text x="140" y="364" fill="#94a3b8" font-family="Arial, sans-serif" font-size="9">Medium</text>
+  <circle cx="180" cy="360" r="5" fill="#ef4444"/>
+  <text x="205" y="364" fill="#94a3b8" font-family="Arial, sans-serif" font-size="9">High</text>
+</svg>
