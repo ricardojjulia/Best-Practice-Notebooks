@@ -1,9 +1,9 @@
 # User Lifecycle and Provisioning
 
-> **Series:** IAM | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 03/23/2026
 
 ## Automating User Management at Scale
-Manual user management doesn't scale. This notebook covers user lifecycle automation including SCIM provisioning, JIT access, service accounts, and token management.
+Manual user management doesn't scale. This notebook covers user lifecycle automation including SCIM provisioning, JIT access, service accounts, token management, and inviting external users from other domains.
 
 ---
 
@@ -15,6 +15,7 @@ Manual user management doesn't scale. This notebook covers user lifecycle automa
 4. [User Offboarding](#user-offboarding)
 5. [Service Accounts and OAuth Clients](#service-accounts-and-oauth-clients)
 6. [API Token Management](#api-token-management)
+7. [External User and Cross-Domain Access](#external-user-and-cross-domain-access)
 
 ---
 
@@ -402,6 +403,94 @@ fetch logs, from: now() - 7d
 | limit 50
 ```
 
+<a id="external-user-and-cross-domain-access"></a>
+## 8. External User and Cross-Domain Access
+
+Not all users come from your corporate directory. Consultants, partners, vendors, and Dynatrace support engineers may need access to your tenant. This section covers how to invite users from external domains and manage their access securely.
+
+### Inviting an External User
+
+**Account Management UI:**
+
+1. Navigate to **Account Management** → **Identity & access management** → **People**
+2. Click **Invite user**
+3. Enter the external user's email address (any domain — no allowlisting required)
+4. The user receives an email invitation to create a Dynatrace account or log in with existing credentials
+5. Once accepted, assign the user to the appropriate groups
+
+> **Note:** The invitation is sent to the email address you enter. The external user does not need to be in your corporate directory or IdP. They create a local Dynatrace account with that email address.
+
+### How External Users Authenticate
+
+| Scenario | Auth Method | Notes |
+|----------|-------------|-------|
+| **No SSO configured for their domain** | Local Dynatrace account (email + password) | User creates account when accepting the invitation |
+| **Their domain is federated** | SSO via their own IdP | Requires Account or Environment Federation configuration |
+| **Your IdP includes them as guest** | SSO via your IdP | Common with Azure AD B2B guest users |
+| **SAML Federation configured** | SSO via federated IdP | External domain must be added to your SAML federation |
+
+### Assigning Permissions to External Users
+
+External users can be assigned to any Dynatrace group — the same groups and policies that apply to internal users. Best practices:
+
+| Practice | Rationale |
+|----------|-----------|
+| **Create a dedicated group** (e.g., `external-consultants`) | Isolate external access for easy audit and revocation |
+| **Apply least-privilege policies** | External users should only see what they need |
+| **Use WHERE clauses** to scope access | Restrict to specific environments, schemas, or data boundaries |
+| **Set time-bound access** | Use IdP group expiration or calendar reminders for contractor end dates |
+| **Enforce MFA** | Require multi-factor authentication for all external accounts |
+
+### Example: Granting a Consultant Read-Only Access
+
+1. **Create group:** `external-acme-consultants`
+2. **Bind policy:** Read-only access scoped to the relevant environment
+
+```
+ALLOW environment:roles:viewer;
+ALLOW settings:objects:read
+  WHERE settings:schemaId startsWith "builtin:alerting";
+ALLOW storage:logs:read
+  WHERE storage:dt.security_context = "checkout-team";
+```
+
+3. **Invite user:** consultant@acme.com
+4. **Add to group:** `external-acme-consultants`
+5. **Set review date:** Contractor end date in your access review calendar
+
+### API Provisioning of External Users
+
+The Account Management API supports programmatic user invitation:
+
+| Operation | API Endpoint | Method |
+|-----------|-------------|--------|
+| Invite user | `/iam/v1/accounts/{accountUuid}/users` | POST |
+| List users | `/iam/v1/accounts/{accountUuid}/users` | GET |
+| Add user to group | `/iam/v1/accounts/{accountUuid}/groups/{groupUuid}/users` | POST |
+| Remove user from group | `/iam/v1/accounts/{accountUuid}/groups/{groupUuid}/users/{userUuid}` | DELETE |
+
+### Security Considerations
+
+| Consideration | Recommendation |
+|---------------|----------------|
+| **No SCIM sync** | External users without SSO cannot benefit from automatic provisioning or group sync — manage manually |
+| **Domain verification** | Required for federated SSO configurations; not required for local account invitations |
+| **Token creation** | External users with appropriate permissions can create API tokens — monitor via audit logs |
+| **Offboarding** | External users must be explicitly removed; they are not deactivated by your corporate IdP offboarding flow |
+| **Regular access reviews** | Review external user access quarterly (or more frequently for privileged access) |
+| **Fallback admin** | Maintain at least one local admin account to prevent lockout during SSO or federation changes |
+
+### External User Offboarding Checklist
+
+```
+□ Remove from all Dynatrace groups
+□ Revoke any API tokens created by the external user
+□ Deactivate any OAuth clients they own
+□ Transfer ownership of shared dashboards/notebooks
+□ Verify user cannot login
+□ Document offboarding completion with date
+```
+
 ## Next Steps
 
 With user lifecycle management in place, proceed to compliance:
@@ -422,6 +511,7 @@ Before moving on, ensure you have:
 - [ ] Documented offboarding process
 - [ ] Established token management policy
 - [ ] Created service account inventory
+- [ ] Defined process for inviting and managing external users
 
 ---
 
@@ -435,14 +525,18 @@ In this notebook, you learned:
 - User onboarding and offboarding workflows
 - Service account and OAuth client management
 - API token best practices and rotation
+- How to invite external users from other domains and manage cross-domain access securely
 
 ---
 
 ## References
 
+- [Manage Users, Groups, and Permissions](https://docs.dynatrace.com/docs/manage/account-management/identity-access-management)
 - [SCIM Provisioning](https://docs.dynatrace.com/docs/manage/identity-access-management/user-management/scim)
+- [SAML Federation](https://docs.dynatrace.com/docs/manage/identity-access-management/user-and-group-management/access-saml)
 - [OAuth Clients](https://docs.dynatrace.com/docs/manage/identity-access-management/account-management/oauth-clients)
 - [API Tokens](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/access-tokens)
+- [Account Management API](https://docs.dynatrace.com/docs/manage/access-control/account-management-api)
 
 ---
 
