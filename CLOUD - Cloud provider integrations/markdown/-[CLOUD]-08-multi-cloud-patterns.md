@@ -6,7 +6,6 @@
 
 This notebook covers strategies for building unified observability across multiple cloud providers with Dynatrace. You will learn how to create cross-cloud dashboards, establish consistent naming conventions, build unified alerting, compare costs across providers, and implement governance patterns for multi-cloud environments.
 
-
 ---
 
 ## Table of Contents
@@ -23,7 +22,6 @@ This notebook covers strategies for building unified observability across multip
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook covers strategies for building unified observability across multip
 | **Permissions** | `metrics.read`, `entities.read`, `logs.read` |
 | **Cloud Integrations** | At least two cloud providers configured (AWS, Azure, or GCP) |
 | **Prior Knowledge** | CLOUD-01 through CLOUD-06 |
-
 
 <a id="challenges"></a>
 
@@ -61,7 +58,6 @@ Dynatrace provides a **unified entity model** that normalizes cloud resources ac
 | Tags | AWS Tags | Azure Tags | GCP Labels |
 | `dt.host.cpu.usage` | CloudWatch CPU | Azure Monitor CPU | Cloud Monitoring CPU |
 
-
 <a id="unified-entities"></a>
 
 ## 2. Unified Entity Model
@@ -88,13 +84,11 @@ Some entities are provider-specific and require separate queries:
 | `dt.entity.aws_lambda_function` | `dt.entity.azure_web_app` | `dt.entity.cloud_application` |
 | `dt.entity.relational_database_service` | `dt.entity.azure_sql_database` | (custom device) |
 
-
 <a id="cross-cloud-queries"></a>
 
 ## 3. Cross-Cloud Comparison Queries
 
 ### Compute Resource Count by Provider
-
 
 ```dql
 // Compare compute resource counts across cloud providers
@@ -117,7 +111,6 @@ fetch dt.entity.ec2_instance
 
 ### Unified Host CPU Usage (All Providers)
 
-
 ```dql
 // Top 10 hosts by CPU usage across all cloud providers
 timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
@@ -128,7 +121,6 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 
 ### Kubernetes Cluster Comparison
 
-
 ```dql
 // List all Kubernetes clusters (EKS, AKS, GKE)
 fetch dt.entity.kubernetes_cluster
@@ -137,7 +129,6 @@ fetch dt.entity.kubernetes_cluster
 ```
 
 ### Cross-Cloud Problem Analysis
-
 
 ```dql
 // Davis problems from the last 7 days across all infrastructure
@@ -148,7 +139,6 @@ fetch dt.davis.problems, from:-7d
 ```
 
 ### Unified Log Analysis
-
 
 ```dql
 // Error log count by source across all providers in the last 6 hours
@@ -189,7 +179,6 @@ Cloud providers use different region naming:
 
 Use a normalized `region` tag in Dynatrace to enable cross-cloud region-based queries.
 
-
 <a id="health-dashboards"></a>
 
 ## 5. Unified Health Dashboards
@@ -208,7 +197,6 @@ Build dashboards that show health across all providers in a single view.
 
 ### Active Problems Across All Infrastructure
 
-
 ```dql
 // Active problems grouped by category
 fetch dt.davis.problems, from:-24h
@@ -218,7 +206,6 @@ fetch dt.davis.problems, from:-24h
 ```
 
 ### Service Error Rate (Unified)
-
 
 ```dql
 // Service-level error rates from spans in the last hour
@@ -254,7 +241,6 @@ fetch spans, from:-1h
 | **Deduplicate** | Davis automatically correlates related issues across providers |
 | **Define SLOs at the service level** | SLOs should be cloud-agnostic |
 
-
 <a id="cost-comparison"></a>
 
 ## 7. Cost Comparison Patterns
@@ -262,7 +248,6 @@ fetch spans, from:-1h
 While Dynatrace is not a cost management tool, you can use monitoring data to inform cost decisions.
 
 ### Resource Utilization Comparison
-
 
 ```dql
 // Host utilization over the last 24 hours - identify underutilized hosts
@@ -283,7 +268,6 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-24h, by:{dt.entity.host}
 | **Zero traffic services** | Unused resources | Decommission candidates |
 | **K8s pods with no requests/limits** | Uncontrolled resource usage | Enforce resource quotas |
 
-
 ```dql
 // Kubernetes namespaces with highest resource consumption (cost proxies)
 timeseries nsCpu = avg(dt.kubernetes.container.cpu_usage), from:-24h, by:{k8s.namespace.name}
@@ -302,12 +286,11 @@ timeseries nsCpu = avg(dt.kubernetes.container.cpu_usage), from:-24h, by:{k8s.na
 |---|---|
 | **Access control** | Segments by cloud provider + environment; IAM policies per team |
 | **Tagging compliance** | Monitor for untagged entities; alert on non-compliance |
-| **Cost allocation** | Tag-based DDU attribution per team/application |
+| **Cost allocation** | Tag-based DPS/DDU cost attribution per team/application |
 | **Security posture** | Runtime vulnerability analysis across all monitored hosts |
 | **Change tracking** | Davis events for configuration changes across providers |
 
 ### Tagging Compliance Check
-
 
 ```dql
 // Find hosts with no tags (potential compliance issue)
@@ -319,7 +302,6 @@ fetch dt.entity.host
 ```
 
 ### Vulnerability Overview
-
 
 ```dql
 // Davis security problems in the last 7 days
@@ -338,7 +320,6 @@ fetch dt.davis.problems, from:-7d
 | **Centralize alert routing** | Single Dynatrace workflow routes alerts to the right team |
 | **Regular utilization reviews** | Monthly review of underutilized resources across all providers |
 | **Unified runbooks** | Runbooks should reference Dynatrace queries, not provider-specific tools |
-
 
 <a id="summary"></a>
 
@@ -361,8 +342,6 @@ This notebook concludes the CLOUD series. For deeper dives into specific areas, 
 - **IAM series** — Enterprise IAM administration
 - **WFLOW series** — Workflows and alert notifications
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

@@ -324,9 +324,7 @@ kubectl label namespace shared cost-center=platform
 Create enrichment rule for `cost-center` label, then query:
 
 ```dql
-fetch dt.metrics
-| filter metric.key == "dt.kubernetes.container.cpu_usage"
-| summarize totalCpu = sum(value), by:{k8s.cost-center}
+timeseries totalCpu = sum(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.cost-center}
 ```
 
 ### Pipeline Routing

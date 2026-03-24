@@ -725,7 +725,7 @@ fi
 echo "Token acquired (expires in ${EXPIRES_IN}s)"
 
 # --- CONFIGURATION -----------------------------------------------------------
-ENVIRONMENT_ID="yhu28601"                                    # Environment ID
+ENVIRONMENT_ID="YOUR_ENVIRONMENT_ID"                                    # Environment ID
 API_BASE="https://api.dynatrace.com"                         # Account Management API base
 
 # --- COLORS ------------------------------------------------------------------

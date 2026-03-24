@@ -40,7 +40,6 @@ By the end of this notebook, you will be able to:
 
 ---
 
-
 ---
 
 <a id="migration-validation-checklist"></a>
@@ -138,7 +137,7 @@ Visual decision trees for diagnosing and resolving common OpenPipeline issues.
 | Issue Type | Symptoms | Solutions | Expected Improvement |
 |------------|----------|-----------|---------------------|
 | High Volume | Delayed logs, slow queries | Drop DEBUG early, reduce parsing, sampling | 60-90% reduction |
-| Cardinality | Millions of time series, high DDU | Bucket fields, remove user_id dimensions | 99%+ reduction |
+| Cardinality | Millions of time series, high DPS/DDU cost | Bucket fields, remove user_id dimensions | 99%+ reduction |
 | Cost | High storage costs | Drop low-value logs, reduce retention, extract metrics | 99.9% savings |
 -->
 
@@ -477,7 +476,6 @@ fetch logs
 
 ---
 
-
 ```python
 // Overview: Log volume by pipeline (last 24 hours)
 fetch logs, from: now() - 24h
@@ -693,7 +691,7 @@ matchesPhrase(content, "/ping") OR
 
 **Symptoms:**
 - Metric extraction creating millions of time series
-- High DDU costs for metric storage
+- High DPS/DDU costs for metric storage
 - Queries slow due to high cardinality
 
 **Diagnosis Queries:**
@@ -795,7 +793,6 @@ If dimension has > 1,000 unique values → BUCKET IT or REMOVE IT
 ```
 
 ---
-
 
 ```python
 // Pipeline volume trend over time

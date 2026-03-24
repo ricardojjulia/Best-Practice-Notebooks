@@ -2,7 +2,7 @@
 
 > **Series:** SPANS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
-## Optimizing Span Queries for Performance and DDU Efficiency
+## Optimizing Span Queries for Performance and Cost Efficiency
 This notebook covers best practices for writing cost-efficient DQL queries, minimizing DDU consumption while maintaining effective observability.
 
 ---
@@ -33,7 +33,7 @@ Before starting this notebook, ensure you have:
 
 <a id="understanding-query-costs"></a>
 ## 1. Understanding Query Costs
-DQL queries consume DDUs (Davis Data Units) based on several factors:
+DQL queries consume resources measured in DPS (Davis Processing Seconds) on current licensing, or DDUs (Davis Data Units) on classic contracts based on several factors:
 
 ![Query Cost Optimization](images/query-cost-optimization.png)
 
@@ -340,7 +340,7 @@ Optimized query templates for common production use cases.
 
 ```dql
 // Production Pattern: Service Health Dashboard
-// Optimized for dashboard refresh (low DDU)
+// Optimized for dashboard refresh (low cost)
 fetch spans, bucket: {"default_spans"}
 | filter span.kind == "server"
 | summarize {

@@ -292,7 +292,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 
 | Limit | Value | Impact |
 |-------|-------|--------|
-| **Max pipelines per record** | 1 | A record routes to ONE pipeline only via dynamic routing |
+| **Max pipelines per record** | 5 | A record can be processed by up to 5 different pipelines. After 5, data extraction stops but the record is still persisted. |
 | **Max processors per pipeline** | 50 | Cannot add more processors to pipeline |
 | **Max DQL commands per processor** | 10 commands | Split complex logic into multiple processors |
 | **Max parse operations per processor** | 100 patterns | Create additional parse processors |
