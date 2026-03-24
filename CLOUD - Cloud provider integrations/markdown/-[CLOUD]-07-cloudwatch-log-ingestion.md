@@ -6,7 +6,6 @@
 
 This notebook covers strategies for forwarding cloud provider logs into Dynatrace. While the focus is on AWS CloudWatch log forwarding (the most common pattern), the principles apply to Azure (Event Hub) and GCP (Pub/Sub) as well. You will learn about Amazon Data Firehose (the recommended approach), alternative methods, filtering strategies, OpenPipeline processing, and cost optimization.
 
-
 ---
 
 ## Table of Contents
@@ -30,7 +29,6 @@ This notebook covers strategies for forwarding cloud provider logs into Dynatrac
 | **Permissions** | `logs.read`, `logs.ingest`, `openpipeline.read` |
 | **AWS Integration** | CloudWatch log groups generating data |
 | **Prior Knowledge** | CLOUD-01 and CLOUD-02 fundamentals |
-
 
 <a id="log-architecture"></a>
 
@@ -177,7 +175,7 @@ A critical design decision is **where** to filter logs: at the cloud provider le
 
 | Aspect | Filter at Source (CloudWatch) | Filter in Dynatrace (OpenPipeline) |
 |---|---|---|
-| **Cost** | Reduces ingestion volume and DDU cost | Full volume ingested, higher DDU cost |
+| **Cost** | Reduces ingestion volume and DPS/DDU cost | Full volume ingested, higher DPS/DDU cost |
 | **Flexibility** | Limited pattern matching | Full DQL-based processing |
 | **Data loss risk** | Filtered logs are not recoverable | All logs retained (can filter at query time) |
 | **Latency** | Immediate (before forwarding) | At ingestion (OpenPipeline processing) |
@@ -197,7 +195,6 @@ A critical design decision is **where** to filter logs: at the cloud provider le
 | `/ecs/service/*` | `""` (all) | Forward all application logs |
 | `/aws/rds/*` | `?"error" ?"slow query"` | Focus on errors and slow queries |
 | ALB access logs | `[w1, w2, w3, w4, w5, w6, w7, status_code >= 400, ...]` | Only 4xx/5xx responses |
-
 
 <a id="openpipeline"></a>
 
@@ -229,13 +226,11 @@ Incoming cloud logs
   └─ Drop if content matches health check pattern
 ```
 
-
 <a id="querying-logs"></a>
 
 ## 6. Querying Cloud Logs
 
 ### All CloudWatch-Sourced Logs
-
 
 ```dql
 // Recent logs from AWS (last hour)
@@ -248,7 +243,6 @@ fetch logs, from:-1h
 
 ### Log Volume by Source
 
-
 ```dql
 // Log volume by source over the last 24 hours
 fetch logs, from:-24h
@@ -259,7 +253,6 @@ fetch logs, from:-24h
 
 ### Error Log Trend Over Time
 
-
 ```dql
 // Error logs per hour over the last 24 hours
 fetch logs, from:-24h
@@ -268,7 +261,6 @@ fetch logs, from:-24h
 ```
 
 ### Top Error Messages
-
 
 ```dql
 // Most frequent error log messages in the last 6 hours
@@ -280,7 +272,6 @@ fetch logs, from:-6h
 ```
 
 ### Log Volume by Kubernetes Namespace
-
 
 ```dql
 // Log volume by Kubernetes namespace over the last 6 hours
@@ -303,8 +294,8 @@ Log ingestion is typically the largest cost driver in cloud monitoring. Optimiza
 |---|---|---|
 | **CloudWatch** | $0.50/GB ingested + $0.03/GB stored | Reduce log retention, filter at source |
 | **Firehose** | Firehose data processing ($0.029/GB) | Buffer settings, compression |
-| **Dynatrace** | DDU per GB ingested | Source filtering, OpenPipeline drop rules |
-| **Grail storage** | DDU per GB stored x retention | Bucket-level retention policies |
+| **Dynatrace** | DPS/DDU per GB ingested | Source filtering, OpenPipeline drop rules |
+| **Grail storage** | DPS/DDU per GB stored x retention | Bucket-level retention policies |
 
 ### Optimization Strategies (Ranked by Impact)
 
@@ -318,7 +309,6 @@ Log ingestion is typically the largest cost driver in cloud monitoring. Optimiza
 | **6. Compress log payloads** | 5-10% transfer | Low |
 
 ### Monitoring Your Log Costs
-
 
 ```dql
 // Log volume trend by hour over the last 7 days
@@ -356,4 +346,3 @@ fetch logs, from:-24h
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

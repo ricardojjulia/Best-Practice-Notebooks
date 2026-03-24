@@ -485,7 +485,7 @@ Before migrating, understand these key limits:
 
 | Limit | Value | Notes |
 |-------|-------|-------|
-| **Max custom pipelines** | 100 pipelines | Per environment |
+| **Max custom pipelines** | 100 | Per configuration scope (includes built-in and custom) |
 | **Max dynamic routes** | 100 routes | Per configuration scope |
 | **Max conditions per route** | 10 conditions | Use AND/OR to combine |
 

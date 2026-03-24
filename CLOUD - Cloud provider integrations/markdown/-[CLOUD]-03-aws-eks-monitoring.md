@@ -214,7 +214,7 @@ Many EKS users start with CloudWatch Container Insights. Here is how it compares
 | **AI-powered root cause** | Basic alarms | Davis AI automatic root cause |
 | **Code-level visibility** | None | Full (method-level) |
 | **Log analysis** | CloudWatch Logs Insights | Grail-powered DQL |
-| **Cost model** | Per metric, per log GB | DDU-based |
+| **Cost model** | Per metric, per log GB | DPS/DDU-based |
 | **Cross-stack correlation** | Limited | Automatic (host → process → service → trace) |
 
 ### When to Use Both

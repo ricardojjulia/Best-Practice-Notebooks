@@ -399,7 +399,6 @@ Understanding how much span data each application generates is critical for effe
 
 First, confirm that spans carry the `dt.ingest.size` attribute:
 
-
 ```dql
 // Verify dt.ingest.size is present on spans
 fetch spans, from:-1h
@@ -426,7 +425,6 @@ Navigate to **Settings > Process and contextualize > OpenPipeline > Spans** and 
 
 Once the metric is flowing (allow a few minutes after saving), query it:
 
-
 ```dql
 // Span ingest volume per application (after metric extraction is configured)
 timeseries span_ingest = sum(span.ingest.size.by.app), from:-24h, by:{primary_tags.app}
@@ -435,7 +433,6 @@ timeseries span_ingest = sum(span.ingest.size.by.app), from:-24h, by:{primary_ta
 ```
 
 > **Why this matters:** Knowing which applications generate the most span traffic helps you make informed decisions about bucket partitioning, retention policies, sampling strategies, and cost attribution. See **ORGNZ-03: Bucket Strategy and Design** for the complete data partitioning best practice.
-
 
 ---
 
@@ -517,7 +514,7 @@ In this notebook, you learned:
 ## Next Steps
 
 Continue to **SPANS-08: Cost-Efficient DQL Queries** to learn:
-- Optimizing DQL queries for DDU efficiency
+- Optimizing DQL queries for cost efficiency
 - Query cost estimation techniques
 - Best practices for production queries
 - Indexed fields and performance strategies

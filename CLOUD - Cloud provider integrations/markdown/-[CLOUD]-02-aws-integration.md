@@ -6,7 +6,6 @@
 
 This notebook covers how to set up and optimize Dynatrace's AWS integration. You will learn about IAM role-based and key-based authentication, which AWS services are supported, how to query AWS entities and metrics, and strategies for managing API costs.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ This notebook covers how to set up and optimize Dynatrace's AWS integration. You
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook covers how to set up and optimize Dynatrace's AWS integration. You
 | **AWS Account** | With IAM permissions for Dynatrace integration |
 | **Connection** | Clouds app direct connection (recommended) or Environment ActiveGate (classic) |
 | **Prior Knowledge** | CLOUD-01 fundamentals |
-
 
 <a id="authentication-methods"></a>
 
@@ -67,7 +64,6 @@ Uses an IAM user with access key ID and secret access key.
 
 > **Important:** Regardless of method, use **least-privilege** IAM policies. `ReadOnlyAccess` is sufficient for monitoring. Never grant `AdministratorAccess`.
 
-
 <a id="supported-services"></a>
 
 ## 2. Supported AWS Services
@@ -93,7 +89,6 @@ Dynatrace monitors 80+ AWS services. Key services include:
 | RDS | `dt.entity.relational_database_service` | 5 min | CPU, connections, read/write latency |
 | S3 | Custom device | 1 day | Bucket size, object count, requests |
 | ELB | `dt.entity.elastic_load_balancer` | 1 min | Request count, latency, HTTP errors |
-
 
 <a id="enabling-monitoring"></a>
 
@@ -135,14 +130,13 @@ Tag key: dynatrace-monitored
 Tag value: true
 ```
 
-This reduces both Dynatrace DDU consumption and AWS CloudWatch API costs.
+This reduces both Dynatrace resource consumption (DPS/DDU) and AWS CloudWatch API costs.
 
 <a id="querying-aws-entities"></a>
 
 ## 4. Querying AWS Entities
 
 ### List All EC2 Instances
-
 
 ```dql
 // List all EC2 instances with their names and instance types
@@ -154,7 +148,6 @@ fetch dt.entity.ec2_instance
 
 ### Count EC2 Instances by Instance Type
 
-
 ```dql
 // Count EC2 instances grouped by instance type
 fetch dt.entity.ec2_instance
@@ -163,7 +156,6 @@ fetch dt.entity.ec2_instance
 ```
 
 ### List Lambda Functions
-
 
 ```dql
 // List all monitored Lambda functions
@@ -174,7 +166,6 @@ fetch dt.entity.aws_lambda_function
 ```
 
 ### List RDS Instances
-
 
 ```dql
 // List all monitored RDS instances
@@ -190,7 +181,6 @@ fetch dt.entity.relational_database_service
 
 ### EC2 CPU Usage
 
-
 ```dql
 // EC2 CPU usage over the last 6 hours, top 10 busiest instances
 timeseries avgCpu = avg(dt.host.cpu.usage), from:-6h, by:{dt.entity.host}
@@ -201,7 +191,6 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-6h, by:{dt.entity.host}
 
 ### Lambda Invocation Metrics
 
-
 ```dql
 // Lambda invocations over the last 6 hours by function
 timeseries invocations = sum(cloud.aws.lambda.invocations), from:-6h, by:{dt.entity.aws_lambda_function}
@@ -211,7 +200,6 @@ timeseries invocations = sum(cloud.aws.lambda.invocations), from:-6h, by:{dt.ent
 ```
 
 ### Lambda Error Rate
-
 
 ```dql
 // Lambda error count over the last 6 hours by function
@@ -240,7 +228,6 @@ Cloud metrics are not instantly available in Dynatrace. Understanding delays hel
 - **Don't set alert evaluation windows shorter than the metric delay** — a 1-minute evaluation window on a 5-minute metric will produce false negatives
 - **Use sliding windows** — evaluate over 15-30 minutes for cloud metrics
 - **Combine with OneAgent** — for sub-minute alerting, rely on OneAgent metrics rather than cloud metrics
-
 
 <a id="cost-optimization"></a>
 
@@ -274,7 +261,6 @@ For example: 5 services x 10 metrics x 100 resources x 288 polls/day x 30 = ~43M
 
 > **Tip:** Review the CloudWatch billing dashboard monthly and correlate spikes with Dynatrace service additions.
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -293,8 +279,6 @@ For example: 5 services x 10 metrics x 100 resources x 288 polls/day x 30 = ~43M
 - **CLOUD-04: AWS Lambda & Serverless** — Serverless function monitoring
 - **CLOUD-07: CloudWatch Log Ingestion** — Log forwarding from AWS
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

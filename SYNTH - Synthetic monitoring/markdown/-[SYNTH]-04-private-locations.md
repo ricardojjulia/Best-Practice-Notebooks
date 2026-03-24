@@ -26,8 +26,6 @@ This notebook covers deploying and managing private synthetic locations (ActiveG
 - ✅ Completed SYNTH-01 through SYNTH-03
 - ✅ Infrastructure access to deploy ActiveGate (for setup)
 
-
-
 <a id="why-private-locations"></a>
 ## 1. Why Private Locations?
 ### Public vs Private Locations
@@ -140,7 +138,7 @@ services:
 
 ```yaml
 # Use Dynatrace Operator with ActiveGate CRD
-apiVersion: dynatrace.com/v1beta1
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube

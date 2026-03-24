@@ -335,7 +335,7 @@ Deploying ActiveGate in Kubernetes requires careful consideration of where, how,
 
 The Dynatrace Operator manages ActiveGate lifecycle automatically.
 
-> **Important:** Use `apiVersion: dynatrace.com/v1beta5` for Dynatrace Operator 1.7.0+. Earlier versions (v1beta1, v1beta2) are deprecated and no longer supported.
+> **Important:** Use `apiVersion: dynatrace.com/v1beta5` or `v1beta6` for Dynatrace Operator 1.8.x. Operator 1.8.0 removes v1beta3 and auto-converts to v1beta6. v1beta6 adds OTLP exporter configuration.
 
 ```yaml
 # dynakube.yaml - ActiveGate via Operator

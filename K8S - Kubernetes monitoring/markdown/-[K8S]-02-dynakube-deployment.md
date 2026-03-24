@@ -211,7 +211,7 @@ oneAgent:
 | Best for multi-tenant clusters | Slightly more complex |
 | Independent app/infra monitoring | |
 
-### classicFullStack (Legacy — Avoid for New Deployments)
+### classicFullStack (Supported — Avoid for New Deployments)
 
 ```yaml
 oneAgent:
@@ -473,9 +473,9 @@ helm upgrade dynatrace-operator dynatrace/dynatrace-operator \
 
 | Operator Version | Min K8s | Max K8s | Notes |
 |------------------|---------|---------|-------|
-| 1.0.x | 1.21 | 1.28 | Legacy |
-| 1.1.x | 1.23 | 1.29 | Current |
-| 1.2.x | 1.24 | 1.30 | Latest |
+| 1.6.x | 1.21 | 1.28 | Supported |
+| 1.7.x | 1.23 | 1.29 | Supported |
+| 1.8.x | 1.24 | 1.30 | Latest (v1.8.1, Feb 2026) |
 
 ### Rollback if Needed
 

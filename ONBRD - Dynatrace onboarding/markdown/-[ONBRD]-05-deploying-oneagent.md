@@ -214,7 +214,7 @@ helm install dynatrace-operator dynatrace/dynatrace-operator \
 
 3. **Apply to cluster**
    ```bash
-   kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.3.2/kubernetes.yaml
+   kubectl apply -f https://github.com/Dynatrace/dynatrace-operator/releases/download/v1.8.1/kubernetes.yaml
    kubectl apply -f dynakube.yaml
    ```
 
@@ -227,7 +227,7 @@ helm install dynatrace-operator dynatrace/dynatrace-operator \
 
 The DynaKube CR is the primary configuration for the Dynatrace Operator. Here are examples for each deployment mode:
 
-> **Important:** Use `apiVersion: dynatrace.com/v1beta5` for Dynatrace Operator 1.7.0+. Earlier versions (v1beta1, v1beta2) are deprecated and no longer supported.
+> **Important:** Use `apiVersion: dynatrace.com/v1beta5` or `v1beta6` for Dynatrace Operator 1.8.x. Operator 1.8.0 removes v1beta3 and auto-converts to v1beta6. v1beta6 adds OTLP exporter configuration.
 
 **Cloud Native FullStack (Recommended for most K8s):**
 
@@ -319,7 +319,7 @@ spec:
 ```bash
 # Mirror required images to private registry
 IMAGES=(
-  "docker.io/dynatrace/dynatrace-operator:v1.3.2"
+  "docker.io/dynatrace/dynatrace-operator:v1.8.1"
   "docker.io/dynatrace/dynatrace-oneagent:latest"
   "docker.io/dynatrace/dynatrace-activegate:latest"
 )
