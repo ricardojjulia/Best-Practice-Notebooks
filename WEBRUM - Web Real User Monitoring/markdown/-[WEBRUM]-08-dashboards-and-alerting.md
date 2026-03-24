@@ -99,7 +99,7 @@ The threshold T is configurable per application. Common defaults:
 
 ```dql
 // Apdex calculation with T = 3 seconds for page loads
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | summarize total = count(),
@@ -113,7 +113,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Apdex trend over 7 days — daily Apdex score
-fetch dt.rum.user_action, from:-7d
+fetch user.events, from:-7d
 | filter action.type == "Load"
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | fieldsAdd is_satisfied = if(duration_sec <= 3, 1.0, else: 0.0),
@@ -127,7 +127,7 @@ fetch dt.rum.user_action, from:-7d
 
 ```dql
 // Apdex by page — which pages have the worst user satisfaction?
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | summarize total = count(),
@@ -174,7 +174,7 @@ fetch dt.rum.error, from:-1h
 
 ```dql
 // Performance SLA — percentage of page loads under 3 seconds
-fetch dt.rum.user_action, from:-1h
+fetch user.events, from:-1h
 | filter action.type == "Load"
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | summarize total = count(),
@@ -250,7 +250,7 @@ Detect when page load performance degrades beyond acceptable thresholds.
 
 ```dql
 // p75 page load duration per 15-minute window — performance alert data
-fetch dt.rum.user_action, from:-6h
+fetch user.events, from:-6h
 | filter action.type == "Load"
 | fieldsAdd duration_ms = toDouble(duration) / 1000000.0
 | makeTimeseries p75_duration = percentile(duration_ms, 75), interval:15m, by:{app.name}
@@ -258,7 +258,7 @@ fetch dt.rum.user_action, from:-6h
 
 ```dql
 // Apdex per 15-minute window — satisfaction alert data
-fetch dt.rum.user_action, from:-6h
+fetch user.events, from:-6h
 | filter action.type == "Load"
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | fieldsAdd apdex_score = if(duration_sec <= 3, 1.0,

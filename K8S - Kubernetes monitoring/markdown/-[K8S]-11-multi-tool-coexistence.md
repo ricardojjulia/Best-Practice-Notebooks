@@ -53,7 +53,7 @@ If you omit `oneAgent.cloudNativeFullStack` entirely:
 
 ```yaml
 # Infrastructure-only DynaKube (no cloudNativeFullStack)
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube
@@ -353,7 +353,7 @@ fetch dt.entity.service
 ### Production-Ready DynaKube with Coexistence
 
 ```yaml
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube

@@ -81,12 +81,12 @@ LCP measures the time from when the user initiates navigation to when the larges
 
 ```dql
 // Average LCP across all applications in the last 24 hours
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
-| filter isNotNull(largest.contentful.paint)
-| summarize avg_lcp = avg(largest.contentful.paint),
-    p75_lcp = percentile(largest.contentful.paint, 75),
-    p95_lcp = percentile(largest.contentful.paint, 95),
+| filter isNotNull(web_vitals.largest_contentful_paint)
+| summarize avg_lcp = avg(web_vitals.largest_contentful_paint),
+    p75_lcp = percentile(web_vitals.largest_contentful_paint, 75),
+    p95_lcp = percentile(web_vitals.largest_contentful_paint, 95),
     sample_size = count(),
     by:{app.name}
 | sort avg_lcp desc
@@ -94,10 +94,10 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // LCP distribution — classify into Good / Needs Improvement / Poor
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
-| filter isNotNull(largest.contentful.paint)
-| fieldsAdd lcp_ms = toDouble(largest.contentful.paint) / 1000000.0
+| filter isNotNull(web_vitals.largest_contentful_paint)
+| fieldsAdd lcp_ms = toDouble(web_vitals.largest_contentful_paint) / 1000000.0
 | fieldsAdd lcp_category = if(lcp_ms <= 2500, "Good",
     else: if(lcp_ms <= 4000, "Needs Improvement",
     else: "Poor"))
@@ -128,9 +128,9 @@ INP measures the time from when a user interacts (click, tap, keypress) to when 
 
 ```dql
 // INP percentile analysis by application
-fetch dt.rum.user_action, from:-24h
-| filter isNotNull(interaction.to.next.paint)
-| fieldsAdd inp_ms = toDouble(interaction.to.next.paint) / 1000000.0
+fetch user.events, from:-24h
+| filter isNotNull(web_vitals.interaction_to_next_paint)
+| fieldsAdd inp_ms = toDouble(web_vitals.interaction_to_next_paint) / 1000000.0
 | summarize avg_inp = avg(inp_ms),
     p75_inp = percentile(inp_ms, 75),
     p95_inp = percentile(inp_ms, 95),
@@ -141,9 +141,9 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // INP by page — identify the slowest-responding pages
-fetch dt.rum.user_action, from:-24h
-| filter isNotNull(interaction.to.next.paint)
-| fieldsAdd inp_ms = toDouble(interaction.to.next.paint) / 1000000.0
+fetch user.events, from:-24h
+| filter isNotNull(web_vitals.interaction_to_next_paint)
+| fieldsAdd inp_ms = toDouble(web_vitals.interaction_to_next_paint) / 1000000.0
 | summarize avg_inp = avg(inp_ms),
     p75_inp = percentile(inp_ms, 75),
     action_count = count(),
@@ -170,22 +170,22 @@ CLS measures unexpected layout shifts during the entire lifespan of a page. A la
 
 ```dql
 // CLS distribution — classify into Good / Needs Improvement / Poor
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
-| filter isNotNull(cumulative.layout.shift)
-| fieldsAdd cls_category = if(cumulative.layout.shift <= 0.1, "Good",
-    else: if(cumulative.layout.shift <= 0.25, "Needs Improvement",
+| filter isNotNull(web_vitals.cumulative_layout_shift)
+| fieldsAdd cls_category = if(web_vitals.cumulative_layout_shift <= 0.1, "Good",
+    else: if(web_vitals.cumulative_layout_shift <= 0.25, "Needs Improvement",
     else: "Poor"))
 | summarize action_count = count(), by:{cls_category}
 ```
 
 ```dql
 // Worst CLS pages — pages with the most layout shifting
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
-| filter isNotNull(cumulative.layout.shift)
-| summarize avg_cls = avg(cumulative.layout.shift),
-    p75_cls = percentile(cumulative.layout.shift, 75),
+| filter isNotNull(web_vitals.cumulative_layout_shift)
+| summarize avg_cls = avg(web_vitals.cumulative_layout_shift),
+    p75_cls = percentile(web_vitals.cumulative_layout_shift, 75),
     action_count = count(),
     by:{action.name}
 | filter action_count > 10
@@ -201,12 +201,12 @@ Aggregate Core Web Vitals by page to identify which pages need optimization:
 
 ```dql
 // All three CWV metrics by page — comprehensive page health view
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize
-    p75_lcp_ms = percentile(toDouble(largest.contentful.paint) / 1000000.0, 75),
-    p75_cls = percentile(cumulative.layout.shift, 75),
-    p75_inp_ms = percentile(toDouble(interaction.to.next.paint) / 1000000.0, 75),
+    p75_lcp_ms = percentile(toDouble(web_vitals.largest_contentful_paint) / 1000000.0, 75),
+    p75_cls = percentile(web_vitals.cumulative_layout_shift, 75),
+    p75_inp_ms = percentile(toDouble(web_vitals.interaction_to_next_paint) / 1000000.0, 75),
     page_views = count(),
     by:{action.name}
 | filter page_views > 20
@@ -225,19 +225,19 @@ Tracking CWV over time helps identify regressions after deployments, seasonal pa
 
 ```dql
 // LCP trend over the last 7 days — hourly p75
-fetch dt.rum.user_action, from:-7d
+fetch user.events, from:-7d
 | filter action.type == "Load"
-| filter isNotNull(largest.contentful.paint)
-| fieldsAdd lcp_ms = toDouble(largest.contentful.paint) / 1000000.0
+| filter isNotNull(web_vitals.largest_contentful_paint)
+| fieldsAdd lcp_ms = toDouble(web_vitals.largest_contentful_paint) / 1000000.0
 | makeTimeseries p75_lcp = percentile(lcp_ms, 75), interval:1h
 ```
 
 ```dql
 // CLS trend over the last 7 days — daily p75
-fetch dt.rum.user_action, from:-7d
+fetch user.events, from:-7d
 | filter action.type == "Load"
-| filter isNotNull(cumulative.layout.shift)
-| makeTimeseries p75_cls = percentile(cumulative.layout.shift, 75), interval:1d
+| filter isNotNull(web_vitals.cumulative_layout_shift)
+| makeTimeseries p75_cls = percentile(web_vitals.cumulative_layout_shift, 75), interval:1d
 ```
 
 <a id="cwv-scoring"></a>
@@ -248,15 +248,15 @@ Create a single-query CWV scorecard showing the percentage of page loads in each
 
 ```dql
 // CWV scorecard — percentage of Good / NI / Poor for each metric
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
-| fieldsAdd lcp_ms = toDouble(largest.contentful.paint) / 1000000.0,
-    inp_ms = toDouble(interaction.to.next.paint) / 1000000.0
+| fieldsAdd lcp_ms = toDouble(web_vitals.largest_contentful_paint) / 1000000.0,
+    inp_ms = toDouble(web_vitals.interaction_to_next_paint) / 1000000.0
 | summarize total = count(),
     lcp_good = countIf(lcp_ms <= 2500),
     lcp_poor = countIf(lcp_ms > 4000),
-    cls_good = countIf(cumulative.layout.shift <= 0.1),
-    cls_poor = countIf(cumulative.layout.shift > 0.25),
+    cls_good = countIf(web_vitals.cumulative_layout_shift <= 0.1),
+    cls_poor = countIf(web_vitals.cumulative_layout_shift > 0.25),
     inp_good = countIf(inp_ms <= 200),
     inp_poor = countIf(inp_ms > 500)
 | fieldsAdd lcp_good_pct = round(toDouble(lcp_good) / toDouble(total) * 100.0, decimals: 1),

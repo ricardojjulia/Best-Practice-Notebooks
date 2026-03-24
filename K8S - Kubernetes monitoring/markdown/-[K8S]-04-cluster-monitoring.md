@@ -1,6 +1,6 @@
 # Cluster Health Monitoring
 
-> **Series:** K8S | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 03/14/2026
 
 ## Deep-Dive into Kubernetes Cluster Metrics
 Cluster health monitoring provides visibility into the infrastructure layer of Kubernetes: nodes, control plane, and cluster-wide resources. This notebook covers key metrics, thresholds, and DQL queries for proactive cluster management.
@@ -252,8 +252,59 @@ timeseries avgMemUsageBytes = avg(dt.kubernetes.container.memory_working_set), f
 | limit 25
 ```
 
+<a id="dynatrace-component-health"></a>
+## 7. Dynatrace Component Health
+
+Monitor the health of Dynatrace's own components (OneAgent, ActiveGate) running on your clusters.
+
+### Why Monitor the Monitoring?
+
+| Component | What to Watch | Action Threshold |
+|-----------|---------------|------------------|
+| **OneAgent** | CPU usage, memory consumption | Sustained memory growth above baseline |
+| **ActiveGate** | Memory headroom, pod restarts | Memory headroom < 20%, any OOMKill |
+| **CSI Driver** | Volume mount failures | Any mount timeout |
+| **Operator** | Reconciliation errors | Failed CR updates |
+
+> **Note:** OneAgent runs without resource limits or requests by default. Headroom queries using `limits_memory` will return no data for OneAgent containers. Use absolute memory usage instead. ActiveGate **does** have limits configured, so headroom queries work for AG.
+
+> **Tip:** These queries use `matchesValue(k8s.container.name, "dynatrace-oneagent")` to isolate Dynatrace components from application workloads.
+
+```dql
+// OneAgent CPU usage across clusters (top 20 consumers)
+timeseries by:{k8s.cluster.name, k8s.pod.name}, from:-1h,
+  oaCpu = avg(dt.kubernetes.container.cpu_usage),
+  filter:{matchesValue(k8s.container.name, "dynatrace-oneagent")}
+| fieldsAdd avgCpu = arrayAvg(oaCpu)
+| sort avgCpu desc
+| limit 20
+```
+
+```dql
+// OneAgent memory usage across clusters (absolute usage — OA has no resource limits by default)
+timeseries by:{k8s.cluster.name}, from:-1h,
+  memUsage = avg(dt.kubernetes.container.memory_working_set),
+  filter:{matchesValue(k8s.container.name, "dynatrace-oneagent")}
+| fieldsAdd avgUsageMi = round(arrayAvg(memUsage) / 1048576, decimals: 0)
+| sort avgUsageMi desc
+```
+
+```dql
+// Dynatrace component restarts and OOM events (last 24h)
+fetch events, from:-24h
+| filter event.kind == "K8S_EVENT"
+| filter matchesPhrase(event.description, "dynatrace") AND (
+    matchesPhrase(event.description, "restart") OR
+    matchesPhrase(event.description, "OOMKilled") OR
+    matchesPhrase(event.description, "BackOff")
+  )
+| fields timestamp, event.description
+| sort timestamp desc
+| limit 50
+```
+
 <a id="alerting-strategies"></a>
-## 7. Alerting Strategies
+## 8. Alerting Strategies
 ### Recommended Alerts
 
 | Alert | Condition | Severity |

@@ -10,7 +10,6 @@ It is the companion to **IAM-11: Policy Persona Workshop**, which designs the pe
 
 > **Script-first approach:** Every script is self-contained with a CONFIGURATION block at the top. Copy, edit the variables, and run — no other files needed.
 
-
 ---
 
 ## Table of Contents
@@ -24,7 +23,6 @@ It is the companion to **IAM-11: Policy Persona Workshop**, which designs the pe
 7. [Troubleshooting](#troubleshooting)
 
 ---
-
 
 ## Prerequisites
 
@@ -86,7 +84,6 @@ fi
 ```
 
 > **Token lifetime:** OAuth tokens typically expire in 300 seconds (5 minutes). For long-running scripts, re-acquire before expiration.
-
 
 <a id="provisioning"></a>
 
@@ -678,7 +675,6 @@ echo "Report complete."
     → DT-GLOBAL-PowerUsers    params: team=checkout
 ```
 
-
 <a id="cleanup"></a>
 
 ## 4. Script 3: Cleanup Test Resources
@@ -703,9 +699,9 @@ FORCE_DELETE=${1:-}  # --force flag to skip confirmation
 
 
 SSO_TOKEN_URL="https://sso.dynatrace.com/sso/oauth2/token"
-OAUTH_CLIENT_ID="dt0s02.YOUR_CLIENT_ID"                                        # Your client ID
-OAUTH_CLIENT_SECRET="dt0s02.YOUR_CLIENT_ID.YOUR_CLIENT_SECRET"                 # Your client secret
-ACCOUNT_UUID="00000000-1111-2222-3333-444444444444"                            # Dynatrace account UUID
+OAUTH_CLIENT_ID="dt0s02.xxxxxxx"                                              # Your client ID
+OAUTH_CLIENT_SECRET="dt0s02.xxxxxxx.xxxxxxxxxx"  # Your client secret
+ACCOUNT_UUID="xxx-xxx-xxx-xxx-xxx"                            # Dynatrace account UUID
 OAUTH_SCOPE="account-idm-read account-idm-write iam-policies-management"
 
 TOKEN_RESPONSE=$(curl -s \
@@ -876,13 +872,11 @@ echo -e "${GREEN}Cleanup complete.${NC}"
 
 > **Safety:** The script only deletes resources whose names start with the configured prefixes. Adjust `GROUP_PREFIX` and `POLICY_PREFIXES` to match your naming convention.
 
-
 <a id="dql-validation"></a>
 
 ## 5. DQL Validation Queries
 
 These DQL queries let you audit your IAM configuration directly from a Dynatrace Notebook — no shell scripts needed.
-
 
 ```dql
 // Audit IAM policy and group changes (last 7 days)
@@ -904,7 +898,6 @@ The query above scans audit events for IAM-related changes. Look for:
 
 ### Verify Group Membership
 
-
 ```dql
 // Count users per group (shows group utilization)
 fetch events, from:-24h
@@ -918,7 +911,6 @@ fetch events, from:-24h
 
 Use this query to confirm that security context values match what your templated data policies expect. If a team's logs have no `dt.security_context` tag, the templated policy won't match anything.
 
-
 ```dql
 // Show distinct security context values in logs (last 1h)
 // These values must match the "team" parameter in your templated data policy bindings
@@ -931,7 +923,6 @@ fetch logs, from:-1h
 ### Verify Bucket-Level Access
 
 If your data policies include bucket restrictions, verify which buckets exist and their retention settings.
-
 
 ```dql
 // List all Grail buckets with record counts
@@ -988,7 +979,6 @@ fetch logs, from:-1h
 
 > **Common mistake:** `document:documents:create` and `document:documents:share` do **not exist**. Use `write` for creation and `direct-shares:write` for sharing.
 
-
 <a id="troubleshooting"></a>
 
 ## 7. Troubleshooting
@@ -1024,7 +1014,6 @@ If users in a templated-policy group can't see data:
 3. **Check bucket assignment** — If using bucket-level policies, verify data is routed to the expected bucket via OpenPipeline
 4. **Check evaluation order** — A DENY from another policy will override the ALLOW. Use the audit DQL to check for conflicting policies
 
-
 ## Next Steps
 
 - **IAM-10: Templated Policy Assignments** — Deep dive into template syntax and `${bindParam:}` patterns
@@ -1035,4 +1024,3 @@ If users in a templated-policy group can't see data:
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

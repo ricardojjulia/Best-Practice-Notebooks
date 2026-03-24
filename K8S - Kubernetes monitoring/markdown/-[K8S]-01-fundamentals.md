@@ -1,6 +1,6 @@
 # Kubernetes Monitoring Fundamentals
 
-> **Series:** K8S | **Notebook:** 1 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Introduction to Kubernetes Observability with Dynatrace
 Kubernetes introduces unique observability challenges: ephemeral workloads, dynamic scaling, complex networking, and multi-layer abstractions. Dynatrace provides comprehensive Kubernetes monitoring through the DynaKube operator, which deploys and manages monitoring components automatically.
@@ -68,7 +68,7 @@ Dynatrace monitors Kubernetes through multiple components:
 | Mode | Use Case | OneAgent | Code Modules |
 |------|----------|----------|---------------|
 | **cloudNativeFullStack** | Full visibility, K8s-native | Privileged DaemonSet | Injected via webhook |
-| **classicFullStack** | Traditional deployment | Privileged DaemonSet | Loaded from host |
+| **classicFullStack** (legacy) | Traditional deployment — avoid for new deployments | Privileged DaemonSet | Loaded from host |
 | **applicationMonitoring** | App-only, no infra | None | Injected via webhook |
 | **hostMonitoring** | Infra-only | DaemonSet | None |
 

@@ -113,7 +113,7 @@ Understanding the sequence of actions within sessions reveals common navigation 
 
 ```dql
 // Top entry pages — where do users start their journey?
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize first_action = takeFirst(action.name), by:{session.id}
 | summarize entry_count = count(), by:{first_action}
@@ -123,7 +123,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Top exit pages — where do users leave?
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize last_action = takeLast(action.name), by:{session.id}
 | summarize exit_count = count(), by:{last_action}
@@ -163,7 +163,7 @@ fetch dt.rum.user_session, from:-24h
 | summarize total_sessions = count(),
     by:{app.name}
 | append [
-    fetch dt.rum.user_action, from:-24h
+    fetch user.events, from:-24h
     | filter action.type == "Load"
     | filter action.name ~ "*confirmation*" or action.name ~ "*thank*you*" or action.name ~ "*checkout*success*"
     | summarize converted_sessions = countDistinct(session.id), by:{app.name}

@@ -37,7 +37,7 @@ The Dynatrace Terraform provider supports three authentication methods. Each cov
 |------------|--------|--------|-------------|
 | **API Token** (classic) | `dt0c01.xxxx` | Settings 2.0, Synthetics, SLOs | Gen3 Platform (workflows, documents, segments) |
 | **Platform Token** | `dt0s16.xxxx` | Settings 2.0 + Gen3 Platform | Synthetics, SLOs (removed in v1.88.0) |
-| **OAuth Client** | Client ID + Secret | Gen3 Platform, IAM | Settings 2.0, Synthetics, SLOs (removed in v1.88.0) |
+| **OAuth Client** | Client ID + Secret | Gen3 Platform, IAM, Settings 2.0 (`HTTP_OAUTH_PREFERENCE`) | Synthetics (v1.88.0+) |
 
 > **Important (v1.88.0):** As of Dynatrace Terraform provider **v1.88.0**, OAuth-based authentication (including Platform Tokens acting as OAuth) **can no longer manage synthetic monitors or SLO definitions**. These resources require a classic **API Token** with the appropriate scopes. When both tokens are configured, the provider automatically uses the correct one for each resource.
 
@@ -120,7 +120,7 @@ terraform {
   required_providers {
     dynatrace = {
       source  = "dynatrace-oss/dynatrace"
-      version = "~> 1.0"
+      version = "~> 1.91"        # Current: v1.91.1 (March 2026)
     }
   }
 }
@@ -130,6 +130,8 @@ provider "dynatrace" {
   dt_api_token = var.dynatrace_token  # Classic API token (dt0c01.xxxx)
 }
 ```
+
+> **Important:** Synthetic monitors and SLO definitions require a classic API Token (`dt0c01.*`). OAuth/Platform Token authentication does not support these resource types as of provider v1.88.0.
 
 #### API Token Scopes — Full Access Reference
 
@@ -192,8 +194,9 @@ provider "dynatrace" {
   dt_api_token = var.dynatrace_token  # For settings/classic resources
 
   # OAuth credentials — required for automation, document, and IAM resources
-  automation_client_id     = var.automation_client_id
-  automation_client_secret = var.automation_client_secret
+  client_id     = var.oauth_client_id        # Falls back for both automation + IAM
+  client_secret = var.oauth_client_secret
+  account_id    = var.account_id             # Required for IAM resources
 }
 ```
 
@@ -232,19 +235,19 @@ export DYNATRACE_API_TOKEN="dt0c01.xxxx.yyyy"
 
 | Variable | Purpose |
 |----------|---------|
-| `DYNATRACE_ENV_URL` or `DT_ENV_URL` | Tenant URL |
-| `DYNATRACE_API_TOKEN` or `DT_API_TOKEN` | Classic API token (`dt0c01`) |
-| `DYNATRACE_PLATFORM_TOKEN` | Platform token (`dt0s16`) |
+| `DYNATRACE_ENV_URL` / `DT_ENV_URL` / `DT_ENVIRONMENT_URL` | Tenant URL |
+| `DYNATRACE_API_TOKEN` / `DT_API_TOKEN` | Classic API token (`dt0c01`) |
+| `DYNATRACE_PLATFORM_TOKEN` / `DT_PLATFORM_TOKEN` | Platform token (`dt0s16`) |
 | `DYNATRACE_HTTP_OAUTH_PREFERENCE` | Set to `true` to prefer OAuth endpoints for Platform Token / OAuth resources |
-| `DT_CLIENT_ID` | OAuth client ID (for automation/document/IAM resources) |
-| `DT_CLIENT_SECRET` | OAuth client secret |
-| `DT_ACCOUNT_ID` | Account UUID (required for account-level IAM resources) |
+| `DT_CLIENT_ID` / `DYNATRACE_CLIENT_ID` | OAuth client ID (for automation/document/IAM resources) |
+| `DT_CLIENT_SECRET` / `DYNATRACE_CLIENT_SECRET` | OAuth client secret |
+| `DT_ACCOUNT_ID` / `DYNATRACE_ACCOUNT_ID` | Account UUID (required for account-level IAM resources) |
 
 ### Which Authentication for Which Resources?
 
 | Resource Category | API Token | Platform Token | OAuth Client |
 |-------------------|-----------|----------------|-------------|
-| Settings 2.0 (management zones, auto-tags, alerting, SLOs) | Yes | Yes | No |
+| Settings 2.0 (management zones, auto-tags, alerting, SLOs) | Yes | Yes | Yes (`HTTP_OAUTH_PREFERENCE`) |
 | Synthetic monitors | **Yes (required)** | No (v1.88.0) | No (v1.88.0) |
 | Gen3: Workflows, scheduling | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
 | Gen3: Documents (dashboards, notebooks) | No | Yes (with `HTTP_OAUTH_PREFERENCE`) | **Yes** |
@@ -313,8 +316,6 @@ To manage **all** resources that require OAuth authentication, create an OAuth c
 > **Security:** Never commit OAuth client secrets or API tokens to version control. Use environment variables, HashiCorp Vault, AWS Secrets Manager, or your CI/CD platform's secret store.
 
 > **Note on scope formats:** API token scopes use dot notation (`settings.read`, `settings.write`). OAuth scopes and IAM policy actions use colon notation (`settings:objects:read`, `settings:objects:write`). These are different identifiers for the same capability in different auth contexts.
-
----
 
 ### Initialize and Validate
 
@@ -871,9 +872,12 @@ resource "dynatrace_iam_group" "payments_team" {
 
 # Bind the policy to the group
 resource "dynatrace_iam_policy_bindings_v2" "payments_binding" {
-  group       = dynatrace_iam_group.payments_team.id
-  policy_id   = dynatrace_iam_policy.team_settings.id
-  environment = var.dynatrace_environment_id
+  group = dynatrace_iam_group.payments_team.id
+
+  policy {
+    id          = dynatrace_iam_policy.team_settings.id
+    environment = var.dynatrace_environment_id
+  }
 }
 ```
 
@@ -917,9 +921,9 @@ provider "dynatrace" {
   dt_env_url       = var.dynatrace_env_url
 
   # Service User + OAuth — for Gen3/platform resources (scoped via IAM)
-  dt_client_id     = var.dt_client_id
-  dt_client_secret = var.dt_client_secret
-  dt_account_id    = var.dt_account_id
+  client_id     = var.dt_client_id           # Canonical attribute (v1.91+)
+  client_secret = var.dt_client_secret
+  account_id    = var.dt_account_id
 
   # Classic API Token — still required for v1 resources (synthetics)
   dt_api_token     = var.dynatrace_api_token
@@ -1014,18 +1018,20 @@ These approaches **do not** overcome the v1 API limitation:
 
 ### Terraform Export Utility
 
-To export existing Dynatrace configuration to Terraform:
+The provider binary itself can export existing Dynatrace configuration to HCL `.tf` files:
 
 ```bash
-# Install terraform-provider-dynatrace-export
-# See: https://github.com/dynatrace-oss/terraform-provider-dynatrace
+# Download the provider binary and use it as an export tool
+# See: https://dt-url.net/h203qmc
 
 # Export all configurations
-terraform-provider-dynatrace-export \
-  -e https://{tenant}.live.dynatrace.com \
-  -t {api-token} \
-  -o ./exported-config
+terraform-provider-dynatrace \
+  -export \
+  -id all \
+  -target-folder ./exported-config
 ```
+
+> **Environment variables required:** Set `DYNATRACE_ENV_URL` and `DYNATRACE_API_TOKEN` (and optionally `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` for Gen3/IAM resources) before running the export.
 
 ### Continue the Series
 
@@ -1035,7 +1041,7 @@ terraform-provider-dynatrace-export \
 
 ### Additional Resources
 
-- [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs)
+- [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) (v1.91.1, March 2026)
 - [Provider GitHub Repository](https://github.com/dynatrace-oss/terraform-provider-dynatrace)
 - [Terraform Style Guide](https://developer.hashicorp.com/terraform/language/style)
 - [Dynatrace OAuth Client Guide](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/guides/create-oauth-client)

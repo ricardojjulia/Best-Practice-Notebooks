@@ -100,6 +100,8 @@ The Plan phase ensures you understand what you have and how you'll migrate it.
 
 **Objective:** Create a complete inventory of your current environment.
 
+> **Critical Planning Constraint:** SaaS tenants have a maximum of 25,000 monitored hosts. If consolidating multiple Managed clusters, plan for multiple SaaS tenants if the combined host count exceeds this limit.
+
 | Activity | Deliverable |
 |----------|-------------|
 | Enumerate monitored entities | Host, service, application counts |

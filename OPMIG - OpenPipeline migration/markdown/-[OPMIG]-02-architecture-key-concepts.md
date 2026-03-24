@@ -284,7 +284,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 | **Working memory per record** | 16 MB | Processing fails, record dropped |
 | **Log attribute size** | 32 KB | Attribute value **truncated** |
 | **Max field name length** | 255 characters | Field creation fails |
-| **Max string field length** | 4 KB | Content truncated |
+| **Max string field length** | 32 KB | Content truncated |
 | **Max array size** | 1000 elements | Array truncated |
 | **Max nesting depth (JSON)** | 10 levels | Deeper levels flattened |
 
@@ -292,7 +292,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 
 | Limit | Value | Impact |
 |-------|-------|--------|
-| **Max pipelines per record** | 5 | Up to 5 pipelines can process one record |
+| **Max pipelines per record** | 1 | A record routes to ONE pipeline only via dynamic routing |
 | **Max processors per pipeline** | 50 | Cannot add more processors to pipeline |
 | **Max DQL commands per processor** | 10 commands | Split complex logic into multiple processors |
 | **Max parse operations per processor** | 100 patterns | Create additional parse processors |
@@ -316,7 +316,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 
 | Limit | Value | Scope |
 |-------|-------|-------|
-| **Max custom pipelines** | 100 pipelines | Per configuration scope (logs, spans, etc.) |
+| **Max custom pipelines** | 30 pipelines | Per configuration scope (logs, spans, etc.) |
 | **Max dynamic routes** | 100 routes | Per configuration scope |
 | **Max conditions per route** | 10 conditions | Combine with AND/OR operators |
 | **Max pipeline name length** | 100 characters | Validation error |

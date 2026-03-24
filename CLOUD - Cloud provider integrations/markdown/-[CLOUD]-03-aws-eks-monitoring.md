@@ -6,7 +6,6 @@
 
 This notebook provides a deep dive into monitoring Amazon Elastic Kubernetes Service (EKS) with Dynatrace. You will learn about EKS-specific monitoring considerations including node groups, Fargate profiles, CloudWatch Container Insights vs Dynatrace, DynaKube operator deployment on EKS, and namespace-level cost allocation patterns.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ This notebook provides a deep dive into monitoring Amazon Elastic Kubernetes Ser
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook provides a deep dive into monitoring Amazon Elastic Kubernetes Ser
 | **AWS EKS Cluster** | At least one EKS cluster with Dynatrace Operator installed |
 | **DynaKube Operator** | v1.3+ deployed via Helm or kubectl |
 | **Prior Knowledge** | CLOUD-01 fundamentals, basic Kubernetes concepts |
-
 
 <a id="eks-architecture"></a>
 
@@ -54,7 +51,6 @@ Monitoring EKS with Dynatrace involves multiple data paths:
 - **VPC CNI** — EKS uses the Amazon VPC CNI plugin, which assigns VPC IP addresses to pods. This affects network monitoring.
 - **IRSA (IAM Roles for Service Accounts)** — Recommended for granting DynaKube pods access to AWS resources.
 
-
 <a id="dynakube-eks"></a>
 
 ## 2. DynaKube on EKS
@@ -72,7 +68,7 @@ The Dynatrace Operator (DynaKube) is the recommended way to monitor EKS workload
 ### DynaKube Configuration for EKS
 
 ```yaml
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube
@@ -100,7 +96,6 @@ spec:
 - Use **nodeSelector** to exclude Windows nodes if running mixed clusters
 - Consider **resource limits** to prevent OneAgent from consuming excessive node resources
 
-
 <a id="node-groups"></a>
 
 ## 3. Node Group Monitoring
@@ -117,7 +112,6 @@ EKS node groups are collections of EC2 instances that serve as Kubernetes worker
 
 ### Querying EKS Nodes
 
-
 ```dql
 // List Kubernetes cluster entities
 fetch dt.entity.kubernetes_cluster
@@ -126,7 +120,6 @@ fetch dt.entity.kubernetes_cluster
 ```
 
 ### Node CPU and Memory Usage
-
 
 ```dql
 // Node-level CPU usage over the last hour
@@ -173,13 +166,11 @@ spec:
 
 > **Note:** Fargate pods cannot use the CSI driver. Set `useCSIDriver: false` and Dynatrace will inject via init containers instead.
 
-
 <a id="eks-metrics"></a>
 
 ## 5. EKS Metrics with DQL
 
 ### Pod CPU and Memory by Namespace
-
 
 ```dql
 // Pod CPU usage by namespace over the last hour
@@ -198,7 +189,6 @@ timeseries containerMem = avg(dt.kubernetes.container.memory_working_set), from:
 ```
 
 ### Pod Status Overview
-
 
 ```dql
 // Kubernetes events related to pod issues in the last 6 hours
@@ -233,7 +223,6 @@ Many EKS users start with CloudWatch Container Insights. Here is how it compares
 - Use Dynatrace for **workload monitoring**, **distributed tracing**, and **AI-powered alerting**
 - Forward Container Insights logs to Dynatrace via **CloudWatch log forwarding** for unified analysis
 
-
 <a id="namespace-cost"></a>
 
 ## 7. Namespace Cost Allocation
@@ -241,7 +230,6 @@ Many EKS users start with CloudWatch Container Insights. Here is how it compares
 One of the key benefits of Kubernetes monitoring is the ability to allocate costs by namespace, team, or application.
 
 ### CPU-Based Cost Allocation by Namespace
-
 
 ```dql
 // Namespace CPU usage as percentage of total cluster CPU
@@ -252,7 +240,6 @@ timeseries nsCpu = avg(dt.kubernetes.container.cpu_usage), from:-24h, by:{k8s.na
 ```
 
 ### Memory-Based Cost Allocation by Namespace
-
 
 ```dql
 // Namespace memory usage over the last 24 hours
@@ -272,7 +259,6 @@ timeseries nsMem = avg(dt.kubernetes.container.memory_working_set), from:-24h, b
 | **Use Dynatrace segments** | Create segments per team/namespace for filtered dashboards |
 | **Track over time** | Use `makeTimeseries` to trend namespace costs weekly |
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -290,8 +276,6 @@ timeseries nsMem = avg(dt.kubernetes.container.memory_working_set), from:-24h, b
 - **CLOUD-07: CloudWatch Log Ingestion** — Forwarding EKS logs to Dynatrace
 - See the **K8S notebook series** for general Kubernetes monitoring patterns
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

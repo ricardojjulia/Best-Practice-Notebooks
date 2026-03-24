@@ -84,7 +84,7 @@ Dynatrace RUM data is organized into a hierarchical model:
 |-------|-------------|-------------|
 | 1 | Application | Web app monitored by RUM JS agent |
 | 2 | User Session (dt.rum.user_session) | One complete visit |
-| 3 | User Action (dt.rum.user_action) | Page load, XHR, or custom action |
+| 3 | User Action (user.events) | Page load, XHR, or custom action |
 | 4 | Action Properties | Timing, errors, and resources |
 For environments where SVG doesn't render
 -->
@@ -94,7 +94,7 @@ For environments where SVG doesn't render
 | DQL Data Object | Description | Key Fields |
 |----------------|-------------|------------|
 | `dt.rum.user_session` | A complete user visit from first page to last | `session.id`, `user.type`, `duration`, `action.count`, `error.count` |
-| `dt.rum.user_action` | A single user interaction (page load, click, XHR) | `action.name`, `action.type`, `duration`, `dom.interactive.time` |
+| `user.events` | A single user interaction (page load, click, XHR) | `action.name`, `action.type`, `duration`, `dom.interactive.time` |
 | `dt.rum.error` | JavaScript or XHR error | `error.message`, `error.type`, `error.source` |
 
 ### Session Types
@@ -158,7 +158,7 @@ Let's explore the most common user actions:
 
 ```dql
 // Top 20 user actions by count in the last hour
-fetch dt.rum.user_action, from:-1h
+fetch user.events, from:-1h
 | summarize action_count = count(), avg_duration = avg(duration), by:{action.name, action.type}
 | sort action_count desc
 | limit 20
@@ -170,7 +170,7 @@ For load-type actions, Dynatrace captures detailed timing milestones:
 
 ```dql
 // Page load timing breakdown — average timings for the top 10 pages
-fetch dt.rum.user_action, from:-1h
+fetch user.events, from:-1h
 | filter action.type == "Load"
 | summarize action_count = count(),
     avg_duration = avg(duration),
@@ -196,7 +196,7 @@ fetch dt.rum.user_session, from:-24h
 
 ```dql
 // Action volume by type over the last 24 hours
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | makeTimeseries action_count = count(), interval:1h, by:{action.type}
 ```
 

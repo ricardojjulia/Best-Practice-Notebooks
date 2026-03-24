@@ -1,6 +1,6 @@
 # GitOps for DynaKube
 
-> **Series:** K8S | **Notebook:** 3 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 3 of 13 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 ## Managing DynaKube with ArgoCD and Flux
 GitOps enables declarative, version-controlled management of your Dynatrace monitoring configuration. This notebook covers integrating DynaKube with popular GitOps tools: ArgoCD and Flux.
@@ -97,7 +97,7 @@ spec:
   source:
     repoURL: https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/main/config/helm/repos/stable
     chart: dynatrace-operator
-    targetRevision: 1.2.0  # Pin version for stability
+    targetRevision: 1.4.0  # Pin to current version — check https://github.com/Dynatrace/dynatrace-operator/releases for latest
     helm:
       releaseName: dynatrace-operator
       values: |
@@ -214,7 +214,7 @@ spec:
     kind: GitRepository
     name: monitoring-config
   healthChecks:
-    - apiVersion: dynatrace.com/v1beta3
+    - apiVersion: dynatrace.com/v1beta5
       kind: DynaKube
       name: dynakube
       namespace: dynatrace
@@ -316,7 +316,7 @@ sops --encrypt secrets.yaml > secrets.secret.yaml
 **Base DynaKube (`base/dynakube/dynakube.yaml`):**
 
 ```yaml
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube
@@ -359,7 +359,7 @@ patches:
 **Dev Patch (`overlays/dev/dynakube-patch.yaml`):**
 
 ```yaml
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube

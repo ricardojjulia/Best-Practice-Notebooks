@@ -267,6 +267,8 @@ Users need the `upgrade-assistant:environments:write` IAM policy assigned in Acc
 
 ### Migration Tooling Options
 
+> **Recommendation:** The SaaS Upgrade Assistant is the primary migration tool for most environments. The tools below are supplementary for specific automation needs.
+
 | Tool | Best For | Approach |
 |------|----------|----------|
 | **[SaaS Upgrade Assistant](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)** | Most migrations—guided UI-based migration | Export from Managed, import via app |

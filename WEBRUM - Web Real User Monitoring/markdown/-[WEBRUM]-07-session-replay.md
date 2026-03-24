@@ -192,7 +192,7 @@ fetch dt.rum.user_session, from:-24h
 
 ```dql
 // Sessions with rage clicks that have replay — top candidates for UX review
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter isNotNull(rage.click) and rage.click == true
 | summarize rage_clicks = count(), by:{session.id, app.name}
 | sort rage_clicks desc

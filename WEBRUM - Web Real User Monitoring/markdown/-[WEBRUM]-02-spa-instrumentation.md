@@ -116,7 +116,7 @@ Let's query route change actions to validate detection:
 
 ```dql
 // Route change actions in the last hour — verify SPA detection is working
-fetch dt.rum.user_action, from:-1h
+fetch user.events, from:-1h
 | filter action.type == "RouteChange"
 | summarize route_count = count(), avg_duration = avg(duration), by:{action.name, app.name}
 | sort route_count desc
@@ -168,7 +168,7 @@ Vue applications use Vue Router with `history.pushState` or hash mode:
 
 ```dql
 // Compare action types across applications — identify SPA vs traditional apps
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | summarize action_count = count(), by:{app.name, action.type}
 | sort app.name asc, action_count desc
 ```
@@ -210,7 +210,7 @@ Let's check for custom actions in our environment:
 
 ```dql
 // Find custom user actions — these indicate manual RUM API usage
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Custom"
 | summarize custom_count = count(), by:{action.name, app.name}
 | sort custom_count desc
@@ -236,7 +236,7 @@ By default, Dynatrace monitors `XMLHttpRequest`. For modern SPAs using `fetch()`
 
 ```dql
 // XHR action performance — identify slow API calls impacting user experience
-fetch dt.rum.user_action, from:-1h
+fetch user.events, from:-1h
 | filter action.type == "Xhr"
 | summarize xhr_count = count(),
     avg_duration = avg(duration),
@@ -248,7 +248,7 @@ fetch dt.rum.user_action, from:-1h
 
 ```dql
 // XHR error rate by action — find failing API calls
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Xhr"
 | summarize total = count(),
     errors = countIf(isNotNull(error.count) and error.count > 0),
@@ -275,7 +275,7 @@ After configuring SPA monitoring, validate that instrumentation is working corre
 
 ```dql
 // Instrumentation health check — action type distribution per app
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | summarize total_actions = count(), by:{app.name, action.type}
 | sort app.name asc, total_actions desc
 ```
@@ -427,7 +427,7 @@ After deploying both applications, verify that:
 
 ```dql
 // Compare user action metrics between mobile WebView and desktop browser apps
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter application.name == "MyApp Desktop" or application.name == "MyApp Mobile"
 | summarize
     actions = count(),
@@ -443,7 +443,7 @@ Identify sessions in the mobile app that include WebView activity — these are 
 
 ```dql
 // Identify WebView sessions in the mobile app — these have both native and web actions
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter application.name == "MyApp Mobile"
 | summarize
     native_actions = countIf(action.type == "Custom" or action.type == "UserAction"),
@@ -460,7 +460,7 @@ WebView performance typically differs from desktop browsers due to device constr
 
 ```dql
 // Compare page load performance: mobile WebView vs desktop browser
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter application.name == "MyApp Desktop" or application.name == "MyApp Mobile"
 | summarize
