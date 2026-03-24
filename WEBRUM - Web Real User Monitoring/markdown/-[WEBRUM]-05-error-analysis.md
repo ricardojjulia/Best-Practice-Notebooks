@@ -189,7 +189,7 @@ Dynatrace captures rage clicks as user action properties. They can also be detec
 
 ```dql
 // Sessions with rage clicks — identify frustrated users
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter isNotNull(rage.click) and rage.click == true
 | summarize rage_count = count(),
     by:{action.name, app.name}
@@ -199,7 +199,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Rage click trend over 7 days — is frustration increasing?
-fetch dt.rum.user_action, from:-7d
+fetch user.events, from:-7d
 | filter isNotNull(rage.click) and rage.click == true
 | makeTimeseries rage_count = count(), interval:1d
 ```

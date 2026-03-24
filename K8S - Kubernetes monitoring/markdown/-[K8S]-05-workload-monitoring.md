@@ -1,6 +1,6 @@
 # Workload Monitoring
 
-> **Series:** K8S | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 5 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Application-Level Observability in Kubernetes
 Workload monitoring focuses on the application layer: deployments, pods, containers, and the services they provide. This notebook covers monitoring Kubernetes workloads from deployment health to service performance.

@@ -69,7 +69,7 @@ For environments where SVG doesn't render
 
 ```dql
 // Page load waterfall — average timing breakdown for top 10 pages
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize page_views = count(),
     avg_duration = avg(duration),
@@ -95,7 +95,7 @@ Google recommends a TTFB of **≤ 800ms** for a good user experience.
 
 ```dql
 // TTFB analysis by page — identify pages with slow server response
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(server.time)
 | summarize page_views = count(),
@@ -110,7 +110,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // TTFB distribution — classify into Good / Needs Improvement / Poor
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(server.time)
 | fieldsAdd ttfb_ms = toDouble(server.time) / 1000000.0
@@ -131,7 +131,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // DOM Interactive vs Load Event — identify resource-heavy pages
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(dom.interactive.time) and isNotNull(load.event.time)
 | summarize page_views = count(),
@@ -154,7 +154,7 @@ Performance varies significantly by user location due to network latency, CDN co
 
 ```dql
 // Page load performance by country — identify slow regions
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(country)
 | summarize page_views = count(),
@@ -169,7 +169,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Compare TTFB across regions — CDN effectiveness indicator
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(continent)
 | summarize page_views = count(),
@@ -189,7 +189,7 @@ Network connection type and device capability significantly impact perceived per
 
 ```dql
 // Performance by connection type — wifi vs cellular vs wired
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(connection.type)
 | summarize page_views = count(),
@@ -201,7 +201,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Performance by browser — which browsers are slowest?
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(browser.family)
 | summarize page_views = count(),
@@ -215,7 +215,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Performance by OS — desktop vs mobile operating systems
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(os.family)
 | summarize page_views = count(),
@@ -234,7 +234,7 @@ Find the pages that need optimization attention — ranked by the impact of thei
 
 ```dql
 // Slowest pages by p95 duration — worst-case performance
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize page_views = count(),
     avg_ms = avg(toDouble(duration) / 1000000.0),
@@ -248,7 +248,7 @@ fetch dt.rum.user_action, from:-24h
 
 ```dql
 // Weighted impact score — pages with high traffic AND high duration
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize page_views = count(),
     avg_ms = avg(toDouble(duration) / 1000000.0),
@@ -268,7 +268,7 @@ Track performance over time to detect regressions and measure the impact of opti
 
 ```dql
 // Page load duration trend — daily p75 over the last 7 days
-fetch dt.rum.user_action, from:-7d
+fetch user.events, from:-7d
 | filter action.type == "Load"
 | fieldsAdd duration_ms = toDouble(duration) / 1000000.0
 | makeTimeseries p75_duration = percentile(duration_ms, 75), interval:1d
@@ -276,7 +276,7 @@ fetch dt.rum.user_action, from:-7d
 
 ```dql
 // TTFB trend — hourly p75 over the last 24 hours
-fetch dt.rum.user_action, from:-24h
+fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(server.time)
 | fieldsAdd ttfb_ms = toDouble(server.time) / 1000000.0

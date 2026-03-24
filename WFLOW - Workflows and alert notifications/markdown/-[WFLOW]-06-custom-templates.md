@@ -420,7 +420,7 @@ Use https://app.slack.com/block-kit-builder to preview your block templates befo
 // Notification task performance
 fetch events, from: now() - 7d
 | filter event.type == "automation.task.execution"
-| filter contains(task.type, "slack") or contains(task.type, "msteams") or contains(task.type, "email")
+| filter matchesPhrase(task.type, "slack") or matchesPhrase(task.type, "msteams") or matchesPhrase(task.type, "email")
 | summarize 
     avg_duration = avg(task.duration),
     max_duration = max(task.duration),
@@ -434,7 +434,7 @@ fetch events, from: now() - 7d
 fetch events, from: now() - 24h
 | filter event.type == "automation.task.execution"
 | filter task.status == "FAILED"
-| filter contains(task.error, "template") or contains(task.error, "jinja") or contains(task.error, "expression")
+| filter matchesPhrase(task.error, "template") or matchesPhrase(task.error, "jinja") or matchesPhrase(task.error, "expression")
 | fields timestamp, workflow.name, task.name, task.error
 | sort timestamp desc
 | limit 20

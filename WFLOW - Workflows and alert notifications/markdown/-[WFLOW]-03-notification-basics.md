@@ -405,7 +405,7 @@ By default, tasks execute **in parallel**. All three notifications send simultan
 // Notification workflow executions
 fetch events, from: now() - 24h
 | filter event.type == "automation.workflow.execution"
-| filter contains(workflow.name, "alert") or contains(workflow.name, "notification")
+| filter matchesPhrase(workflow.name, "alert") or matchesPhrase(workflow.name, "notification")
 | fields timestamp, 
          workflow.name, 
          execution.status,
@@ -418,7 +418,7 @@ fetch events, from: now() - 24h
 // Notification task success rates
 fetch events, from: now() - 7d
 | filter event.type == "automation.task.execution"
-| filter contains(task.type, "slack") or contains(task.type, "msteams") or contains(task.type, "email")
+| filter matchesPhrase(task.type, "slack") or matchesPhrase(task.type, "msteams") or matchesPhrase(task.type, "email")
 | summarize 
     total = count(),
     succeeded = countIf(task.status == "SUCCEEDED"),
@@ -433,7 +433,7 @@ fetch events, from: now() - 7d
 fetch events, from: now() - 24h
 | filter event.type == "automation.task.execution"
 | filter task.status == "FAILED"
-| filter contains(task.type, "slack") or contains(task.type, "msteams") or contains(task.type, "email")
+| filter matchesPhrase(task.type, "slack") or matchesPhrase(task.type, "msteams") or matchesPhrase(task.type, "email")
 | fields timestamp, workflow.name, task.name, task.type, task.error
 | sort timestamp desc
 | limit 20

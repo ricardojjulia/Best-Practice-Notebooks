@@ -1,6 +1,6 @@
 # Namespace Organization and Boundaries
 
-> **Series:** K8S | **Notebook:** 6 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 ## Organizing Kubernetes Monitoring with Namespaces
 Namespaces provide logical boundaries in Kubernetes for resource isolation, access control, and organizational structure. This notebook covers namespace strategies and how to leverage them in Dynatrace for filtered views, access control, and cost allocation.
@@ -76,7 +76,8 @@ Control which namespaces receive OneAgent injection:
 
 ```yaml
 spec:
-  namespaceSelector:
+  cloudNativeFullStack:  # namespaceSelector goes inside the deployment mode section
+    namespaceSelector:
     matchLabels:
       monitoring: dynatrace
 ```
@@ -85,7 +86,8 @@ Or exclude specific namespaces:
 
 ```yaml
 spec:
-  namespaceSelector:
+  cloudNativeFullStack:  # namespaceSelector goes inside the deployment mode section
+    namespaceSelector:
     matchExpressions:
       - key: monitoring
         operator: NotIn
@@ -237,7 +239,7 @@ For strong isolation, use separate DynaKube instances:
 
 ```yaml
 # Tenant A
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube-tenant-a

@@ -1,6 +1,6 @@
 # Troubleshooting Kubernetes Monitoring
 
-> **Series:** K8S | **Notebook:** 9 of 12 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 03/14/2026
 
 ## Debugging Dynatrace Monitoring in Kubernetes
 When monitoring doesn't work as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic procedures, and resolution steps for Dynatrace Kubernetes monitoring.
@@ -17,6 +17,7 @@ When monitoring doesn't work as expected, systematic troubleshooting is essentia
 6. [Data Collection Issues](#data-collection-issues)
 7. [Connectivity Issues](#connectivity-issues)
 8. [Diagnostic Commands](#diagnostic-commands)
+9. [DQL-Based Diagnostics](#dql-diagnostics)
 
 ---
 
@@ -411,6 +412,57 @@ tar -czf dynatrace-debug.tar.gz dynatrace-debug/
 | `kubectl -n dynatrace logs <pod>` | Pod logs |
 | `kubectl -n dynatrace exec -it <pod> -- sh` | Shell access |
 | `kubectl -n dynatrace port-forward <pod> 9999:9999` | Local port forward |
+
+<a id="dql-diagnostics"></a>
+## 9. DQL-Based Diagnostics
+
+Complement kubectl diagnostics with DQL queries that detect Dynatrace component issues across your cluster fleet.
+
+### Common Failure Patterns
+
+| Pattern | Symptoms | Detection Method |
+|---------|----------|------------------|
+| **CSI Volume Timeout** | Pods stuck in ContainerCreating | Events with `MountVolume` + `timeout` |
+| **Injection Failure** | Missing init container | Events with `Failed` + `dynatrace` |
+| **ActiveGate OOM** | AG restarts, data gaps | Events with `OOMKilled` + `activegate` |
+| **OneAgent CrashLoop** | Incomplete monitoring | Events with `CrashLoopBackOff` + `oneagent` |
+| **Connection Loss** | Stale data, no updates | Davis events with `AGENT_CONNECTION` |
+
+```dql
+// Detect Dynatrace pod failures in the last 24h
+fetch events, from:-24h
+| filter event.kind == "K8S_EVENT"
+| filter matchesPhrase(event.description, "dynatrace")
+| filter matchesPhrase(event.description, "Failed") OR
+        matchesPhrase(event.description, "Error") OR
+        matchesPhrase(event.description, "BackOff") OR
+        matchesPhrase(event.description, "OOMKilled") OR
+        matchesPhrase(event.description, "CrashLoopBackOff")
+| fields timestamp, event.description
+| sort timestamp desc
+| limit 50
+```
+
+```dql
+// Detect ActiveGate connection issues via Davis events
+fetch dt.davis.events, from:-24h
+| filter contains(toString(event.type), "ACTIVEGATE") OR
+        contains(toString(event.type), "AGENT_CONNECTION")
+| fields timestamp, event.type, event.category, affected_entity_ids
+| sort timestamp desc
+| limit 30
+```
+
+```dql
+// Detect hosts with metric data gaps (missing CPU readings in last 6h)
+timeseries from:-6h, interval:5m,
+  cpuPoints = count(dt.host.cpu.usage),
+  by:{dt.entity.host}
+| fieldsAdd minPoints = arrayMin(cpuPoints)
+| filter minPoints == 0
+| fieldsAdd hostName = entityName(dt.entity.host, type:"dt.entity.host")
+| fields hostName, minPoints
+```
 
 ## Summary
 

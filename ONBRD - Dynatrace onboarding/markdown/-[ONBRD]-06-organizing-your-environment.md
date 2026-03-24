@@ -102,8 +102,17 @@ sudo /bin/sh Dynatrace-OneAgent.sh \
 ```
 
 **Via Configuration File:**
+
+> **Note:** The configuration file path depends on your OneAgent version. Check your version with `oneagentctl --version` to determine the correct path.
+
+| OneAgent Version | Configuration File Path |
+|------------------|------------------------|
+| **< 1.225** | `/var/lib/dynatrace/oneagent/agent/config/hostcustomproperties.conf` |
+| **≥ 1.225** | `/var/lib/dynatrace/oneagent/agent/config/custom.properties` |
+
 ```
-# /var/lib/dynatrace/oneagent/agent/config/hostcustomproperties.conf
+# OneAgent < 1.225: /var/lib/dynatrace/oneagent/agent/config/hostcustomproperties.conf
+# OneAgent ≥ 1.225: /var/lib/dynatrace/oneagent/agent/config/custom.properties
 env=production
 team=platform
 cost-center=engineering

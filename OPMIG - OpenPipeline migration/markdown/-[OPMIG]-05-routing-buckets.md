@@ -39,7 +39,6 @@ By completing this notebook, you will:
 
 ---
 
-
 ---
 
 <a id="understanding-dynamic-routing"></a>
@@ -241,9 +240,11 @@ For logs needed only for metrics:
 ## Cost Optimization ROI Calculator ⭐ NEW
 Understanding the financial impact of bucket strategies is critical for migration planning. This section provides detailed ROI calculations for common optimization patterns.
 
-### DDU (Davis Data Units) Pricing Model
+### Pricing Model (DPS / DDU)
 
-OpenPipeline storage is measured in **Davis Data Units (DDUs)**:
+> **Note:** Dynatrace has transitioned to **DPS (Davis Processing Seconds)** licensing. The DDU model below applies to classic licensing contracts. Check your license model to determine which applies.
+
+On classic licensing, OpenPipeline storage is measured in **Davis Data Units (DDUs)**:
 
 | Component | DDU Calculation |
 |-----------|----------------|
@@ -380,7 +381,6 @@ TOTAL:          $4,040/month
 **Key Insight:** Sometimes optimization increases cost but ensures compliance. The cost of non-compliance (fines, audits) far exceeds storage costs.
 
 ---
-
 
 ---
 
@@ -773,7 +773,6 @@ ephemeral_healthcheck_logs
 - [ ] Document bucket governance changes
 
 ---
-
 
 ---
 

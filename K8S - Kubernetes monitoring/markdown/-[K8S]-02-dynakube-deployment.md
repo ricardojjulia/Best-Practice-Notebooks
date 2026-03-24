@@ -1,6 +1,6 @@
 # DynaKube Operator Deployment
 
-> **Series:** K8S | **Notebook:** 2 of 12 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 ## Installing and Configuring the Dynatrace Operator
 The DynaKube operator is the recommended way to deploy Dynatrace monitoring in Kubernetes. This notebook covers installation via Helm, configuration options, and deployment modes for different use cases.
@@ -157,7 +157,7 @@ The DynaKube CR defines how monitoring is deployed.
 ### Minimal DynaKube (cloudNativeFullStack)
 
 ```yaml
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta5
 kind: DynaKube
 metadata:
   name: dynakube
@@ -211,7 +211,7 @@ oneAgent:
 | Best for multi-tenant clusters | Slightly more complex |
 | Independent app/infra monitoring | |
 
-### classicFullStack
+### classicFullStack (Legacy — Avoid for New Deployments)
 
 ```yaml
 oneAgent:
@@ -344,9 +344,8 @@ DynaKube feature flags:
 spec:
   oneAgent:
     cloudNativeFullStack:
-      env:
-        - name: ONEAGENT_ENABLE_VOLUME_STORAGE
-          value: "true"
+      # Note: ONEAGENT_ENABLE_VOLUME_STORAGE defaults to true when CSI driver
+      # is enabled — no need to set explicitly
 ```
 
 ### Templates Configuration

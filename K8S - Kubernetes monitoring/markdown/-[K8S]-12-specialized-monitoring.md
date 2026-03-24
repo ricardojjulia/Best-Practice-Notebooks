@@ -215,7 +215,7 @@ csidriver:
 | Mode | CPU Request | CPU Limit | Memory Request | Memory Limit |
 |------|-------------|-----------|----------------|---------------|
 | cloudNativeFullStack | 100m | 300m | 256Mi | 512Mi |
-| classicFullStack | 150m | 500m | 512Mi | 1Gi |
+| classicFullStack (legacy) | 150m | 500m | 512Mi | 1Gi |
 | applicationMonitoring | 50m | 200m | 128Mi | 256Mi |
 
 ### OTel Collector Sizing
