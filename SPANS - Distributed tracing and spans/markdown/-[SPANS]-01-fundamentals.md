@@ -1,10 +1,17 @@
 # 🔍 Spans & Distributed Tracing Fundamentals
 
-> **Series:** SPANS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Understanding the Building Blocks of Observability
 
 This notebook introduces distributed tracing concepts and demonstrates how to query span data in Dynatrace using DQL. You'll learn what spans are, how they form traces, and how to explore your distributed systems.
+
+
+> 🆕 **New Addition (March 2026)**
+>
+> **Companion Series**
+> - **OPIPE** — Processing spans at ingestion (filtering, enrichment, metric extraction)? See **OPIPE-02: Span Processing & Enrichment**
+> - **OPLOGS** — For OpenPipeline log processing, see **OPLOGS-01: OpenPipeline Fundamentals**
 
 ---
 

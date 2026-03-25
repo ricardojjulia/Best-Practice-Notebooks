@@ -1,6 +1,6 @@
 # OPMIG-09: Troubleshooting & Validation
 
-> **Series:** OPMIG | **Notebook:** 9 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG | **Notebook:** 9 of 9 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 > **Level:** Intermediate  
 > **Prerequisites:** OPMIG-01 through OPMIG-08  
 > **Estimated Time:** 45 minutes  
@@ -1267,6 +1267,8 @@ You've completed the OpenPipeline migration notebook series!
 2. **Create dashboards** - Monitor pipeline health
 3. **Iterate** - Add pipelines for new use cases
 4. **Optimize** - Continuously improve performance
+
+🆕 **New Addition (March 2026):** Migration complete? Move to **OPLOGS-01: OpenPipeline Fundamentals** for day-to-day log operations, or **OPIPE-01: OpenPipeline as a Multi-Scope Platform** for spans and metrics.
 
 ---
 

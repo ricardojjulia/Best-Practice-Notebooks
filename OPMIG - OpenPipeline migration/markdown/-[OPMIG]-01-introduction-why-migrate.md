@@ -1,8 +1,15 @@
 # OpenPipeline Migration Guide: Part 1
 
-> **Series:** OPMIG | **Notebook:** 1 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG | **Notebook:** 1 of 9 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Introduction & Why Migrate from Classic to OpenPipeline v2.0
+
+> 🆕 **New Addition (March 2026)**
+>
+> **Companion Series**
+> - **OPLOGS** — Already migrated? Deep-dive into log processing with **OPLOGS-01: OpenPipeline Fundamentals**
+> - **OPIPE** — Need spans, metrics, or event processing? See **OPIPE-01: OpenPipeline as a Multi-Scope Platform**
+
 ---
 
 ## Table of Contents

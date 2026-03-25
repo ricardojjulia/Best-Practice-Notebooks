@@ -1,6 +1,6 @@
 # 🔒 Security & Data Protection
 
-> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Sensitive Data Discovery, Masking, and Compliance
 This notebook covers sensitive data discovery, OpenPipeline masking configuration, security event monitoring, and compliance reporting.
@@ -28,8 +28,6 @@ This notebook covers sensitive data discovery, OpenPipeline masking configuratio
 - ✅ Access to a Dynatrace environment with log data
 - ✅ Completed OPLOGS-01 through OPLOGS-07
 - ✅ Understanding of data privacy requirements
-
-
 
 <a id="sensitive-data-discovery"></a>
 ## 1. Sensitive Data Discovery
@@ -450,6 +448,8 @@ In this notebook, you learned:
 <a id="next-steps"></a>
 ## ➡️ Next Steps
 Continue to **OPLOGS-07: Buckets & Cost Optimization** for storage management.
+
+🆕 **New Addition (March 2026):** OpenPipeline processes more than logs. To extend these concepts to spans, metrics, and events, continue to **OPIPE-01: OpenPipeline as a Multi-Scope Platform**.
 
 ---
 

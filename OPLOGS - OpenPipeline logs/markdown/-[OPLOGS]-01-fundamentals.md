@@ -1,9 +1,16 @@
 # 📋 OpenPipeline Fundamentals
 
-> **Series:** OPLOGS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Understanding the Unified Data Ingestion Framework
 This notebook introduces OpenPipeline, Dynatrace's unified data processing framework for logs, traces, metrics, and events.
+
+> 🆕 **New Addition (March 2026)**
+>
+> **Companion Series**
+> - **OPMIG** — Migrating from classic logs to OpenPipeline? Start with **OPMIG-01: Why Migrate**
+> - **OPIPE** — Ready to process spans, metrics, and events? Continue to **OPIPE-01: OpenPipeline as a Multi-Scope Platform**
+> - **SPANS** — Need to query and analyze distributed traces? See **SPANS-01: Fundamentals**
 
 ---
 
@@ -27,8 +34,6 @@ This notebook introduces OpenPipeline, Dynatrace's unified data processing frame
 - ✅ Access to a Dynatrace environment with log data
 - ✅ DQL query permissions (viewer role minimum)
 - ✅ Basic understanding of log management concepts
-
-
 
 <a id="what-is-openpipeline"></a>
 ## 1. What is OpenPipeline?

@@ -154,6 +154,15 @@ Step-by-step onboarding series for new Dynatrace users.
 - [ONBRD-09: Setting Up Alerts](ONBRD%20-%20Dynatrace%20onboarding/markdown/-%5BONBRD%5D-09-setting-up-alerts.md) — Alerting and notifications
 - [ONBRD-10: Building Dashboards](ONBRD%20-%20Dynatrace%20onboarding/markdown/-%5BONBRD%5D-10-building-dashboards.md) — Creating stakeholder dashboards
 
+### [OPIPE - OpenPipeline Beyond Logs](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/README.md)
+Advanced OpenPipeline patterns for spans, metrics, business events, and security events — extending observability beyond log processing.
+- [OPIPE-01: OpenPipeline as a Multi-Scope Platform](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-01-multi-scope-platform.md) — Beyond logs: processing spans, metrics, and events at ingestion
+- [OPIPE-02: Span Processing & Enrichment](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-02-span-processing-and-enrichment.md) — Filtering, enriching, and routing distributed traces at ingestion
+- [OPIPE-03: Sampling-Aware Metrics](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-03-sampling-aware-metrics.md) — Extracting accurate metrics from sampled trace data
+- [OPIPE-04: Cardinality Management](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-04-cardinality-management.md) — Controlling dimension explosion across all scopes
+- [OPIPE-05: Business & Security Event Pipelines](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-05-business-and-security-event-pipelines.md) — Processing business transactions and security events at ingestion
+- [OPIPE-06: Cross-Scope Design Patterns](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-06-cross-scope-design-patterns.md) — Correlating logs, spans, metrics, and events across scopes
+
 ### [OPLOGS - OpenPipeline logs](OPLOGS%20-%20OpenPipeline%20logs/README.md)
 End-to-end guidance for managing logs with Dynatrace OpenPipeline.
 - [OPLOGS-01: Fundamentals](OPLOGS%20-%20OpenPipeline%20logs/markdown/-%5BOPLOGS%5D-01-fundamentals.md) — Core OpenPipeline concepts
@@ -180,15 +189,24 @@ Structured migration path to Dynatrace OpenPipeline.
 ### [ORGNZ - Organize data: buckets, segments, security](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/README.md)
 Organizing data in Dynatrace Grail using buckets, segments, and security context.
 - [ORGNZ-01: Introduction to Organizing Data](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-01-introduction-to-organizing-data.md) — Why data organization matters in Grail
+- [ORGNZ-01 \[LAB\]: Introduction to Organizing Data](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-01-%5BLAB%5D-introduction-to-organizing-data.md) — Hands-on exercises
 - [ORGNZ-02: Understanding Grail Buckets](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-02-understanding-grail-buckets.md) — Bucket fundamentals and data types
+- [ORGNZ-02 \[LAB\]: Understanding Grail Buckets](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-02-%5BLAB%5D-understanding-grail-buckets.md) — Hands-on exercises
 - [ORGNZ-03: Bucket Strategy and Design](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-03-bucket-strategy-and-design.md) — Naming conventions and retention planning
+- [ORGNZ-03 \[LAB\]: Bucket Strategy and Design](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-03-%5BLAB%5D-bucket-strategy-and-design.md) — Hands-on exercises
 - [ORGNZ-04: Permissions in Grail](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-04-permissions-in-grail.md) — Overview of Grail permission levels
 - [ORGNZ-05: Bucket-Level Access Control](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-05-bucket-level-access-control.md) — IAM policies for bucket access
+- [ORGNZ-05 \[LAB\]: Bucket-Level Access Control](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-05-%5BLAB%5D-bucket-level-access-control.md) — Hands-on exercises
 - [ORGNZ-06: Security Context](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-06-security-context.md) — Fine-grained access with dt.security_context
+- [ORGNZ-06 \[LAB\]: Security Context](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-06-%5BLAB%5D-security-context.md) — Hands-on exercises
 - [ORGNZ-07: Advanced Permission Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-07-advanced-permission-patterns.md) — Record and field-level permissions
+- [ORGNZ-07 \[LAB\]: Advanced Permission Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-07-%5BLAB%5D-advanced-permission-patterns.md) — Hands-on exercises
 - [ORGNZ-08: Grail Segments](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-08-grail-segments.md) — Logical data filtering with segments
+- [ORGNZ-08 \[LAB\]: Grail Segments](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-08-%5BLAB%5D-grail-segments.md) — Hands-on exercises
 - [ORGNZ-09: Enterprise Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-09-enterprise-patterns.md) — Combining mechanisms for enterprise governance
+- [ORGNZ-09 \[LAB\]: Enterprise Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-09-%5BLAB%5D-enterprise-patterns.md) — Hands-on exercises
 - [ORGNZ-10: Advanced Segment Definitions](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-10-advanced-segment-definitions.md) — Complex segment filters with multi-include patterns
+- [ORGNZ-10 \[LAB\]: Advanced Segment Definitions](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-10-%5BLAB%5D-advanced-segment-definitions.md) — Hands-on exercises
 
 ### [OTEL - OpenTelemetry integration](OTEL%20-%20OpenTelemetry%20integration/README.md)
 Integrating OpenTelemetry with Dynatrace for observability.
