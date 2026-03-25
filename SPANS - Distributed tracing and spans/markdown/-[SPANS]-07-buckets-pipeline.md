@@ -1,6 +1,6 @@
 # 🏗️ Grail Buckets & OpenPipeline
 
-> **Series:** SPANS | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 03/05/2026
+> **Series:** SPANS | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Data Architecture and Processing for Distributed Traces
 This notebook covers Dynatrace Grail's bucket architecture for span storage, OpenPipeline configuration patterns, and data governance strategies.
@@ -518,6 +518,8 @@ Continue to **SPANS-08: Cost-Efficient DQL Queries** to learn:
 - Query cost estimation techniques
 - Best practices for production queries
 - Indexed fields and performance strategies
+
+🆕 **New Addition (March 2026):** For configuring span processing pipelines (filtering, enrichment, sampling-aware metrics), see **OPIPE-02: Span Processing & Enrichment**.
 
 ---
 
