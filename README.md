@@ -105,14 +105,16 @@ Best practices for monitoring Kubernetes with Dynatrace.
 
 ### [M2S - Managed to SaaS migration](M2S%20-%20Managed%20to%20SaaS%20migration/README.md)
 Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
-- [M2S-01: What's Different](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-01-whats-different.md) — Key differences between Managed and SaaS
-- [M2S-02: Migration Framework](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-02-migration-framework.md) — Overall migration approach and framework
-- [M2S-03: Planning & Assessment](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-03-planning-assessment.md) — Assessing readiness and planning migration
-- [M2S-04: Architecture Design](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-04-architecture-design.md) — Designing your SaaS architecture
-- [M2S-05: Configuration Migration](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-05-configuration-migration.md) — Migrating configurations and settings
-- [M2S-06: OneAgent & ActiveGate](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-06-oneagent-activegate.md) — Migrating agents and gateways
-- [M2S-07: Security & Privacy](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-07-security-privacy.md) — Security considerations for migration
-- [M2S-08: Validation & Optimization](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-08-validation-optimization.md) — Validating and optimizing post-migration
+- [M2S-01: Step 1 — Discover: Understand SaaS Differences](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-01-step-1-discover.md) — Understanding why you're migrating, the benefits of SaaS, and inventorying your Managed environment
+- [M2S-02: Step 2 — Strategize: Define Your Migration Approach](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-02-step-2-strategize.md) — Planning your migration strategy, phasing, and execution approach
+- [M2S-03: Step 3 — Design: Create Target Architecture](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-03-step-3-design.md) — Designing your target SaaS architecture and configuration
+- [M2S-04: Step 4 — Prepare: Readiness and Pre-Migration](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-04-step-4-prepare.md) — Assessing readiness and preparing for migration
+- [M2S-05: Step 5 — Execute: Migrate Configuration and Agents](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-05-step-5-execute.md) — Migrating configurations and redirecting agents to SaaS
+- [M2S-06: Step 6 — Integrate: Reconnect Integrations](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-06-step-6-integrate.md) — Reconnecting cloud integrations and third-party tools
+- [M2S-07: Step 7 — Expand: Adopt New SaaS Capabilities](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-07-step-7-expand.md) — Discovering and adopting new SaaS-only capabilities
+- [M2S-08: Step 8 — Enable: User Enablement and Communication](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-08-step-8-enable.md) — User training, support, and operations handover
+- [M2S-09: Step 9 — Optimize: Validate, Optimize, and Decommission](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-09-step-9-optimize.md) — Validating the migration, optimizing the environment, and decommissioning Managed
+- [M2S-99: Best Practice Summary](M2S%20-%20Managed%20to%20SaaS%20migration/markdown/-%5BM2S%5D-99-best-practice-summary.md) — Definitive reference of all best practices from the M2S series
 
 ### [MOBL - Mobile monitoring](MOBL%20-%20Mobile%20monitoring/README.md)
 Dynatrace mobile Real User Monitoring (RUM) for iOS, Android, and cross-platform frameworks.
@@ -233,18 +235,16 @@ Guide for migrating monitoring capabilities from Splunk to Dynatrace.
 
 ### [S2S - SaaS to SaaS Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/README.md)
 Comprehensive guide to migrating between Dynatrace SaaS environments.
-- [S2S-01: Migration Scenarios and Readiness Assessment](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-01-migration-scenarios-readiness.md) — Identifying migration drivers and evaluating readiness
-- [S2S-02: Discovery and Configuration Export](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-02-discovery-configuration-export.md) — Cataloging and exporting source environment configuration
-- [S2S-03: IAM, SSO, and User Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-03-iam-sso-user-migration.md) — Migrating identity, access management, and SSO
-- [S2S-04: OneAgent and ActiveGate Cutover](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-04-oneagent-activegate-cutover.md) — Redirecting agents to the target environment
-- [S2S-05: Settings and Configuration Import](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-05-settings-configuration-import.md) — Importing configuration into the target environment
-- [S2S-06: Cloud Integration Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-06-cloud-integration-migration.md) — Migrating cloud provider integrations
-- [S2S-07: Dashboard, Workflow, and Integration Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-07-dashboard-workflow-integration-migration.md) — Migrating dashboards, workflows, and third-party integrations
-- [S2S-08: OpenPipeline and Grail Bucket Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-08-openpipeline-grail-bucket-migration.md) — Migrating data pipelines and storage configuration
-- [S2S-09: Data Continuity and Parallel Operation](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-09-data-continuity-parallel-operation.md) — Running source and target in parallel during transition
-- [S2S-10: SLO and Alerting Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-10-slo-alerting-migration.md) — Migrating SLOs and alerting configuration
-- [S2S-11: Cutover Execution and Validation](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-11-cutover-execution-validation.md) — Executing the final cutover and validating completeness
-- [S2S-12: Post-Migration Optimization and Decommission](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-12-post-migration-optimization-decommission.md) — Optimizing the target environment and decommissioning source
+- [S2S-01: Step 1 — Discover: Migration Scenarios and Inventory](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-01-step-1-discover.md) — Understanding why you're migrating, inventorying your source environment, and identifying what migrates automatically
+- [S2S-02: Step 2 — Strategize: Define Your Migration Approach](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-02-step-2-strategize.md) — Planning your migration strategy, phasing, and execution approach
+- [S2S-03: Step 3 — Design: Target Tenant Architecture](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-03-step-3-design.md) — Designing your target SaaS architecture and tenant structure
+- [S2S-04: Step 4 — Prepare: Export and Pre-Stage](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-04-step-4-prepare.md) — Exporting configurations and pre-staging for migration
+- [S2S-05: Step 5 — Execute: Configuration Import and Agent Cutover](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-05-step-5-execute.md) — Importing configuration and redirecting agents to the target environment
+- [S2S-06: Step 6 — Integrate: Cloud, Dashboards, and Workflows](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-06-step-6-integrate.md) — Migrating cloud integrations, dashboards, and workflows
+- [S2S-07: Step 7 — Expand: OpenPipeline, SLOs, and Alerting](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-07-step-7-expand.md) — Configuring data pipelines, SLOs, and alerting rules
+- [S2S-08: Step 8 — Enable: Parallel Operation and Stakeholder Handover](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-08-step-8-enable.md) — Running source and target in parallel and handing over to operations
+- [S2S-09: Step 9 — Optimize: Cutover Validation and Decommission](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-09-step-9-optimize.md) — Validating the migration, optimizing the target, and decommissioning source
+- [S2S-99: Best Practice Summary](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-99-best-practice-summary.md) — Comprehensive reference of all best practices from the S2S series
 
 ### [SPANS - Distributed tracing and spans](SPANS%20-%20Distributed%20tracing%20and%20spans/README.md)
 Guidance for working with distributed traces and spans in Dynatrace.

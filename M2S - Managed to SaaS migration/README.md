@@ -10,14 +10,16 @@ Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
-1. [What's Different](markdown/-[M2S]-01-whats-different.md) — Key differences between Managed and SaaS
-2. [Migration Framework](markdown/-[M2S]-02-migration-framework.md) — Overall migration approach and framework
-3. [Planning & Assessment](markdown/-[M2S]-03-planning-assessment.md) — Assessing readiness and planning migration
-4. [Architecture Design](markdown/-[M2S]-04-architecture-design.md) — Designing your SaaS architecture
-5. [Configuration Migration](markdown/-[M2S]-05-configuration-migration.md) — Migrating configurations and settings
-6. [OneAgent & ActiveGate](markdown/-[M2S]-06-oneagent-activegate.md) — Migrating agents and gateways
-7. [Security & Privacy](markdown/-[M2S]-07-security-privacy.md) — Security considerations for migration
-8. [Validation & Optimization](markdown/-[M2S]-08-validation-optimization.md) — Validating and optimizing post-migration
+1. [Step 1 — Discover: Understand SaaS Differences](markdown/-[M2S]-01-step-1-discover.md) — Understanding why you're migrating, the benefits of SaaS, and inventorying your Managed environment
+2. [Step 2 — Strategize: Define Your Migration Approach](markdown/-[M2S]-02-step-2-strategize.md) — Planning your migration strategy, phasing, and execution approach
+3. [Step 3 — Design: Create Target Architecture](markdown/-[M2S]-03-step-3-design.md) — Designing your target SaaS architecture and configuration
+4. [Step 4 — Prepare: Readiness and Pre-Migration](markdown/-[M2S]-04-step-4-prepare.md) — Assessing readiness and preparing for migration
+5. [Step 5 — Execute: Migrate Configuration and Agents](markdown/-[M2S]-05-step-5-execute.md) — Migrating configurations and redirecting agents to SaaS
+6. [Step 6 — Integrate: Reconnect Integrations](markdown/-[M2S]-06-step-6-integrate.md) — Reconnecting cloud integrations and third-party tools
+7. [Step 7 — Expand: Adopt New SaaS Capabilities](markdown/-[M2S]-07-step-7-expand.md) — Discovering and adopting new SaaS-only capabilities
+8. [Step 8 — Enable: User Enablement and Communication](markdown/-[M2S]-08-step-8-enable.md) — User training, support, and operations handover
+9. [Step 9 — Optimize: Validate, Optimize, and Decommission](markdown/-[M2S]-09-step-9-optimize.md) — Validating the migration, optimizing the environment, and decommissioning Managed
+99. [Best Practice Summary](markdown/-[M2S]-99-best-practice-summary.md) — Definitive reference of all best practices from the M2S series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
