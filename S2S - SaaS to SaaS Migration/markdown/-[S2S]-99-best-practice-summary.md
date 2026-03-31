@@ -1,27 +1,57 @@
 # S2S-99: Best Practice Summary
 
-> **Series:** S2S | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** S2S | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/30/2026
 
 ## Overview
 
-This notebook consolidates every actionable best practice from the S2S series (notebooks 01-12) into a single reference. Each practice is definitive: it tells you exactly what to set, when, and why. Use this as a pre-flight checklist and ongoing reference throughout your SaaS-to-SaaS migration.
+This notebook consolidates **104 actionable best practices** from the S2S series into a single reference organized around the 9-step migration framework. Each practice is definitive: it tells you exactly what to set, when, and why. Use this as a pre-flight checklist and ongoing reference throughout your SaaS-to-SaaS migration.
+
+The S2S series follows a **9-step framework** (Discover through Optimize) supported by an **11-step Order of Operations** that governs execution sequence.
+
+## The 9-Step Migration Framework
+
+| Step | Name | Focus |
+|------|------|-------|
+| **1** | **Discover** | Migration scenarios and inventory |
+| **2** | **Strategize** | Define your migration approach |
+| **3** | **Design** | Target tenant architecture |
+| **4** | **Prepare** | Export and pre-stage |
+| **5** | **Execute** | Configuration import and agent cutover |
+| **6** | **Integrate** | Cloud, dashboards, and workflows |
+| **7** | **Expand** | OpenPipeline, SLOs, and alerting |
+| **8** | **Enable** | Parallel operation and stakeholder handover |
+| **9** | **Optimize** | Cutover validation and decommission |
+
+## The 11-Step Order of Operations
+
+| # | Operation | Description |
+|---|-----------|-------------|
+| 1 | **Assess** | Inventory source tenant |
+| 2 | **Provision** | Target SaaS tenant and access (SSO/IAM) |
+| 3 | **Export** | Configuration from source tenant |
+| 4 | **Migrate** | Configuration to target tenant |
+| 5 | **Rebuild** | Dashboards, SLOs, alerts |
+| 6 | **Redirect** | OneAgents and operators to target |
+| 7 | **Reconnect** | Cloud integrations and extensions |
+| 8 | **Migrate** | Any remaining configuration |
+| 9 | **Validate** | Data flow and performance |
+| 10 | **Cutover** | Full switch to target tenant |
+| 11 | **Decommission** | Source tenant |
 
 ---
 
 ## Table of Contents
 
-1. [Planning and Readiness](#planning-and-readiness)
-2. [Configuration Export and Tooling](#configuration-export-and-tooling)
-3. [IAM, SSO, and Identity](#iam-sso-and-identity)
-4. [Agent and Operator Migration](#agent-and-operator-migration)
-5. [Configuration Import and Deployment Order](#configuration-import-and-deployment-order)
-6. [Cloud Integration](#cloud-integration)
-7. [Dashboards, Workflows, and Integrations](#dashboards-workflows-and-integrations)
-8. [OpenPipeline and Grail Buckets](#openpipeline-and-grail-buckets)
-9. [Parallel Operation and Data Continuity](#parallel-operation-and-data-continuity)
-10. [SLOs and Alerting](#slos-and-alerting)
-11. [Cutover Execution](#cutover-execution)
-12. [Post-Migration and Decommission](#post-migration-and-decommission)
+1. [Step 1: Discover — Migration Scenarios and Inventory](#step-1-discover)
+2. [Step 2: Strategize — Define Your Migration Approach](#step-2-strategize)
+3. [Step 3: Design — Target Tenant Architecture](#step-3-design)
+4. [Step 4: Prepare — Export and Pre-Stage](#step-4-prepare)
+5. [Step 5: Execute — Configuration Import and Agent Cutover](#step-5-execute)
+6. [Step 6: Integrate — Cloud, Dashboards, and Workflows](#step-6-integrate)
+7. [Step 7: Expand — OpenPipeline, SLOs, and Alerting](#step-7-expand)
+8. [Step 8: Enable — Parallel Operation and Stakeholder Handover](#step-8-enable)
+9. [Step 9: Optimize — Cutover Validation and Decommission](#step-9-optimize)
+10. [The Five Principles of S2S Migration](#five-principles)
 
 ---
 
@@ -29,214 +59,199 @@ This notebook consolidates every actionable best practice from the S2S series (n
 
 | Requirement | Details |
 |-------------|----------|
-| **S2S Series** | Read S2S-01 through S2S-12 for full context |
+| **S2S Series** | Read S2S-01 through S2S-09 for full context |
 | **Source Tenant** | Active Dynatrace SaaS with admin access |
 | **Target Tenant** | Provisioned Dynatrace SaaS with admin access |
 | **CLI Tools** | Monaco CLI v2.x, Terraform v1.5+ with provider ~> 1.91 |
 
-<a id="planning-and-readiness"></a>
-## 1. Planning and Readiness
+<a id="step-1-discover"></a>
+## 1. Step 1: Discover — Migration Scenarios and Inventory
 
 *Source: S2S-01*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 1 | Use phased-by-environment migration strategy | Migrate dev first, then staging, then production over 6-12 weeks | **Critical** | Strategy |
-| 2 | Expect the 90/10 rule | 90% of config migrates automatically; budget 90% of effort for the remaining 10% (entity ID remapping, integration repointing, IAM redesign) | **Critical** | Planning |
-| 3 | Run readiness assessment before starting | Complete every item on the Pre-Migration Checklist: licensing, network, auth, IAM, SSO, cloud creds, naming convention, parallel period, rollback plan, stakeholder alignment | **Critical** | Planning |
-| 4 | Inventory source tenant with DQL before export | Run entity count queries (`fetch dt.entity.host \| summarize count()`, same for service, process_group) to establish baseline numbers | **Critical** | Discovery |
-| 5 | Prefix resources when consolidating multiple tenants | Use source tenant identifier as prefix (e.g., `us-east - Critical Alerts`) on all dashboards, rules, and SLOs to prevent naming collisions | **Critical** | Naming |
-| 6 | Tag everything by business unit before splitting a tenant | Apply auto-tags identifying which business unit owns each resource before splitting one tenant into many | **Recommended** | Naming |
-| 7 | Build a comprehensive endpoint inventory for regional relocation | Document every agent URL, API call, webhook, and integration endpoint that references the source tenant URL | **Critical** | Discovery |
-| 8 | Align migration timing with stable traffic periods | Avoid migration during holidays, sales events, or other atypical traffic patterns | **Recommended** | Scheduling |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 1 | Complete entity discovery before anything else | Run `fetch dt.entity.host \| summarize count()` for hosts, services, process groups, and applications to establish baseline numbers | **Critical** |
+| 2 | Identify your migration scenario | Classify as consolidation (many-to-one), split (one-to-many), regional relocation, or cloud provider change — each has distinct tooling and planning requirements | **Critical** |
+| 3 | Select Monaco for configuration, Terraform for IAM | Monaco v2 covers all 8 config types (settings, document, automation, bucket, segment, slo-v2, openpipeline, classic api); Terraform is required exclusively for IAM policies, groups, and bindings | **Critical** |
+| 4 | Plan for entity ID changes | Entity IDs (HOST-xxx, SERVICE-xxx) are tenant-specific and will change; identify every dashboard, SLO, and alert that hardcodes an entity ID | **Critical** |
+| 5 | Document the 90/10 manual items | 90% of config migrates automatically; budget 90% of your effort for the remaining 10% — entity ID remapping, integration repointing, IAM redesign, credential recreation | **Critical** |
+| 6 | Build a comprehensive endpoint inventory | Document every agent URL, API call, webhook, and integration endpoint that references the source tenant URL | **Critical** |
+| 7 | Inventory Extensions 2.0 separately | Extensions cannot be exported via Monaco or Terraform; list all extensions and plan for manual reinstallation from the Dynatrace Hub | **Recommended** |
+| 8 | Audit configuration changes from last 30 days | Query audit logs to identify recently changed settings that may not be in your last export | **Recommended** |
 
-<a id="configuration-export-and-tooling"></a>
-## 2. Configuration Export and Tooling
+<a id="step-2-strategize"></a>
+## 2. Step 2: Strategize — Define Your Migration Approach
 
 *Source: S2S-02*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 9 | Use `monaco download` for bulk export | Run `monaco download manifest.yaml --environment source-tenant` to export all configuration in one operation | **Critical** | Tooling |
-| 10 | Store exported configuration in Git | Commit the Monaco export directory to a Git repository immediately after download | **Critical** | Version Control |
-| 11 | Use Monaco for everything except IAM | Monaco v2 covers all 8 config types: settings, document, automation, bucket, segment, slo-v2, openpipeline, and classic api | **Critical** | Tooling |
-| 12 | Use Terraform exclusively for IAM policies, groups, and bindings | IAM is the only resource type that requires Terraform; everything else works with Monaco | **Critical** | Tooling |
-| 13 | Validate export contains no secrets | Run `grep -r "dt0c01" projects/` after export and confirm 0 matches | **Critical** | Security |
-| 14 | Verify export completeness by comparing schema counts | Compare `ls projects/full-export/settings/ | wc -l` against Settings API `totalCount` per schema | **Recommended** | Validation |
-| 15 | Run `monaco validate manifest.yaml` before any deploy | Catches JSON validity errors, missing references, and dependency issues before they reach the target | **Critical** | Validation |
-| 16 | Audit configuration changes from last 30 days before export | Query audit logs (`fetch logs, from:-30d | filter matchesPhrase(log.source, "audit")`) to identify recently changed settings | **Recommended** | Discovery |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 9 | Choose phased approach for environments with >500 hosts | Migrate dev first (weeks 1-2), staging (weeks 3-4), production (weeks 5-6); gives Davis AI time to build baselines | **Critical** |
+| 10 | Define success criteria before starting | Document measurable targets: host count parity, service count parity, log volume parity, SLO evaluation accuracy, alerting coverage | **Critical** |
+| 11 | Engage your account team for licensing early | Contact Dynatrace to discuss temporary parallel licensing; negotiate before the migration window opens | **Critical** |
+| 12 | Plan a 2-4 week parallel operation period | Historical data does not migrate; parallel is the only path to data continuity and Davis AI baseline stability | **Critical** |
+| 13 | Establish a configuration freeze window | No settings modifications in the source tenant during cutover; communicate freeze dates to all teams | **Critical** |
+| 14 | Align migration timing with stable traffic periods | Avoid holidays, sales events, or other atypical traffic patterns that would distort Davis AI baselines | **Recommended** |
+| 15 | Expect the 90/10 rule | 90% of config migrates automatically; budget 90% of effort for the remaining 10% | **Critical** |
+| 16 | Prepare a rollback plan | Document how to revert agents to the source tenant if issues arise during cutover | **Recommended** |
 
-<a id="iam-sso-and-identity"></a>
-## 3. IAM, SSO, and Identity
+<a id="step-3-design"></a>
+## 3. Step 3: Design — Target Tenant Architecture
 
 *Source: S2S-03*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 17 | Redesign IAM during consolidation instead of lift-and-shift | Use the migration as the opportunity to fix group sprawl and overprivileged policies; redesign from scratch for the consolidated tenant | **Critical** | IAM |
-| 18 | Create a new SAML application in your IdP for the target tenant | New Entity ID, new ACS URL; do not reuse the source tenant's SAML app | **Critical** | SSO |
-| 19 | Test SSO with a pilot user before cutover | SAML configuration issues are the #1 day-of-cutover blocker | **Critical** | SSO |
-| 20 | Configure SCIM provisioning for the target tenant | Set new SCIM URL and token; users sync automatically on first login | **Recommended** | User Migration |
-| 21 | Create new OAuth clients in target tenant | Source tenant OAuth client secrets cannot be exported; create fresh clients with matching scopes | **Critical** | Credentials |
-| 22 | Create new API tokens in target tenant | Source tenant API tokens cannot be exported; create new tokens and update all consumers before cutover | **Critical** | Credentials |
-| 23 | Use Terraform with `account-idm-read`, `account-idm-write`, and `iam-policies-management` OAuth scopes for IAM | These three scopes are required to manage groups, policies, and bindings | **Critical** | IAM |
-| 24 | Map cloud provider identity constructs when changing providers | AWS IAM roles to Azure Service Principals, Azure AD Groups to GCP Google Groups, etc. | **Recommended** | Cloud Identity |
-| 25 | Limit Azure AD group claims to 150 groups per SAML assertion | Azure AD has a hard limit; use group filtering if your org exceeds this | **Recommended** | SSO |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 17 | Redesign IAM during consolidation | Use the migration as the opportunity to fix group sprawl and overprivileged policies; redesign from scratch for the target tenant | **Critical** |
+| 18 | Deploy data foundation before governance | Buckets and enrichment rules must exist before OpenPipeline routing, segments, SLOs, and IAM policies that reference them | **Critical** |
+| 19 | Replace entity IDs with tag-based filters | Convert `entityId("HOST-xxxx")` to `tag(app:checkout),tag(env:production)` in dashboards, SLOs, and notification rules before migration | **Critical** |
+| 20 | Design bucket naming for consolidation | Use prefix naming (e.g., `us-east_app_logs`, `eu-west_app_logs`) to prevent collisions when consolidating multiple tenants | **Recommended** |
+| 21 | Plan the 24-item deployment order | Buckets (1st) → Enrichment (2nd) → OpenPipeline (3rd) → Segments (4th) → Gen2 config (5th-13th) → Alerting/SLOs (14th-18th) → Dashboards/Workflows (19th-21st) → IAM last (22nd-24th) | **Critical** |
+| 22 | Replace management zone ID references with names | Convert `mzId(123)` to `mzName("Production")` because zone IDs change between tenants | **Critical** |
+| 23 | Prefix resources with source identifier during consolidation | Set `name = "${source_prefix} - ${resource_name}"` on all dashboards, rules, and SLOs to prevent naming collisions | **Recommended** |
+| 24 | Tag everything by business unit before splitting a tenant | Apply auto-tags identifying ownership before splitting one tenant into many | **Recommended** |
+| 25 | Map cloud provider identity constructs when changing providers | AWS IAM roles to Azure Service Principals, Azure AD Groups to GCP Google Groups, etc. | **Recommended** |
 
-<a id="agent-and-operator-migration"></a>
-## 4. Agent and Operator Migration
+<a id="step-4-prepare"></a>
+## 4. Step 4: Prepare — Export and Pre-Stage
 
 *Source: S2S-04*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 26 | Migrate agents phased by environment (dev, staging, production) | Dev first (weeks 1-2), staging (weeks 3-4), production (weeks 5-6); gives Davis AI time to establish baselines | **Critical** | Agent Migration |
-| 27 | Reconfigure OneAgent with `oneagentctl` | Run `oneagentctl --set-server=<target-url>/communication --set-tenant=<target-id> --set-tenant-token=<target-token>`; no application restart required | **Critical** | Agent Migration |
-| 28 | Reinstall ActiveGates in the target tenant | ActiveGates cannot be reconfigured like OneAgents; install fresh from the target tenant UI | **Critical** | Agent Migration |
-| 29 | Use Dynatrace Operator v1.8.1+ with DynaKube API `v1beta5` or `v1beta6` | Operator 1.8.x removes `v1beta3` and auto-converts to `v1beta6`; update manifests from `v1beta3` before upgrading | **Critical** | Kubernetes |
-| 30 | Install Operator via Helm from `oci://public.ecr.aws/dynatrace/dynatrace-operator` version 1.8.1 | Use `--atomic` flag for rollback safety | **Critical** | Kubernetes |
-| 31 | Budget 540m CPU and 872Mi memory per node for Dynatrace overhead | OneAgent (100m/512Mi) + CSI Driver components (440m/360Mi) per node; control plane adds 650m/320Mi per cluster | **Recommended** | Capacity |
-| 32 | Recreate network zones in target before migrating agents | Export with `monaco download --specific-settings builtin:networkzones` and deploy to target | **Critical** | Network |
-| 33 | Keep source tenant running throughout migration window | Do not decommission source ActiveGates or revoke source tokens until all agents are confirmed in the target | **Critical** | Rollback |
-| 34 | Automate fleet-wide `oneagentctl` with config management tools | Use Ansible, Chef, Puppet, AWS SSM, or Azure Automation for large fleets | **Recommended** | Agent Migration |
-| 35 | Update IRSA (AWS), Managed Identity (Azure), or Workload Identity (GCP) to reference target tenant | Cloud-specific K8s identity must point to the new tenant | **Critical** | Kubernetes |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 26 | Export via `monaco download` | Run `monaco download manifest.yaml --environment source-tenant` to export all configuration in one operation | **Critical** |
+| 27 | Store exported configuration in Git | Commit the Monaco export directory to a Git repository immediately after download | **Critical** |
+| 28 | Validate export completeness | Compare `ls projects/full-export/settings/ \| wc -l` against Settings API `totalCount` per schema | **Critical** |
+| 29 | Validate export contains no secrets | Run `grep -r "dt0c01" projects/` after export and confirm 0 matches | **Critical** |
+| 30 | Run `monaco validate manifest.yaml` before any deploy | Catches JSON validity errors, missing references, and dependency issues before they reach the target | **Critical** |
+| 31 | Provision target tenant and verify admin access | Confirm SSO, API token creation, and environment admin role before proceeding | **Critical** |
+| 32 | Configure SSO with full SAML message signing | Create a new SAML application in your IdP for the target tenant — new Entity ID, new ACS URL; never reuse the source SAML app | **Critical** |
+| 33 | Test SSO with a pilot user before cutover | SAML configuration issues are the #1 day-of-cutover blocker | **Critical** |
+| 34 | Deploy ActiveGates in the target tenant | ActiveGates cannot be reconfigured like OneAgents; install fresh from the target tenant UI | **Critical** |
+| 35 | Prepare K8s operator manifests for the target tenant | Update DynaKube API to `v1beta5` or `v1beta6`; use Operator v1.8.1+ from `oci://public.ecr.aws/dynatrace/dynatrace-operator` | **Critical** |
+| 36 | Recreate network zones in the target | Export with `monaco download --specific-settings builtin:networkzones` and deploy to the target before agent migration | **Critical** |
+| 37 | Create new OAuth clients and API tokens in the target | Source credentials cannot be exported; create fresh clients with matching scopes | **Critical** |
+| 38 | Limit Azure AD group claims to 150 groups per SAML assertion | Azure AD has a hard limit; use group filtering if your org exceeds this | **Recommended** |
 
-<a id="configuration-import-and-deployment-order"></a>
-## 5. Configuration Import and Deployment Order
+<a id="step-5-execute"></a>
+## 5. Step 5: Execute — Configuration Import and Agent Cutover
 
 *Source: S2S-05*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 36 | Deploy configuration in dependency order | Buckets (1st) -> Enrichment rules (2nd) -> OpenPipeline (3rd) -> Segments (4th) -> Gen2 config (5th-13th) -> Alerting/SLOs (14th-18th) -> Dashboards/Workflows (19th-21st) -> IAM last (22nd-24th) | **Critical** | Deployment |
-| 37 | Deploy IAM groups, policies, and bindings last | IAM `WHERE` clauses reference schemas, buckets, and security contexts that must already exist | **Critical** | IAM |
-| 38 | Use `monaco deploy manifest.yaml --environment target` for the entire import (except IAM) | Monaco resolves dependencies automatically within a single run | **Critical** | Tooling |
-| 39 | Run `monaco deploy --dry-run` before every real deploy | Preview what will change before committing to the target tenant | **Critical** | Validation |
-| 40 | Replace all hardcoded entity IDs with tag-based filters before import | Convert `entityId("HOST-xxxx")` to `tag(app:checkout),tag(env:production)` in dashboards, SLOs, and notification rules | **Critical** | Entity Remapping |
-| 41 | Look up new entity IDs in target tenant using `fetch dt.entity.<type> \| filter contains(entity.name, "<name>")` | Use DQL to find new entity IDs after agents report to target | **Recommended** | Entity Remapping |
-| 42 | Prefix resources with source tenant identifier during consolidation | Set `name = "${var.source_prefix} - ${resource_name}"` in Terraform variables | **Recommended** | Naming |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 39 | Follow the 24-item deployment order | Buckets → Enrichment → OpenPipeline → Segments → Gen2 config → Alerting/SLOs → Dashboards/Workflows → IAM last | **Critical** |
+| 40 | Deploy IAM groups, policies, and bindings last | IAM `WHERE` clauses reference schemas, buckets, and security contexts that must already exist | **Critical** |
+| 41 | Use `monaco deploy manifest.yaml --environment target` for import | Monaco resolves dependencies automatically within a single run (except IAM) | **Critical** |
+| 42 | Run `monaco deploy --dry-run` before every real deploy | Preview what will change before committing to the target tenant | **Critical** |
+| 43 | Deploy IAM via Terraform with `account-idm-read`, `account-idm-write`, and `iam-policies-management` scopes | These three OAuth scopes are required to manage groups, policies, and bindings | **Critical** |
+| 44 | Reconfigure OneAgent with `oneagentctl` — do not reinstall | Run `oneagentctl --set-server=<target-url>/communication --set-tenant=<target-id> --set-tenant-token=<target-token>` | **Critical** |
+| 45 | Restart application processes after agent reconfiguration | Application processes must restart for the agent to report to the new tenant | **Critical** |
+| 46 | Migrate non-production first | Dev agents first (weeks 1-2), staging (weeks 3-4), production last (weeks 5-6) | **Critical** |
+| 47 | Validate after each migration wave | Verify host count, service count, and data flow in the target after each environment wave | **Critical** |
+| 48 | Automate fleet-wide `oneagentctl` with config management | Use Ansible, Chef, Puppet, AWS SSM, or Azure Automation for large fleets | **Recommended** |
+| 49 | Budget 540m CPU and 872Mi memory per node for Dynatrace overhead | OneAgent (100m/512Mi) + CSI Driver (440m/360Mi) per node; control plane adds 650m/320Mi per cluster | **Recommended** |
+| 50 | Update IRSA (AWS), Managed Identity (Azure), or Workload Identity (GCP) to reference target | Cloud-specific K8s identity must point to the new tenant | **Critical** |
 
-<a id="cloud-integration"></a>
-## 6. Cloud Integration
+<a id="step-6-integrate"></a>
+## 6. Step 6: Integrate — Cloud, Dashboards, and Workflows
 
 *Source: S2S-06*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 43 | Recreate cloud provider credentials manually in the target tenant | `monaco download` cannot export AWS, Azure, or K8s credentials; recreate IAM roles, service principals, and service accounts for the target | **Critical** | Cloud |
-| 44 | Create new AWS IAM role with trust policy referencing the target tenant's Dynatrace account ID and external ID | Get these values from the target tenant's AWS integration setup wizard | **Critical** | AWS |
-| 45 | Create new Azure App Registration with `Monitoring Reader` role on target subscriptions | New Tenant ID, Client ID, Client Secret for the target tenant | **Critical** | Azure |
-| 46 | Create new GCP Service Account with `Monitoring Viewer` and `Compute Viewer` roles | Generate new JSON key for the target tenant integration | **Critical** | GCP |
-| 47 | Deploy new AWS Log Forwarder Lambda pointing to the target tenant | Update S3 event notifications to trigger the new Lambda function | **Critical** | AWS |
-| 48 | Update Azure Event Hub consumer group for the target tenant | Configure new ActiveGate or function to consume from Event Hub | **Critical** | Azure |
-| 49 | Standardize tag naming across cloud providers | Use consistent keys (`app`, `env`, `team`) regardless of AWS/Azure/GCP | **Recommended** | Multi-Cloud |
-| 50 | Schedule credential rotation for all cloud provider integrations post-migration | Rotate within 30 days of cutover | **Recommended** | Security |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 51 | Recreate cloud provider credentials in the target tenant | `monaco download` cannot export AWS, Azure, or K8s credentials; create new IAM roles, service principals, and service accounts | **Critical** |
+| 52 | Create new AWS IAM role with trust policy for the target tenant | Reference the target tenant's Dynatrace account ID and external ID from the AWS integration wizard | **Critical** |
+| 53 | Create new Azure App Registration with `Monitoring Reader` role | New Tenant ID, Client ID, Client Secret for the target tenant | **Critical** |
+| 54 | Create new GCP Service Account with `Monitoring Viewer` and `Compute Viewer` roles | Generate new JSON key for the target tenant integration | **Critical** |
+| 55 | Deploy new AWS Log Forwarder Lambda pointing to the target | Update S3 event notifications to trigger the new Lambda function | **Critical** |
+| 56 | Update webhook URLs that reference source-tenant-specific endpoints | Verify custom webhooks accept traffic from the target tenant's IP range | **Critical** |
+| 57 | Migrate dashboards via Monaco and audit for hardcoded entity IDs | Search dashboard JSON for `entityId(`, `HOST-`, `SERVICE-`, `PROCESS_GROUP-` patterns and replace with tag-based filters | **Critical** |
+| 58 | Reassign dashboard ownership to a target tenant user or service account | Source user accounts may not exist in the target; set `owner` field to a valid target identity | **Critical** |
+| 59 | Create new workflow service user (actor) in the target tenant | Source service users cannot be migrated; create new service user and set as workflow actor | **Critical** |
+| 60 | Recreate Synthetic private locations in the target tenant | Private Synthetic locations are tenant-specific; update location references in all monitor configs | **Critical** |
+| 61 | Use a classic API token (not OAuth) for Synthetic monitor migration | Synthetic monitors require classic token as of provider v1.88.0+ | **Critical** |
+| 62 | Reinstall Extensions 2.0 from the Dynatrace Hub | Neither Monaco nor Terraform supports Extensions 2.0 export/import; extensions require a host-based ActiveGate, not K8s-based | **Critical** |
+| 63 | Standardize tag naming across cloud providers | Use consistent keys (`app`, `env`, `team`) regardless of AWS/Azure/GCP | **Recommended** |
+| 64 | Webhook integrations (Teams, Slack, PagerDuty, ServiceNow, Jira) use the same URLs | No URL changes needed for standard integrations; just recreate the notification rule in the target | **Recommended** |
 
-<a id="dashboards-workflows-and-integrations"></a>
-## 7. Dashboards, Workflows, and Integrations
+<a id="step-7-expand"></a>
+## 7. Step 7: Expand — OpenPipeline, SLOs, and Alerting
 
 *Source: S2S-07*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 51 | Audit all dashboards for hardcoded entity IDs before import | Search dashboard JSON for `entityId(`, `HOST-`, `SERVICE-`, `PROCESS_GROUP-` patterns and replace with tag-based filters | **Critical** | Dashboards |
-| 52 | Reassign dashboard ownership to a target tenant user or service account | Source user accounts may not exist in target; set `owner` field to valid target identity | **Critical** | Dashboards |
-| 53 | Create new workflow service user (actor) in the target tenant | Source service users cannot be migrated; create new service user and set as workflow actor | **Critical** | Workflows |
-| 54 | Update all webhook URLs that reference source-tenant-specific endpoints | Verify custom webhooks accept traffic from the target tenant's IP range | **Critical** | Notifications |
-| 55 | Recreate Synthetic ActiveGate locations in the target tenant | Private Synthetic locations are tenant-specific; update location references in all monitor configs | **Critical** | Synthetic |
-| 56 | Use a classic API token (not OAuth) for Synthetic monitor migration | Synthetic monitors require classic token as of provider v1.88.0+ | **Critical** | Synthetic |
-| 57 | Reinstall Extensions 2.0 from the Dynatrace Hub in the target tenant | Neither Monaco nor Terraform supports Extensions 2.0 export/import; manual reinstall required | **Critical** | Extensions |
-| 58 | Extensions 2.0 require a host-based ActiveGate, not K8s-based | Ensure the target tenant has an appropriate host-based AG deployment for extensions | **Critical** | Extensions |
-| 59 | Webhook integrations (Teams, Slack, PagerDuty, ServiceNow, Jira) use the same URLs across tenants | No URL changes needed for these standard integrations; just recreate the notification rule in the target | **Recommended** | Notifications |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 65 | Deploy Grail buckets before OpenPipeline routing rules | Routing rules that target nonexistent buckets cause data loss | **Critical** |
+| 66 | Deploy in order: buckets → enrichment rules → OpenPipeline rules | This three-step sequence ensures data flows correctly from the first byte | **Critical** |
+| 67 | Use prefix naming for bucket consolidation | E.g., `us-east_app_logs`, `eu-west_app_logs` to prevent collisions when consolidating tenants | **Recommended** |
+| 68 | Match retention policies exactly for regulated environments | Set to same days as source (e.g., 360 days for PCI); verify compliance requirements before cutover | **Critical** |
+| 69 | Update bucket references in OpenPipeline routing rules | Routing rules from export contain source bucket names; replace with target bucket names | **Critical** |
+| 70 | Convert SLO entity IDs to tag-based filters | Replace `type(SERVICE),entityId(SERVICE-xxx)` with `type(SERVICE),tag(app:checkout),tag(env:production)` | **Critical** |
+| 71 | Set SLO evaluation windows to 30 days initially | Start with `ROLLING_3_DAYS`, expand to `ROLLING_WEEK` after 7 days, then to full window after 30 days | **Critical** |
+| 72 | Align SLO cutover with calendar boundaries | If using calendar-based SLOs, switch at the start of a month or quarter to avoid partial evaluation | **Recommended** |
+| 73 | Port alerting profile severity and tag filters as-is | Ensure the referenced tags exist in the target tenant before deploying alerting profiles | **Critical** |
+| 74 | Verify maintenance window timezone settings | Cron expressions are timezone-sensitive; confirm schedules are correct after import | **Recommended** |
+| 75 | Update maintenance window entity scopes | Source entity references in scope definitions must be remapped to target tenant entities | **Critical** |
 
-<a id="openpipeline-and-grail-buckets"></a>
-## 8. OpenPipeline and Grail Buckets
+<a id="step-8-enable"></a>
+## 8. Step 8: Enable — Parallel Operation and Stakeholder Handover
 
 *Source: S2S-08*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 60 | Deploy Grail buckets before OpenPipeline routing rules | Routing rules that target nonexistent buckets cause data loss | **Critical** | Deployment Order |
-| 61 | Deploy in order: buckets -> enrichment rules -> OpenPipeline rules | This three-step sequence ensures data flows correctly from the first byte | **Critical** | Deployment Order |
-| 62 | Prefix bucket names with source tenant identifier when consolidating | E.g., `us-east_app_logs`, `eu-west_app_logs` to prevent collisions | **Recommended** | Naming |
-| 63 | Match retention policies exactly for regulated environments | Production: set to same days as source (e.g., 360 days for PCI); verify compliance requirements before cutover | **Critical** | Compliance |
-| 64 | Update bucket references in OpenPipeline routing rules to target bucket names | Routing rules from export contain source bucket names; replace with target bucket names | **Critical** | Data Routing |
-| 65 | Use a single Monaco deploy for buckets + enrichment + OpenPipeline together | `monaco deploy` resolves the dependency order automatically | **Recommended** | Tooling |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 76 | Run parallel operation for 2-4 weeks minimum | Historical data does not migrate; parallel is the only path to continuity | **Critical** |
+| 77 | Allow 7-14 days for Davis AI baselines to stabilize | Availability: 2-3 days; response time and error rate: 1-2 weeks; resource utilization: 2-4 weeks (full business cycle) | **Critical** |
+| 78 | Use phased parallel model to control cost | Migrate agents in waves so you never run 2x host units simultaneously; expect 1.1-1.5x cost | **Critical** |
+| 79 | Communicate to all personas | Engineering teams: 4 weeks before cutover; SRE/on-call: 2 weeks before; executives: weekly status | **Critical** |
+| 80 | Communicate the SLO baseline gap to stakeholders | SLOs start at 0% in the target and accumulate data over 7-30 days depending on evaluation window | **Critical** |
+| 81 | Warn about Davis AI false positives | Baselines are relearning during first 2-4 weeks; expect noisy alerting until stabilized | **Recommended** |
+| 82 | Negotiate dual licensing with Dynatrace | Contact your account team to discuss temporary parallel licensing to reduce cost | **Recommended** |
+| 83 | Configure SCIM provisioning for the target tenant | Set new SCIM URL and token; users sync automatically on first login | **Recommended** |
+| 84 | Export problem history before decommission | Problem history cannot migrate; export critical incidents as documentation for post-mortem reference | **Recommended** |
+| 85 | Keep a fallback local admin account | If SAML is misconfigured on day of cutover, local admin bypasses SSO | **Critical** |
 
-<a id="parallel-operation-and-data-continuity"></a>
-## 9. Parallel Operation and Data Continuity
+<a id="step-9-optimize"></a>
+## 9. Step 9: Optimize — Cutover Validation and Decommission
 
 *Source: S2S-09*
 
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 66 | Run parallel operation for a minimum of 30 days | Historical data does not migrate; parallel is the only path to continuity | **Critical** | Parallel |
-| 67 | Use phased parallel model to control cost | Migrate agents in waves (dev -> staging -> prod) so you never run 2x host units simultaneously; expect 1.1-1.5x host unit cost | **Critical** | Cost |
-| 68 | Allow 2-4 weeks for Davis AI baselines to stabilize | Availability baselines: 2-3 days; response time and error rate: 1-2 weeks; resource utilization: 2-4 weeks (full business cycle) | **Critical** | Baselines |
-| 69 | Migrate dev/staging first to give Davis AI a head start | Dev agents in target from week 1 provides 4+ weeks of baseline data before production cutover | **Recommended** | Baselines |
-| 70 | Communicate the SLO baseline gap to stakeholders | SLOs start at 0% in the target and accumulate data over 7-30 days depending on evaluation window | **Critical** | Communication |
-| 71 | Notify engineering teams 4 weeks before cutover | Include migration timeline, agent cutover schedule, and expected impacts | **Critical** | Communication |
-| 72 | Notify SRE/on-call 2 weeks before cutover | Cover alert routing changes and dual-tenant monitoring procedures | **Critical** | Communication |
-| 73 | Warn about Davis AI false positives during first 2-4 weeks post-cutover | Baselines are relearning; expect noisy alerting until stabilized | **Recommended** | Baselines |
-| 74 | Negotiate parallel license period with Dynatrace | Contact your Dynatrace account team to discuss temporary parallel licensing to reduce cost | **Recommended** | Cost |
-| 75 | Export key problem history as documentation before decommissioning source | Problem history cannot migrate; export critical incidents for post-mortem reference | **Recommended** | Data |
+| # | Best Practice | Recommended Setting/Value | Priority |
+|---|--------------|---------------------------|----------|
+| 86 | Complete go/no-go checklist before cutover | Verify host count, service count, log volume, span volume, SLO evaluation, alerting coverage — all must match success criteria | **Critical** |
+| 87 | Validate all data flows via DQL | Run `fetch logs, from:-1h \| summarize count()`, `fetch spans, from:-1h \| summarize count()`, and entity count queries to confirm parity | **Critical** |
+| 88 | Verify enrichment tags are populating | Run `fetch logs, from:-1h \| filter isNotNull(dt.security_context) \| summarize count()` and confirm count > 0 | **Critical** |
+| 89 | Run final `monaco download` → `monaco deploy` sync before cutover | Captures any configuration changes made since initial export | **Critical** |
+| 90 | Get stakeholder sign-off | SRE, dev, security, management, and compliance each validate their domain: alerting, dashboards, IAM, SLO reporting, retention | **Critical** |
+| 91 | Disable alerting in source tenant after cutover | Prevents duplicate alerts during the transition tail | **Critical** |
+| 92 | Keep source tenant running 30 days minimum after cutover | Read-only mode for reference; do not deprovision until all stakeholders confirm | **Critical** |
+| 93 | Rotate all credentials within 30 days of cutover | API tokens, OAuth clients, cloud provider keys — revoke any temporary migration credentials | **Critical** |
+| 94 | Revoke all source tenant API tokens and deactivate OAuth clients | Prevents unauthorized access to the deprecated tenant | **Critical** |
+| 95 | Remove SAML/SSO application from IdP for source tenant | Eliminates stale IdP configuration and prevents confusion | **Recommended** |
+| 96 | Export final audit logs from source before decommission | Compliance requires audit trail retention; export before access is lost | **Critical** |
+| 97 | Update all documentation | Replace source tenant URLs, API endpoints, and dashboard links in runbooks, CI/CD pipelines, and architecture diagrams | **Critical** |
+| 98 | Tune Davis AI anomaly detection during weeks 1-2 post-cutover | Suppress known false positives; adjust sensitivity for noisy services | **Critical** |
+| 99 | Expand SLO evaluation windows to full duration by week 4 | Move from `ROLLING_3_DAYS` to `ROLLING_WEEK` to `ROLLING_MONTH` as data accumulates | **Recommended** |
+| 100 | Consolidate redundant Synthetic monitors | If consolidating tenants, deduplicate monitors that tested the same endpoints from different tenants | **Optional** |
+| 101 | Replace all remaining entity ID references | Post-migration cleanup ensures configuration is fully portable for future migrations | **Recommended** |
+| 102 | Schedule credential rotation for cloud provider integrations | Rotate within 30 days of cutover for all AWS, Azure, and GCP integrations | **Recommended** |
+| 103 | Conduct a lessons-learned review within 2 weeks of cutover | Capture planning gaps, tool issues, communication effectiveness, timeline accuracy | **Recommended** |
+| 104 | Set source tenant to read-only retention after cutover | Preserves historical data for reference without active monitoring cost | **Critical** |
 
-<a id="slos-and-alerting"></a>
-## 10. SLOs and Alerting
+<a id="five-principles"></a>
+## The Five Principles of S2S Migration
 
-*Source: S2S-10*
-
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 76 | Convert all SLO metric expressions from entity IDs to tag-based filters | Replace `type(SERVICE),entityId(SERVICE-xxx)` with `type(SERVICE),tag(app:checkout),tag(env:production)` | **Critical** | SLOs |
-| 77 | Replace management zone ID references with management zone names | Convert `mzId(123)` to `mzName("Production")` because zone IDs change between tenants | **Critical** | SLOs |
-| 78 | Set initial SLO evaluation window to match available data | Start with `ROLLING_3_DAYS`, expand to `ROLLING_WEEK` after 7 days, then to full window after 30 days | **Critical** | SLOs |
-| 79 | Align SLO cutover with calendar boundaries | If using calendar-based SLOs, switch at the start of a month or quarter to avoid partial evaluation | **Recommended** | SLOs |
-| 80 | Port alerting profile severity filters and tag filters as-is | Ensure the referenced tags exist in the target tenant before deploying alerting profiles | **Critical** | Alerting |
-| 81 | Verify maintenance window timezone settings match the target tenant | Cron expressions are timezone-sensitive; confirm schedules are correct after import | **Recommended** | Alerting |
-| 82 | Update maintenance window entity scopes to reference target tenant entities | Source entity references in scope definitions must be remapped | **Critical** | Alerting |
-
-<a id="cutover-execution"></a>
-## 11. Cutover Execution
-
-*Source: S2S-11*
-
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 83 | Freeze configuration changes in the source tenant before final sync | No settings modifications during the cutover window | **Critical** | Change Control |
-| 84 | Run a final `monaco download` -> `monaco deploy` sync immediately before cutover | Captures any configuration changes made since initial export | **Critical** | Sync |
-| 85 | Verify host count in target matches source | Run `fetch dt.entity.host \| summarize count()` in both tenants and compare | **Critical** | Validation |
-| 86 | Verify service count in target matches source | Run `fetch dt.entity.service \| summarize count()` in both tenants and compare | **Critical** | Validation |
-| 87 | Verify logs are flowing in target | Run `fetch logs, from:-1h \| summarize log_count = count()` and confirm log_count > 0 | **Critical** | Validation |
-| 88 | Verify spans are flowing in target | Run `fetch spans, from:-1h \| summarize span_count = count()` and confirm span_count > 0 | **Critical** | Validation |
-| 89 | Verify enrichment tags are populating | Run `fetch logs, from:-1h \| filter isNotNull(dt.security_context) \| summarize count()` and confirm count > 0 | **Critical** | Validation |
-| 90 | Disable alerting in source tenant after cutover | Prevents duplicate alerts during the transition tail | **Critical** | Alerting |
-| 91 | Set source tenant to read-only retention after cutover | Preserves historical data for reference without active monitoring cost | **Critical** | Decommission |
-| 92 | Keep a fallback local admin account for SSO failures | If SAML is misconfigured on day of cutover, local admin bypasses SSO | **Critical** | SSO |
-| 93 | Obtain stakeholder sign-off from SRE, dev, security, management, and compliance | Each team validates their domain: alerting, dashboards, IAM, SLO reporting, retention | **Critical** | Governance |
-
-<a id="post-migration-and-decommission"></a>
-## 12. Post-Migration and Decommission
-
-*Source: S2S-12*
-
-| # | Best Practice | Setting / Value | Priority | Category |
-|---|--------------|-----------------|----------|----------|
-| 94 | Keep source tenant running for 30 days after cutover before decommissioning | Read-only mode for reference; do not deprovision until all stakeholders confirm | **Critical** | Decommission |
-| 95 | Tune Davis AI anomaly detection baselines during weeks 1-2 post-cutover | Suppress known false positives; adjust sensitivity for noisy services | **Critical** | Optimization |
-| 96 | Expand SLO evaluation windows to full duration by week 4 | Move from `ROLLING_3_DAYS` to `ROLLING_WEEK` to `ROLLING_MONTH` as data accumulates | **Recommended** | SLOs |
-| 97 | Rotate all credentials (API tokens, OAuth clients, cloud provider keys) within 30 days of cutover | Post-migration credential hygiene; revoke any temporary migration credentials | **Critical** | Security |
-| 98 | Export final audit logs from source tenant before decommission | Compliance requires audit trail retention; export before access is lost | **Critical** | Compliance |
-| 99 | Revoke all API tokens and deactivate all OAuth clients in source | Prevents unauthorized access to the deprecated tenant | **Critical** | Security |
-| 100 | Remove SAML/SSO application from IdP for source tenant | Eliminates stale IdP configuration; prevents confusion | **Recommended** | SSO |
-| 101 | Update all runbooks, CI/CD pipelines, and architecture diagrams to reference target tenant | Replace source tenant URLs, API endpoints, and dashboard links everywhere | **Critical** | Documentation |
-| 102 | Consolidate redundant Synthetic monitors post-migration | If consolidating tenants, deduplicate monitors that tested the same endpoints from different tenants | **Optional** | Optimization |
-| 103 | Conduct a lessons-learned review within 2 weeks of cutover | Capture planning gaps, tool issues, communication effectiveness, timeline accuracy, and surprise entity ID references | **Recommended** | Process |
-| 104 | Replace all remaining entity ID references in dashboards and SLOs with tag-based filters | Post-migration cleanup; ensures configuration is fully portable for future migrations | **Recommended** | Optimization |
+1. **Export early, validate often** — do not wait for cutover to discover missing config
+2. **Tags over entity IDs** — make all configuration portable before migration
+3. **Parallel is not optional** — historical data does not migrate; 30 days minimum
+4. **IAM last** — deploy the resources first, then lock them down with policies
+5. **Communicate relentlessly** — migration is as much about people as technology
 
 ## Summary
 
-This notebook contains **104 best practices** across 12 categories. The breakdown by priority:
+This notebook contains **104 best practices** across 9 migration steps. The breakdown by priority:
 
 | Priority | Count | Guidance |
 |----------|-------|----------|
@@ -244,13 +259,7 @@ This notebook contains **104 best practices** across 12 categories. The breakdow
 | **Recommended** | 27 | Implement unless there is a documented reason not to. These reduce risk and cost. |
 | **Optional** | 4 | Implement if resources allow. These improve efficiency but are not blockers. |
 
-### The Five Principles of S2S Migration
-
-1. **Export early, validate often** -- do not wait for cutover to discover missing config
-2. **Tags over entity IDs** -- make all configuration portable before migration
-3. **Parallel is not optional** -- historical data does not migrate; 30 days minimum
-4. **IAM last** -- deploy the resources first, then lock them down with policies
-5. **Communicate relentlessly** -- migration is as much about people as technology
+Use the 9-step framework table and the 11-step Order of Operations table at the top of this notebook to track progress and govern execution sequence. Each step's best practices align to the corresponding S2S notebook (S2S-01 through S2S-09) for full context and worked examples.
 
 ---
 
