@@ -1,6 +1,6 @@
 # Getting Started: Your First Steps in Dynatrace
 
-> **Series:** ONBRD | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Finding Your Way Around
 Welcome to Dynatrace. This notebook helps you get oriented in your new environment—where to find things, how to navigate, and what to do first.
@@ -142,6 +142,11 @@ Before deploying OneAgent, check if any data is already flowing. Run these queri
 // Count entities by type - see what's been discovered
 fetch dt.entity.host
 | summarize host_count = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize host_count = count()
+
 ```
 
 ```dql
@@ -158,6 +163,13 @@ fetch dt.entity.service
 | fields entity.name, serviceType
 | sort entity.name
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fields name, serviceType
+// | sort name
+// | limit 50
+
 ```
 
 ```dql

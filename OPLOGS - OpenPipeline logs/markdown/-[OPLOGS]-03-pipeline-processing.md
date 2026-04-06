@@ -31,6 +31,8 @@ This notebook covers OpenPipeline processing stages: parsing, enrichment, metric
 
 
 
+> **OneAgent Attribute Enrichment (1.331+):** OneAgent can enrich all telemetry (metrics, spans, logs, events) with primary fields (`dt.security_context`, `dt.cost.costcenter`) and primary tags (`primary_tags.environment`, `primary_tags.team`) at the source. More efficient than auto-tags — feeds directly into OpenPipeline routing, bucket assignment, and Grail permissions. Configure via `oneagentctl --set-host-tag` or `--set-host-tag` at install time. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
 <a id="parsing-field-extraction"></a>
 ## 2. Parsing & Field Extraction
 Parsing extracts structured fields from unstructured log content **at ingestion time**.

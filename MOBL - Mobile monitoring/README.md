@@ -22,6 +22,7 @@ Dynatrace mobile Real User Monitoring (RUM) — SDK setup, user action tracking,
 10. [DQL for Mobile Analytics](markdown/-[MOBL]-10-dql-for-mobile.md) — Query reference for mobile entities, crashes, and performance
 11. [Dashboards & Alerting](markdown/-[MOBL]-11-dashboards-and-alerting.md) — KPI dashboards with anomaly detection and metric event alerts
 12. [Advanced Instrumentation](markdown/-[MOBL]-12-advanced-instrumentation.md) — Custom events, nested actions, A/B testing, and multi-app strategies
+99. [Best Practice Summary](markdown/-[MOBL]-99-best-practice-summary.md) — Consolidated best practices from the MOBL series
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.

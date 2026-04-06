@@ -1,11 +1,10 @@
 # DASH-02: Dashboard Hierarchy
 
-> **Series:** DASH | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Not every stakeholder needs the same view. A well-designed dashboard strategy uses a three-tier hierarchy — Executive, Operations, and Engineering — where each tier serves a different audience with appropriate information density. This notebook defines each tier, explains how to select metrics and refresh cadence for each, and provides sample DQL queries representative of each level.
-
 
 ---
 
@@ -21,7 +20,6 @@ Not every stakeholder needs the same view. A well-designed dashboard strategy us
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -29,7 +27,6 @@ Not every stakeholder needs the same view. A well-designed dashboard strategy us
 | **Dynatrace Environment** | SaaS or Managed with Grail enabled |
 | **Permissions** | `storage:logs:read`, `storage:metrics:read`, `storage:events:read`, `storage:spans:read` |
 | **Prior Reading** | DASH-01: Dashboard Fundamentals |
-
 
 <a id="three-tier-model"></a>
 
@@ -52,7 +49,6 @@ Design dashboards so users can drill down through the tiers:
 3. Click through to **Engineering** dashboard for trace-level root cause
 
 Use dashboard links in markdown tiles to connect the tiers.
-
 
 <a id="executive-tier"></a>
 
@@ -79,7 +75,6 @@ Executive dashboards answer: **"Is the business healthy?"**
 
 ### Example: Weekly Problem Trend
 
-
 ```dql
 // Weekly problem trend — suitable for executive line chart
 fetch dt.davis.problems, from:-7d
@@ -87,7 +82,6 @@ fetch dt.davis.problems, from:-7d
 ```
 
 ### Example: Active Problem Count (Single Value)
-
 
 ```dql
 // Active problems — single value tile for executive dashboard
@@ -123,7 +117,6 @@ Operations dashboards answer: **"What needs attention right now?"**
 
 ### Example: Service Error Rate
 
-
 ```dql
 // Error rate by service — operations bar chart
 fetch spans, from:-1h
@@ -135,7 +128,6 @@ fetch spans, from:-1h
 ```
 
 ### Example: Log Volume by Level
-
 
 ```dql
 // Log volume trend by severity — operations stacked area chart
@@ -169,7 +161,6 @@ Engineering dashboards answer: **"Why is this happening and where exactly?"**
 
 ### Example: Top 10 Slowest Endpoints
 
-
 ```dql
 // Top 10 slowest endpoints by p95 response time
 fetch spans, from:-1h
@@ -182,11 +173,10 @@ fetch spans, from:-1h
 
 ### Example: Database Performance by System
 
-
 ```dql
 // Database response time by system — engineering detail table
 fetch spans, from:-1h
-| filter span.kind == "client" AND isNotNull(db.system)
+| filter span.kind == "client" and isNotNull(db.system)
 | summarize avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, query_count = count(), by:{db.system, db.namespace}
 | sort p95_ms desc
 ```
@@ -208,7 +198,6 @@ Information density describes how much data a viewer must process. Match density
 
 > **Tip:** If an executive dashboard takes more than 30 seconds to understand, it has too much detail. Push that detail down to the operations tier.
 
-
 <a id="refresh-cadence"></a>
 
 ## 6. Refresh Cadence Recommendations
@@ -226,7 +215,6 @@ Auto-refresh should match how the dashboard is consumed.
 
 > **Important:** Aggressive refresh intervals (< 1 min) on complex queries can cause unnecessary load. Start at 5 minutes and decrease only if real-time awareness is critical.
 
-
 <a id="summary-and-next-steps"></a>
 
 ## 7. Summary and Next Steps
@@ -241,8 +229,6 @@ In this notebook you learned:
 
 **Next:** In **DASH-03: Executive Dashboards**, we deep-dive into building polished executive-level dashboards with KPI selection, availability calculations, and MTTR tracking.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

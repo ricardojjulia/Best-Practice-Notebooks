@@ -20,6 +20,8 @@ The M2S series follows a structured, step-based approach to Managed-to-SaaS migr
 | 8 | **Enable** | User Enablement and Communication |
 | 9 | **Optimize** | Validate, Optimize, and Decommission |
 
+> **OneAgent Attribute Enrichment (1.331+):** OneAgent can enrich all telemetry (metrics, spans, logs, events) with primary fields (`dt.security_context`, `dt.cost.costcenter`) and primary tags (`primary_tags.environment`, `primary_tags.team`) at the source. More efficient than auto-tags — feeds directly into OpenPipeline routing, bucket assignment, and Grail permissions. Configure via `oneagentctl --set-host-tag` or `--set-host-tag` at install time. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
 ## The 11-Step Order of Operations (Upgrade Phase)
 
 Within the upgrade phase, follow this precise execution order:
@@ -105,7 +107,7 @@ Within the upgrade phase, follow this precise execution order:
 | Announce configuration freeze | Notify all teams that no configuration changes should be made to the Managed environment during the migration window. Document the freeze start and end dates. | Recommended |
 | Test rollback procedure | Document the Managed server URL and token. Rollback: `oneagentctl --set-server="https://{managed-cluster}/communication"` + restart. Test on one host before bulk migration. | Critical |
 | Test connectivity before migration | Run `curl -v https://{tenant-id}.live.dynatrace.com/api/v1/time` from monitored hosts and ActiveGate servers before scheduling the migration window. | Critical |
-| Verify OneAgent versions are within support window | OneAgent support window is **9–12 months**. Check oldest deployed versions before migration. Upgrade outdated agents first. | Recommended |
+| Verify OneAgent versions are within support window | OneAgent support window is **9 months (Standard) / 12 months (Enterprise)**. Check oldest deployed versions before migration. Upgrade outdated agents first. | Recommended |
 
 <a id="step-5-execute"></a>
 ## 5. Step 5: Execute — Migrate Configuration and Agents

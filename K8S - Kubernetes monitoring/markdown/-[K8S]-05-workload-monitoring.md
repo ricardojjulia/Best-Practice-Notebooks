@@ -1,6 +1,6 @@
 # Workload Monitoring
 
-> **Series:** K8S | **Notebook:** 5 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 5 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Application-Level Observability in Kubernetes
 Workload monitoring focuses on the application layer: deployments, pods, containers, and the services they provide. This notebook covers monitoring Kubernetes workloads from deployment health to service performance.
@@ -55,6 +55,13 @@ fetch dt.entity.cloud_application
 | fields entity.name, tags
 | sort entity.name asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_DEPLOYMENT
+// | fields name, tags
+// | sort name asc
+// | limit 50
+
 ```
 
 <a id="deployment-health"></a>

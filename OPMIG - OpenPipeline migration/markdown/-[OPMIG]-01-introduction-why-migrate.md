@@ -1,6 +1,6 @@
 # OpenPipeline Migration Guide: Part 1
 
-> **Series:** OPMIG | **Notebook:** 1 of 9 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** OPMIG | **Notebook:** 1 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Introduction & Why Migrate from Classic to OpenPipeline v2.0
 
@@ -466,14 +466,14 @@ Before migrating, understand these key limits:
 | **Working memory per record** | 16 MB | Processing fails, record dropped |
 | **Log attribute size** | 32 KB | Attribute is **truncated** |
 | **Max field name length** | 255 characters | Field creation fails |
-| **Max string field length** | 4 KB | Content truncated |
+| **Max string field length** | 32 KB | Content truncated (truncated to 4 KB in event templates) |
 
 ### Processing Limits
 
 | Limit | Value | Impact |
 |-------|-------|--------|
 | **Max extractions per record** | 5 pipelines | Record processed by max 5 pipelines |
-| **Max processors per pipeline** | 50 processors | Cannot add more processors |
+| **Max processors per pipeline** | 1,000 processors | Cannot add more processors |
 | **Max DQL commands per processor** | 10 commands | Split into multiple processors |
 | **Max parse operations per processor** | 100 patterns | Create multiple parse processors |
 | **Processing timeout** | 30 seconds | Record dropped if processing exceeds |
@@ -483,7 +483,7 @@ Before migrating, understand these key limits:
 | Data Type | Timestamp Range | Records Outside Range |
 |-----------|----------------|----------------------|
 | **Logs** | 24 hours past to 10 min future | **Dropped** |
-| **Spans** | 2 hours past | **Dropped** |
+| **Spans** | 60 minutes past (end time) | **Dropped** |
 | **Events** | 24 hours past to 10 min future | **Dropped** |
 
 > ⚠️ **Important:** Always send data with recent timestamps. Historical data imports require special considerations.

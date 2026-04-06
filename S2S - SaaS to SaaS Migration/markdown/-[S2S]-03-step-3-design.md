@@ -1,6 +1,6 @@
 # S2S-03: Step 3 — Design: Target Tenant Architecture
 
-> **Series:** S2S | **Notebook:** 3 of 9 | **Phase:** Plan | **Step:** Design | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 3 of 9 | **Phase:** Plan | **Step:** Design | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -368,6 +368,13 @@ fetch dt.entity.service
 | filter contains(entity.name, "checkout")
 | fields entity.name, id
 | limit 10
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | filter contains(name, "checkout")
+// | fields name, id
+// | limit 10
+
 ```
 
 ```dql

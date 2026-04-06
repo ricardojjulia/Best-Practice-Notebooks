@@ -1,6 +1,6 @@
 # Migration Automation
 
-> **Series:** AUTOM | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** AUTOM | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 Configuration migration is the process of transferring Dynatrace settings from one environment to another. This is common in tenant consolidation, Managed-to-SaaS migration, and disaster recovery scenarios.
 
@@ -329,26 +329,37 @@ For Managed-to-SaaS migrations, Dynatrace provides a guided tool.
 
 Run these DQL queries on the target tenant to verify entity counts:
 
-> **Note:** The `fetch dt.settings` data object may not be available in all environments. If these queries return errors, use the Settings API validation script shown below instead.
+> **Note:** `fetch dt.settings` is NOT a valid DQL data object. Settings objects must be queried via the Settings API (`GET /api/v2/settings/objects`), not DQL. The cells below document the correct approach.
 
 ```dql
 // Count management zones
-fetch dt.settings
-| filter schemaId == "builtin:management-zones"
-| summarize count()
+// NOTE: fetch dt.settings is NOT a valid DQL data object.
+// Settings objects cannot be queried via DQL.
+// Use the Settings API instead:
+//   GET /api/v2/settings/objects?schemaIds=<schemaId>
+// Example:
+//   GET /api/v2/settings/objects?schemaIds=builtin:management-zones
+//   GET /api/v2/settings/objects?schemaIds=builtin:tags.auto-tagging
+
 ```
 
 ```dql
 // Count auto-tagging rules
-fetch dt.settings
-| filter schemaId == "builtin:tags.auto-tagging"
-| summarize count()
+// NOTE: fetch dt.settings is NOT a valid DQL data object.
+// Settings objects cannot be queried via DQL.
+// Use the Settings API instead:
+//   GET /api/v2/settings/objects?schemaIds=<schemaId>
+// Example:
+//   GET /api/v2/settings/objects?schemaIds=builtin:management-zones
+//   GET /api/v2/settings/objects?schemaIds=builtin:tags.auto-tagging
+
 ```
 
 ```dql
 // Verify synthetic monitors
 fetch dt.entity.synthetic_test
 | summarize total = count()
+
 ```
 
 ### Validation Script

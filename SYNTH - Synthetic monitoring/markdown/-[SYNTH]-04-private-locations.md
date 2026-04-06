@@ -1,6 +1,6 @@
 # 🏢 Private Synthetic Locations
 
-> **Series:** SYNTH | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SYNTH | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Monitoring Internal Applications from Your Infrastructure
 This notebook covers deploying and managing private synthetic locations (ActiveGates) for monitoring internal applications, APIs, and services not accessible from the public internet.
@@ -160,6 +160,7 @@ fetch dt.entity.synthetic_location
 | fields id, entity.name
 | sort entity.name asc
 | limit 50
+
 ```
 
 ```dql

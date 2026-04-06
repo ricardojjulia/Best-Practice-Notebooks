@@ -1,6 +1,6 @@
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -78,7 +78,7 @@ Each bucket is associated with exactly **one data type**:
 | **spans** | `default_spans` | Distributed trace spans |
 | **events** | `default_events` | Platform events |
 | **bizevents** | `default_bizevents` | Business events |
-| **security_events** | `default_security_events` | Security-related events |
+| **security_events** | `default_securityevents` | Security-related events |
 
 > **Important**: You cannot mix data types in the same bucket. A logs bucket only stores logs.
 
@@ -142,7 +142,8 @@ Dynatrace provides default buckets with varying retention:
 | `default_spans` | spans | 10 days | Short-term APM data |
 | `default_events` | events | 35 days | Platform events |
 | `default_bizevents` | bizevents | 35 days | Business events |
-| `default_security_events` | security_events | 35 days | Security events |
+| `default_securityevents` | security_events | 1 year | Security events |
+| `default_securityevents_builtin` | security_events | 3 years | Built-in security events |
 
 > **Note**: Query your environment's `dt.system.buckets` to verify current retention settings.
 

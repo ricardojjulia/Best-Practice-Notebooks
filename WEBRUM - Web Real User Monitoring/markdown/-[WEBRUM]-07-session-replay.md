@@ -1,6 +1,6 @@
 # WEBRUM-07: Session Replay
 
-> **Series:** WEBRUM | **Notebook:** 7 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM | **Notebook:** 7 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -140,34 +140,34 @@ Use DQL to identify sessions that have replay data available, then navigate to t
 
 ```dql
 // Sessions with replay data available in the last 24 hours
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
-| filter isNotNull(has.session.replay) and has.session.replay == true
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
+| filter isNotNull(hasSessionReplay) and hasSessionReplay == true
 | summarize replay_sessions = count(),
-    avg_actions = avg(action.count),
-    avg_errors = avg(error.count),
-    by:{app.name}
+    avg_actions = avg(userActionCount),
+    avg_errors = avg(totalErrorCount),
+    by:{application}
 | sort replay_sessions desc
 ```
 
 ```dql
 // Find replay sessions with errors — prioritize these for review
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
-| filter isNotNull(has.session.replay) and has.session.replay == true
-| filter error.count > 0
-| fieldsKeep session.id, app.name, duration, action.count, error.count, country, browser.family
-| sort error.count desc
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
+| filter isNotNull(hasSessionReplay) and hasSessionReplay == true
+| filter totalErrorCount > 0
+| fieldsKeep sessionId, application, duration, userActionCount, totalErrorCount, country, browserFamily
+| sort totalErrorCount desc
 | limit 20
 ```
 
 ```dql
 // Replay coverage — what percentage of sessions have replay?
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | summarize total_sessions = count(),
-    replay_sessions = countIf(isNotNull(has.session.replay) and has.session.replay == true),
-    by:{app.name}
+    replay_sessions = countIf(isNotNull(hasSessionReplay) and hasSessionReplay == true),
+    by:{application}
 | fieldsAdd replay_coverage_pct = round(toDouble(replay_sessions) / toDouble(total_sessions) * 100.0, decimals: 1)
 | sort total_sessions desc
 ```
@@ -180,12 +180,12 @@ Session Replay is most powerful when correlated with performance data. Use DQL t
 
 ```dql
 // Slow sessions with replay — sessions with poor page load times
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
-| filter isNotNull(has.session.replay) and has.session.replay == true
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
+| filter isNotNull(hasSessionReplay) and hasSessionReplay == true
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | filter duration_sec > 120
-| fieldsKeep session.id, app.name, duration_sec, action.count, error.count, country
+| fieldsKeep sessionId, application, duration_sec, userActionCount, totalErrorCount, country
 | sort duration_sec desc
 | limit 10
 ```
@@ -193,8 +193,8 @@ fetch dt.rum.user_session, from:-24h
 ```dql
 // Sessions with rage clicks that have replay — top candidates for UX review
 fetch user.events, from:-24h
-| filter isNotNull(rage.click) and rage.click == true
-| summarize rage_clicks = count(), by:{session.id, app.name}
+| filter type == "RageClick"
+| summarize rage_clicks = count(), by:{sessionId, application}
 | sort rage_clicks desc
 | limit 10
 ```
@@ -226,13 +226,13 @@ Session Replay helps identify qualitative UX issues that metrics alone cannot re
 
 ```dql
 // Abandoned sessions with replay — users who started but did not finish
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
-| filter isNotNull(has.session.replay) and has.session.replay == true
-| filter action.count >= 3 and action.count <= 5
-| filter error.count > 0
-| fieldsKeep session.id, app.name, action.count, error.count, duration, country
-| sort error.count desc
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
+| filter isNotNull(hasSessionReplay) and hasSessionReplay == true
+| filter userActionCount >= 3 and userActionCount <= 5
+| filter totalErrorCount > 0
+| fieldsKeep sessionId, application, userActionCount, totalErrorCount, duration, country
+| sort totalErrorCount desc
 | limit 15
 ```
 

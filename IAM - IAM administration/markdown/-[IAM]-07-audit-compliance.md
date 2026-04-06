@@ -1,6 +1,6 @@
 # Audit Logging and Compliance
 
-> **Series:** IAM | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Meeting Regulatory and Security Requirements
 Audit logging is essential for compliance (SOC2, SOX, HIPAA, PCI-DSS) and security operations. This notebook covers querying audit logs, building compliance reports, and conducting access reviews.
@@ -112,7 +112,7 @@ fetch logs, from: now() - 7d
 | filter matchesPhrase(log.source, "audit")
 | filter matchesPhrase(content, "login")
 | fields timestamp, content
-| filter hour(timestamp) < 8 or hour(timestamp) > 18
+| filter getHour(timestamp) < 8 or getHour(timestamp) > 18
 | sort timestamp desc
 | limit 50
 ```

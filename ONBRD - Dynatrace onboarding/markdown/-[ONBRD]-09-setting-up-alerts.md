@@ -1,6 +1,6 @@
 # Setting Up Alerts
 
-> **Series:** ONBRD | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Getting Notified When Things Go Wrong
 Dynatrace's DAVIS AI automatically detects problems, but you need to configure where those alerts go. This notebook covers the Workflows app for modern alerting and notification routing.
@@ -275,7 +275,7 @@ Davis analyzers can detect anomalies in metrics:
 ```dql
 // Recent problems
 fetch dt.davis.problems, from: now() - 24h
-| fields timestamp, display_id, title, status, affected_entity_types
+| fields timestamp, display_id, title, event.status, affected_entity_types
 | sort timestamp desc
 | limit 20
 ```
@@ -283,7 +283,7 @@ fetch dt.davis.problems, from: now() - 24h
 ```dql
 // Problem count by status
 fetch dt.davis.problems, from: now() - 7d
-| summarize count = count(), by: {status}
+| summarize count = count(), by: {event.status}
 | sort count desc
 ```
 
@@ -298,7 +298,7 @@ fetch dt.davis.problems, from: now() - 7d
 ```dql
 // Active problems right now
 fetch dt.davis.problems, from: now() - 30d
-| filter status == "OPEN"
+| filter event.status == "OPEN"
 | fields timestamp, display_id, title, affected_entity_types
 | sort timestamp desc
 ```
@@ -306,9 +306,9 @@ fetch dt.davis.problems, from: now() - 30d
 ```dql
 // Problem duration analysis
 fetch dt.davis.problems, from: now() - 7d
-| filter status == "CLOSED"
-| filter isNotNull(end_time)
-| fieldsAdd duration_minutes = (end_time - timestamp) / 60000000000
+| filter event.status == "CLOSED"
+| filter isNotNull(event.end)
+| fieldsAdd duration_minutes = (event.end - timestamp) / 60000000000
 | summarize
     avg_duration = avg(duration_minutes),
     max_duration = max(duration_minutes),

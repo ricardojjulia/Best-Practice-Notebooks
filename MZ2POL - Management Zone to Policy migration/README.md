@@ -19,6 +19,7 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 6. [Migration Execution](markdown/-[MZ2POL]-06-migration-execution.md) — Executing the migration
 7. [Validation & Troubleshooting](markdown/-[MZ2POL]-07-validation-troubleshooting.md) — Validating and resolving issues
 8. [Templated Policies Migration](markdown/-[MZ2POL]-08-templated-policies-migration.md) — Policy templates for bulk MZ migration
+99. [Best Practice Summary](markdown/-[MZ2POL]-99-best-practice-summary.md) — Consolidated best practices from the MZ2POL series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

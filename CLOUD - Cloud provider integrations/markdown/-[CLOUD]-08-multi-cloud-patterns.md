@@ -1,6 +1,6 @@
 # CLOUD-08: Multi-Cloud Observability Patterns
 
-> **Series:** CLOUD | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -107,6 +107,24 @@ fetch dt.entity.ec2_instance
     | summarize provider = "Azure", resource_type = "Web App", resource_count = count()
   ]
 | sort provider asc, resource_count desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_EC2_INSTANCE
+// | summarize provider = "AWS", resource_type = "EC2 Instance", resource_count = count()
+// | append [
+// smartscapeNodes AWS_EC2_INSTANCE
+// | summarize provider = "Azure", resource_type = "Virtual Machine", resource_count = count()
+// ]
+// | append [
+// smartscapeNodes AWS_EC2_INSTANCE
+// | summarize provider = "AWS", resource_type = "Lambda Function", resource_count = count()
+// ]
+// | append [
+// smartscapeNodes AWS_EC2_INSTANCE
+// | summarize provider = "Azure", resource_type = "Web App", resource_count = count()
+// ]
+// | sort provider asc, resource_count desc
+
 ```
 
 ### Unified Host CPU Usage (All Providers)
@@ -126,6 +144,12 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 fetch dt.entity.kubernetes_cluster
 | fieldsKeep id, entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fieldsKeep id, name, tags
+// | sort name asc
+
 ```
 
 ### Cross-Cloud Problem Analysis
@@ -299,6 +323,14 @@ fetch dt.entity.host
 | filter isNull(tags) or tags == ""
 | sort entity.name asc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsKeep id, name, tags
+// | filter isNull(tags) or tags == ""
+// | sort name asc
+// | limit 20
+
 ```
 
 ### Vulnerability Overview

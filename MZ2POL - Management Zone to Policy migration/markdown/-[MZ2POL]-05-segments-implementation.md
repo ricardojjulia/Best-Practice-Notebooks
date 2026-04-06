@@ -1,6 +1,6 @@
 # MZ2POL-05: Segments Implementation
 
-> **Series:** MZ2POL | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -249,6 +249,13 @@ fetch dt.entity.service
 | filter matchesValue(tags, "team:frontend")
 | fields entity.name, tags
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | filter matchesValue(tags, "team:frontend")
+// | fields name, tags
+// | limit 20
+
 ```
 
 ```dql
@@ -258,6 +265,13 @@ fetch dt.entity.host
 | filter matchesValue(tags, "env:production")
 | fields entity.name, tags
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | filter matchesValue(tags, "env:production")
+// | fields name, tags
+// | limit 20
+
 ```
 
 ```dql

@@ -1,6 +1,6 @@
 # M2S-06: Step 6 — Integrate: Reconnect Integrations
 
-> **Series:** M2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 With OneAgents reporting to SaaS and configurations migrated, the next challenge is ensuring every external system that depends on Dynatrace is reconnected. Dashboards need updated links, alerting channels need validation, CI/CD pipelines need new API endpoints, and ITSM integrations need reconfiguration. This notebook provides a systematic approach to reconnecting every integration point.
 
@@ -87,6 +87,7 @@ Work through dashboards in priority order:
 fetch dt.entity.dashboard
 | fieldsAdd entity.name
 | sort entity.name asc
+
 ```
 
 ### URL Format Changes
@@ -244,6 +245,14 @@ fetch dt.entity.service
 | filter isNotNull(releaseVersion)
 | sort entity.name asc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fieldsAdd name, releaseVersion, releaseStage
+// | filter isNotNull(releaseVersion)
+// | sort name asc
+// | limit 20
+
 ```
 
 <a id="itsm-and-incident-management"></a>
@@ -345,6 +354,7 @@ timeseries avg(dt.cloud.azure.vm.cpu_usage), from:-1h
 fetch dt.entity.active_gate
 | fieldsAdd entity.name
 | sort entity.name asc
+
 ```
 
 <a id="api-script-migration"></a>
@@ -449,6 +459,7 @@ Public locations are available in both Managed and SaaS. Simply recreate the mon
 fetch dt.entity.synthetic_test
 | fieldsAdd entity.name
 | summarize monitorCount = count()
+
 ```
 
 ```dql

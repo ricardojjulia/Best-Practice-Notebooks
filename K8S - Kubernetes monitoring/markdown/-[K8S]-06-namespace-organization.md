@@ -1,6 +1,6 @@
 # Namespace Organization and Boundaries
 
-> **Series:** K8S | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Organizing Kubernetes Monitoring with Namespaces
 Namespaces provide logical boundaries in Kubernetes for resource isolation, access control, and organizational structure. This notebook covers namespace strategies and how to leverage them in Dynatrace for filtered views, access control, and cost allocation.
@@ -66,6 +66,13 @@ fetch dt.entity.cloud_application_namespace
 | fields entity.name, tags
 | sort entity.name asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NAMESPACE
+// | fields name, tags
+// | sort name asc
+// | limit 50
+
 ```
 
 <a id="namespace-monitoring-in-dynatrace"></a>
@@ -267,6 +274,12 @@ spec:
 fetch dt.entity.cloud_application
 | summarize workloadCount = count()
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_DEPLOYMENT
+// | summarize workloadCount = count()
+// | limit 20
+
 ```
 
 <a id="cost-allocation-by-namespace"></a>

@@ -17,6 +17,7 @@ Designing and building effective dashboards for different stakeholder audiences.
 5. [Engineering Dashboards](markdown/-[DASH]-05-engineering-dashboards.md) — Technical deep-dive dashboards for development and platform teams
 6. [Variables and Filters](markdown/-[DASH]-06-variables-and-filters.md) — Creating dynamic, interactive dashboard experiences with filters
 7. [Sharing and Reporting](markdown/-[DASH]-07-sharing-and-reporting.md) — Distribution, scheduled exports, and reporting strategies
+99. [Best Practice Summary](markdown/-[DASH]-99-best-practice-summary.md) — Consolidated best practices from the DASH series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

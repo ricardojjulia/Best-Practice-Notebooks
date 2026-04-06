@@ -80,6 +80,16 @@ fetch dt.entity.service
     missingContext = countIf(isNull(dt.security_context))
 | fields total, withContext, missingContext,
          coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize
+// total = count(),
+// withContext = countIf(isNotNull(dt.security_context)),
+// missingContext = countIf(isNull(dt.security_context))
+// | fields total, withContext, missingContext,
+// coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
 ```
 
 ```dql
@@ -101,6 +111,16 @@ fetch dt.entity.host
     missingContext = countIf(isNull(dt.security_context))
 | fields total, withContext, missingContext,
          coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize
+// total = count(),
+// withContext = countIf(isNotNull(dt.security_context)),
+// missingContext = countIf(isNull(dt.security_context))
+// | fields total, withContext, missingContext,
+// coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
 ```
 
 ### Verify Security Context Distribution

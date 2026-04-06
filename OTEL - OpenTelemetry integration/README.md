@@ -18,6 +18,7 @@ Integrating OpenTelemetry with Dynatrace for observability.
 6. [Logs Instrumentation](markdown/-[OTEL]-06-logs-instrumentation.md) — Instrumenting applications for logs
 7. [Dynatrace Integration](markdown/-[OTEL]-07-dynatrace-integration.md) — Sending OTel data to Dynatrace
 8. [Troubleshooting](markdown/-[OTEL]-08-troubleshooting.md) — Diagnosing OpenTelemetry issues
+99. [Best Practice Summary](markdown/-[OTEL]-99-best-practice-summary.md) — Consolidated best practices from the OTEL series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

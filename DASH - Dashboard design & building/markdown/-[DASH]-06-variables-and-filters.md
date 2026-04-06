@@ -1,11 +1,10 @@
 # DASH-06: Variables and Filters
 
-> **Series:** DASH | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Variables transform a static dashboard into a dynamic, reusable tool. Instead of building separate dashboards for each service, environment, or team, a single template dashboard with variables can serve everyone. This notebook covers variable types in Dynatrace dashboards, filter propagation across tiles, variable-driven DQL queries, entity selector patterns, and strategies for building template dashboards that work across environments.
-
 
 ---
 
@@ -21,7 +20,6 @@ Variables transform a static dashboard into a dynamic, reusable tool. Instead of
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -30,7 +28,6 @@ Variables transform a static dashboard into a dynamic, reusable tool. Instead of
 | **Permissions** | `storage:logs:read`, `storage:metrics:read`, `storage:spans:read`, `storage:entities:read` |
 | **Dashboard Access** | `document:documents:write` for creating dashboards with variables |
 | **Prior Reading** | DASH-01 through DASH-05 |
-
 
 <a id="variable-types"></a>
 
@@ -55,7 +52,6 @@ Dynatrace dashboards support several variable types, each suited for different f
 
 > **Important:** Variable names are case-sensitive. Use consistent casing across all tiles that reference the same variable.
 
-
 <a id="entity-selector-variables"></a>
 
 ## 2. Entity Selector Variables
@@ -73,22 +69,32 @@ Entity selector variables are the most common variable type. They present a sear
 
 ### Querying Available Entities for Variable Population
 
-
 ```dql
 // List all services — useful for populating a service variable
 fetch dt.entity.service
 | fieldsKeep id, entity.name
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fieldsKeep id, name
+// | sort name asc
+
 ```
 
 ### Querying Hosts for Variable Population
-
 
 ```dql
 // List all hosts — useful for populating a host variable
 fetch dt.entity.host
 | fieldsKeep id, entity.name
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsKeep id, name
+// | sort name asc
+
 ```
 
 <a id="string-variables"></a>
@@ -100,7 +106,6 @@ String variables accept free-text or predefined values. They are ideal for filte
 ### Discovering Available Values
 
 Before creating a string variable with predefined options, query the data to discover what values exist.
-
 
 ```dql
 // Discover Kubernetes namespaces for variable options
@@ -119,11 +124,10 @@ fetch logs, from:-1h
 
 ### Discovering Available Database Systems
 
-
 ```dql
 // Discover database systems for variable options
 fetch spans, from:-1h
-| filter span.kind == "client" AND isNotNull(db.system)
+| filter span.kind == "client" and isNotNull(db.system)
 | summarize query_count = count(), by:{db.system}
 | sort query_count desc
 ```
@@ -147,7 +151,6 @@ Once variables are defined on a dashboard, reference them in tile DQL queries us
 
 In a dashboard tile, this query would use the `$service` variable. In a notebook, we use a concrete value to demonstrate the pattern.
 
-
 ```dql
 // Service latency filtered by entity — dashboard would use $service variable
 // In a dashboard tile: filter dt.entity.service == $service
@@ -159,10 +162,9 @@ fetch spans, from:-1h
 
 ### Example: Log Analysis with Namespace and Level Variables
 
-
 ```dql
 // Log analysis — dashboard would use $namespace and $loglevel variables
-// In a dashboard tile: filter k8s.namespace.name == $namespace AND loglevel == $loglevel
+// In a dashboard tile: filter k8s.namespace.name == $namespace and loglevel == $loglevel
 fetch logs, from:-1h
 | filter isNotNull(k8s.namespace.name)
 | filterOut loglevel == "NONE"
@@ -170,7 +172,6 @@ fetch logs, from:-1h
 ```
 
 ### Example: Metrics with Host Variable
-
 
 ```dql
 // CPU and memory for selected host — dashboard would use $host variable
@@ -207,12 +208,11 @@ Filter propagation ensures that when a user selects a variable value, all releva
 
 For hierarchical filtering (e.g., select a cluster, then see only namespaces in that cluster), use query-based variables where the second variable's query references the first.
 
-
 ```dql
 // Namespaces filtered by cluster — would be a query-based variable
 // In variable config: references $cluster variable
 fetch logs, from:-1h
-| filter isNotNull(k8s.namespace.name) AND isNotNull(k8s.cluster.name)
+| filter isNotNull(k8s.namespace.name) and isNotNull(k8s.cluster.name)
 | summarize log_count = count(), by:{k8s.cluster.name, k8s.namespace.name}
 | sort k8s.cluster.name asc, log_count desc
 ```
@@ -244,7 +244,6 @@ Each team uses the same template but selects their services.
 
 ### Discovering Tags for Team-Based Variables
 
-
 ```dql
 // Discover service tags — useful for building team-based variables
 fetch dt.entity.service
@@ -267,7 +266,6 @@ A template dashboard that displays the four golden signals (latency, traffic, er
 
 This pattern is especially powerful because it works for every service in the environment — engineers just change the variable.
 
-
 <a id="summary-and-next-steps"></a>
 
 ## 7. Summary and Next Steps
@@ -282,8 +280,6 @@ In this notebook you learned:
 
 **Next:** In **DASH-07: Sharing and Reporting**, we cover dashboard permissions, sharing with teams, scheduled reports via Workflows, dashboard-as-code, and version control patterns.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

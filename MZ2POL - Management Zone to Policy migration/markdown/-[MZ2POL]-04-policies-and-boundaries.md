@@ -1,6 +1,6 @@
 # MZ2POL-04: Policies and Boundaries
 
-> **Series:** MZ2POL | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 02/25/2026
+> **Series:** MZ2POL | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -186,7 +186,7 @@ Policies and boundaries share the same condition syntax.
 | `environment:name` | Environment by name | Boundaries |
 | `environment:management-zone` | MZ-based (transitional) | Boundaries |
 | `storage:dt.security_context` | Security context | Both |
-| `storage:bucket` | Grail bucket | Both |
+| `storage:bucket-name` | Grail bucket | Both |
 | `settings:schemaId` | Settings schema ID | Policies |
 | `settings:dt.security_context` | Settings security context | Boundaries |
 
@@ -196,7 +196,7 @@ Policies and boundaries share the same condition syntax.
 ```
 ALLOW storage:logs:read 
   WHERE storage:dt.security_context = "team-a"
-  AND storage:bucket = "production_logs"
+  AND storage:bucket-name = "production_logs"
 ```
 
 **OR logic** (multiple statements or lines):
@@ -458,12 +458,12 @@ When replacing team-based MZs, use buckets in **both policies AND boundaries**:
 
 ```
 // Policy: Grant team access to their specific buckets
-ALLOW storage:logs:read WHERE storage:bucket.name = "frontend_logs"
-ALLOW storage:spans:read WHERE storage:bucket.name = "frontend_spans"
-ALLOW storage:metrics:read WHERE storage:bucket.name = "frontend_metrics"
+ALLOW storage:logs:read WHERE storage:bucket-name = "frontend_logs"
+ALLOW storage:spans:read WHERE storage:bucket-name = "frontend_spans"
+ALLOW storage:metrics:read WHERE storage:bucket-name = "frontend_metrics"
 
 // Boundary: Restrict to team's buckets and security context
-storage:bucket.name IN ("frontend_logs", "frontend_spans", "frontend_metrics");
+storage:bucket-name IN ("frontend_logs", "frontend_spans", "frontend_metrics");
 storage:dt.security_context IN ("team-frontend");
 environment:management-zone IN ("Frontend-Team");
 ```
@@ -487,11 +487,11 @@ environment:management-zone IN ("Frontend-Team");
 ```
 Group: Checkout-Team (SAML from AD)
 ├── Policy: Checkout Data Access
-│   ├── ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
-│   ├── ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans"
-│   └── ALLOW storage:metrics:read WHERE storage:bucket.name = "checkout_metrics"
+│   ├── ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
+│   ├── ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans"
+│   └── ALLOW storage:metrics:read WHERE storage:bucket-name = "checkout_metrics"
 └── Boundary:
-    storage:bucket.name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
+    storage:bucket-name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
     storage:dt.security_context IN ("checkout");
     environment:management-zone IN ("Checkout-Team");
 ```
@@ -528,6 +528,16 @@ fetch dt.entity.service
          managementZones
 | sort dt.security_context asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fields name,
+// dt.security_context,
+// tags,
+// managementZones
+// | sort dt.security_context asc
+// | limit 50
+
 ```
 
 ```dql

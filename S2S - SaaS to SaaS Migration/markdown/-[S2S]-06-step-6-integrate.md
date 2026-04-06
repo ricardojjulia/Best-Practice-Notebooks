@@ -1,6 +1,6 @@
 # S2S-06: Step 6 — Integrate: Cloud, Dashboards, and Workflows
 
-> **Series:** S2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -321,6 +321,7 @@ After migration, verify synthetic monitors are executing in the target tenant:
 fetch dt.entity.synthetic_test
 | summarize monitor_count = count()
 | fieldsAdd validation = "Compare against source tenant synthetic monitor count"
+
 ```
 
 <a id="extension-migration"></a>

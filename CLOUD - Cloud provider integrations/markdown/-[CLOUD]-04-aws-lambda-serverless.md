@@ -1,11 +1,10 @@
 # CLOUD-04: AWS Lambda & Serverless Monitoring
 
-> **Series:** CLOUD | **Notebook:** 4 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 4 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 This notebook covers serverless monitoring with Dynatrace, focusing on AWS Lambda. You will learn how to monitor Lambda function performance (cold starts, duration, errors, throttles), integrate API Gateway tracing, analyze Step Functions workflows, assess DynamoDB performance, and build end-to-end serverless application tracing.
-
 
 ---
 
@@ -23,7 +22,6 @@ This notebook covers serverless monitoring with Dynatrace, focusing on AWS Lambd
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -33,7 +31,6 @@ This notebook covers serverless monitoring with Dynatrace, focusing on AWS Lambd
 | **AWS Integration** | AWS cloud integration configured (CLOUD-02) |
 | **Lambda Functions** | At least one Lambda function with Dynatrace layer or OneAgent extension |
 | **Prior Knowledge** | CLOUD-01 fundamentals, CLOUD-02 AWS integration |
-
 
 <a id="lambda-fundamentals"></a>
 
@@ -59,17 +56,22 @@ Dynatrace monitors Lambda functions through two complementary approaches:
 
 ### List Monitored Lambda Functions
 
-
 ```dql
 // List all monitored Lambda functions with runtime and code size
 fetch dt.entity.aws_lambda_function
 | fieldsKeep id, entity.name, awsLambdaFunctionRuntime, awsCodeSize, tags
 | sort entity.name asc
 | limit 25
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_LAMBDA_FUNCTION
+// | fieldsKeep id, name, awsLambdaFunctionRuntime, awsCodeSize, tags
+// | sort name asc
+// | limit 25
+
 ```
 
 ### Lambda Execution Time Over Time
-
 
 ```dql
 // Lambda average execution duration over the last 6 hours
@@ -99,7 +101,6 @@ Cold starts occur when Lambda creates a new execution environment. They add late
 
 CloudWatch provides an `InitDuration` metric for cold starts. With Dynatrace Lambda Layer, you can detect cold starts from spans.
 
-
 ```dql
 // Detect Lambda cold starts from spans (init phase)
 fetch spans, from:-6h
@@ -111,7 +112,6 @@ fetch spans, from:-6h
 ```
 
 ### Lambda Invocations with Duration Percentiles
-
 
 ```dql
 // Lambda duration percentiles over the last 6 hours
@@ -134,7 +134,6 @@ Lambda errors fall into two categories:
 
 ### Error Rate by Function
 
-
 ```dql
 // Lambda error count by function over the last 24 hours
 timeseries errors = sum(cloud.aws.lambda.errors), from:-24h, by:{dt.entity.aws_lambda_function}
@@ -145,7 +144,6 @@ timeseries errors = sum(cloud.aws.lambda.errors), from:-24h, by:{dt.entity.aws_l
 ```
 
 ### Error-to-Invocation Ratio
-
 
 ```dql
 // Error rate percentage by function over the last 24 hours
@@ -171,7 +169,6 @@ Throttling occurs when Lambda cannot allocate an execution environment, typicall
 
 ### Throttled Invocations Over Time
 
-
 ```dql
 // Lambda throttles over the last 24 hours by function
 timeseries throttles = sum(cloud.aws.lambda.throttles), from:-24h, by:{dt.entity.aws_lambda_function}
@@ -181,7 +178,6 @@ timeseries throttles = sum(cloud.aws.lambda.throttles), from:-24h, by:{dt.entity
 ```
 
 ### Concurrent Executions Trend
-
 
 ```dql
 // Concurrent Lambda executions over the last 6 hours
@@ -219,7 +215,6 @@ Client → API Gateway → Lambda Function → DynamoDB / SQS / etc.
               Complete distributed trace
 ```
 
-
 ```dql
 // Trace spans from API Gateway and Lambda in the last hour
 fetch spans, from:-1h
@@ -247,7 +242,6 @@ AWS Step Functions orchestrate Lambda functions into workflows. Dynatrace can tr
 
 ### Step Function Execution Tracking via Logs
 
-
 ```dql
 // Step Function execution logs (if forwarded to Dynatrace)
 fetch logs, from:-24h
@@ -271,7 +265,6 @@ DynamoDB is frequently used with Lambda for serverless data storage. Key monitor
 | **Error count** | Conditional check failures, throttles |
 
 ### DynamoDB Span Analysis
-
 
 ```dql
 // DynamoDB call duration from Lambda spans in the last 6 hours
@@ -299,7 +292,6 @@ Dynatrace traces the entire flow as a single distributed trace when the Lambda L
 
 ### Trace Analysis Across Services
 
-
 ```dql
 // Slowest traces involving Lambda functions in the last hour
 fetch spans, from:-1h
@@ -319,7 +311,6 @@ fetch spans, from:-1h
 | **Track cold start ratio** | High ratio indicates scaling or provisioned concurrency needs |
 | **Correlate API Gateway with Lambda** | End-to-end latency matters more than Lambda duration alone |
 
-
 <a id="summary"></a>
 
 ## 9. Summary and Next Steps
@@ -337,8 +328,6 @@ fetch spans, from:-1h
 - **CLOUD-07: CloudWatch Log Ingestion** — Forward Lambda logs to Dynatrace
 - **CLOUD-08: Multi-Cloud Patterns** — Unified serverless monitoring across providers
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

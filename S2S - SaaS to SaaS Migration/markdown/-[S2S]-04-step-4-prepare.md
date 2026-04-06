@@ -1,6 +1,6 @@
 # S2S-04: Step 4 — Prepare: Export and Pre-Stage
 
-> **Series:** S2S | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -96,6 +96,12 @@ Before any migration begins, capture entity counts from the source tenant. These
 fetch dt.entity.host
 | summarize host_count = count()
 | fieldsAdd entity_type = "Hosts"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize host_count = count()
+// | fieldsAdd entity_type = "Hosts"
+
 ```
 
 ```dql
@@ -103,6 +109,12 @@ fetch dt.entity.host
 fetch dt.entity.service
 | summarize service_count = count()
 | fieldsAdd entity_type = "Services"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize service_count = count()
+// | fieldsAdd entity_type = "Services"
+
 ```
 
 ```dql
@@ -110,6 +122,12 @@ fetch dt.entity.service
 fetch dt.entity.process_group
 | summarize pg_count = count()
 | fieldsAdd entity_type = "Process Groups"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes PROCESS
+// | summarize pg_count = count()
+// | fieldsAdd entity_type = "Process Groups"
+
 ```
 
 ```dql
@@ -306,7 +324,7 @@ For environments running Kubernetes, the Dynatrace Operator must be configured t
 ### DynaKube CR Template (Target Tenant)
 
 ```yaml
-apiVersion: dynatrace.com/v1beta3
+apiVersion: dynatrace.com/v1beta6
 kind: DynaKube
 metadata:
   name: dynakube

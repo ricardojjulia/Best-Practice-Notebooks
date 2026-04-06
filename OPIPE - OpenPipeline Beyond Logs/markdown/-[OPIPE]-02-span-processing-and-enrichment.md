@@ -1,6 +1,6 @@
 # OPIPE-02: Span Processing & Enrichment
 
-> **Series:** OPIPE | **Notebook:** 2 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE | **Notebook:** 2 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Filtering, Enriching, and Routing Distributed Traces at Ingestion
 
@@ -93,8 +93,8 @@ Before configuring drop rules, quantify how much volume each noise pattern repre
 // Quantify noise: health checks, synthetic, and OPTIONS requests
 fetch spans, from:-1h
 | summarize total = count(),
-    health_checks = countIf(matchesValue(span.name, "GET /health*") OR matchesValue(span.name, "GET /ready*") OR matchesValue(span.name, "GET /livez*")),
-    metrics_scrapes = countIf(matchesValue(span.name, "*/metrics*") OR matchesValue(span.name, "*/actuator/*")),
+    health_checks = countIf(matchesValue(span.name, "GET /health*") or matchesValue(span.name, "GET /ready*") or matchesValue(span.name, "GET /livez*")),
+    metrics_scrapes = countIf(matchesValue(span.name, "*/metrics*") or matchesValue(span.name, "*/actuator/*")),
     options_preflight = countIf(http.request.method == "OPTIONS")
 | fieldsAdd noise_total = health_checks + metrics_scrapes + options_preflight
 | fieldsAdd noise_pct = round(toDouble(noise_total) / toDouble(total) * 100, decimals: 1)

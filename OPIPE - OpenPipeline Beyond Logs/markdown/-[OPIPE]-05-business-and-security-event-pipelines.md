@@ -1,6 +1,6 @@
 # OPIPE-05: Business & Security Event Pipelines
 
-> **Series:** OPIPE | **Notebook:** 5 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE | **Notebook:** 5 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Processing Business Transactions and Security Events at Ingestion
 
@@ -149,7 +149,7 @@ Security events include threat detections, vulnerability findings, audit records
 ```dql
 // Security event overview
 fetch events, from:-24h
-| filter event.kind == "SECURITY_EVENT" OR matchesValue(dt.system.bucket, "*security*")
+| filter event.kind == "SECURITY_EVENT" or matchesValue(dt.system.bucket, "*security*")
 | summarize event_count = count(), by:{event.type}
 | sort event_count desc
 ```
@@ -201,7 +201,7 @@ Extract operational KPIs from both business and security events for dashboards a
 ```dql
 // Security event trend over 7 days
 fetch events, from:-7d
-| filter event.kind == "SECURITY_EVENT" OR matchesValue(dt.system.bucket, "*security*")
+| filter event.kind == "SECURITY_EVENT" or matchesValue(dt.system.bucket, "*security*")
 | makeTimeseries event_count = count(), by:{event.type}, interval:24h
 ```
 

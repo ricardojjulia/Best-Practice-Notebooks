@@ -1,6 +1,6 @@
 # Boundary Design Patterns
 
-> **Series:** IAM | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Controlling Data Visibility with Boundaries
 Boundaries determine **what data** users can see. While policies control actions, boundaries filter visibility. This notebook covers boundary syntax, patterns, and implementation strategies.
@@ -138,7 +138,7 @@ settings:dt.security_context IN ("checkout");
 |--------|-------|-------------|
 | environment | `management-zone` | Management zone filter |
 | storage | `dt.security_context` | Data security context |
-| storage | `bucket.name` | Storage bucket name |
+| storage | `bucket-name` | Storage bucket name |
 | settings | `dt.security_context` | Settings security context |
 | settings | `schemaId` | Settings schema |
 
@@ -250,15 +250,15 @@ These fields are automatically enriched from infrastructure metadata and provide
 
 ### Bucket + Boundary Integration
 
-Use `storage:bucket.name` in boundaries to restrict team access to their data:
+Use `storage:bucket-name` in boundaries to restrict team access to their data:
 
 ```
 // Policy: Grant read access to team's bucket
-ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
-ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans"
+ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
+ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans"
 
 // Boundary: Restrict to team's buckets and security context
-storage:bucket.name IN ("checkout_logs", "checkout_spans");
+storage:bucket-name IN ("checkout_logs", "checkout_spans");
 storage:dt.security_context IN ("checkout");
 environment:management-zone IN ("Checkout");
 ```
@@ -276,11 +276,11 @@ For team-level data access control:
 // Complete team isolation example
 Group: Checkout-Team
 ├── Policy: Checkout Data Access
-│   ├── ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
-│   ├── ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans"
-│   └── ALLOW storage:metrics:read WHERE storage:bucket.name = "checkout_metrics"
+│   ├── ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
+│   ├── ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans"
+│   └── ALLOW storage:metrics:read WHERE storage:bucket-name = "checkout_metrics"
 └── Boundary:
-    storage:bucket.name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
+    storage:bucket-name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
     storage:dt.security_context IN ("checkout");
     environment:management-zone IN ("Checkout");
 ```
@@ -354,7 +354,7 @@ environment:management-zone IN ("checkout", "shared");
 3. **Design buckets** - Create buckets aligned with access control boundaries
 4. **Configure pipelines** - Route data to buckets based on primary fields
 5. **Define policies** - Grant bucket-specific permissions per team
-6. **Apply boundaries** - Use `storage:bucket.name` and `storage:dt.security_context`
+6. **Apply boundaries** - Use `storage:bucket-name` and `storage:dt.security_context`
 7. **Create segments** - For cross-bucket query filtering
 
 > **See Also:** For migration from Management Zones, refer to **MZ2POL-04: Policies and Boundaries** which covers mapping MZ patterns to the new model.
@@ -499,6 +499,13 @@ fetch dt.entity.service
 | summarize count = count(), by:{dt.security_context}
 | sort count desc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize count = count(), by:{dt.security_context}
+// | sort count desc
+// | limit 20
+
 ```
 
 ```dql
@@ -518,6 +525,15 @@ fetch dt.entity.host
     withContext = countIf(isNotNull(dt.security_context)),
     missing = countIf(isNull(dt.security_context))
 | fieldsAdd coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize
+// total = count(),
+// withContext = countIf(isNotNull(dt.security_context)),
+// missing = countIf(isNull(dt.security_context))
+// | fieldsAdd coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
 ```
 
 ```dql

@@ -1,6 +1,6 @@
 # 🌐 Browser Monitors
 
-> **Series:** SYNTH | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SYNTH | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Creating and Optimizing Browser-Based Synthetic Tests
 This notebook covers browser monitors in Dynatrace, including single-URL monitors, browser clickpaths, and performance analysis using the latest Dynatrace platform capabilities.
@@ -24,8 +24,6 @@ This notebook covers browser monitors in Dynatrace, including single-URL monitor
 - ✅ Access to a Dynatrace environment with Synthetic Monitoring
 - ✅ Completed SYNTH-01 Fundamentals
 - ✅ Web application URL to monitor
-
-
 
 <a id="browser-monitor-types"></a>
 ## 1. Browser Monitor Types
@@ -103,11 +101,13 @@ fetch dt.entity.synthetic_test
 | fields id, entity.name, isEnabled, browserMonitorSubtype
 | sort entity.name asc
 | limit 50
+
 ```
 
 ```dql
 // Browser monitor execution results (last 24h)
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | fields timestamp,
          monitor = synthetic_test_id,
@@ -155,7 +155,8 @@ Define steps programmatically using the script editor.
 
 ```dql
 // Clickpath step performance analysis
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter isNotNull(step_title)
 | summarize {
     avg_duration_ms = avg(toDouble(step_duration)),
@@ -199,7 +200,8 @@ Browser monitors capture detailed timing metrics based on the W3C Navigation Tim
 
 ```dql
 // Browser monitor performance breakdown
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | summarize {
     avg_dns_ms = avg(toDouble(dns_lookup_time)),
@@ -216,7 +218,8 @@ fetch dt.synthetic.events, from: now() - 24h
 
 ```dql
 // Performance trend over time
-fetch dt.synthetic.events, from: now() - 7d
+fetch bizevents, from: now() - 7d
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | makeTimeseries {
     avg_response_time = avg(toDouble(total_duration)),
@@ -254,7 +257,8 @@ fetch dt.synthetic.events, from: now() - 7d
 
 ```dql
 // Failed browser monitor executions
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | filter execution_success == false
 | fields timestamp,
@@ -270,7 +274,8 @@ fetch dt.synthetic.events, from: now() - 24h
 
 ```dql
 // Browser monitor availability by location
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | summarize {
     total = count(),
@@ -284,7 +289,8 @@ fetch dt.synthetic.events, from: now() - 24h
 
 ```dql
 // Response time distribution by location
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | filter execution_success == true
 | summarize {
@@ -301,7 +307,8 @@ fetch dt.synthetic.events, from: now() - 24h
 
 ```dql
 // Slowest page loads (outliers)
-fetch dt.synthetic.events, from: now() - 24h
+fetch bizevents, from: now() - 24h
+| filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event_type, "*browser*")
 | filter execution_success == true
 | filter toDouble(total_duration) > 5000  // > 5 seconds

@@ -1,6 +1,6 @@
 # S2D-99: Best Practice Summary
 
-> **Series:** S2D | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** S2D | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -35,7 +35,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="migration-planning"></a>
 ## 1. Migration Planning
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 1 | Follow the 5-phase migration sequence | Phase 1: Discovery, Phase 2: Data Validation, Phase 3: Query Translation, Phase 4: Alert Migration, Phase 5: Dashboard Migration | Critical | Process |
 | 2 | Inventory all Splunk assets before starting | Document every dashboard, alert, report, and saved search with their SPL queries | Critical | Process |
@@ -47,7 +47,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="log-discovery-and-validation"></a>
 ## 2. Log Discovery and Validation
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 7 | Set log ingest rules at the host-group level | Use host-group scope, not per-host | Recommended | Configuration |
 | 8 | Enable OneAgent log content access | `oneagentctl --set-log-content-access=true` on every monitored host | Critical | Configuration |
@@ -60,7 +60,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="query-translation-spl-to-dql"></a>
 ## 3. Query Translation (SPL to DQL)
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 14 | Use `==` for equality, not `=` | `filter field == "value"` | Critical | Syntax |
 | 15 | Use double quotes only, not single quotes | `"value"` not `'value'` | Critical | Syntax |
@@ -72,7 +72,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 | 21 | Translate `table` to `fields` | `fields field1, field2` | Recommended | Syntax |
 | 22 | Translate `sort -field` to `sort field desc` | Explicit `asc`/`desc` keyword | Recommended | Syntax |
 | 23 | Translate `head N` to `limit N` | `limit 100` | Recommended | Syntax |
-| 24 | Translate `rename old AS new` to `fieldsRename` | `fieldsRename new = old` | Recommended | Syntax |
+| 24 | Translate `rename old AS new` to `fieldsRename` | `fieldsRename old, alias:new` | Recommended | Syntax |
 | 25 | Translate `timechart span=5m count by level` to `makeTimeseries` | `makeTimeseries count = count(), by:{loglevel}, interval:5m` | Critical | Syntax |
 | 26 | Translate `rex` field extraction to `parse` with DPL | `parse content, "LD 'user=' WORD:username"` | Recommended | Syntax |
 | 27 | Translate `*value*` wildcard to `matchesPhrase()` | `matchesPhrase(field, "value")` for token-based matching | Critical | Syntax |
@@ -83,7 +83,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="alert-migration-davis-anomaly-detectors"></a>
 ## 4. Alert Migration - Davis Anomaly Detectors
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 31 | Apply the threshold translation formula | `Splunk Threshold = DT Threshold x DT Violating Samples` | Critical | Alerting |
 | 32 | Use the "Alert Reimagined" strategy as default | Threshold: calculated, Sliding Window: match Splunk timeframe, Violating Samples: 2-3, Dealerting Samples: match Splunk suppress duration | Recommended | Alerting |
@@ -99,7 +99,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="alert-migration-workflows"></a>
 ## 5. Alert Migration - Workflows
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 41 | Use Workflows only when: timeframe > 60 min, alert runs few times/day, business-hours only, or is actually a report | Otherwise use Davis Anomaly Detectors | Critical | Alerting |
 | 42 | Specify timeframe explicitly in the DQL query, not from dashboard | `fetch logs, from:now()-7d` in the workflow query itself | Critical | Alerting |
@@ -113,7 +113,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="extended-timeframes-arraymovingsum"></a>
 ## 6. Extended Timeframes (ArrayMovingSum)
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 49 | Use `arrayMovingSum(array, 60)` with `interval:1m` for 60-minute rolling sum | Each data point = sum of preceding 60 minutes | Critical | DQL |
 | 50 | Max `arrayMovingSum` window = 60 | Cannot exceed 60 data points regardless of interval | Critical | DQL |
@@ -126,7 +126,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="metric-creation-from-logs"></a>
 ## 7. Metric Creation from Logs
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 56 | Create log-based metrics for frequently executed dashboard and alert queries | Reduces query cost, improves speed, increases retention | Recommended | Performance |
 | 57 | Metric filter must use only supported functions | `matchesPhrase`, `matchesValue`, `isNull`, `isNotNull`, basic operators only. No `parse` or `fieldsAdd` | Critical | Configuration |
@@ -139,7 +139,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="dashboard-migration"></a>
 ## 8. Dashboard Migration
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 63 | Layout: top row = single-value KPIs, middle = time-series trends, bottom = detail tables | Standard 3-tier dashboard layout | Recommended | Design |
 | 64 | Use dashboard variables for interactive filtering | Define `$cluster`, `$namespace`, `$deployment` variables with query-backed dropdowns | Recommended | Design |
@@ -152,7 +152,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="naming-standards"></a>
 ## 9. Naming Standards
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 70 | Dashboard names | `[app_name] Dashboard Title` | Critical | Naming |
 | 71 | Alert configuration names | `[app_name] alert name from splunk` | Critical | Naming |
@@ -169,7 +169,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 <a id="dql-performance-and-syntax"></a>
 ## 10. DQL Performance and Syntax
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 81 | Always specify a time range on `fetch` | `fetch logs, from:-1h` (never bare `fetch logs`) | Critical | Performance |
 | 82 | Filter immediately after `fetch` | Place `filter` commands before any `fieldsAdd`, `parse`, or `summarize` | Critical | Performance |

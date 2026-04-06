@@ -27,7 +27,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 1. Connection & Authentication
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 1 | Use Clouds app direct connections for SaaS | **Clouds app > Add connection** — no ActiveGate required | Critical | CLOUD-01 |
 | 2 | Reserve classic ActiveGate polling for Managed only | ActiveGate-based polling for Dynatrace Managed or strict network isolation only | Critical | CLOUD-01 |
@@ -45,7 +45,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 2. AWS Integration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 12 | Enable services in tiers, not all at once | **Tier 1 (always):** EC2, ELB, RDS, Lambda. **Tier 2:** S3, SQS, SNS, DynamoDB, ECS/EKS. **Tier 3:** CloudFront, Route 53, Kinesis, Step Functions. **Tier 4:** SageMaker, Bedrock, IoT | Critical | CLOUD-02 |
 | 13 | Use tag-based resource filtering | Tag key: `dynatrace-monitored`, value: `true`; only monitored resources are discovered | Critical | CLOUD-02 |
@@ -59,7 +59,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 3. Azure Integration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 19 | Map Azure resource groups to Dynatrace Segments | One Segment per resource group or application for access control and scoped views | Critical | CLOUD-05 |
 | 20 | Propagate Azure tags to Dynatrace | Tags must flow through automatically; verify `environment`, `team`, `cost-center` appear in Dynatrace | Recommended | CLOUD-05 |
@@ -70,7 +70,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 4. GCP Integration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 23 | Use Workload Identity for GKE pods | Replace service account JSON keys with Workload Identity for DynaKube and integration pods | Critical | CLOUD-06 |
 | 24 | Tag all GCP resources with standard labels | Required labels: `env`, `team`, `service`, `cost-center`; propagate as Dynatrace tags | Recommended | CLOUD-06 |
@@ -83,7 +83,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 5. Kubernetes (EKS / AKS / GKE)
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 29 | Deploy DynaKube in CloudNativeFullStack mode for standard node pools | `spec.oneAgent.cloudNativeFullStack` — full agent injection + infrastructure monitoring | Critical | CLOUD-03 |
 | 30 | Use ApplicationMonitoring mode for Fargate and GKE Autopilot | `spec.oneAgent.applicationMonitoring` with `useCSIDriver: false` for Fargate | Critical | CLOUD-03, CLOUD-06 |
@@ -99,7 +99,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 6. Serverless Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 38 | Install Dynatrace Lambda Layer on all Lambda functions | Enables distributed tracing, code-level visibility, and direct log collection | Critical | CLOUD-04 |
 | 39 | Use meaningful Lambda function names | Avoid auto-generated names; use `<service>-<function>-<env>` pattern for identification | Recommended | CLOUD-04 |
@@ -114,7 +114,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 7. Log Ingestion
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 46 | Use Amazon Data Firehose for CloudWatch log forwarding | Fully managed, auto-scaling, no custom code. Buffer: 1 MB or 60 seconds. Enable GZIP compression | Critical | CLOUD-07 |
 | 47 | Migrate legacy Lambda log forwarder to Firehose | `dynatrace-aws-log-forwarder` is **deprecated** — do not use for new deployments | Critical | CLOUD-07 |
@@ -132,7 +132,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 8. Cost Optimization
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 57 | Disable unused cloud service monitoring | Only enable AWS/Azure/GCP services your applications depend on; disable the rest | Critical | CLOUD-02 |
 | 58 | Tag-based filtering is the #1 cost lever | Monitor only resources tagged `dynatrace-monitored: true`; reduces both DPS and cloud API costs | Critical | CLOUD-02 |
@@ -148,7 +148,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 9. Multi-Cloud Governance
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 66 | Apply consistent tag schema across all providers | Required tags: `cloud-provider`, `environment`, `team`, `application`, `cost-center`, `region` | Critical | CLOUD-08 |
 | 67 | Normalize region names across providers | Use normalized values: `us-east`, `eu-west`, `ap-south` — not provider-specific names | Recommended | CLOUD-08 |
@@ -163,7 +163,7 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 ## 10. Alerting & Observability
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 74 | Use Davis AI for automatic cross-cloud anomaly detection | Enable Davis anomaly detection on all monitored entities; do not rely solely on static thresholds | Critical | CLOUD-08 |
 | 75 | Set alert evaluation windows ≥ 15 min for cloud metrics | Cloud metric delay: 5–15 min. A 1-min evaluation window on 5-min metrics produces false negatives | Critical | CLOUD-02 |

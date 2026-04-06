@@ -1,6 +1,6 @@
 # M2S-08: Step 8 — Enable: User Enablement and Communication
 
-> **Series:** M2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 A successful migration is measured not by the technical cutover but by whether every team in the organization can use the new platform effectively. Step 8 focuses on communication, training, documentation, and establishing the support structures that ensure adoption. Without deliberate enablement, teams will struggle with new URLs, unfamiliar interfaces, and unanswered questions — undermining the value of the migration.
 
@@ -128,6 +128,7 @@ Before sending the post-migration announcement, confirm that users can actually 
 fetch dt.entity.user_session_synthetic, from:-24h
 | summarize sessionCount = count()
 | fieldsAdd status = if(sessionCount > 0, then: "User sessions detected", else: "No user sessions — verify IAM configuration")
+
 ```
 
 <a id="persona-based-training"></a>
@@ -403,12 +404,22 @@ fetch logs, from:-24h
 // Count monitored hosts — should match or exceed Managed baseline
 fetch dt.entity.host
 | summarize hostCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hostCount = count()
+
 ```
 
 ```dql
 // Count monitored services — compare to Managed inventory
 fetch dt.entity.service
 | summarize serviceCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize serviceCount = count()
+
 ```
 
 ### Adoption Dashboard

@@ -1,6 +1,6 @@
 # Cluster Health Monitoring
 
-> **Series:** K8S | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 03/14/2026
+> **Series:** K8S | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Deep-Dive into Kubernetes Cluster Metrics
 Cluster health monitoring provides visibility into the infrastructure layer of Kubernetes: nodes, control plane, and cluster-wide resources. This notebook covers key metrics, thresholds, and DQL queries for proactive cluster management.
@@ -54,6 +54,12 @@ Navigate to: **Infrastructure > Kubernetes**
 fetch dt.entity.kubernetes_cluster
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name, tags
+// | sort name asc
+
 ```
 
 <a id="node-monitoring"></a>
@@ -73,6 +79,12 @@ fetch dt.entity.kubernetes_cluster
 fetch dt.entity.kubernetes_node
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NODE
+// | fields name, tags
+// | sort name asc
+
 ```
 
 ```dql

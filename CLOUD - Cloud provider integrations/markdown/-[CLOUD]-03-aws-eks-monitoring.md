@@ -1,6 +1,6 @@
 # CLOUD-03: AWS EKS Monitoring
 
-> **Series:** CLOUD | **Notebook:** 3 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 3 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -117,6 +117,12 @@ EKS node groups are collections of EC2 instances that serve as Kubernetes worker
 fetch dt.entity.kubernetes_cluster
 | fieldsKeep id, entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fieldsKeep id, name, tags
+// | sort name asc
+
 ```
 
 ### Node CPU and Memory Usage

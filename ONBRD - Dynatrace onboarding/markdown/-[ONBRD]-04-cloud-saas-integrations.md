@@ -1,6 +1,6 @@
 # Cloud & SaaS Integrations
 
-> **Series:** ONBRD | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** ONBRD | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Extending Visibility Beyond OneAgent
 While OneAgent provides deep application and infrastructure monitoring, many organizations need visibility into cloud services and SaaS platforms that can't run an agent. This notebook covers how to integrate AWS, Azure, GCP, and third-party SaaS tools into Dynatrace.
@@ -22,7 +22,7 @@ While OneAgent provides deep application and infrastructure monitoring, many org
 ## Prerequisites
 
 - Dynatrace environment with admin access
-- **ActiveGate deployed** (required for most integrations)
+- **ActiveGate deployed** (required for Extensions 2.0 and classic cloud integrations; not needed if using the Clouds app)
 - Cloud provider admin access (for AWS/Azure/GCP)
 - API credentials for SaaS platforms
 
@@ -32,7 +32,8 @@ Dynatrace offers multiple integration methods depending on the data source:
 
 | Method | Use Case | Requires ActiveGate? |
 |--------|----------|---------------------|
-| **Cloud Integrations** | AWS, Azure, GCP native services | Yes (for polling) |
+| **Cloud Integrations (Classic)** | AWS, Azure, GCP native services | Yes (for polling) |
+| **Clouds App (Modern)** | AWS (GA), Azure (preview), GCP (preview) direct connections | No |
 | **Extensions 2.0** | Custom data sources, SaaS APIs | Yes |
 | **OpenTelemetry** | OTel-instrumented apps | No (direct ingest) |
 | **Log Ingest** | External log sources | Optional |
@@ -292,6 +293,12 @@ After configuring integrations, verify data is flowing into Dynatrace.
 fetch dt.entity.aws_lambda_function
 | fields entity.name, id
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_LAMBDA_FUNCTION
+// | fields name, id
+// | limit 20
+
 ```
 
 ```dql
@@ -299,21 +306,35 @@ fetch dt.entity.aws_lambda_function
 fetch dt.entity.azure_vm
 | fields entity.name, id
 | limit 20
+
 ```
 
 ```dql
 // Check for cloud-sourced metrics
-metrics 
-| filter matchesPhrase(metric.key, "cloud")
-| fields metric.key
-| limit 20
+// Note: There is no "metrics" starting command in DQL.
+// Use timeseries to query a specific cloud metric, for example:
+timeseries avg(dt.cloud.aws.lambda.duration), from:-24h
+// Or browse available cloud metrics in the Dynatrace Metrics browser:
+// Observe & Explore → Metrics → search for "cloud" or "aws" / "azure" / "gcp"
 ```
 
 ```dql
 // Check Extensions 2.0 status
-fetch `dt.entity.extensions:extension`
-| fields entity.name, id
-| limit 20
+// Note: "dt.entity.extensions:extension" is not a valid entity type for DQL fetch.
+// Use the Extensions API v2 instead:
+//   GET /api/v2/extensions
+// Or check installed extensions in the Dynatrace Hub:
+//   Apps → Dynatrace Hub → Installed
+// To list extension-reported entities, query a known extension entity type:
+fetch dt.entity.host
+| fieldsKeep entity.name, id
+| limit 10
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsKeep name, id
+// | limit 10
+
 ```
 
 ### Troubleshooting Integration Issues

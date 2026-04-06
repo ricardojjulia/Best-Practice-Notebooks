@@ -1,6 +1,6 @@
 # ORGNZ-08 LAB: Grail Segments - Hands-on Exercises
 
-> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-08: Grail
 
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 
 **Grail segments** are logical groupings of data that enable real-time filtering across massive datasets without creating thousands of individual rules. Segments bring business context to observability data and are consistently available across the Dynatrace platform.
@@ -125,7 +125,7 @@ Segment:
 | Maximum includes (rules) per segment | 20 | Plan rule complexity accordingly |
 | Include blocks per data/entity type | 1 | Cannot have multiple rules for same type |
 | Expressions per filter condition | 10 | Maximum conditions per filter |
-| Values per variable | 2,000 | Maximum variable values |
+| Values per variable | 10,000 | Maximum variable values |
 
 
 | Pattern | Supported? | Notes |
@@ -206,7 +206,7 @@ includes:
     filter: "dt.host_group.id == 'prod-web-tier'"
   
   - type: dt.entity.host
-    filter: "hostGroup == 'prod-web-tier'"
+    filter: "host_group == 'prod-web-tier'"
 ```
 
 
@@ -242,9 +242,16 @@ includes:
 ```dql
 // Test host group filtering (simulating segment rule)
 fetch dt.entity.host
-| filter startsWith(hostGroup, "prod-")
-| fields entity.name, hostGroup, tags
+| filter startsWith(host_group, "prod-")
+| fields entity.name, host_group, tags
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | filter startsWith(host_group, "prod-")
+// | fields name, host_group, tags
+// | limit 20
+
 ```
 
 <a id="exercise-2"></a>
@@ -257,6 +264,14 @@ fetch dt.entity.service
 | filter contains(tags,  "team:platform")
 | fields entity.name, tags
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | expand tags
+// | filter contains(tags,  "team:platform")
+// | fields name, tags
+// | limit 20
+
 ```
 
 <a id="exercise-3"></a>

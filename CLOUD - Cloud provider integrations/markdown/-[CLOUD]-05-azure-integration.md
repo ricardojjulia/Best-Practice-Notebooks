@@ -1,11 +1,10 @@
 # CLOUD-05: Azure Integration
 
-> **Series:** CLOUD | **Notebook:** 5 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 5 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 This notebook covers Dynatrace's integration with Microsoft Azure. You will learn how to configure Azure Monitor metrics ingestion, which Azure services are supported, authentication via Azure AD (Entra ID), how resource group organization maps to Dynatrace monitoring, and how to query Azure entities and metrics with DQL.
-
 
 ---
 
@@ -22,7 +21,6 @@ This notebook covers Dynatrace's integration with Microsoft Azure. You will lear
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook covers Dynatrace's integration with Microsoft Azure. You will lear
 | **Azure Subscription** | With Entra ID (Azure AD) app registration for Dynatrace |
 | **Connection** | Azure Native Dynatrace Service (recommended) or Clouds app or Environment ActiveGate (classic) |
 | **Prior Knowledge** | CLOUD-01 fundamentals |
-
 
 <a id="azure-architecture"></a>
 
@@ -101,7 +98,6 @@ For non-native integrations, Azure uses an Entra ID (Azure AD) app registration.
 
 > **Best Practice:** Use the **Azure Native Dynatrace Service** for the simplest setup. If using classic integration with an ActiveGate on an Azure VM, use **managed identity** to eliminate credential management.
 
-
 <a id="supported-services"></a>
 
 ## 3. Supported Azure Services
@@ -129,13 +125,11 @@ Dynatrace monitors 50+ Azure services. Key services:
 | Load Balancer | `dt.entity.azure_load_balancer` |
 | IoT Hub | `dt.entity.azure_iot_hub` |
 
-
 <a id="querying-entities"></a>
 
 ## 4. Querying Azure Entities
 
 ### List Azure Virtual Machines
-
 
 ```dql
 // List all monitored Azure VMs
@@ -143,10 +137,10 @@ fetch dt.entity.azure_vm
 | fieldsKeep id, entity.name, tags
 | sort entity.name asc
 | limit 20
+
 ```
 
 ### Count Azure Resources by Type
-
 
 ```dql
 // Count Azure VMs and Web Apps
@@ -161,10 +155,12 @@ fetch dt.entity.azure_vm
     | summarize provider = "Azure", resource_type = "SQL Database", resource_count = count()
   ]
 | sort resource_count desc
+// ]
+// ]
+
 ```
 
 ### List Azure Web Apps
-
 
 ```dql
 // List monitored Azure App Service instances
@@ -182,7 +178,6 @@ Azure Monitor metrics are ingested into Dynatrace under the `cloud.azure.*` name
 
 ### Azure VM CPU Usage
 
-
 ```dql
 // Azure VM CPU percentage over the last 6 hours
 timeseries avgCpu = avg(dt.host.cpu.usage), from:-6h, by:{dt.entity.host}
@@ -192,7 +187,6 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-6h, by:{dt.entity.host}
 ```
 
 ### Azure VM Memory Usage
-
 
 ```dql
 // Host memory usage for Azure VMs over the last 6 hours
@@ -221,7 +215,6 @@ Azure Kubernetes Service (AKS) monitoring follows similar patterns to EKS (see C
 
 ### AKS Node Metrics
 
-
 ```dql
 // AKS container CPU usage by namespace over the last hour
 timeseries containerCpu = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.namespace.name}
@@ -231,7 +224,6 @@ timeseries containerCpu = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{
 ```
 
 ### AKS Pod Memory
-
 
 ```dql
 // Container memory by namespace over the last hour
@@ -263,7 +255,6 @@ Azure organizes resources into **resource groups**, which serve as logical conta
 - **Use naming conventions** that include subscription, environment, and application: `rg-myapp-prod-eastus`
 - **Create alerting profiles** per resource group to route alerts to the right team
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -281,8 +272,6 @@ Azure organizes resources into **resource groups**, which serve as logical conta
 - **CLOUD-07: CloudWatch Log Ingestion** — Log forwarding patterns (applicable to Azure via Event Hub)
 - **CLOUD-08: Multi-Cloud Patterns** — Unified monitoring across Azure and other providers
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

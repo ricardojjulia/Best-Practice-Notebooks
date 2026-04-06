@@ -19,6 +19,7 @@ Structured migration path to Dynatrace OpenPipeline.
 7. [Metric & Event Extraction](markdown/-[OPMIG]-07-metric-event-extraction.md) — Deriving metrics/events from logs
 8. [Security & Masking](markdown/-[OPMIG]-08-security-masking.md) — Security controls and data masking
 9. [Troubleshooting & Validation](markdown/-[OPMIG]-09-troubleshooting-validation.md) — Validation and issue resolution
+99. [Best Practice Summary](markdown/-[OPMIG]-99-best-practice-summary.md) — Consolidated best practices from the OPMIG series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

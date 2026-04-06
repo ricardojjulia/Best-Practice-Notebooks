@@ -1,6 +1,6 @@
 # MOBL-03: Android SDK Setup (Kotlin & Jetpack Compose)
 
-> **Series:** MOBL | **Notebook:** 3 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL | **Notebook:** 3 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -310,6 +310,7 @@ fetch dt.entity.device_application
 | filter contains(toString(entity.name), "Android") or contains(toString(tags), "Android")
 | fields entity.name, id, tags
 | sort entity.name asc
+
 ```
 
 The query above searches for mobile application entities with "Android" in their name or tags. If your app appears in the results, the Dynatrace environment is aware of it.

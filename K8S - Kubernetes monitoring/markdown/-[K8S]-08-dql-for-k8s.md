@@ -1,6 +1,6 @@
 # DQL Queries for Kubernetes
 
-> **Series:** K8S | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Advanced Query Patterns for Kubernetes Data
 This notebook provides a comprehensive reference of DQL queries for Kubernetes monitoring. From basic entity queries to complex performance analysis, these patterns help you extract insights from your Kubernetes data.
@@ -47,6 +47,12 @@ This notebook provides a comprehensive reference of DQL queries for Kubernetes m
 fetch dt.entity.kubernetes_cluster
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name, tags
+// | sort name asc
+
 ```
 
 ```dql
@@ -54,6 +60,12 @@ fetch dt.entity.kubernetes_cluster
 fetch dt.entity.kubernetes_node
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NODE
+// | fields name, tags
+// | sort name asc
+
 ```
 
 ```dql
@@ -61,6 +73,12 @@ fetch dt.entity.kubernetes_node
 fetch dt.entity.cloud_application_namespace
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NAMESPACE
+// | fields name, tags
+// | sort name asc
+
 ```
 
 ```dql
@@ -69,6 +87,13 @@ fetch dt.entity.cloud_application
 | fields entity.name, tags
 | sort entity.name asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_DEPLOYMENT
+// | fields name, tags
+// | sort name asc
+// | limit 50
+
 ```
 
 ```dql

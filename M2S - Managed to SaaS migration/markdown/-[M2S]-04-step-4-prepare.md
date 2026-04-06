@@ -310,6 +310,7 @@ fetch dt.entity.active_gate
 | fieldsAdd entity.name, version = toString(softwareVersion)
 | fields entity.name, version, networkZone
 | sort entity.name asc
+
 ```
 
 ```dql

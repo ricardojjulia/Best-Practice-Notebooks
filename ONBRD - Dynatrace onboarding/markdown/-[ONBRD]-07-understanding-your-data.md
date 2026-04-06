@@ -1,6 +1,6 @@
 # Understanding Your Data
 
-> **Series:** ONBRD | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Exploring What Dynatrace Discovered
 With OneAgent deployed, Dynatrace has automatically discovered your infrastructure, processes, and services. This notebook helps you understand what's been found and how to explore your data.
@@ -147,6 +147,10 @@ fetch dt.entity.host | summarize hosts = count()
 // Run separately for other types:
 // fetch dt.entity.service | summarize services = count()
 // fetch dt.entity.process_group | summarize process_groups = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST | summarize hosts = count()
+
 ```
 
 ```dql
@@ -243,6 +247,12 @@ fetch logs, from: now() - 15m
 fetch dt.entity.kubernetes_cluster
 | fields entity.name
 | sort entity.name
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name
+// | sort name
+
 ```
 
 ```dql
@@ -251,6 +261,13 @@ fetch dt.entity.cloud_application_namespace
 | fields entity.name
 | sort entity.name
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NAMESPACE
+// | fields name
+// | sort name
+// | limit 50
+
 ```
 
 ```dql
@@ -259,6 +276,13 @@ fetch dt.entity.cloud_application
 | fields entity.name
 | sort entity.name
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_DEPLOYMENT
+// | fields name
+// | sort name
+// | limit 50
+
 ```
 
 ### Problems Discovery

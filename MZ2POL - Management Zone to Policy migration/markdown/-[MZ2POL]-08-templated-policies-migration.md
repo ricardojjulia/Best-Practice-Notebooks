@@ -1,6 +1,6 @@
 # MZ2POL-08: Templated Policies for MZ Migration
 
-> **Series:** MZ2POL | **Notebook:** 9 of 9 | **Created:** February 2026 | **Last Updated:** 02/25/2026
+> **Series:** MZ2POL | **Notebook:** 9 of 9 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -278,6 +278,16 @@ fetch dt.entity.service
     missingContext = countIf(isNull(dt.security_context))
 | fields total, withContext, missingContext,
          coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize
+// total = count(),
+// withContext = countIf(isNotNull(dt.security_context)),
+// missingContext = countIf(isNull(dt.security_context))
+// | fields total, withContext, missingContext,
+// coveragePercent = round(100.0 * withContext / total, decimals: 2)
+
 ```
 
 ```dql
@@ -287,7 +297,7 @@ fetch dt.entity.service
 | summarize
     inMZ = countIf(in(managementZones, {"Frontend-Team"})),
     hasContext = countIf(dt.security_context == "team-frontend"),
-    inBoth = countIf(in(managementZones, {"Frontend-Team"}) AND dt.security_context == "team-frontend")
+    inBoth = countIf(in(managementZones, {"Frontend-Team"}) and dt.security_context == "team-frontend")
 | fields inMZ, hasContext, inBoth,
          match = if(inMZ == inBoth, then: "ALIGNED", else: "GAPS EXIST")
 ```
@@ -297,7 +307,7 @@ fetch dt.entity.service
 // These need security context before template binding will work
 fetch dt.entity.service
 | filter in(managementZones, {"Frontend-Team"})
-| filter dt.security_context != "team-frontend" OR isNull(dt.security_context)
+| filter dt.security_context != "team-frontend" or isNull(dt.security_context)
 | fields entity.name, dt.security_context, managementZones, tags
 | sort entity.name asc
 | limit 50

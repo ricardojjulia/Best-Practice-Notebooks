@@ -1,6 +1,6 @@
 # Dynatrace OTLP Integration
 
-> **Series:** OTEL | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Complete Setup for OpenTelemetry with Dynatrace
 This notebook provides end-to-end configuration for sending OpenTelemetry data to Dynatrace, including authentication, endpoints, and verification.
@@ -229,7 +229,7 @@ DT_API_TOKEN = os.environ["DT_API_TOKEN"]
 resource = Resource.create({
     "service.name": "my-python-app",
     "service.version": "1.0.0",
-    "deployment.environment": "production"
+    "deployment.environment.name": "production"
 })
 
 # Setup tracer
@@ -303,7 +303,7 @@ resource = Resource.create({
     # Recommended
     "service.version": "1.2.3",
     "service.namespace": "ecommerce",
-    "deployment.environment": "production",
+    "deployment.environment.name": "production",
     
     # For K8s
     "k8s.namespace.name": "checkout",

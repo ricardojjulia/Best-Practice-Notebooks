@@ -20,6 +20,7 @@ Step-by-step onboarding series for new Dynatrace users, from initial setup to da
 8. [Your First Queries](markdown/-[ONBRD]-08-your-first-queries.md) — Intro to DQL
 9. [Setting Up Alerts](markdown/-[ONBRD]-09-setting-up-alerts.md) — Alerting and notifications
 10. [Building Dashboards](markdown/-[ONBRD]-10-building-dashboards.md) — Creating stakeholder dashboards
+99. [Best Practice Summary](markdown/-[ONBRD]-99-best-practice-summary.md) — Consolidated best practices from the ONBRD series
 
 ## Usage
 1. Pick a format: import JSON from NOTEBOOKS/ into Dynatrace, read PDFs/ for print, or open markdown/ for lightweight viewing.

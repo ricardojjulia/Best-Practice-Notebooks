@@ -1,6 +1,6 @@
 # Policy Authoring and Management
 
-> **Series:** IAM | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Mastering Dynatrace Policy Syntax
 Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can perform. This notebook provides a comprehensive guide to policy authoring, from basic syntax to advanced patterns.
@@ -184,7 +184,7 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 | Domain | Field | Description |
 |--------|-------|-------------|
 | Storage | `storage:dt.security_context` | Security context on data |
-| Storage | `storage:bucket.name` | **Bucket name (for team isolation)** |
+| Storage | `storage:bucket-name` | **Bucket name (for team isolation)** |
 | Settings | `settings:schemaId` | Settings schema |
 | Settings | `settings:dt.security_context` | Security context on settings |
 
@@ -193,7 +193,7 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 | Condition Type | Use Case | Example |
 |----------------|----------|----------|
 | **Security Context** | Flexible, changeable access | `storage:dt.security_context = "team-a"` |
-| **Bucket** | Hard data isolation | `storage:bucket.name = "team-a-logs"` |
+| **Bucket** | Hard data isolation | `storage:bucket-name = "team-a-logs"` |
 | **Both** | Defense in depth | Both conditions in policy + boundary |
 
 ### Condition Examples
@@ -205,7 +205,7 @@ ALLOW storage:logs:read WHERE storage:dt.security_context = "checkout"
 
 **Scope to specific bucket (team isolation):**
 ```
-ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs"
+ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
 ```
 
 **Scope to settings schema:**
@@ -215,7 +215,7 @@ ALLOW settings:objects:write WHERE settings:schemaId startsWith "builtin:alertin
 
 **Multiple conditions (AND):**
 ```
-ALLOW storage:logs:read WHERE storage:dt.security_context = "team-a" AND storage:bucket.name = "team-a-logs"
+ALLOW storage:logs:read WHERE storage:dt.security_context = "team-a" AND storage:bucket-name = "team-a-logs"
 ```
 
 **Multiple values (IN):**
@@ -225,8 +225,8 @@ ALLOW storage:logs:read WHERE storage:dt.security_context IN ("team-a", "team-b"
 
 **Multiple buckets (team access):**
 ```
-ALLOW storage:logs:read WHERE storage:bucket.name IN ("checkout_logs", "shared_logs")
-ALLOW storage:spans:read WHERE storage:bucket.name IN ("checkout_spans", "shared_spans")
+ALLOW storage:logs:read WHERE storage:bucket-name IN ("checkout_logs", "shared_logs")
+ALLOW storage:spans:read WHERE storage:bucket-name IN ("checkout_spans", "shared_spans")
 ```
 
 <a id="common-policy-patterns"></a>
@@ -266,22 +266,22 @@ ALLOW settings:objects:* WHERE settings:dt.security_context = "checkout-team";
 
 ```
 // Grant access to team's specific buckets (hard data isolation)
-ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs";
-ALLOW storage:logs:write WHERE storage:bucket.name = "checkout_logs";
-ALLOW storage:spans:read WHERE storage:bucket.name = "checkout_spans";
-ALLOW storage:spans:write WHERE storage:bucket.name = "checkout_spans";
-ALLOW storage:metrics:read WHERE storage:bucket.name = "checkout_metrics";
-ALLOW storage:metrics:write WHERE storage:bucket.name = "checkout_metrics";
+ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs";
+ALLOW storage:logs:write WHERE storage:bucket-name = "checkout_logs";
+ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans";
+ALLOW storage:spans:write WHERE storage:bucket-name = "checkout_spans";
+ALLOW storage:metrics:read WHERE storage:bucket-name = "checkout_metrics";
+ALLOW storage:metrics:write WHERE storage:bucket-name = "checkout_metrics";
 
 // Also grant access to shared buckets
-ALLOW storage:logs:read WHERE storage:bucket.name = "shared_logs";
-ALLOW storage:spans:read WHERE storage:bucket.name = "shared_spans";
+ALLOW storage:logs:read WHERE storage:bucket-name = "shared_logs";
+ALLOW storage:spans:read WHERE storage:bucket-name = "shared_spans";
 ```
 
 **Bucket + Security Context (Defense in Depth):**
 ```
 // Combine bucket restriction with security context for maximum isolation
-ALLOW storage:logs:read WHERE storage:bucket.name = "checkout_logs" 
+ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs" 
   AND storage:dt.security_context = "checkout";
 ```
 
@@ -334,8 +334,8 @@ ALLOW state:*:read;
 
 ```
 // Access only to PCI-compliant data bucket
-ALLOW storage:logs:read WHERE storage:bucket.name = "pci_logs";
-ALLOW storage:spans:read WHERE storage:bucket.name = "pci_spans";
+ALLOW storage:logs:read WHERE storage:bucket-name = "pci_logs";
+ALLOW storage:spans:read WHERE storage:bucket-name = "pci_spans";
 // No access to non-PCI buckets
 ```
 

@@ -1,6 +1,6 @@
 # CI/CD Integration
 
-> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 02/17/2026
+> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -1394,6 +1394,49 @@ In this notebook, you learned:
 ---
 
 *Continue to **AUTOM-08: Migration Automation** to learn bulk configuration transfer.*
+
+## Community Resources & CI/CD Examples
+
+The following GitHub repositories provide working CI/CD pipelines, validation scripts, and platform engineering references:
+
+### Pipeline Observability Samples (in `dynatrace-configuration-as-code-samples`)
+
+Both Monaco and Terraform variants are available for each CI/CD platform:
+
+| CI/CD Platform | Monaco Sample | Terraform Sample |
+|---------------|---------------|------------------|
+| GitHub Actions | `github_pipeline_observability` | `github_pipeline_observability_terraform` |
+| GitLab CI | `gitlab_pipeline_observability` | `gitlab_pipeline_observability_terraform` |
+| Azure DevOps | `azure_devops_observability` | -- |
+| ArgoCD | `argocd_observability` | `argocd_observability_terraform` |
+
+All samples ingest SDLC events via OpenPipeline and include pre-built dashboards.
+
+### CI Validation Scripts (in `dynatrace-configuration-as-code-samples/scripts/ci/`)
+
+| Script | Purpose |
+|--------|---------|
+| `validate-monaco.sh` | Validate Monaco configuration in CI |
+| `validate-terraform.sh` | Validate Terraform configuration in CI |
+| `check-secrets.sh` | Detect hardcoded secrets before commit |
+
+### CI/CD Automation Tools
+
+| Repository | Description |
+|------------|-------------|
+| [dynatrace-automation-tools](https://github.com/Dynatrace/dynatrace-automation-tools) | CLI for Site Reliability Guardian automation and deployment event ingestion in CI/CD (v1.0.3) |
+| [monaco-demo](https://github.com/dt-demos/monaco-demo) | Working GitHub Actions workflow for Monaco deploy with `.github/workflows/monaco.yml` |
+
+### Platform Engineering References
+
+| Repository | Description |
+|------------|-------------|
+| [platform-engineering-demo](https://github.com/dynatrace-perfclinics/platform-engineering-demo) | Full IDP reference: ArgoCD + Backstage + Keptn + OpenTelemetry + Dynatrace |
+| [demo-crossplane](https://github.com/Dynatrace/demo-crossplane) | Crossplane + Terraform provider for continuous GitOps reconciliation (no manual pipeline triggers) |
+| [obslab-composite-srg](https://github.com/dynatrace-perfclinics/obslab-composite-srg) | Composite Site Reliability Guardians with GitHub Actions |
+| [obslab-release-validation](https://github.com/Dynatrace/obslab-release-validation) | Release validation using k6, business events, workflows, and SRG |
+
+---
 
 ---
 

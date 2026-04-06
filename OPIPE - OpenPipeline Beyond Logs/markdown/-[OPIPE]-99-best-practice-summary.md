@@ -24,7 +24,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="multi-scope-architecture"></a>
 ## 1. Multi-Scope Architecture
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | One pipeline per source type per scope | Separate pipelines for each distinct data source | Critical |
 | Never leave >20% of volume in default pipeline | Target 0% in default for production environments | Critical |
@@ -38,7 +38,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="processing-groups"></a>
 ## 2. Processing Groups
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Use groups for different parsing within one pipeline | One group per log format (e.g., `java-logs`, `nodejs-logs`) with shared global processors outside | Recommended |
 | Max 5-6 groups per pipeline | More than 6 = split into separate pipelines | Recommended |
@@ -50,7 +50,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="span-filtering-enrichment"></a>
 ## 3. Span Filtering & Enrichment
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Drop health check spans | Drop: `span.name` matches `"GET /health*"` OR `"GET /ready*"` OR `"GET /livez*"` | Critical |
 | Drop metrics scraping spans | Drop: `span.name` matches `"*/metrics*"` OR `"*/actuator/*"` | Critical |
@@ -66,7 +66,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="sampling-aware-metrics-red"></a>
 ## 4. Sampling-Aware Metrics & RED
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Enable sampling-aware for count metrics | `span.request_count`, `span.error_count` must weight by 1/sampling_ratio | Critical |
 | Do NOT enable sampling-aware for duration | Averages and percentiles are statistically representative from sampled data | Recommended |
@@ -79,7 +79,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="cardinality-management"></a>
 ## 5. Cardinality Management
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Never use `trace.id`, `span.id`, or `content` as dimensions | Unique per record = unbounded cardinality = metric dropped | Critical |
 | Never use `http.url` as dimension | Use `http.route` (pattern) instead of `http.url` (instance with query params) | Critical |
@@ -98,7 +98,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="security-context"></a>
 ## 6. Security Context
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Set `dt.security_context` on every scope with sensitive data | Field enrichment processors in Logs, Spans, Metrics, Events, Bizevents | Critical |
 | Extension metrics: set explicitly | Extensions 2.0 do NOT inherit security context — add via Metrics scope OpenPipeline enrichment on `metric.key` prefix | Critical |
@@ -109,7 +109,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="business-security-events"></a>
 ## 7. Business & Security Events
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Enrich business events with channel | `event.provider == "mobile-app"` → `channel = "mobile"` | Recommended |
 | Extract conversion funnel metrics | Separate count per stage: views → adds → checkouts → purchases | Recommended |
@@ -124,7 +124,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="cross-scope-patterns"></a>
 ## 8. Cross-Scope Patterns
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Primary correlation key: `dt.entity.service` | Ensure present on logs, spans, metrics, events — the single most important cross-scope join field | Critical |
 | Enrich logs with `service.name` if missing | Derive from `dt.entity.service` via entity lookup | Recommended |
@@ -137,7 +137,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="ingestion-vs-query-time"></a>
 ## 9. Ingestion vs Query-Time
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Mask at ingestion — no exceptions | PII must be redacted before storage | Critical |
 | Drop noise at ingestion | Debug, health checks, synthetic — never store and filter later | Critical |
@@ -150,7 +150,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 <a id="production-readiness"></a>
 ## 10. Production Readiness
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | No overlapping routing conditions | Audit conditions for overlap — first match wins, order-dependent behavior is a bug | Critical |
 | Drop rules before extraction rules | Filter noise before creating metrics — otherwise you extract from noise | Critical |

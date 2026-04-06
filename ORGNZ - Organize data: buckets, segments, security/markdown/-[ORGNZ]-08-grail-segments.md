@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 03/05/2026
+> **Series:** ORGNZ | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -116,7 +116,7 @@ Segment:
 | Maximum includes (rules) per segment | 20 | Plan rule complexity accordingly |
 | Include blocks per data/entity type | 1 | Cannot have multiple rules for same type |
 | Expressions per filter condition | 10 | Maximum conditions per filter |
-| Values per variable | 2,000 | Maximum variable values |
+| Values per variable | 10,000 | Maximum variable values |
 
 ### Wildcard Restrictions
 

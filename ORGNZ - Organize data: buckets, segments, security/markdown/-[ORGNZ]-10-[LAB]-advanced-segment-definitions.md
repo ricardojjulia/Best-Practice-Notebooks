@@ -345,7 +345,7 @@ fetch dt.entity.host
 ```dql
 // Variable DQL: Extract CloudFoundry Organization from process group tags
 // Creates variables: $value (org name), $id (process group ID), $AppTag (full tag string)
-// Note: Smartscape on Grail alternative: smartscapeNodes PROCESS_GROUP
+// Note: Smartscape on Grail alternative: smartscapeNodes PROCESS
 fetch dt.entity.process_group
 | fields tags, id
 | expand tags

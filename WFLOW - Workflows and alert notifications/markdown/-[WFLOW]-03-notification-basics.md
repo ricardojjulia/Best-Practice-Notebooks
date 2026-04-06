@@ -1,6 +1,6 @@
 # Alert Notification Basics
 
-> **Series:** WFLOW | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Sending Notifications with Workflows
 The most common workflow use case is sending alert notifications to Slack, Microsoft Teams, and email. This notebook covers setting up connections, configuring notification tasks, and best practices for effective alerting.
@@ -57,7 +57,7 @@ Trigger (Davis Problem, Schedule, etc.)
 | Channel | Task Type | Authentication |
 |---------|-----------|----------------|
 | Slack | `dynatrace.slack:message` | OAuth App or Webhook |
-| Microsoft Teams | `dynatrace.msteams:message` | Incoming Webhook |
+| Microsoft Teams | `dynatrace.msteams:message` | Power Automate or Webhook (deprecated) |
 | Email | `dynatrace.email:send` | SMTP or built-in |
 | PagerDuty | `dynatrace.pagerduty:*` | Integration Key |
 | ServiceNow | `dynatrace.servicenow:*` | OAuth or Basic Auth |
@@ -168,7 +168,16 @@ input:
 
 <a id="microsoft-teams-notifications"></a>
 ## 4. Microsoft Teams Notifications
-### Setting Up Teams Webhook
+
+> **Warning — O365 Connectors Deprecated:** Microsoft retired Office 365 Connectors (Incoming Webhooks) in late 2024. Existing webhooks may continue to work temporarily, but **new O365 Connector creation is disabled**. Use one of these alternatives instead:
+>
+> | Method | Status | Notes |
+> |--------|--------|-------|
+> | **Power Automate Workflow** | Recommended | Create a "When a Teams webhook request is received" flow in Power Automate; use the resulting URL as a `dynatrace.http:request` task |
+> | **Teams Workflows Connector** | Recommended | Available in new Teams client under channel **...** → **Workflows** |
+> | **O365 Incoming Webhook** | Deprecated | Legacy method shown below for reference only |
+
+### Setting Up Teams Webhook (Legacy)
 
 1. Open target Teams channel
 2. Click **...** → **Connectors** (or **Workflows** in new Teams)
@@ -177,7 +186,6 @@ input:
 5. Copy the webhook URL
 6. Create connection in Dynatrace
 
-> **Note:** Microsoft is deprecating Office 365 Connectors. Consider using Power Automate or the newer Workflows connector for future-proofing.
 
 ### Basic Teams Message Task
 
@@ -453,7 +461,7 @@ Now that you can send basic notifications, learn advanced patterns:
 
 - **Connections** store credentials securely and are reusable
 - **Slack** supports both OAuth apps and webhooks
-- **Teams** uses incoming webhooks (consider Power Automate for future)
+- **Teams** requires Power Automate or Teams Workflows connector (O365 Incoming Webhooks are deprecated)
 - **Email** can use built-in SMTP or custom servers
 - **Jinja expressions** enable dynamic message content
 - Tasks execute in **parallel** by default

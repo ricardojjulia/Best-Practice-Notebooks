@@ -19,6 +19,7 @@ Guide for migrating monitoring capabilities from Splunk to Dynatrace.
 7. [Metric Creation](markdown/-[S2D]-07-metric-creation.md) — Extracting metrics from logs via OpenPipeline
 8. [Dashboard Migration](markdown/-[S2D]-08-dashboard-migration.md) — Converting Splunk dashboards to Dynatrace
 9. [Naming Standards](markdown/-[S2D]-09-naming-standards.md) — Asset naming conventions and organization
+99. [Best Practice Summary](markdown/-[S2D]-99-best-practice-summary.md) — Consolidated best practices from the S2D series
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.

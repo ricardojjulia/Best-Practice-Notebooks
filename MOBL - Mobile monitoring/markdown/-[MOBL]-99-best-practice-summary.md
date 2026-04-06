@@ -39,7 +39,7 @@ This notebook consolidates every actionable best practice from the MOBL series (
 
 Best practices for installing and configuring the Dynatrace mobile SDK across iOS, Android, and cross-platform frameworks.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Enable auto-start for production apps | iOS: `DTXAutoStart = true` in Info.plist; Android: `autoStart = true` in Gradle config | **Critical** | MOBL-02, MOBL-03 |
 | 2 | Enable crash reporting | iOS: `DTXCrashReportingEnabled = true`; Android: `crashReporting(true)` | **Critical** | MOBL-02, MOBL-03 |
@@ -59,7 +59,7 @@ Best practices for installing and configuring the Dynatrace mobile SDK across iO
 
 Best practices for ensuring crash data is complete, readable, and actionable.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Upload dSYM files for every iOS release build | Automate via Xcode Build Phase Script using `DTXDssClient`, or use Fastlane `dynatrace_process_symbols` | **Critical** | MOBL-06 |
 | 2 | Upload ProGuard/R8 mapping files for every Android release build | Enable in Gradle: `symbols { apitoken 'YOUR_API_TOKEN' }` for automatic upload | **Critical** | MOBL-06 |
@@ -79,7 +79,7 @@ Best practices for ensuring crash data is complete, readable, and actionable.
 
 Best practices for tracking user interactions accurately and meaningfully.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Add manual instrumentation for SwiftUI views | Apply `.dtAction(name:)` to top-level screen views and key interaction buttons | **Critical** | MOBL-02, MOBL-05 |
 | 2 | Add manual instrumentation for Jetpack Compose | Use `Dynatrace.enterAction("name")` and `action.leaveAction()` for all onClick handlers | **Critical** | MOBL-03, MOBL-05 |
@@ -99,7 +99,7 @@ Best practices for tracking user interactions accurately and meaningfully.
 
 Best practices for HTTP monitoring, backend correlation, and network performance optimization.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Instrument backend services with OneAgent or OpenTelemetry | Required for `x-dtc` header correlation; enables end-to-end distributed tracing from device to database | **Critical** | MOBL-07 |
 | 2 | Use manual web request tagging for non-standard transports | Add `x-dynatrace` header via `DTXAction.getRequestTag()` (iOS) or `Dynatrace.getRequestTag()` (Android) for WebSocket, gRPC, or custom HTTP clients | **Recommended** | MOBL-12 |
@@ -118,7 +118,7 @@ Best practices for HTTP monitoring, backend correlation, and network performance
 
 Best practices for configuring mobile session replay with appropriate privacy controls.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Enable session replay on crash | iOS: `DTXSessionReplayOnCrash = true`; Android: `sessionReplayOnCrash(true)` | **Critical** | MOBL-08 |
 | 2 | Set privacy masking to Safe as the default | iOS: `DTXSessionReplayPrivacyMode = SAFE`; Android: `sessionReplayPrivacyMode("SAFE")` | **Critical** | MOBL-08 |
@@ -136,7 +136,7 @@ Best practices for configuring mobile session replay with appropriate privacy co
 
 Best practices for enriching sessions with business context and identifying users.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Tag users with opaque IDs, never PII | `Dynatrace.identifyUser("usr_a1b2c3d4")` -- never email addresses, phone numbers, or full names | **Critical** | MOBL-09 |
 | 2 | Clear user tag on logout | iOS: `Dynatrace.identifyUser(nil)`; Android: `Dynatrace.identifyUser(null)` | **Critical** | MOBL-09 |
@@ -153,7 +153,7 @@ Best practices for enriching sessions with business context and identifying user
 
 Best practices for GDPR, CCPA, and general data privacy compliance.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Implement opt-in mode for GDPR compliance | Set `DTXAutoStart = false` (iOS) or `autoStart = false` (Android); start SDK only after user consent | **Critical** | MOBL-09 |
 | 2 | Default data collection level to Performance until consent | `DataCollectionLevel.PERFORMANCE` captures anonymous performance data without user identification | **Critical** | MOBL-09 |
@@ -171,7 +171,7 @@ Best practices for GDPR, CCPA, and general data privacy compliance.
 
 Best practices for operationalizing mobile monitoring with dashboards and alerts.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Include a crash-free rate single-value tile with color thresholds | Green: > 99.5%, Yellow: 98-99.5%, Red: < 98% | **Critical** | MOBL-11 |
 | 2 | Organize dashboard: health at top, trends in middle, drill-down at bottom | Top: single-value tiles (crash rate, sessions); Middle: timeseries (trends); Bottom: tables (top crashes, slowest actions) | **Recommended** | MOBL-11 |
@@ -192,7 +192,7 @@ Best practices for operationalizing mobile monitoring with dashboards and alerts
 
 Best practices for minimizing SDK overhead on battery, network, and CPU.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Exclude third-party analytics and CDN URLs from monitoring | Add `excludeURLs` patterns: `analytics.google.com/*`, `firebaselogging.googleapis.com/*`, CDN domains | **Recommended** | MOBL-12 |
 | 2 | Use sampling for high-traffic production apps | 10-50% sampling reduces DEM consumption proportionally; even 1% of millions provides thousands of sessions | **Recommended** | MOBL-08, MOBL-12 |
@@ -206,7 +206,7 @@ Best practices for minimizing SDK overhead on battery, network, and CPU.
 
 Best practices for custom business events, A/B testing, multi-app strategies, and advanced SDK usage.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Use reverse-domain naming for custom business event types | `"com.myapp.purchase"` not `"purchase"` -- avoids collisions across apps and services | **Recommended** | MOBL-12 |
 | 2 | Send business events for conversion-critical interactions | Purchases, sign-ups, feature usage via `sendBizEvent()` with structured attributes | **Recommended** | MOBL-12 |
@@ -225,7 +225,7 @@ Best practices for custom business events, A/B testing, multi-app strategies, an
 
 Mandatory patterns and filters for querying mobile data in Grail.
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Always filter mobile data on event.provider | `filter event.provider == "www.dynatrace.com/mobile"` -- this is the key discriminator for mobile events | **Critical** | MOBL-10 |
 | 2 | Use `countDistinct(dt.rum.session.id)` for unique session counts | Never use `count()` for sessions -- each session generates many events | **Critical** | MOBL-10 |

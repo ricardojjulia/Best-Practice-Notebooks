@@ -1,6 +1,6 @@
 # M2S-01: Step 1 — Discover: Understand SaaS Differences
 
-> **Series:** M2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 The first step in any Managed-to-SaaS migration is understanding what you are moving to and why. This notebook helps you document the benefits of Dynatrace SaaS for your organization, take inventory of your current Managed environment, and confirm your use cases and goals for the upgrade.
 
@@ -129,6 +129,11 @@ Before planning the migration, take a complete inventory of what exists in your 
 // Count total monitored hosts
 fetch dt.entity.host
 | summarize hostCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hostCount = count()
+
 ```
 
 ```dql
@@ -152,6 +157,11 @@ curl -s "https://{managed-url}/api/v2/entities?entitySelector=type(HOST)&pageSiz
 // Count total monitored services
 fetch dt.entity.service
 | summarize serviceCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize serviceCount = count()
+
 ```
 
 ```dql
@@ -167,6 +177,7 @@ fetch dt.entity.service
 // Count monitored web applications
 fetch dt.entity.application
 | summarize appCount = count()
+
 ```
 
 ### Synthetic Test Inventory
@@ -175,6 +186,7 @@ fetch dt.entity.application
 // Count synthetic monitors
 fetch dt.entity.synthetic_test
 | summarize syntheticCount = count()
+
 ```
 
 ```dql
@@ -186,7 +198,7 @@ fetch dt.entity.synthetic_test
 
 ### OneAgent Version Assessment
 
-Understanding your OneAgent version spread is important because SaaS supports a rolling 9–12 month version window. Agents older than this window must be updated before or during migration.
+Understanding your OneAgent version spread is important because SaaS supports a rolling 9-month (Standard) / 12-month (Enterprise) version window. Agents older than this window must be updated before or during migration.
 
 ```dql
 // OneAgent versions across hosts
@@ -202,6 +214,7 @@ fetch dt.entity.host
 fetch dt.entity.active_gate
 | fieldsAdd entity.name
 | summarize activeGateCount = count()
+
 ```
 
 ### Environment Size Summary

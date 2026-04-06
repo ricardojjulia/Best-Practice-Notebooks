@@ -1,6 +1,6 @@
 # Your First Queries
 
-> **Series:** ONBRD | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Learning DQL Fundamentals
 Dynatrace Query Language (DQL) is how you access data in Grail. This notebook introduces the core concepts and patterns you'll use daily.
@@ -93,6 +93,11 @@ fetch spans, from:-1h
 // Fetch entity data (hosts)
 fetch dt.entity.host
 | limit 10
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | limit 10
+
 ```
 
 ```dql
@@ -134,7 +139,7 @@ fetch logs, from:-1h
 ```
 
 ```dql
-// Filter with OR condition
+// Filter with or condition
 fetch logs, from:-1h
 | filter loglevel == "error" or loglevel == "warn"
 | limit 20
@@ -301,7 +306,7 @@ fetch spans, from: now() - 1h
 Control the time range for your queries.
 
 ```dql
-// Last hour (using from: parameter)
+// Last getHour(using from: parameter)
 fetch logs, from: now() - 1h
 | summarize count()
 ```

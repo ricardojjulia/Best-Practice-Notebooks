@@ -1,6 +1,6 @@
 # Organizing Your Environment
 
-> **Series:** ONBRD | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Tags, Segments, and Naming Conventions
 As your Dynatrace environment grows, organization becomes critical. This notebook covers how to structure your environment with tags, segments, and naming conventions for maintainability and access control.
@@ -22,6 +22,49 @@ As your Dynatrace environment grows, organization becomes critical. This noteboo
 - Admin or Configurator access to Dynatrace
 - Entities discovered (hosts, services)
 - Understanding of your organizational structure
+
+### OneAgent Attribute Enrichment (OneAgent 1.331+)
+
+> **Requires:** OneAgent version **1.331** or later
+
+OneAgent can enrich **all telemetry signals** (metrics, spans, logs, events, entities) with custom metadata at the source — before data reaches the Dynatrace platform. This is more efficient than server-side tagging (auto-tags) because enrichment happens on the host and propagates to all Smartscape nodes.
+
+**Primary Fields** (standardized from Semantic Dictionary):
+- `dt.security_context` — data governance and access control
+- `dt.cost.costcenter` — cost allocation
+- `dt.cost.product` — product attribution
+
+**Primary Tags** (custom key-value pairs):
+- `primary_tags.environment` — environment identification (production, staging, etc.)
+- `primary_tags.team` — team ownership
+- `primary_tags.business_unit` — organizational unit
+
+**Configuration:**
+
+```bash
+# Set during OneAgent installation
+Dynatrace-OneAgent-Linux.sh --set-host-tag="primary_tags.environment=production" --set-host-tag="dt.security_context=confidential"
+
+# Set on existing agents via oneagentctl
+oneagentctl --set-host-tag="primary_tags.environment=production"
+oneagentctl --set-host-tag="dt.cost.costcenter=12345"
+
+# Per-process via environment variable (overrides host-level)
+DT_TAGS="primary_tags.team=platform primary_tags.environment=production"
+```
+
+**Benefits over auto-tagging:**
+| Aspect | Auto-Tags (Server-Side) | Attribute Enrichment (Agent-Side) |
+|--------|------------------------|----------------------------------|
+| When applied | After data arrives at platform | At the source, before transmission |
+| Scope | Entity tags only | All signals: metrics, spans, logs, events, entities |
+| Grail integration | Limited | Full — feeds OpenPipeline routing, bucket assignment, permissions |
+| Cost allocation | Not supported | `dt.cost.costcenter`, `dt.cost.product` fields |
+| Security context | Not supported | `dt.security_context` for data governance |
+
+> **See:** [Primary Grail fields and tags enrichment through OneAgent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment)
+
+> **Version Support Policy:** OneAgent and ActiveGate versions are supported for **9 months (Standard)** or **12 months (Enterprise)**. Third-party technologies are supported for 6 months beyond vendor EOL. See [Support Policy](https://www.dynatrace.com/company/trust-center/support-policy/).
 
 <a id="why-organization-matters"></a>
 ## 1. Why Organization Matters
@@ -256,6 +299,13 @@ fetch dt.entity.host
 | filter contains(entity.name, "prod")
 | fields entity.name
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | filter contains(name, "prod")
+// | fields name
+// | limit 20
+
 ```
 
 ```dql
@@ -271,6 +321,13 @@ fetch dt.entity.service
 | filter contains(entity.name, "checkout")
 | fields entity.name, serviceType
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | filter contains(name, "checkout")
+// | fields name, serviceType
+// | limit 20
+
 ```
 
 ```dql

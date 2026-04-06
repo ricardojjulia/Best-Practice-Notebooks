@@ -1,6 +1,6 @@
 # OpenPipeline Migration Guide: Part 2
 
-> **Series:** OPMIG | **Notebook:** 2 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG | **Notebook:** 2 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Architecture & Key Concepts
 ---
@@ -280,7 +280,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 | Limit | Value | Behavior When Exceeded |
 |-------|-------|------------------------|
 | **Max record size (after processing)** | 16 MB | Record is **dropped**, logged in audit |
-| **Max record size (before processing)** | 1 MB | Ingestion rejected with 413 error |
+| **Max record size (before processing)** | 10 MB | Ingestion rejected with 413 error |
 | **Working memory per record** | 16 MB | Processing fails, record dropped |
 | **Log attribute size** | 32 KB | Attribute value **truncated** |
 | **Max field name length** | 255 characters | Field creation fails |
@@ -293,10 +293,10 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 | Limit | Value | Impact |
 |-------|-------|--------|
 | **Max pipelines per record** | 5 | A record can be processed by up to 5 different pipelines. After 5, data extraction stops but the record is still persisted. |
-| **Max processors per pipeline** | 50 | Cannot add more processors to pipeline |
+| **Max processors per pipeline** | 1,000 | Cannot add more processors to pipeline |
 | **Max DQL commands per processor** | 10 commands | Split complex logic into multiple processors |
 | **Max parse operations per processor** | 100 patterns | Create additional parse processors |
-| **Max fields per record** | 1000 fields | Additional fields ignored |
+| **Max fields per record** | 500 fields | Additional fields ignored |
 | **Processing timeout per record** | 30 seconds | Record dropped if exceeded |
 | **Max processor name length** | 100 characters | Validation error |
 
@@ -305,7 +305,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 | Data Type | Accepted Range | Records Outside Range |
 |-----------|---------------|----------------------|
 | **Logs** | 24 hours past to 10 minutes future | **Dropped** |
-| **Spans** | 2 hours past | **Dropped** |
+| **Spans** | 60 minutes past (end time) | **Dropped** |
 | **Events** | 24 hours past to 10 minutes future | **Dropped** |
 | **Business Events** | 24 hours past to 10 minutes future | **Dropped** |
 | **Metrics** | 1 hour past to 1 minute future | **Dropped** |
@@ -316,7 +316,7 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 
 | Limit | Value | Scope |
 |-------|-------|-------|
-| **Max custom pipelines** | 30 pipelines | Per configuration scope (logs, spans, etc.) |
+| **Max custom pipelines** | 100 pipelines | Per configuration scope (logs, spans, etc.) |
 | **Max dynamic routes** | 100 routes | Per configuration scope |
 | **Max conditions per route** | 10 conditions | Combine with AND/OR operators |
 | **Max pipeline name length** | 100 characters | Validation error |

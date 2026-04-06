@@ -22,6 +22,7 @@ Comprehensive guide to identity and access management in Dynatrace.
 10. [Templated Policy Assignments](markdown/-[IAM]-10-templated-policy-assignments.md) — Policy templates and bulk assignments
 11. [[WORKSHOP] Policy Persona Simulation](markdown/-[IAM]-11-[WORKSHOP]-policy-persona.md) — Interactive workshop: simulate policy behavior as different personas
 12. [API Provisioning & Validation](markdown/-[IAM]-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API
+99. [Best Practice Summary](markdown/-[IAM]-99-best-practice-summary.md) — Consolidated best practices from the IAM series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

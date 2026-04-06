@@ -1,11 +1,10 @@
 # CLOUD-06: GCP Integration
 
-> **Series:** CLOUD | **Notebook:** 6 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 6 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 This notebook covers Dynatrace integration with Google Cloud Platform (GCP). You will learn how to configure GCP monitoring, authenticate via service accounts, explore supported GCP services, query GCP entities and metrics, and monitor GKE and Cloud Run workloads.
-
 
 ---
 
@@ -22,7 +21,6 @@ This notebook covers Dynatrace integration with Google Cloud Platform (GCP). You
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook covers Dynatrace integration with Google Cloud Platform (GCP). You
 | **GCP Project** | With service account configured for Dynatrace |
 | **Connection** | Clouds app or Helm-based GKE integration (recommended for SaaS) or Environment ActiveGate (classic) |
 | **Prior Knowledge** | CLOUD-01 fundamentals |
-
 
 <a id="gcp-architecture"></a>
 
@@ -105,7 +102,6 @@ To monitor multiple GCP projects with a single integration:
 
 > **Best Practice:** Use a dedicated GCP project for monitoring resources (service accounts, Pub/Sub topics) to keep billing and IAM clean.
 
-
 <a id="supported-services"></a>
 
 ## 3. Supported GCP Services
@@ -131,7 +127,6 @@ To monitor multiple GCP projects with a single integration:
 | Cloud SQL | CPU, connections, storage, replication lag | 3-5 minutes |
 | BigQuery | Slot utilization, query count, bytes processed | 5-10 minutes |
 
-
 <a id="querying-entities"></a>
 
 ## 4. Querying GCP Entities
@@ -140,33 +135,49 @@ To monitor multiple GCP projects with a single integration:
 
 GCP compute instances that run OneAgent appear as regular host entities. Cloud-specific entities appear under their dedicated entity types.
 
-
 ```dql
 // List all hosts (includes GCE instances with OneAgent)
 fetch dt.entity.host
 | fieldsKeep id, entity.name, tags
 | sort entity.name asc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsKeep id, name, tags
+// | sort name asc
+// | limit 20
+
 ```
 
 ### List Kubernetes Clusters (Including GKE)
-
 
 ```dql
 // List all Kubernetes clusters (GKE clusters appear here)
 fetch dt.entity.kubernetes_cluster
 | fieldsKeep id, entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fieldsKeep id, name, tags
+// | sort name asc
+
 ```
 
 ### GCP Service Entity Count
-
 
 ```dql
 // Count cloud application entities (includes GKE workloads, Cloud Run)
 fetch dt.entity.cloud_application
 | summarize resource_count = count()
 | fieldsAdd resource_type = "Cloud Applications (GKE/Cloud Run)"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_DEPLOYMENT
+// | summarize resource_count = count()
+// | fieldsAdd resource_type = "Cloud Applications (GKE/Cloud Run)"
+
 ```
 
 <a id="gke-monitoring"></a>
@@ -186,7 +197,6 @@ Google Kubernetes Engine (GKE) is monitored with the DynaKube Operator, similar 
 
 ### GKE Container Metrics
 
-
 ```dql
 // Top 10 containers by CPU usage in the last hour
 timeseries containerCpu = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{k8s.container.name}
@@ -197,7 +207,6 @@ timeseries containerCpu = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{
 
 ### GKE Node Utilization
 
-
 ```dql
 // Node CPU utilization across GKE nodes in the last hour
 timeseries nodeCpu = avg(dt.kubernetes.node.cpu_usage), from:-1h, by:{dt.entity.kubernetes_node}
@@ -207,7 +216,6 @@ timeseries nodeCpu = avg(dt.kubernetes.node.cpu_usage), from:-1h, by:{dt.entity.
 ```
 
 ### GKE Pod Events
-
 
 ```dql
 // Kubernetes warning events in the last 6 hours
@@ -246,7 +254,6 @@ Cloud Run is GCP's serverless container platform. It shares some monitoring patt
 | **Monitoring** | OneAgent in container | Lambda Layer |
 | **Cold start** | Container pull + startup | Runtime initialization |
 
-
 ```dql
 // Cloud Run service spans in the last hour
 fetch spans, from:-1h
@@ -280,7 +287,6 @@ GCP uses a project-based hierarchy that maps to Dynatrace as follows:
 | **Segment by project** | Create Dynatrace segments per GCP project for access control |
 | **Monitor billing exports** | Forward BigQuery billing data to Dynatrace for cost correlation |
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -297,8 +303,6 @@ GCP uses a project-based hierarchy that maps to Dynatrace as follows:
 - **CLOUD-07: CloudWatch Log Ingestion** — Log forwarding patterns (applicable to GCP via Pub/Sub)
 - **CLOUD-08: Multi-Cloud Patterns** — Unified monitoring across GCP and other providers
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

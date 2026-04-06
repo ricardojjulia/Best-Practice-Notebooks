@@ -1,6 +1,6 @@
 # IAM-99: Best Practice Summary
 
-> **Series:** IAM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** IAM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -36,7 +36,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-01, IAM-02*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 1 | Configure SSO before creating groups or policies | SAML 2.0 IdP integration in Account Management > Identity providers | **Critical** | Auth |
 | 2 | Use SAML 2.0 with signed assertions | IdP configuration: Sign assertions = Required | **Critical** | Auth |
@@ -54,7 +54,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-03, IAM-06*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 10 | Use the Matrix group pattern for enterprises (>50 users) | Groups = `<scope>-<team>-<role>` (e.g., `dt-checkout-admins`, `dt-checkout-viewers`) | **Recommended** | Groups |
 | 11 | Prefix all Dynatrace groups with `dt-` | Naming: `dt-<team>-<role>`, lowercase, hyphens only, under 50 characters | **Critical** | Groups |
@@ -72,15 +72,15 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-04, IAM-10*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 19 | Start with default policies, add custom only when needed | Use `environment-viewer`, `environment-editor`, `environment-admin` as baseline. Create custom policies for team-scoped or capability-scoped access | **Recommended** | Policies |
 | 20 | Layer default + custom policies per group | Group gets `environment-viewer` (base read) + custom policy (scoped write). Never rely on custom policy alone for read access | **Recommended** | Policies |
 | 21 | Use `${bindParam:...}` templated policies for multi-team scoping | One template policy + N bindings instead of N identical policies. Naming: `tpl-<scope>-<permission>` | **Recommended** | Policies |
 | 22 | Apply least privilege: grant minimum required service:resource:action | Each policy statement = `ALLOW <service>:<resource>:<action>`. No wildcards unless role genuinely needs broad access | **Critical** | Policies |
 | 23 | Use WHERE conditions to scope storage access by security context | `ALLOW storage:logs:read WHERE storage:dt.security_context = "team-name"` | **Critical** | Policies |
-| 24 | Use `storage:bucket.name` conditions for hard data isolation | `ALLOW storage:logs:read WHERE storage:bucket.name = "team_logs"` for compliance-grade team isolation | **Critical** | Policies |
-| 25 | Combine bucket + security context for defense in depth | `WHERE storage:bucket.name = "team_logs" AND storage:dt.security_context = "team"` | **Optional** | Policies |
+| 24 | Use `storage:bucket-name` conditions for hard data isolation | `ALLOW storage:logs:read WHERE storage:bucket-name = "team_logs"` for compliance-grade team isolation | **Critical** | Policies |
+| 25 | Combine bucket + security context for defense in depth | `WHERE storage:bucket-name = "team_logs" AND storage:dt.security_context = "team"` | **Optional** | Policies |
 | 26 | Version-control all policies via GitOps (Monaco or Terraform) | Store policy YAML in git. PR review before apply. CI/CD deploys to environments | **Recommended** | Policies |
 | 27 | Test every custom policy in a non-production environment first | Create test group + test user, verify intended access works AND unintended access is blocked | **Critical** | Policies |
 
@@ -90,7 +90,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-05*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 28 | Define boundaries across all three domains | Every boundary must include: `environment:management-zone`, `storage:dt.security_context`, AND `settings:dt.security_context` | **Critical** | Boundaries |
 | 29 | Include "shared" context in team boundaries | `storage:dt.security_context IN ("team-a", "shared", "infrastructure")` for infrastructure visibility | **Recommended** | Boundaries |
@@ -107,7 +107,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-06*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 36 | Use SCIM for automated user/group sync (>50 users) | IdP SCIM endpoint to Dynatrace. Enable: Create Users, Update Attributes, Deactivate Users, Push Groups | **Recommended** | Lifecycle |
 | 37 | Use JIT provisioning only if SCIM is unavailable | Account Management > Identity providers > Enable auto-provision on login. Always configure a default group | **Optional** | Lifecycle |
@@ -123,7 +123,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-06, IAM-12*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 43 | One OAuth client per application | Never share clients across apps. Naming: `<app>-<environment>-<purpose>` | **Critical** | Tokens |
 | 44 | Grant minimum OAuth scopes | Only grant scopes the integration needs. Common: `storage:logs:read`, `storage:metrics:read`, `settings:objects:read` | **Critical** | Tokens |
@@ -140,7 +140,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-07*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 51 | Set audit log retention to match compliance framework | SOC2: 1 year. SOX: 7 years. HIPAA: 6 years. PCI-DSS: 1 year online + archive | **Critical** | Audit |
 | 52 | Monitor failed logins and alert on brute-force patterns | Alert: >5 failed logins from same user in 10 min = Warning. >20 failed logins any user in 10 min = Critical | **Critical** | Audit |
@@ -157,7 +157,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-01, IAM-08*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 59 | Adopt the hybrid governance model | Central IAM team owns: account-level policies, production access, policy templates, audit. Team leads own: non-prod access, group membership | **Recommended** | Governance |
 | 60 | Restrict account-level permissions to IAM and platform teams | `account-iam-admin`: IAM team only. `account-viewer`: limited distribution. No developers with account-level permissions | **Critical** | Governance |
@@ -174,7 +174,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 *Source: IAM-09, IAM-12*
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 67 | Follow the 8-step diagnostic methodology for every access issue | 1) Authenticate 2) User exists 3) Correct groups 4) Policies grant access 5) Conditions met 6) Boundary allows 7) No conflicts 8) Data exists | **Recommended** | Operations |
 | 68 | Collect standard information before troubleshooting | Required: user email, exact error message, action attempted, timestamp, recent changes (role, team, IdP) | **Recommended** | Operations |

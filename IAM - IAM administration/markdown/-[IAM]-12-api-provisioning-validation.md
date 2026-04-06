@@ -1,6 +1,6 @@
 # IAM-12: API Provisioning & Validation Scripts
 
-> **Series:** IAM | **Notebook:** 12 of 12 | **Created:** March 2026 | **Last Updated:** 03/05/2026
+> **Series:** IAM | **Notebook:** 12 of 12 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -915,8 +915,8 @@ Use this query to confirm that security context values match what your templated
 // Show distinct security context values in logs (last 1h)
 // These values must match the "team" parameter in your templated data policy bindings
 fetch logs, from:-1h
-| filter isNotNull(storage.dt.security_context)
-| summarize log_count = count(), by:{storage.dt.security_context}
+| filter isNotNull(dt.security_context)
+| summarize log_count = count(), by:{dt.security_context}
 | sort log_count desc
 ```
 
@@ -1010,7 +1010,7 @@ If your script creates groups but then silently stops:
 If users in a templated-policy group can't see data:
 
 1. **Verify binding parameters** — Use the Report script (Section 3) to confirm `team=<value>` is set
-2. **Verify security context** — Run the DQL query in Section 5 to confirm `storage.dt.security_context` values match the binding parameter
+2. **Verify security context** — Run the DQL query in Section 5 to confirm `dt.security_context` values match the binding parameter
 3. **Check bucket assignment** — If using bucket-level policies, verify data is routed to the expected bucket via OpenPipeline
 4. **Check evaluation order** — A DENY from another policy will override the ALLOW. Use the audit DQL to check for conflicting policies
 

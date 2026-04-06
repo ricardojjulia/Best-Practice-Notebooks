@@ -21,6 +21,7 @@ Framework for assessing and advancing Dynatrace observability adoption across th
 - [ADOPT-03: Success Metrics](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-%5BADOPT%5D-03-success-metrics.md) — Defining KPIs and measuring adoption
 - [ADOPT-04: Team Enablement](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-%5BADOPT%5D-04-team-enablement.md) — Training and organization strategies
 - [ADOPT-05: Optimization Roadmap](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-%5BADOPT%5D-05-optimization-roadmap.md) — Building your adoption roadmap
+- [ADOPT-99: Best Practice Summary](ADOPT%20-%20Observability%20adoption%20%26%20maturity/markdown/-%5BADOPT%5D-99-best-practice-summary.md) — Consolidated best practices from the ADOPT series
 
 ### [AUTOM - Dynatrace automation](AUTOM%20-%20Dynatrace%20automation/README.md)
 Comprehensive guide to automating Dynatrace configuration and operations.
@@ -32,6 +33,7 @@ Comprehensive guide to automating Dynatrace configuration and operations.
 - [AUTOM-06: SDKs](AUTOM%20-%20Dynatrace%20automation/markdown/-%5BAUTOM%5D-06-sdks.md) — Using Dynatrace SDKs for automation
 - [AUTOM-07: CI/CD Integration](AUTOM%20-%20Dynatrace%20automation/markdown/-%5BAUTOM%5D-07-cicd-integration.md) — Integrating Dynatrace into CI/CD pipelines
 - [AUTOM-08: Migration Automation](AUTOM%20-%20Dynatrace%20automation/markdown/-%5BAUTOM%5D-08-migration-automation.md) — Automating configuration migrations
+- [AUTOM-99: Best Practice Summary](AUTOM%20-%20Dynatrace%20automation/markdown/-%5BAUTOM%5D-99-best-practice-summary.md) — Consolidated best practices from the AUTOM series
 
 ### [BIZEV - Business events & funnel analysis](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/README.md)
 Turning business transactions into first-class observability data with Dynatrace Business Events.
@@ -41,6 +43,7 @@ Turning business transactions into first-class observability data with Dynatrace
 - [BIZEV-04: Revenue Impact Analysis](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-%5BBIZEV%5D-04-revenue-impact.md) — Quantifying business impact
 - [BIZEV-05: KPIs and Metrics](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-%5BBIZEV%5D-05-kpis-and-metrics.md) — Business metrics and dashboarding
 - [BIZEV-06: Executive Reporting](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-%5BBIZEV%5D-06-executive-reporting.md) — Creating business-focused reports
+- [BIZEV-99: Best Practice Summary](BIZEV%20-%20Business%20events%20%26%20funnel%20analysis/markdown/-%5BBIZEV%5D-99-best-practice-summary.md) — Consolidated best practices from the BIZEV series
 
 ### [CLOUD - Cloud provider integrations](CLOUD%20-%20Cloud%20provider%20integrations/README.md)
 Monitoring cloud infrastructure and services across AWS, Azure, and GCP with Dynatrace.
@@ -52,6 +55,7 @@ Monitoring cloud infrastructure and services across AWS, Azure, and GCP with Dyn
 - [CLOUD-06: GCP Integration](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-%5BCLOUD%5D-06-gcp-integration.md) — Connecting Google Cloud projects
 - [CLOUD-07: CloudWatch Log Ingestion](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-%5BCLOUD%5D-07-cloudwatch-log-ingestion.md) — Ingesting CloudWatch logs via OpenPipeline
 - [CLOUD-08: Multi-Cloud Observability Patterns](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-%5BCLOUD%5D-08-multi-cloud-patterns.md) — Managing multi-cloud strategies
+- [CLOUD-99: Best Practice Summary](CLOUD%20-%20Cloud%20provider%20integrations/markdown/-%5BCLOUD%5D-99-best-practice-summary.md) — Consolidated best practices from the CLOUD series
 
 ### [DASH - Dashboard design & building](DASH%20-%20Dashboard%20design%20%26%20building/README.md)
 Designing and building effective dashboards for different stakeholder audiences.
@@ -62,6 +66,7 @@ Designing and building effective dashboards for different stakeholder audiences.
 - [DASH-05: Engineering Dashboards](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-%5BDASH%5D-05-engineering-dashboards.md) — Technical deep-dive dashboards
 - [DASH-06: Variables and Filters](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-%5BDASH%5D-06-variables-and-filters.md) — Dynamic dashboard interactions
 - [DASH-07: Sharing and Reporting](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-%5BDASH%5D-07-sharing-and-reporting.md) — Distribution and scheduled exports
+- [DASH-99: Best Practice Summary](DASH%20-%20Dashboard%20design%20%26%20building/markdown/-%5BDASH%5D-99-best-practice-summary.md) — Consolidated best practices from the DASH series
 
 ### [DBMON - Database monitoring](DBMON%20-%20Database%20monitoring/README.md)
 End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
@@ -71,6 +76,7 @@ End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
 - [DBMON-04: Cache and Messaging Monitoring](DBMON%20-%20Database%20monitoring/markdown/-%5BDBMON%5D-04-cache-and-messaging.md) — Redis, Memcached, RabbitMQ, Kafka
 - [DBMON-05: Query Analysis](DBMON%20-%20Database%20monitoring/markdown/-%5BDBMON%5D-05-query-analysis.md) — Performance analysis and optimization
 - [DBMON-06: Dashboards and Alerting](DBMON%20-%20Database%20monitoring/markdown/-%5BDBMON%5D-06-dashboards-and-alerting.md) — Database performance dashboards
+- [DBMON-99: Best Practice Summary](DBMON%20-%20Database%20monitoring/markdown/-%5BDBMON%5D-99-best-practice-summary.md) — Consolidated best practices from the DBMON series
 
 ### [IAM - IAM administration](IAM%20-%20IAM%20administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
@@ -86,6 +92,7 @@ Enterprise identity and access management administration for Dynatrace.
 - [IAM-10: Templated Policy Assignments](IAM%20-%20IAM%20administration/markdown/-%5BIAM%5D-10-templated-policy-assignments.md) — Policy templates and bulk assignments
 - [IAM-11: [WORKSHOP] Policy Persona Simulation](IAM%20-%20IAM%20administration/markdown/-%5BIAM%5D-11-%5BWORKSHOP%5D-policy-persona.md) — Interactive workshop: simulate policy behavior as different personas
 - [IAM-12: API Provisioning & Validation](IAM%20-%20IAM%20administration/markdown/-%5BIAM%5D-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API
+- [IAM-99: Best Practice Summary](IAM%20-%20IAM%20administration/markdown/-%5BIAM%5D-99-best-practice-summary.md) — Consolidated best practices from the IAM series
 
 ### [K8S - Kubernetes monitoring](K8S%20-%20Kubernetes%20monitoring/README.md)
 Best practices for monitoring Kubernetes with Dynatrace.
@@ -102,6 +109,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 - [K8S-11: Multi-Tool Coexistence](K8S%20-%20Kubernetes%20monitoring/markdown/-%5BK8S%5D-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
 - [K8S-12: Specialized Monitoring](K8S%20-%20Kubernetes%20monitoring/markdown/-%5BK8S%5D-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
 - [K8S-13: Kafka Monitoring with Kpow](K8S%20-%20Kubernetes%20monitoring/markdown/-%5BK8S%5D-13-kafka-monitoring-with-kpow.md) — Kafka observability using Kpow Prometheus metrics
+- [K8S-99: Best Practice Summary](K8S%20-%20Kubernetes%20monitoring/markdown/-%5BK8S%5D-99-best-practice-summary.md) — Consolidated best practices from the K8S series
 
 ### [M2S - Managed to SaaS migration](M2S%20-%20Managed%20to%20SaaS%20migration/README.md)
 Guide for migrating from Dynatrace Managed to Dynatrace SaaS.
@@ -130,6 +138,7 @@ Dynatrace mobile Real User Monitoring (RUM) for iOS, Android, and cross-platform
 - [MOBL-10: DQL for Mobile Analytics](MOBL%20-%20Mobile%20monitoring/markdown/-%5BMOBL%5D-10-dql-for-mobile.md) — Query reference for mobile entities, crashes, and performance
 - [MOBL-11: Dashboards & Alerting](MOBL%20-%20Mobile%20monitoring/markdown/-%5BMOBL%5D-11-dashboards-and-alerting.md) — KPI dashboards with anomaly detection and metric event alerts
 - [MOBL-12: Advanced Instrumentation](MOBL%20-%20Mobile%20monitoring/markdown/-%5BMOBL%5D-12-advanced-instrumentation.md) — Custom events, nested actions, A/B testing, and multi-app strategies
+- [MOBL-99: Best Practice Summary](MOBL%20-%20Mobile%20monitoring/markdown/-%5BMOBL%5D-99-best-practice-summary.md) — Consolidated best practices from the MOBL series
 
 ### [MZ2POL - Management Zone to Policy migration](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/README.md)
 Tools and guidance for migrating from Management Zones to Policy-based access control.
@@ -142,6 +151,7 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 - [MZ2POL-06: Migration Execution](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-06-migration-execution.md) — Executing the migration
 - [MZ2POL-07: Validation & Troubleshooting](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-07-validation-troubleshooting.md) — Validating and resolving issues
 - [MZ2POL-08: Templated Policies Migration](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-08-templated-policies-migration.md) — Policy templates for bulk MZ migration
+- [MZ2POL-99: Best Practice Summary](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-99-best-practice-summary.md) — Consolidated best practices from the MZ2POL series
 
 ### [ONBRD - Dynatrace onboarding](ONBRD%20-%20Dynatrace%20onboarding/README.md)
 Step-by-step onboarding series for new Dynatrace users.
@@ -155,6 +165,7 @@ Step-by-step onboarding series for new Dynatrace users.
 - [ONBRD-08: Your First Queries](ONBRD%20-%20Dynatrace%20onboarding/markdown/-%5BONBRD%5D-08-your-first-queries.md) — Introduction to DQL
 - [ONBRD-09: Setting Up Alerts](ONBRD%20-%20Dynatrace%20onboarding/markdown/-%5BONBRD%5D-09-setting-up-alerts.md) — Alerting and notifications
 - [ONBRD-10: Building Dashboards](ONBRD%20-%20Dynatrace%20onboarding/markdown/-%5BONBRD%5D-10-building-dashboards.md) — Creating stakeholder dashboards
+- [ONBRD-99: Best Practice Summary](ONBRD%20-%20Dynatrace%20onboarding/markdown/-%5BONBRD%5D-99-best-practice-summary.md) — Consolidated best practices from the ONBRD series
 
 ### [OPIPE - OpenPipeline Beyond Logs](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/README.md)
 Advanced OpenPipeline patterns for spans, metrics, business events, and security events — extending observability beyond log processing.
@@ -164,6 +175,7 @@ Advanced OpenPipeline patterns for spans, metrics, business events, and security
 - [OPIPE-04: Cardinality Management](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-04-cardinality-management.md) — Controlling dimension explosion across all scopes
 - [OPIPE-05: Business & Security Event Pipelines](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-05-business-and-security-event-pipelines.md) — Processing business transactions and security events at ingestion
 - [OPIPE-06: Cross-Scope Design Patterns](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-06-cross-scope-design-patterns.md) — Correlating logs, spans, metrics, and events across scopes
+- [OPIPE-99: Best Practice Summary](OPIPE%20-%20OpenPipeline%20Beyond%20Logs/markdown/-%5BOPIPE%5D-99-best-practice-summary.md) — Consolidated best practices from the OPIPE series
 
 ### [OPLOGS - OpenPipeline logs](OPLOGS%20-%20OpenPipeline%20logs/README.md)
 End-to-end guidance for managing logs with Dynatrace OpenPipeline.
@@ -175,6 +187,7 @@ End-to-end guidance for managing logs with Dynatrace OpenPipeline.
 - [OPLOGS-06: Topology](OPLOGS%20-%20OpenPipeline%20logs/markdown/-%5BOPLOGS%5D-06-topology.md) — Log topology and relationships
 - [OPLOGS-07: Analytics](OPLOGS%20-%20OpenPipeline%20logs/markdown/-%5BOPLOGS%5D-07-analytics.md) — Advanced log analytics
 - [OPLOGS-08: Security](OPLOGS%20-%20OpenPipeline%20logs/markdown/-%5BOPLOGS%5D-08-security.md) — Security, masking, and compliance
+- [OPLOGS-99: Best Practice Summary](OPLOGS%20-%20OpenPipeline%20logs/markdown/-%5BOPLOGS%5D-99-best-practice-summary.md) — Consolidated best practices from the OPLOGS series
 
 ### [OPMIG - OpenPipeline migration](OPMIG%20-%20OpenPipeline%20migration/README.md)
 Structured migration path to Dynatrace OpenPipeline.
@@ -187,28 +200,21 @@ Structured migration path to Dynatrace OpenPipeline.
 - [OPMIG-07: Metric & Event Extraction](OPMIG%20-%20OpenPipeline%20migration/markdown/-%5BOPMIG%5D-07-metric-event-extraction.md) — Deriving metrics/events from logs
 - [OPMIG-08: Security & Masking](OPMIG%20-%20OpenPipeline%20migration/markdown/-%5BOPMIG%5D-08-security-masking.md) — Security controls and data masking
 - [OPMIG-09: Troubleshooting & Validation](OPMIG%20-%20OpenPipeline%20migration/markdown/-%5BOPMIG%5D-09-troubleshooting-validation.md) — Validation and issue resolution
+- [OPMIG-99: Best Practice Summary](OPMIG%20-%20OpenPipeline%20migration/markdown/-%5BOPMIG%5D-99-best-practice-summary.md) — Consolidated best practices from the OPMIG series
 
 ### [ORGNZ - Organize data: buckets, segments, security](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/README.md)
 Organizing data in Dynatrace Grail using buckets, segments, and security context.
 - [ORGNZ-01: Introduction to Organizing Data](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-01-introduction-to-organizing-data.md) — Why data organization matters in Grail
-- [ORGNZ-01 \[LAB\]: Introduction to Organizing Data](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-01-%5BLAB%5D-introduction-to-organizing-data.md) — Hands-on exercises
 - [ORGNZ-02: Understanding Grail Buckets](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-02-understanding-grail-buckets.md) — Bucket fundamentals and data types
-- [ORGNZ-02 \[LAB\]: Understanding Grail Buckets](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-02-%5BLAB%5D-understanding-grail-buckets.md) — Hands-on exercises
 - [ORGNZ-03: Bucket Strategy and Design](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-03-bucket-strategy-and-design.md) — Naming conventions and retention planning
-- [ORGNZ-03 \[LAB\]: Bucket Strategy and Design](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-03-%5BLAB%5D-bucket-strategy-and-design.md) — Hands-on exercises
 - [ORGNZ-04: Permissions in Grail](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-04-permissions-in-grail.md) — Overview of Grail permission levels
 - [ORGNZ-05: Bucket-Level Access Control](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-05-bucket-level-access-control.md) — IAM policies for bucket access
-- [ORGNZ-05 \[LAB\]: Bucket-Level Access Control](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-05-%5BLAB%5D-bucket-level-access-control.md) — Hands-on exercises
 - [ORGNZ-06: Security Context](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-06-security-context.md) — Fine-grained access with dt.security_context
-- [ORGNZ-06 \[LAB\]: Security Context](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-06-%5BLAB%5D-security-context.md) — Hands-on exercises
 - [ORGNZ-07: Advanced Permission Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-07-advanced-permission-patterns.md) — Record and field-level permissions
-- [ORGNZ-07 \[LAB\]: Advanced Permission Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-07-%5BLAB%5D-advanced-permission-patterns.md) — Hands-on exercises
 - [ORGNZ-08: Grail Segments](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-08-grail-segments.md) — Logical data filtering with segments
-- [ORGNZ-08 \[LAB\]: Grail Segments](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-08-%5BLAB%5D-grail-segments.md) — Hands-on exercises
 - [ORGNZ-09: Enterprise Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-09-enterprise-patterns.md) — Combining mechanisms for enterprise governance
-- [ORGNZ-09 \[LAB\]: Enterprise Patterns](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-09-%5BLAB%5D-enterprise-patterns.md) — Hands-on exercises
 - [ORGNZ-10: Advanced Segment Definitions](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-10-advanced-segment-definitions.md) — Complex segment filters with multi-include patterns
-- [ORGNZ-10 \[LAB\]: Advanced Segment Definitions](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-10-%5BLAB%5D-advanced-segment-definitions.md) — Hands-on exercises
+- [ORGNZ-99: Best Practice Summary](ORGNZ%20-%20Organize%20data%3A%20buckets%2C%20segments%2C%20security/markdown/-%5BORGNZ%5D-99-best-practice-summary.md) — Consolidated best practices from the ORGNZ series
 
 ### [OTEL - OpenTelemetry integration](OTEL%20-%20OpenTelemetry%20integration/README.md)
 Integrating OpenTelemetry with Dynatrace for observability.
@@ -220,6 +226,7 @@ Integrating OpenTelemetry with Dynatrace for observability.
 - [OTEL-06: Logs Instrumentation](OTEL%20-%20OpenTelemetry%20integration/markdown/-%5BOTEL%5D-06-logs-instrumentation.md) — Instrumenting applications for logs
 - [OTEL-07: Dynatrace Integration](OTEL%20-%20OpenTelemetry%20integration/markdown/-%5BOTEL%5D-07-dynatrace-integration.md) — Sending OTel data to Dynatrace
 - [OTEL-08: Troubleshooting](OTEL%20-%20OpenTelemetry%20integration/markdown/-%5BOTEL%5D-08-troubleshooting.md) — Diagnosing OpenTelemetry issues
+- [OTEL-99: Best Practice Summary](OTEL%20-%20OpenTelemetry%20integration/markdown/-%5BOTEL%5D-99-best-practice-summary.md) — Consolidated best practices from the OTEL series
 
 ### [S2D - Splunk to Dynatrace migration](S2D%20-%20Splunk%20to%20Dynatrace%20migration/README.md)
 Guide for migrating monitoring capabilities from Splunk to Dynatrace.
@@ -232,6 +239,7 @@ Guide for migrating monitoring capabilities from Splunk to Dynatrace.
 - [S2D-07: Metric Creation](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-07-metric-creation.md) — Extracting metrics from logs via OpenPipeline
 - [S2D-08: Dashboard Migration](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-08-dashboard-migration.md) — Converting Splunk dashboards to Dynatrace
 - [S2D-09: Naming Standards](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-09-naming-standards.md) — Asset naming conventions and organization
+- [S2D-99: Best Practice Summary](S2D%20-%20Splunk%20to%20Dynatrace%20migration/markdown/-%5BS2D%5D-99-best-practice-summary.md) — Consolidated best practices from the S2D series
 
 ### [S2S - SaaS to SaaS Migration](S2S%20-%20SaaS%20to%20SaaS%20Migration/README.md)
 Comprehensive guide to migrating between Dynatrace SaaS environments.
@@ -256,6 +264,7 @@ Guidance for working with distributed traces and spans in Dynatrace.
 - [SPANS-06: Security](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-06-security.md) — Span security and data protection
 - [SPANS-07: Buckets & Pipeline](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-07-buckets-pipeline.md) — Storage and processing
 - [SPANS-08: Cost Optimization](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-08-cost-optimization.md) — Optimizing trace ingestion costs
+- [SPANS-99: Best Practice Summary](SPANS%20-%20Distributed%20tracing%20and%20spans/markdown/-%5BSPANS%5D-99-best-practice-summary.md) — Consolidated best practices from the SPANS series
 
 ### [SYNTH - Synthetic monitoring](SYNTH%20-%20Synthetic%20monitoring/README.md)
 Series covering Dynatrace Synthetic Monitoring.
@@ -265,6 +274,7 @@ Series covering Dynatrace Synthetic Monitoring.
 - [SYNTH-04: Private Locations](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-04-private-locations.md) — Deploying private synthetic locations
 - [SYNTH-05: Network Monitoring](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-05-network-monitoring.md) — Network performance monitoring
 - [SYNTH-06: Analytics](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-06-analytics.md) — Analyzing synthetic monitoring data
+- [SYNTH-99: Best Practice Summary](SYNTH%20-%20Synthetic%20monitoring/markdown/-%5BSYNTH%5D-99-best-practice-summary.md) — Consolidated best practices from the SYNTH series
 
 ### [WEBRUM - Web Real User Monitoring](WEBRUM%20-%20Web%20Real%20User%20Monitoring/README.md)
 Client-side monitoring and observability for web applications with session replay and performance metrics.
@@ -276,6 +286,7 @@ Client-side monitoring and observability for web applications with session repla
 - [WEBRUM-06: Performance Analysis](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-06-performance-analysis.md) — Page load and runtime performance
 - [WEBRUM-07: Session Replay](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-07-session-replay.md) — Visual reproduction of user sessions
 - [WEBRUM-08: Dashboards and Alerting](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-08-dashboards-and-alerting.md) — RUM metrics dashboards and alerts
+- [WEBRUM-99: Best Practice Summary](WEBRUM%20-%20Web%20Real%20User%20Monitoring/markdown/-%5BWEBRUM%5D-99-best-practice-summary.md) — Consolidated best practices from the WEBRUM series
 
 ### [WFLOW - Workflows and alert notifications](WFLOW%20-%20Workflows%20and%20alert%20notifications/README.md)
 Automating workflows and configuring alert notifications in Dynatrace.
@@ -288,6 +299,7 @@ Automating workflows and configuring alert notifications in Dynatrace.
 - [WFLOW-07: Remediation](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-07-remediation.md) — Automated remediation workflows
 - [WFLOW-08: JavaScript & HTTP](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-08-javascript-http.md) — JavaScript actions and HTTP requests
 - [WFLOW-09: Governance](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-09-governance.md) — Workflow governance and best practices
+- [WFLOW-99: Best Practice Summary](WFLOW%20-%20Workflows%20and%20alert%20notifications/markdown/-%5BWFLOW%5D-99-best-practice-summary.md) — Consolidated best practices from the WFLOW series
 
 ## How to Use
 

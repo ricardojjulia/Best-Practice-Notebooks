@@ -38,6 +38,8 @@ The S2S series follows a **9-step framework** (Discover through Optimize) suppor
 | 10 | **Cutover** | Full switch to target tenant |
 | 11 | **Decommission** | Source tenant |
 
+> **OneAgent Attribute Enrichment (1.331+):** OneAgent can enrich all telemetry (metrics, spans, logs, events) with primary fields (`dt.security_context`, `dt.cost.costcenter`) and primary tags (`primary_tags.environment`, `primary_tags.team`) at the source. More efficient than auto-tags — feeds directly into OpenPipeline routing, bucket assignment, and Grail permissions. Configure via `oneagentctl --set-host-tag` or `--set-host-tag` at install time. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
 ---
 
 ## Table of Contents

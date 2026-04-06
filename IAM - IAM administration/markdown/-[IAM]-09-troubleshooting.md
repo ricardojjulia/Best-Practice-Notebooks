@@ -1,6 +1,6 @@
 # Troubleshooting Access Issues
 
-> **Series:** IAM | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Systematic Diagnosis of IAM Problems
 Access issues are among the most common support requests. This notebook provides a systematic methodology for diagnosing and resolving IAM-related problems including permission denials, policy conflicts, and boundary issues.
@@ -390,7 +390,7 @@ fetch logs, from: now() - 7d
 ```
 
 ```dql
-// All audit events in last hour (for immediate troubleshooting)
+// All audit events in last getHour(for immediate troubleshooting)
 fetch logs, from: now() - 1h
 | filter matchesPhrase(log.source, "audit")
 | fields timestamp, content

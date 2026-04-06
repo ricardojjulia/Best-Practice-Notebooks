@@ -181,6 +181,47 @@ ALLOW storage:logs:read WHERE storage:dt.security_context MATCH ("crn-70400-*");
 ALLOW storage:logs:read WHERE storage:dt.security_context = "crn-70400-team";
 ```
 
+### OneAgent Attribute Enrichment (OneAgent 1.331+)
+
+> **Requires:** OneAgent version **1.331** or later
+
+OneAgent can enrich **all telemetry signals** (metrics, spans, logs, events, entities) with custom metadata at the source — before data reaches the Dynatrace platform. This is more efficient than server-side tagging (auto-tags) because enrichment happens on the host and propagates to all Smartscape nodes.
+
+**Primary Fields** (standardized from Semantic Dictionary):
+- `dt.security_context` — data governance and access control
+- `dt.cost.costcenter` — cost allocation
+- `dt.cost.product` — product attribution
+
+**Primary Tags** (custom key-value pairs):
+- `primary_tags.environment` — environment identification (production, staging, etc.)
+- `primary_tags.team` — team ownership
+- `primary_tags.business_unit` — organizational unit
+
+**Configuration:**
+
+```bash
+# Set during OneAgent installation
+Dynatrace-OneAgent-Linux.sh --set-host-tag="primary_tags.environment=production" --set-host-tag="dt.security_context=confidential"
+
+# Set on existing agents via oneagentctl
+oneagentctl --set-host-tag="primary_tags.environment=production"
+oneagentctl --set-host-tag="dt.cost.costcenter=12345"
+
+# Per-process via environment variable (overrides host-level)
+DT_TAGS="primary_tags.team=platform primary_tags.environment=production"
+```
+
+**Benefits over auto-tagging:**
+| Aspect | Auto-Tags (Server-Side) | Attribute Enrichment (Agent-Side) |
+|--------|------------------------|----------------------------------|
+| When applied | After data arrives at platform | At the source, before transmission |
+| Scope | Entity tags only | All signals: metrics, spans, logs, events, entities |
+| Grail integration | Limited | Full — feeds OpenPipeline routing, bucket assignment, permissions |
+| Cost allocation | Not supported | `dt.cost.costcenter`, `dt.cost.product` fields |
+| Security context | Not supported | `dt.security_context` for data governance |
+
+> **See:** [Primary Grail fields and tags enrichment through OneAgent](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment)
+
 ```dql
 // View logs with security context
 fetch logs, from:-1h

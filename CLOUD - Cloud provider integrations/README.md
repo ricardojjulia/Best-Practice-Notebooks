@@ -18,6 +18,7 @@ Monitoring cloud infrastructure and services across AWS, Azure, and GCP with Dyn
 6. [GCP Integration](markdown/-[CLOUD]-06-gcp-integration.md) — Connecting Google Cloud projects and monitoring GCP services
 7. [CloudWatch Log Ingestion](markdown/-[CLOUD]-07-cloudwatch-log-ingestion.md) — Ingesting AWS CloudWatch logs via Dynatrace OpenPipeline
 8. [Multi-Cloud Observability Patterns](markdown/-[CLOUD]-08-multi-cloud-patterns.md) — Best practices for managing observability across multiple clouds
+99. [Best Practice Summary](markdown/-[CLOUD]-99-best-practice-summary.md) — Consolidated best practices from the CLOUD series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

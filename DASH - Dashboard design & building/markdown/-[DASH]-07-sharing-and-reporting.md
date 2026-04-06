@@ -1,11 +1,10 @@
 # DASH-07: Sharing and Reporting
 
-> **Series:** DASH | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 A dashboard only delivers value when the right people can access it. This final notebook in the DASH series covers the full lifecycle of dashboard distribution — permission models, sharing with teams and stakeholders, scheduled reports via Dynatrace Workflows, exporting dashboard snapshots, managing dashboards as code through the Settings API, and version control patterns that keep your dashboard library maintainable.
-
 
 ---
 
@@ -21,7 +20,6 @@ A dashboard only delivers value when the right people can access it. This final 
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -30,7 +28,6 @@ A dashboard only delivers value when the right people can access it. This final 
 | **Permissions** | `document:documents:write`, `document:direct-shares:write`, `automation:workflows:write` |
 | **API Access** | API token with `ReadConfig` and `WriteConfig` scopes (for dashboard-as-code) |
 | **Prior Reading** | DASH-01 through DASH-06 |
-
 
 <a id="permission-models"></a>
 
@@ -64,7 +61,6 @@ Dynatrace provides granular control over who can view, edit, and manage dashboar
 
 > **Tip:** Limit editor access to prevent well-intentioned modifications from breaking dashboards. Encourage teams to clone and customize rather than editing shared originals.
 
-
 <a id="sharing-with-teams"></a>
 
 ## 2. Sharing with Teams
@@ -93,12 +89,11 @@ As your dashboard library grows, organization becomes critical.
 
 Track which dashboards are actually used to identify candidates for cleanup.
 
-
 ```dql
 // Audit trail: document access events over last 7 days
 fetch events, from:-7d
 | filter event.kind == "AUDIT_LOG"
-| filter event.type == "DOCUMENT_ACCESS" OR event.type == "DOCUMENT_READ"
+| filter event.type == "DOCUMENT_ACCESS" or event.type == "DOCUMENT_READ"
 | summarize access_count = count(), by:{event.type}
 | sort access_count desc
 ```
@@ -122,7 +117,6 @@ Dynatrace Workflows can automate dashboard reporting — running DQL queries on 
 
 This query would be used in a Workflow DQL action for a weekly executive report.
 
-
 ```dql
 // Weekly problem summary — suitable for automated report
 fetch dt.davis.problems, from:-7d
@@ -132,7 +126,6 @@ fetch dt.davis.problems, from:-7d
 ```
 
 ### Example: Daily Error Rate Summary
-
 
 ```dql
 // Daily error rate by service — automated operations report
@@ -146,7 +139,6 @@ fetch spans, from:-24h
 ```
 
 ### Example: Daily Log Volume Report
-
 
 ```dql
 // Daily log volume by level — automated capacity report
@@ -163,7 +155,6 @@ fetch logs, from:-24h
 | Operations daily | Daily (7 AM) | SRE team, on-call |
 | SLA compliance | Monthly (1st of month) | Account management, leadership |
 | Cost/volume tracking | Weekly | Platform team, finance |
-
 
 <a id="exporting-snapshots"></a>
 
@@ -192,7 +183,6 @@ curl -X GET "https://<environment>.apps.dynatrace.com/platform/document/v1/docum
 ```
 
 > **Note:** Dashboard export captures the definition (tiles, queries, variables) but not the current data. Re-importing will re-execute queries against the live environment.
-
 
 <a id="dashboard-as-code"></a>
 
@@ -233,7 +223,6 @@ configs:
 | **Disaster recovery** | Rebuild entire dashboard library from code |
 | **Standardization** | Enforce naming, layout, and variable conventions |
 
-
 <a id="version-control"></a>
 
 ## 6. Version Control Patterns
@@ -273,17 +262,26 @@ dashboards/
 
 Maintain a registry of which queries power which dashboards. This helps when DQL syntax changes or data sources are modified.
 
-
 ```dql
 // Service count — useful for tracking monitoring coverage
 fetch dt.entity.service
 | summarize total_services = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize total_services = count()
+
 ```
 
 ```dql
 // Host count — useful for tracking infrastructure coverage
 fetch dt.entity.host
 | summarize total_hosts = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize total_hosts = count()
+
 ```
 
 <a id="summary-and-wrap-up"></a>
@@ -313,8 +311,6 @@ In this notebook you learned:
 
 With this series complete, you have the knowledge to build a comprehensive dashboard strategy — from executive summaries to engineering deep-dives, with variables for reusability and automation for reporting.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

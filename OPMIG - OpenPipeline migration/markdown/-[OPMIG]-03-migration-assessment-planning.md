@@ -1,6 +1,6 @@
 # OpenPipeline Migration Guide: Part 3
 
-> **Series:** OPMIG | **Notebook:** 3 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG | **Notebook:** 3 of 9 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Migration Assessment & Planning
 ---
@@ -589,9 +589,9 @@ fetch logs, from: now() - 7d
     daily_avg = count() / 7,
     
     // COST SAVINGS FACTOR
-    debug_count = countIf(loglevel == "DEBUG" OR status == "DEBUG"),
-    trace_count = countIf(loglevel == "TRACE" OR status == "TRACE"),
-    health_checks = countIf(contains(toString(content), "health") OR contains(toString(content), "/ready")),
+    debug_count = countIf(loglevel == "DEBUG" or status == "DEBUG"),
+    trace_count = countIf(loglevel == "TRACE" or status == "TRACE"),
+    health_checks = countIf(contains(toString(content), "health") or contains(toString(content), "/ready")),
     
     // SECURITY FACTOR (indicators)
     potential_pii = countIf(
@@ -605,7 +605,7 @@ fetch logs, from: now() - 7d
     parsed_records = countIf(isNotNull(loglevel)),
     
     // ERROR RATE (criticality indicator)
-    error_count = countIf(loglevel == "ERROR" OR status == "ERROR"),
+    error_count = countIf(loglevel == "ERROR" or status == "ERROR"),
     
     unique_hosts = countDistinct(dt.entity.host)
   }, by: {log.source}

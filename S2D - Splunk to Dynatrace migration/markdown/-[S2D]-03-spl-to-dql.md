@@ -1,6 +1,6 @@
 # S2D-03: SPL to DQL Translation
 
-> **Series:** S2D | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** S2D | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -64,7 +64,7 @@ By the end of this notebook, you will be able to:
 | `sort -count` | `sort count desc` | Sort results |
 | `head 10` | `limit 10` | Limit results |
 | `eval new=field1+field2` | `fieldsAdd new = field1 + field2` | Calculate fields |
-| `rename old AS new` | `fieldsRename new = old` | Rename fields |
+| `rename old AS new` | `fieldsRename old, alias:new` | Rename fields |
 | `dedup field` | Not directly available | Use `summarize ... by:{field}` |
 
 ### String Matching
@@ -188,7 +188,7 @@ index=application (host="app-01" OR host="app-02") AND level="ERROR"
 ```dql
 // Combined AND/OR conditions
 fetch logs, from:-1h
-| filter (matchesPhrase(host.name, "app-01") OR matchesPhrase(host.name, "app-02"))
+| filter (matchesPhrase(host.name, "app-01") or matchesPhrase(host.name, "app-02"))
 | filter loglevel == "ERROR"
 | limit 100
 ```
@@ -267,7 +267,7 @@ index=application | rex field=_raw "status=(?<status>\d+)" | rex field=_raw "dur
 // Extract multiple fields from structured log
 fetch logs, from:-1h
 | parse content, "LD 'status=' INT:status LD 'duration=' INT:duration"
-| filter isNotNull(status) AND isNotNull(duration)
+| filter isNotNull(status) and isNotNull(duration)
 | summarize avg_duration = avg(duration), by:{status}
 ```
 
