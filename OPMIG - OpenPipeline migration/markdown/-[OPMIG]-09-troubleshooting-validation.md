@@ -1,6 +1,6 @@
 # OPMIG-09: Troubleshooting & Validation
 
-> **Series:** OPMIG | **Notebook:** 9 of 9 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** OPMIG | **Notebook:** 9 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 > **Level:** Intermediate  
 > **Prerequisites:** OPMIG-01 through OPMIG-08  
 > **Estimated Time:** 45 minutes  
@@ -317,8 +317,8 @@ fetch logs
    data record(
      content = "Payment processed: card=4111-1111-1111-1111, cvv=123"
    )
-   | fieldsAdd content = replaceAll(content, "\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b", "[PAN_REDACTED]")
-   | fieldsAdd content = replaceAll(content, "cvv[=:]?\\s*\\d{3,4}", "cvv=[REDACTED]")
+   | fieldsAdd content = replacePattern(content, "\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b", "[PAN_REDACTED]")
+   | fieldsAdd content = replacePattern(content, "cvv[=:]?\\s*\\d{3,4}", "cvv=[REDACTED]")
    | fields content
    
    // Expected: "Payment processed: card=[PAN_REDACTED], cvv=[REDACTED]"
@@ -575,13 +575,13 @@ fetch logs
 **Optimization Example:**
 
 ```dql
-// ❌ SLOW: Multiple replaceAll in sequence
-| fieldsAdd content = replaceAll(content, "pattern1", "X")
-| fieldsAdd content = replaceAll(content, "pattern2", "Y")
-| fieldsAdd content = replaceAll(content, "pattern3", "Z")
+// ❌ SLOW: Multiple replacePattern in sequence
+| fieldsAdd content = replacePattern(content, "pattern1", "X")
+| fieldsAdd content = replacePattern(content, "pattern2", "Y")
+| fieldsAdd content = replacePattern(content, "pattern3", "Z")
 
 // ✅ FAST: Single regex with alternation
-| fieldsAdd content = replaceAll(content, "(pattern1|pattern2|pattern3)", "[REDACTED]")
+| fieldsAdd content = replacePattern(content, "(pattern1|pattern2|pattern3)", "[REDACTED]")
 ```
 
 ```dql
@@ -769,9 +769,9 @@ fetch logs
 | fieldsAdd api_path = request_path
 
 // ✅ GOOD: Normalize to /api/users/{id}
-| fieldsAdd api_path = replaceAll(request_path, "/api/users/\\d+", "/api/users/{id}")
-| fieldsAdd api_path = replaceAll(api_path, "/api/orders/\\d+", "/api/orders/{id}")
-| fieldsAdd api_path = replaceAll(api_path, "/api/products/[a-f0-9-]+", "/api/products/{uuid}")
+| fieldsAdd api_path = replacePattern(request_path, "/api/users/\\d+", "/api/users/{id}")
+| fieldsAdd api_path = replacePattern(api_path, "/api/orders/\\d+", "/api/orders/{id}")
+| fieldsAdd api_path = replacePattern(api_path, "/api/products/[a-f0-9-]+", "/api/products/{uuid}")
 // Result: 20 normalized paths instead of 100,000+ unique paths
 ```
 

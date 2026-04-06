@@ -1,6 +1,6 @@
 # MOBL-04: Cross-Platform Frameworks
 
-> **Series:** MOBL | **Notebook:** 4 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL | **Notebook:** 4 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -212,6 +212,7 @@ fetch dt.entity.device_application
 | fields entity.name, id, tags
 | sort entity.name asc
 | limit 50
+
 ```
 
 You should see separate entries for your Android and iOS applications. If either is missing, revisit the configuration and ensure the Application ID and Beacon URL are correctly set for that platform.

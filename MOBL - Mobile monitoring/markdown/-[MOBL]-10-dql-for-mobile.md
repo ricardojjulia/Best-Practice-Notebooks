@@ -1,6 +1,6 @@
 # MOBL-10: DQL for Mobile Analytics
 
-> **Series:** MOBL | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -79,6 +79,7 @@ fetch dt.entity.device_application
 | fields entity.name, id, lifetime, tags
 | sort entity.name asc
 | limit 50
+
 ```
 
 **Expected output:** A table listing each mobile application entity with its display name, entity ID, lifetime (first seen to last seen), and any assigned tags.

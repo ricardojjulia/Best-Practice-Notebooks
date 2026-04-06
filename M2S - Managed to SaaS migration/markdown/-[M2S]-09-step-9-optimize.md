@@ -1,6 +1,6 @@
 # M2S-09: Step 9 — Optimize: Validate, Optimize, and Decommission
 
-> **Series:** M2S | **Notebook:** 9 of 9 | **Phase:** Run | **Step:** Optimize | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 9 of 9 | **Phase:** Run | **Step:** Optimize | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 The migration is functionally complete. Agents are reporting, configurations are applied, integrations are reconnected, SaaS-exclusive features are adopted, and users are trained. This final step closes the loop: validate that every success criterion is met, optimize the SaaS environment for long-term performance, obtain stakeholder sign-off, and decommission the Managed cluster.
 
@@ -96,30 +96,47 @@ Run each query below and compare the results against your Managed inventory from
 // Host count — compare to Step 1 inventory
 fetch dt.entity.host
 | summarize hostCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hostCount = count()
+
 ```
 
 ```dql
 // Service count — compare to Step 1 inventory
 fetch dt.entity.service
 | summarize serviceCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize serviceCount = count()
+
 ```
 
 ```dql
 // Application count — compare to Step 1 inventory
 fetch dt.entity.application
 | summarize appCount = count()
+
 ```
 
 ```dql
 // Process group count — compare to Step 1 inventory
 fetch dt.entity.process_group
 | summarize processGroupCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes PROCESS
+// | summarize processGroupCount = count()
+
 ```
 
 ```dql
 // Synthetic monitor count — compare to Step 1 inventory
 fetch dt.entity.synthetic_test
 | summarize syntheticCount = count()
+
 ```
 
 ### Entity Coverage Comparison

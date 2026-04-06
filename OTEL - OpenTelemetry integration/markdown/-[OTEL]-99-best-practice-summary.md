@@ -27,7 +27,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="collector-configuration"></a>
 ## 1. Collector Configuration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 1 | Always use the `batch` processor | `processors.batch.timeout: 10s`, `send_batch_size: 1000`, `send_batch_max_size: 1500` | Critical | OTEL-02 |
 | 2 | Always use the `memory_limiter` processor | `processors.memory_limiter.check_interval: 1s`, `limit_mib:` 80% of container memory, `spike_limit_mib:` 25% of limit | Critical | OTEL-02 |
@@ -43,7 +43,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="deployment-and-sizing"></a>
 ## 2. Deployment and Sizing
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 11 | Use DaemonSet (agent mode) for per-node collection | `kind: DaemonSet` in K8s manifest | Recommended | OTEL-03 |
 | 12 | Use Deployment (gateway mode) for centralized processing | `kind: Deployment` with `replicas: 2+` | Recommended | OTEL-03 |
@@ -59,7 +59,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="security"></a>
 ## 3. Security
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 21 | Store API tokens in Kubernetes Secrets | `kind: Secret`, reference via `secretKeyRef` | Critical | OTEL-03 |
 | 22 | Enable TLS on receiver endpoints | `tls.cert_file`, `tls.key_file` on `otlp.protocols.grpc` and `.http` | Critical | OTEL-03 |
@@ -72,7 +72,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="dynatrace-otlp-integration"></a>
 ## 4. Dynatrace OTLP Integration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 28 | Use OTLP/HTTP for direct Dynatrace ingest | `exporters.otlphttp.endpoint: https://{env-id}.live.dynatrace.com/api/v2/otlp` | Critical | OTEL-01, OTEL-07 |
 | 29 | Route gRPC through a Collector (gRPC is not supported for direct DT ingest) | Collector with `otlp` gRPC receiver + `otlphttp` exporter to Dynatrace | Critical | OTEL-01, OTEL-07 |
@@ -86,7 +86,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="resource-attributes-and-entity-mapping"></a>
 ## 5. Resource Attributes and Entity Mapping
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 36 | Always set `service.name` resource attribute | `resource.create({"service.name": "checkout-api"})` | Critical | OTEL-07, OTEL-08 |
 | 37 | Set `service.version` for release tracking | `"service.version": "1.2.3"` | Recommended | OTEL-07 |
@@ -98,7 +98,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="trace-instrumentation"></a>
 ## 6. Trace Instrumentation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 42 | Start with auto-instrumentation, add manual spans for business logic | Auto-instrument frameworks; add custom spans with `tracer.start_as_current_span()` | Recommended | OTEL-04 |
 | 43 | Use low-cardinality span names | `HTTP GET /users/{id}` not `HTTP GET /users/12345` | Critical | OTEL-04 |
@@ -115,7 +115,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="metrics-instrumentation"></a>
 ## 7. Metrics Instrumentation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 53 | Choose the correct instrument type | Counter for monotonic; Histogram for durations/sizes; UpDownCounter for gauges; ObservableGauge for current state | Critical | OTEL-05 |
 | 54 | Use hierarchical metric naming | `<domain>.<component>.<metric>` e.g. `http.server.request.duration` | Recommended | OTEL-05 |
@@ -131,7 +131,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="logs-instrumentation"></a>
 ## 8. Logs Instrumentation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 63 | Use the Log Bridge pattern (do not replace your logging library) | Attach `LoggingHandler` to standard Python logger; use Log4j/Logback appenders for Java | Critical | OTEL-06 |
 | 64 | Enable automatic log-trace correlation | Use OTel tracing + log bridge together; `trace_id` and `span_id` are injected automatically | Critical | OTEL-06 |
@@ -145,7 +145,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="semantic-conventions"></a>
 ## 9. Semantic Conventions
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 71 | Migrate to stable HTTP semantic conventions | Use `http.request.method` (not `http.method`), `http.response.status_code` (not `http.status_code`), `url.full` (not `http.url`) | Recommended | OTEL-01 |
 | 72 | Migrate to stable DB semantic conventions | Use `db.namespace` (not `db.name`), `db.query.text` (not `db.statement`), `db.operation.name` (not `db.operation`) | Recommended | OTEL-01 |
@@ -156,7 +156,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="performance-and-reliability"></a>
 ## 10. Performance and Reliability
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 76 | Use `spanmetrics` connector to derive metrics from traces | `connectors.spanmetrics` with histogram buckets `[100ms, 500ms, 1s, 5s]` | Optional | OTEL-02 |
 | 77 | Filter health-check spans at the Collector | `processors.filter.traces.span: ['attributes["http.url"] == "/health"']` | Recommended | OTEL-02 |
@@ -169,7 +169,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 <a id="troubleshooting-and-observability"></a>
 ## 11. Troubleshooting and Observability
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 83 | Enable `health_check` extension | `extensions.health_check.endpoint: 0.0.0.0:13133` | Critical | OTEL-02, OTEL-08 |
 | 84 | Enable `zpages` extension in non-production | `extensions.zpages.endpoint: 0.0.0.0:55679` | Recommended | OTEL-02, OTEL-08 |

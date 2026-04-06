@@ -1,11 +1,10 @@
 # BIZEV-03: Funnel Analysis
 
-> **Series:** BIZEV | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** BIZEV | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Conversion funnel analysis is one of the most powerful applications of business events. By tracking users through a sequence of steps — browse, add to cart, checkout, purchase — you can identify where customers drop off, measure conversion rates, and quantify the business impact of friction points. This notebook demonstrates how to build multi-step funnels from business events using DQL, calculate step-by-step conversion rates, and analyze the time users spend between funnel stages.
-
 
 ---
 
@@ -22,7 +21,6 @@ Conversion funnel analysis is one of the most powerful applications of business 
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ Conversion funnel analysis is one of the most powerful applications of business 
 | **Permissions** | `storage:bizevents:read` |
 | **Data** | Business events with sequential event types (e.g., browse, cart, checkout, purchase) |
 | **Knowledge** | BIZEV-01 fundamentals, DQL `summarize` and `countIf` |
-
 
 <a id="funnel-analysis-concepts"></a>
 
@@ -58,7 +55,6 @@ A **conversion funnel** models a sequence of steps that users take to complete a
 | **Drop-off rate** | 1 - step conversion rate | % leaving at each step |
 | **Time to convert** | Avg time from first to last step | Speed of conversion |
 
-
 <a id="building-a-basic-funnel"></a>
 
 ## 2. Building a Basic Funnel
@@ -66,7 +62,6 @@ A **conversion funnel** models a sequence of steps that users take to complete a
 The simplest funnel counts distinct users (or sessions) at each step. We use `countIf` to count events matching each step condition in a single query.
 
 > **Note:** Adapt the `event.type` values below to match your actual business event names. The examples use a generic e-commerce pattern.
-
 
 ```dql
 // Basic funnel — count events at each step over the last 24 hours
@@ -96,7 +91,6 @@ fetch bizevents, from:-24h
 
 Conversion rates reveal the percentage of users who proceed from one step to the next. This is the core metric for funnel optimization.
 
-
 ```dql
 // Calculate conversion rates between each funnel step
 fetch bizevents, from:-24h
@@ -118,7 +112,6 @@ fetch bizevents, from:-24h
 
 Drop-off analysis highlights where users abandon the process. The step with the highest drop-off rate is your biggest optimization opportunity.
 
-
 ```dql
 // Visualize funnel steps as a bar chart to see drop-off
 // Each row represents one funnel step
@@ -137,7 +130,7 @@ fetch bizevents, from:-24h
 | summarize started_checkout = countIf(event.type == "com.myapp.checkout.started"),
            completed_payment = countIf(event.type == "com.myapp.payment.processed"),
            by:{user_id}
-| filter started_checkout > 0 AND completed_payment == 0
+| filter started_checkout > 0 and completed_payment == 0
 | summarize abandoned_users = count()
 ```
 
@@ -146,7 +139,6 @@ fetch bizevents, from:-24h
 ## 5. Time Between Steps
 
 Understanding how long users take between funnel steps reveals friction points. A long delay between "add to cart" and "checkout" may indicate a confusing checkout flow or price comparison behavior.
-
 
 ```dql
 // Average time between cart and checkout (per user)
@@ -157,7 +149,7 @@ fetch bizevents, from:-24h
 | summarize cart_time = min(if(event.type == "com.myapp.cart.updated", then: timestamp)),
            checkout_time = min(if(event.type == "com.myapp.checkout.started", then: timestamp)),
            by:{user_id}
-| filter isNotNull(cart_time) AND isNotNull(checkout_time)
+| filter isNotNull(cart_time) and isNotNull(checkout_time)
 | fieldsAdd time_to_checkout_sec = (toDouble(unixMillisFromTimestamp(checkout_time)) - toDouble(unixMillisFromTimestamp(cart_time))) / 1000.0
 | filter time_to_checkout_sec > 0
 | summarize avg_seconds = avg(time_to_checkout_sec),
@@ -170,7 +162,6 @@ fetch bizevents, from:-24h
 ## 6. Funnel Segmentation
 
 Segmenting funnels by dimensions — device type, geographic region, customer tier — reveals which segments convert better and which need attention.
-
 
 ```dql
 // Funnel conversion rates segmented by event provider
@@ -200,7 +191,6 @@ fetch bizevents, from:-24h
 ## 7. Funnel Trends Over Time
 
 Track how conversion rates change over time to measure the impact of feature releases, marketing campaigns, or incidents.
-
 
 ```dql
 // Funnel step volumes over time
@@ -245,8 +235,6 @@ In this notebook, you learned:
 - [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/platform-modules/business-analytics)
 - [DQL summarize Command](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands/summarize-command)
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

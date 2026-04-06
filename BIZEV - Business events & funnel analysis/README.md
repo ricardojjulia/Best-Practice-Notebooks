@@ -16,6 +16,7 @@ Turning business transactions into first-class observability data with Dynatrace
 4. [Revenue Impact Analysis](markdown/-[BIZEV]-04-revenue-impact.md) — Correlating business events with financial outcomes and quantifying impact
 5. [KPIs and Metrics](markdown/-[BIZEV]-05-kpis-and-metrics.md) — Defining business metrics, calculating KPIs, and creating metric events
 6. [Executive Reporting](markdown/-[BIZEV]-06-executive-reporting.md) — Building actionable business dashboards and executive reports
+99. [Best Practice Summary](markdown/-[BIZEV]-99-best-practice-summary.md) — Consolidated best practices from the BIZEV series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

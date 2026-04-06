@@ -1,11 +1,10 @@
 # DASH-03: Executive Dashboards
 
-> **Series:** DASH | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Executive dashboards distill complex observability data into a handful of business-meaningful KPIs. The goal is not to show everything — it is to show exactly what a decision-maker needs to assess system health in under 30 seconds. This notebook covers KPI selection, single-value tiles, trend lines, traffic-light patterns, MTTR calculations, and how to tell a story with data while avoiding information overload.
-
 
 ---
 
@@ -22,7 +21,6 @@ Executive dashboards distill complex observability data into a handful of busine
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ Executive dashboards distill complex observability data into a handful of busine
 | **Permissions** | `storage:events:read`, `storage:metrics:read`, `storage:spans:read` |
 | **Data** | Davis problems with closed events (for MTTR), service spans |
 | **Prior Reading** | DASH-01 and DASH-02 |
-
 
 <a id="kpi-selection"></a>
 
@@ -61,7 +58,6 @@ Selecting the right KPIs is the most important decision in executive dashboard d
 
 > **Tip:** Start with 4-5 KPIs. You can always add more later, but removing tiles executives have grown accustomed to is harder.
 
-
 <a id="availability-percentage"></a>
 
 ## 2. Availability Percentage
@@ -71,7 +67,6 @@ Availability is the most commonly requested executive metric. There are several 
 ### Approach 1: Based on Davis Problem Downtime
 
 Calculate the percentage of time with no AVAILABILITY-category problems.
-
 
 ```dql
 // Availability based on Davis problem downtime over 7 days
@@ -87,7 +82,6 @@ fetch dt.davis.problems, from:-7d
 ### Approach 2: Based on Service Success Rate
 
 Calculate availability as the percentage of successful server-side requests.
-
 
 ```dql
 // Service-level availability based on span success rate
@@ -105,7 +99,6 @@ MTTR measures how quickly your team resolves problems. It is one of the four DOR
 
 ### Current MTTR (Single Value)
 
-
 ```dql
 // Average MTTR over last 7 days in hours
 fetch dt.davis.problems, from:-7d
@@ -119,12 +112,11 @@ fetch dt.davis.problems, from:-7d
 
 Show MTTR as a daily trend to highlight improvement or degradation.
 
-
 ```dql
 // MTTR trend — daily average over 30 days
 fetch dt.davis.problems, from:-30d
 | filter event.status == "CLOSED"
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | makeTimeseries mttr_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0), interval:1d, time:event.end
 ```
 
@@ -136,7 +128,6 @@ Problem trends reveal whether operational health is improving or declining over 
 
 ### Weekly Problem Trend by Category
 
-
 ```dql
 // Problem trend by category over 7 days
 fetch dt.davis.problems, from:-7d
@@ -145,7 +136,6 @@ fetch dt.davis.problems, from:-7d
 ```
 
 ### Problems by Severity — Executive Summary Table
-
 
 ```dql
 // Problem summary by category — executive table tile
@@ -171,7 +161,6 @@ Health = 100 - (error_rate_penalty + latency_penalty)
 | Error rate > 5% | +50 penalty |
 | P95 latency > 1s | +15 penalty |
 | P95 latency > 3s | +35 penalty |
-
 
 ```dql
 // Service health score — composite metric for executive dashboard
@@ -202,7 +191,6 @@ Error budgets quantify how much failure is acceptable before an SLA breach. For 
 | 99.0% | 7.2 hours |
 
 ### Error Budget Remaining
-
 
 ```dql
 // Error budget remaining for 99.9% SLA target — 30-day window
@@ -240,7 +228,6 @@ An executive dashboard should tell a story without explanation. Follow these sto
 
 > **Warning:** Executives will lose trust in a dashboard that shows misleading data. Always validate that your availability and MTTR calculations match what the team reports manually. A discrepancy between the dashboard and a status meeting destroys credibility.
 
-
 <a id="summary-and-next-steps"></a>
 
 ## 8. Summary and Next Steps
@@ -257,8 +244,6 @@ In this notebook you learned:
 
 **Next:** In **DASH-04: Operations Dashboards**, we move to the operations tier — real-time service monitoring, infrastructure health, log volume tracking, and problem/alert integration.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

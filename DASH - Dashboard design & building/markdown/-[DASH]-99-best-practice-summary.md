@@ -37,7 +37,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 1. Dashboard Architecture
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 1 | Use the three-tier hierarchy | Create exactly three tiers: Executive, Operations, Engineering | Critical | DASH-02 |
 | 2 | One purpose per dashboard | Each dashboard answers one audience's questions; never build an "everything" dashboard | Critical | DASH-01 |
@@ -49,7 +49,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 2. Design and Layout
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 6 | Place the most critical KPI in the top-left | Top-left tile is the first thing the eye hits; put your primary health indicator there | Critical | DASH-01 |
 | 7 | Follow Z-pattern reading order | Arrange tiles left-to-right, top-to-bottom so the dashboard reads naturally | Recommended | DASH-01 |
@@ -64,7 +64,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 3. Tile Configuration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 14 | Every tile must trigger an action | If a tile does not lead to a decision (investigate, escalate, scale, correlate), remove it | Critical | DASH-01 |
 | 15 | Match tile type to data shape | Single value: KPIs. Line chart: trends over time. Bar chart: categorical comparisons. Table: detailed data / top-N. Honeycomb: entity health grid | Recommended | DASH-01 |
@@ -76,7 +76,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 4. Executive Tier
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 19 | Limit to 4-6 tiles maximum | Single-value and trend tiles only | Critical | DASH-02, DASH-03 |
 | 20 | Select KPIs using the SMART filter | Each KPI must be Specific, Measurable, Actionable, Relevant, Time-bound | Critical | DASH-03 |
@@ -95,7 +95,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 5. Operations Tier
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 31 | Use 8-12 tiles with mixed chart types | Line charts for trends, bar charts for comparisons, tables for top-N, single values for status | Critical | DASH-02, DASH-04 |
 | 32 | Use 1h-2h time windows for real-time tiles | Short windows surface real-time spikes; 24h hides them | Critical | DASH-02, DASH-04 |
@@ -112,7 +112,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 6. Engineering Tier
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 41 | Use 10-15 tiles with high data density | Tables, detailed charts, multiple variables | Recommended | DASH-02, DASH-05 |
 | 42 | Use 15m-1h time ranges for investigation | Longer ranges dilute the signal; shorter ranges focus on the incident window | Critical | DASH-05 |
@@ -130,7 +130,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 7. DQL Query Standards
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 52 | Always specify a time range on fetch | `fetch logs, from:-1h`. Never use bare `fetch logs` | Critical | DASH-01, all |
 | 53 | Filter before aggregating | Place `filter` immediately after `fetch`, never after `sort` or `summarize` | Critical | DASH-01 |
@@ -148,7 +148,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 8. Variables and Filters
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 63 | Use entity selector variables for services and hosts | Variable type: entity selector. Entity types: `dt.entity.service`, `dt.entity.host` | Critical | DASH-06 |
 | 64 | Use string variables for namespaces, log levels, environments | Predefined values discovered from actual data via DQL | Recommended | DASH-06 |
@@ -164,7 +164,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 9. Refresh and Performance
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 72 | Executive wall screen refresh | Set to 10-15 minutes | Critical | DASH-02 |
 | 73 | Operations NOC wall refresh | Set to 1-2 minutes | Critical | DASH-02 |
@@ -179,7 +179,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 10. Sharing and Permissions
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 80 | Executive dashboards: platform team owns, leadership views | Owner: platform team lead. Editors: platform team. Viewers: all managers + leadership | Critical | DASH-07 |
 | 81 | Operations dashboards: SRE team owns | Owner: SRE team. Editors: SRE + on-call. Viewers: operations group | Critical | DASH-07 |
@@ -194,7 +194,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 11. Reporting and Automation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 88 | Automate executive summary via Workflow | Schedule: weekly, Monday 8 AM. Recipients: leadership, management | Recommended | DASH-07 |
 | 89 | Automate operations daily report via Workflow | Schedule: daily, 7 AM. Recipients: SRE team, on-call | Recommended | DASH-07 |
@@ -207,7 +207,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 
 ## 12. Dashboard Lifecycle
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|-----------------|----------|--------|
 | 94 | Follow the 6-step creation workflow | 1) Define audience/purpose, 2) Identify 5-10 key metrics, 3) Prototype in notebook, 4) Build dashboard, 5) Add variables, 6) Share and iterate | Critical | DASH-01 |
 | 95 | Manage dashboards as code | Use Monaco CLI or Terraform for multi-environment deployment, version control, and peer review | Recommended | DASH-07 |

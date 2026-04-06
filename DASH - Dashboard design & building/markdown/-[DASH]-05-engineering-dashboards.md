@@ -1,11 +1,10 @@
 # DASH-05: Engineering Dashboards
 
-> **Series:** DASH | **Notebook:** 5 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH | **Notebook:** 5 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Engineering dashboards are the deepest tier in the dashboard hierarchy. They serve developers, DBAs, and performance engineers who need to answer specific questions: Which endpoint is slow? Which database query is causing timeouts? Did the last deployment improve or degrade latency? This notebook covers trace analysis, database performance, endpoint-level metrics, deployment impact analysis, and effective use of filters and variables for drill-down workflows.
-
 
 ---
 
@@ -21,7 +20,6 @@ Engineering dashboards are the deepest tier in the dashboard hierarchy. They ser
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ Engineering dashboards are the deepest tier in the dashboard hierarchy. They ser
 | **Data** | Distributed trace data (spans), database spans, deployment events |
 | **Prior Reading** | DASH-01 through DASH-04 |
 
-
 <a id="span-analysis"></a>
 
 ## 1. Span Analysis for Service Deep-Dives
@@ -39,7 +36,6 @@ Engineering dashboards are the deepest tier in the dashboard hierarchy. They ser
 Engineering dashboards rely heavily on span data. Spans provide the most granular view of service behavior — individual requests, their duration, status, and attributes.
 
 ### Service Throughput and Latency
-
 
 ```dql
 // Service throughput and latency — engineering overview
@@ -54,11 +50,10 @@ fetch spans, from:-1h
 
 When investigating errors, engineers need the actual span attributes — status code, error message, and trace ID for correlation.
 
-
 ```dql
 // Recent error spans with details — engineering investigation table
 fetch spans, from:-1h
-| filter span.kind == "server" AND otel.status_code == "ERROR"
+| filter span.kind == "server" and otel.status_code == "ERROR"
 | fieldsKeep timestamp, trace.id, dt.entity.service, http.route, http.response.status_code, otel.status_message, duration
 | fieldsAdd duration_ms = duration / 1000000
 | fieldsRemove duration
@@ -69,7 +64,6 @@ fetch spans, from:-1h
 ### Latency Distribution
 
 Understanding the shape of latency distribution helps identify whether slowness is systemic or affects only a tail of requests.
-
 
 ```dql
 // Latency distribution buckets — engineering histogram
@@ -89,11 +83,10 @@ Database spans reveal query performance, connection issues, and which databases 
 
 ### Database Response Time by System
 
-
 ```dql
 // Database response time by system and namespace
 fetch spans, from:-1h
-| filter span.kind == "client" AND isNotNull(db.system)
+| filter span.kind == "client" and isNotNull(db.system)
 | summarize avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, query_count = count(), errors = countIf(otel.status_code == "ERROR"), by:{db.system, db.namespace}
 | fieldsAdd error_rate = round(100.0 * errors / query_count, decimals: 2)
 | sort p95_ms desc
@@ -101,11 +94,10 @@ fetch spans, from:-1h
 
 ### Slowest Database Operations
 
-
 ```dql
 // Slowest database operations — engineering deep-dive
 fetch spans, from:-1h
-| filter span.kind == "client" AND isNotNull(db.system)
+| filter span.kind == "client" and isNotNull(db.system)
 | summarize avg_ms = avg(duration) / 1000000, max_ms = max(duration) / 1000000, call_count = count(), by:{db.system, db.statement}
 | sort max_ms desc
 | limit 15
@@ -113,11 +105,10 @@ fetch spans, from:-1h
 
 ### Database Query Trend
 
-
 ```dql
 // Database query volume and latency trend
 fetch spans, from:-2h
-| filter span.kind == "client" AND isNotNull(db.system)
+| filter span.kind == "client" and isNotNull(db.system)
 | makeTimeseries avg_ms = avg(duration) / 1000000, query_count = count(), interval:5m, by:{db.system}
 ```
 
@@ -129,11 +120,10 @@ Endpoint-level analysis lets engineers identify which specific API routes are pr
 
 ### Endpoint Performance Table
 
-
 ```dql
 // Endpoint performance breakdown — engineering detail table
 fetch spans, from:-1h
-| filter span.kind == "server" AND isNotNull(http.route)
+| filter span.kind == "server" and isNotNull(http.route)
 | summarize requests = count(), avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, errors = countIf(otel.status_code == "ERROR"), by:{http.route, http.request.method}
 | fieldsAdd error_rate = round(100.0 * errors / requests, decimals: 2)
 | sort p95_ms desc
@@ -142,11 +132,10 @@ fetch spans, from:-1h
 
 ### Endpoint Latency Trend
 
-
 ```dql
 // Endpoint latency trend — line chart for top 5 routes
 fetch spans, from:-2h
-| filter span.kind == "server" AND isNotNull(http.route)
+| filter span.kind == "server" and isNotNull(http.route)
 | makeTimeseries p95_ms = percentile(duration, 95) / 1000000, interval:5m, by:{http.route}
 ```
 
@@ -159,7 +148,6 @@ Compare service performance before and after a deployment to quantify its impact
 ### Before vs After Deployment
 
 This pattern uses `append` to compare two time windows — 1 hour before the deployment vs 1 hour after.
-
 
 ```dql
 // Before/after deployment comparison — last 2 hours vs preceding 2 hours
@@ -181,7 +169,6 @@ When services are instrumented with custom spans, engineers can see method-level
 
 ### Span Performance by Code Namespace
 
-
 ```dql
 // Code-level performance by namespace and function
 fetch spans, from:-1h
@@ -192,7 +179,6 @@ fetch spans, from:-1h
 ```
 
 ### Span Hierarchy — Call Chain Analysis
-
 
 ```dql
 // Span breakdown by kind — understanding the call chain
@@ -223,7 +209,6 @@ fetch spans, from:-1h
 - **Table tiles over charts** — engineers often need exact values, not visual trends
 - **Document queries** — add markdown tiles explaining what each section shows and how to interpret it
 
-
 <a id="summary-and-next-steps"></a>
 
 ## 7. Summary and Next Steps
@@ -239,8 +224,6 @@ In this notebook you learned:
 
 **Next:** In **DASH-06: Variables and Filters**, we cover how to make dashboards dynamic and reusable with variables, filter propagation, and template patterns.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

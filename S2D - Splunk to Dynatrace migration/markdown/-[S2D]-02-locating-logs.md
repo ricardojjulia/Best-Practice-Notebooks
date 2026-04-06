@@ -143,7 +143,7 @@ fetch logs, from:-1h
 Run equivalent time-bounded queries in both platforms to compare log volumes:
 
 ```dql
-// Total log count for the last hour (compare with Splunk)
+// Total log count for the last getHour(compare with Splunk)
 fetch logs, from:now()-1h
 | filter matchesPhrase(host.name, "your-host-name")
 | summarize total_count = count()
@@ -217,7 +217,7 @@ Use this template to create a comprehensive validation query for your applicatio
 // Comprehensive log validation template
 // Modify filters to match your application
 fetch logs, from:now()-24h
-| filter matchesPhrase(host.name, "app-server") OR matchesPhrase(k8s.namespace.name, "app-namespace")
+| filter matchesPhrase(host.name, "app-server") or matchesPhrase(k8s.namespace.name, "app-namespace")
 | summarize 
     total_count = count(),
     error_count = countIf(loglevel == "ERROR"),

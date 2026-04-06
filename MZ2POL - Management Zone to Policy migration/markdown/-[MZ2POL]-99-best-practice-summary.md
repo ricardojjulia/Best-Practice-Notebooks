@@ -26,7 +26,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="assessment-and-planning"></a>
 ## 1. Assessment and Planning
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Classify every MZ by type before migration | Categories: Team/Ownership, Environment, Geographic, Application, Infrastructure | Critical |
 | Prioritize migration by impact | P1: Security/compliance MZs, P2: Team-based MZs, P3: Filtering-only MZs, P4: Informational/legacy MZs | Critical |
@@ -40,7 +40,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="security-context"></a>
 ## 2. Security Context
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Set `dt.security_context` on every entity before creating boundaries | Assign via Entity Enrichment rules (preferred), OneAgent host properties, or OpenPipeline processing | Critical |
 | Use a consistent naming convention for security context values | `team-{name}` for teams, `env-{name}` for environments, `region-{code}` for regions, `app-{name}` for applications | Critical |
@@ -53,7 +53,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="policy-design"></a>
 ## 3. Policy Design
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Start with default policies; customize only when needed | `Dynatrace Viewer` for read-only, `Dynatrace Standard User` for regular users, `Dynatrace Professional User` for power users, `Dynatrace Admin User` for admins | Critical |
 | Pair a Dynatrace access policy with a data access policy | Viewers -> `Dynatrace Viewer` + `Data Viewer`; Developers -> `Dynatrace Standard` + `Data Viewer`; SRE -> `Dynatrace Professional` + `Data Editor`; Admins -> `Dynatrace Admin` + `Data Editor` | Critical |
@@ -67,7 +67,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="boundary-design"></a>
 ## 4. Boundary Design
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Include all three domains in every boundary | `environment:management-zone IN ("LOB5");` + `storage:dt.security_context IN ("LOB5");` + `settings:dt.security_context IN ("LOB5");` | Critical |
 | Keep boundary conditions simple | One condition per line; each line is OR-combined within the boundary | Critical |
@@ -82,7 +82,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="segment-design"></a>
 ## 5. Segment Design
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use segments for data filtering; use policies+boundaries for access control | Segments replace MZ filtering; policies+boundaries replace MZ permissions. Never conflate the two. | Critical |
 | Align segments with business structure | Create segments per team, product, region, or environment — not per technical component | Critical |
@@ -98,7 +98,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="bucket-strategy"></a>
 ## 6. Bucket Strategy
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use buckets for physical data isolation (compliance, strict team separation) | Create team-specific or compliance buckets: `pci_logs`, `frontend_logs`, `prod_spans` | Critical |
 | Use segments (not buckets) for ad-hoc or regional filtering | Buckets are irreversible; segments are flexible. Only use buckets when physical isolation is required. | Critical |
@@ -113,7 +113,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="group-and-saml-structure"></a>
 ## 7. Group and SAML Structure
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use SAML groups tied to Active Directory for team management | Map AD groups to Dynatrace groups via SAML assertion; no separate user management needed | Critical |
 | Structure: Group -> Policy + Boundary | `Group: "LOB5-Team" (SAML)` -> `Policy: Dynatrace Professional` + `Boundary: LOB5-Scope (three-domain)` | Critical |
@@ -125,7 +125,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="templated-policies-at-scale"></a>
 ## 8. Templated Policies at Scale
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use `${bindParam:...}` templated policies instead of one policy per MZ | 3-5 templates replace 92+ individual policies. Template: `ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:team}"` | Critical |
 | Create templates by MZ type, not by MZ instance | `tpl-team-data-reader`, `tpl-team-data-editor`, `tpl-region-reader` — one template per access pattern | Critical |
@@ -139,7 +139,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="migration-execution"></a>
 ## 9. Migration Execution
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Follow the 7-phase migration order | Phase 1: Foundation -> Phase 2: Security Context -> Phase 3: Policies/Boundaries -> Phase 4: Segments -> Phase 5: Parallel Running -> Phase 6: Cutover -> Phase 7: Cleanup | Critical |
 | Run parallel (MZ + new model) for 2-4 weeks before cutover | Both systems active simultaneously; users should see identical data via both paths | Critical |
@@ -155,7 +155,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 <a id="validation-and-ongoing-maintenance"></a>
 ## 10. Validation and Ongoing Maintenance
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Validate security context coverage reaches 100% | `fetch dt.entity.service \| summarize total = count(), covered = countIf(isNotNull(dt.security_context))` | Critical |
 | Compare MZ membership vs security context alignment per MZ | Query entities `in(managementZones, {"MZ"}) AND dt.security_context == "expected-value"` — all must match | Critical |

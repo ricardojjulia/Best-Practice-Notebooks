@@ -40,7 +40,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 1. OneAgent Instrumentation
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 1 | Deploy OneAgent on every host that makes database calls | OneAgent installed on all application servers, not just database servers | **Critical** | Deployment |
 | 2 | Enable deep code-level instrumentation | OneAgent auto-instruments JDBC, ADO.NET, and native database drivers by default; do not disable | **Critical** | Deployment |
@@ -53,7 +53,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 2. ActiveGate Extensions
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 7 | Use host-based ActiveGate for Extensions 2.0 | Must be host-based, not Kubernetes-based — K8s-based AG does not support Extensions 2.0 | **Critical** | Deployment |
 | 8 | Install PostgreSQL extension | Captures: connections, transactions/sec, tuple operations, table/index sizes, lock waits, replication lag | **Recommended** | Extension |
@@ -67,7 +67,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 3. Span Attribute Coverage
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 14 | Validate all six core DB span attributes | Every database span must carry: `db.system`, `db.statement`, `db.operation`, `db.namespace`, `server.address`, `server.port` | **Critical** | Data Quality |
 | 15 | Check for NULL fields periodically | Run `filter isNotNull(db.operation)` — NULL means the driver is not reporting the operation type; investigate driver version | **Recommended** | Data Quality |
@@ -79,7 +79,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 4. SQL Database Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 19 | Set slow query threshold for SQL databases | **500ms** — any SQL query exceeding `duration > 500000000` (500ms in nanoseconds) is classified as slow | **Critical** | Threshold |
 | 20 | Track read/write ratio | Classify operations: `SELECT` = READ, `INSERT/UPDATE/DELETE` = WRITE; monitor ratio shifts over time | **Recommended** | Analysis |
@@ -93,7 +93,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 5. NoSQL Database Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 26 | Set slow query threshold for NoSQL databases | **100ms** for MongoDB; **300ms** critical threshold for all NoSQL | **Critical** | Threshold |
 | 27 | Monitor MongoDB by collection | Group by `db.mongodb.collection` in addition to `db.namespace` — collection-level granularity reveals hot spots | **Critical** | MongoDB |
@@ -107,7 +107,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 6. Cache Monitoring (Redis / Memcached)
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 33 | Set Redis slow command threshold at 5ms | `filter duration > 5000000` — Redis operations should complete in microseconds; anything over 5ms is abnormal | **Critical** | Threshold |
 | 34 | Monitor Redis read/write balance | READ: `GET`, `MGET`, `HGET`, `HGETALL`, `LRANGE`, `SMEMBERS`, `ZRANGE`; WRITE: `SET`, `MSET`, `HSET`, `LPUSH`, `RPUSH`, `SADD`, `ZADD`, `DEL` | **Recommended** | Analysis |
@@ -119,7 +119,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 7. Message Broker Monitoring (Kafka / RabbitMQ)
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 38 | Track Kafka throughput by topic | Group by `messaging.destination.name` and `messaging.operation` (`publish` vs `process`) at 5m intervals | **Critical** | Kafka |
 | 39 | Monitor Kafka consumer group processing latency | Group by `messaging.kafka.consumer.group` and `messaging.destination.name`; track `avg_ms` and `p95_ms` per group | **Critical** | Kafka |
@@ -131,7 +131,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 8. Search Engine Monitoring (Elasticsearch)
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 43 | Set Elasticsearch slow query threshold at 200ms | `filter duration > 200000000` for search operations; indexing operations use a separate threshold | **Recommended** | Threshold |
 | 44 | Break down Elasticsearch operations by type | Track `db.operation` (search, index, bulk, delete) separately; search latency and indexing throughput have different SLOs | **Recommended** | Analysis |
@@ -141,7 +141,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 9. Query Analysis and Optimization
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 46 | Detect N+1 queries | Group spans by `trace.id` and `db.statement`; any pattern with `calls_per_trace >= 10` is an N+1 candidate; >= 50 is confirmed N+1 | **Critical** | Anti-Pattern |
 | 47 | Fix N+1 by batching | Replace N individual queries with a single batch query using `IN` clauses or JOINs | **Critical** | Remediation |
@@ -157,7 +157,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 10. Dashboards and KPIs
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 55 | Build a unified health overview tile | Single query: group by `db.system`, show `total_calls`, `avg_ms`, `p95_ms`, `error_rate_pct`, `slow_rate_pct` | **Critical** | Dashboard |
 | 56 | Include a "total database calls" single-value tile | `fetch spans, from:-1h \| filter isNotNull(db.system) \| summarize total_db_calls = count()` | **Critical** | Dashboard |
@@ -174,7 +174,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ### Error Rate Alerts
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 63 | Alert on error rate > 5% for 5 minutes | Severity: **Critical** — immediate page | **Critical** | Alert |
 | 64 | Alert on error rate > 1% for 15 minutes | Severity: **Warning** — notification | **Critical** | Alert |
@@ -183,7 +183,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ### Slow Query Alerts (P95 Thresholds)
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 67 | SQL Warning threshold | P95 > **200ms** over 5-minute window | **Critical** | Alert |
 | 68 | SQL Critical threshold | P95 > **500ms** over 5-minute window | **Critical** | Alert |
@@ -196,7 +196,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ### Throughput Alerts
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 75 | Alert on throughput drop > 50% vs 7-day average | Compare current queries/min to 7-day baseline; sudden drop indicates upstream failure or connectivity loss | **Critical** | Alert |
 | 76 | Alert on slow query count > 10 per 5-minute window | Sustained slow query volume indicates systemic degradation, not a one-off outlier | **Recommended** | Alert |
@@ -205,7 +205,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 12. SLO Definitions
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 77 | Define availability SLO | **99.9%** of database calls succeed (`otel.status_code != "ERROR"`) measured over 24h rolling window | **Critical** | SLO |
 | 78 | Define latency SLO | **95%** of calls complete under the vendor-specific P95 threshold (SQL: 500ms, NoSQL: 300ms, Cache: 20ms, Search: 2000ms) | **Critical** | SLO |
@@ -217,7 +217,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 ## 13. DQL Query Standards
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
 | 82 | Always specify a time range on fetch | `fetch spans, from:-1h` — never omit `from:` on span queries; default 2h scan is excessive | **Critical** | DQL |
 | 83 | Filter on `isNotNull(db.system)` first | This is the primary filter to isolate database spans; apply immediately after `fetch` | **Critical** | DQL |

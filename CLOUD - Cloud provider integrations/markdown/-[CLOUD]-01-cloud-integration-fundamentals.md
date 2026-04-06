@@ -1,11 +1,10 @@
 # CLOUD-01: Cloud Integration Fundamentals
 
-> **Series:** CLOUD | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 This notebook introduces how Dynatrace integrates with major cloud providers (AWS, Azure, GCP) to deliver full-stack observability across cloud environments. You will learn the difference between ActiveGate-based polling and API-based ingestion, how the Dynatrace entity model maps cloud resources, and how to plan a multi-cloud monitoring strategy.
-
 
 ---
 
@@ -21,7 +20,6 @@ This notebook introduces how Dynatrace integrates with major cloud providers (AW
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -30,7 +28,6 @@ This notebook introduces how Dynatrace integrates with major cloud providers (AW
 | **Permissions** | `metrics.read`, `entities.read`, `ReadConfig` |
 | **Cloud Integration** | At least one cloud provider connected (AWS, Azure, or GCP) |
 | **Prior Knowledge** | Basic Dynatrace navigation and DQL fundamentals |
-
 
 <a id="integration-architecture"></a>
 
@@ -144,7 +141,6 @@ Dynatrace maps cloud resources to its entity model. Each cloud resource becomes 
 | `dt.entity.cloud_application_instance` | Individual pods/instances |
 | `dt.entity.google_cloud_platform_service` | GCP managed services |
 
-
 <a id="cloud-vs-host-metrics"></a>
 
 ## 4. Cloud Metrics vs Host Metrics
@@ -167,9 +163,7 @@ For compute resources (EC2, Azure VMs, GCE), use **both** cloud integration and 
 - OneAgent provides **deep observability** (processes, traces, code-level diagnostics)
 - Dynatrace automatically correlates both data sources via the entity model
 
-
 Let's query the cloud entities currently monitored in your environment.
-
 
 <a id="querying-cloud-entities"></a>
 
@@ -179,26 +173,29 @@ The following queries demonstrate how to explore cloud entities in your Dynatrac
 
 ### Count EC2 Instances
 
-
 ```dql
 // Count all monitored EC2 instances
 fetch dt.entity.ec2_instance
 | summarize instance_count = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_EC2_INSTANCE
+// | summarize instance_count = count()
+
 ```
 
 ### Count Azure VMs
-
 
 ```dql
 // Count all monitored Azure VMs
 fetch dt.entity.azure_vm
 | summarize vm_count = count()
+
 ```
 
 ### Compare Cloud Resources Across Providers
 
 This query uses `append` to combine entity counts from multiple cloud providers into a single view.
-
 
 ```dql
 // Compare cloud resource counts across providers
@@ -213,12 +210,25 @@ fetch dt.entity.ec2_instance
     | summarize provider = "AWS", resource_type = "Serverless (Lambda)", resource_count = count()
   ]
 | sort provider asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_LAMBDA_FUNCTION
+// | summarize provider = "AWS", resource_type = "Compute (EC2)", resource_count = count()
+// | append [
+// smartscapeNodes AWS_LAMBDA_FUNCTION
+// | summarize provider = "Azure", resource_type = "Compute (VM)", resource_count = count()
+// ]
+// | append [
+// smartscapeNodes AWS_LAMBDA_FUNCTION
+// | summarize provider = "AWS", resource_type = "Serverless (Lambda)", resource_count = count()
+// ]
+// | sort provider asc
+
 ```
 
 ### Host CPU Usage Across Cloud Hosts
 
 This query retrieves average CPU usage for all monitored hosts, which includes both cloud and on-premises hosts.
-
 
 ```dql
 // Average CPU usage across all hosts in the last hour
@@ -260,7 +270,6 @@ Establish consistent naming across providers:
 - **Review cloud API costs** — CloudWatch API calls, Azure Monitor queries, and GCP monitoring API calls all have costs
 - **Right-size polling intervals** — not every metric needs 1-minute granularity
 
-
 <a id="summary"></a>
 
 ## 7. Summary and Next Steps
@@ -278,8 +287,6 @@ Establish consistent naming across providers:
 - **CLOUD-05: Azure Integration** — Azure Monitor integration and supported services
 - **CLOUD-06: GCP Integration** — Google Cloud monitoring configuration
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

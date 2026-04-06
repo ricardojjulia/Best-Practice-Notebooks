@@ -23,7 +23,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="dql-syntax-rules"></a>
 ## 1. DQL Syntax Rules
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Equality operator | `==` (double equals) — never `=` | Critical |
 | Array literals | `{"a", "b"}` with curly braces and double quotes — never `('a', 'b')` | Critical |
@@ -38,7 +38,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="filtering-performance"></a>
 ## 2. Filtering & Performance
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Filter immediately after fetch | All `filter` commands before any `fieldsAdd`, `summarize`, `sort` | Critical |
 | Filter on indexed fields first | `trace.id`, `span.id`, `dt.entity.service`, `span.name`, `span.kind`, `span.status_code`, `start_time` | Critical |
@@ -54,7 +54,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="time-range-cost"></a>
 ## 3. Time Range & Cost
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Always specify explicit time range | `fetch spans, from:-1h` — never bare `fetch spans` | Critical |
 | Use narrowest range possible | Debugging: `from:-5m`. Recent: `from:-1h`. Daily: `from:-24h`. Weekly: `from:-7d` | Critical |
@@ -67,7 +67,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="duration-aggregation"></a>
 ## 4. Duration & Aggregation
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Convert duration from nanoseconds | `/1000000.0` for ms, `/1000000000.0` for seconds | Critical |
 | Use duration literals in filters | `filter duration > 100ms`, `filter duration > 1s` | Recommended |
@@ -80,7 +80,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="trace-analysis"></a>
 ## 5. Trace Analysis
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Find root spans | `filter isNull(span.parent_id)` | Recommended |
 | Reconstruct trace chronologically | `filter trace.id == "ID" \| sort start_time asc` | Recommended |
@@ -92,7 +92,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="service-dependencies"></a>
 ## 6. Service Dependencies
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Map dependencies via CLIENT spans | `filter span.kind == "client" \| summarize count(), by:{service.name, server.address}` | Recommended |
 | Use `peer.service` for named dependencies | `filter span.kind == "client" and isNotNull(peer.service)` when available | Recommended |
@@ -102,7 +102,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="security"></a>
 ## 7. Security
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Use `http.route` in dashboards, never `url.path` | `http.route` = pattern (no PII), `url.path` = actual values (may contain PII) | Critical |
 | Weekly PII audit: emails in URLs | `filter contains(url.path, "@") or contains(url.path, "%40")` — must return 0 | Critical |
@@ -119,7 +119,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="openpipeline-span-configuration"></a>
 ## 8. OpenPipeline Span Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Drop health check spans at ingestion | `contains(span.name, "health") or contains(span.name, "ready")` | Critical |
 | Drop static asset spans | `endsWith(span.name, ".js") or endsWith(span.name, ".css") or endsWith(span.name, ".png")` | Recommended |
@@ -133,7 +133,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 <a id="bucket-strategy-sampling"></a>
 ## 9. Bucket Strategy & Sampling
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Retention by environment | Production: 90 days. Standard: 35 days. Staging: 7 days. Dev: 3 days | Recommended |
 | Three-tier sampling | (1) Errors → 100%. (2) Slow >1s → 100%. (3) Everything else → 10-50% | Critical |

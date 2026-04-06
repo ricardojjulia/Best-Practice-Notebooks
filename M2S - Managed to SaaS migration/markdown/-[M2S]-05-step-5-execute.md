@@ -1,6 +1,6 @@
 # M2S-05: Step 5 — Execute: Migrate Configuration and Agents
 
-> **Series:** M2S | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 With your SaaS environment prepared, it is time to execute the migration. This step covers deploying configurations via the SaaS Upgrade Assistant in dependency-ordered waves, redirecting OneAgents from Managed to SaaS, and validating data flow after each wave. By the end of this step, all hosts and services will be reporting to your SaaS tenant.
 
@@ -306,6 +306,8 @@ For environments requiring zero monitoring gaps:
 
 > **Note:** Running two agents simultaneously doubles the CPU and memory overhead on the host. Use this method only when monitoring continuity is a hard requirement.
 
+> **Tip — OneAgent Attribute Enrichment (1.331+):** During agent redirect, consider adding primary tags and fields at the same time using `oneagentctl --set-host-tag`. This enriches all telemetry at the source with `primary_tags.environment`, `dt.security_context`, `dt.cost.costcenter`, etc. — eliminating the need for some server-side auto-tagging rules. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
 <a id="migration-wave-execution"></a>
 
 ## 5. Migration Wave Execution
@@ -356,6 +358,11 @@ After each wave, run the following DQL queries against your SaaS tenant to verif
 // Count hosts reporting to SaaS — compare against expected count from migration wave
 fetch dt.entity.host
 | summarize hostCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hostCount = count()
+
 ```
 
 ### Check for Metric Data Gaps
@@ -374,6 +381,11 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 // Count discovered services — should grow as applications restart
 fetch dt.entity.service
 | summarize serviceCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize serviceCount = count()
+
 ```
 
 ### Check Distributed Traces Flowing

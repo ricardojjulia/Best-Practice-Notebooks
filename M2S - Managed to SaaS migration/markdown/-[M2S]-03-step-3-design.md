@@ -342,6 +342,7 @@ fetch dt.entity.active_gate
 | fieldsAdd entity.name, version = softwareVersion
 | fields entity.name, version, networkZone
 | sort entity.name asc
+
 ```
 
 ![Security Model](images/03-security-model.png)

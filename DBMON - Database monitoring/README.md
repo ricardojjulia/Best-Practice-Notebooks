@@ -16,6 +16,7 @@ End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
 4. [Cache and Messaging Monitoring](markdown/-[DBMON]-04-cache-and-messaging.md) — Monitoring Redis, Memcached, RabbitMQ, Kafka, and message brokers
 5. [Query Analysis](markdown/-[DBMON]-05-query-analysis.md) — Performance analysis, slow query identification, and optimization techniques
 6. [Dashboards and Alerting](markdown/-[DBMON]-06-dashboards-and-alerting.md) — Database performance dashboards and alert strategies
+99. [Best Practice Summary](markdown/-[DBMON]-99-best-practice-summary.md) — Consolidated best practices from the DBMON series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

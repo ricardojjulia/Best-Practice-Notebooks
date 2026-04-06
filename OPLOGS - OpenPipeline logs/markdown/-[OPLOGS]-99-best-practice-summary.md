@@ -22,7 +22,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="pipeline-configuration"></a>
 ## 1. Pipeline Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Process data at ingestion, not query time | Configure parsing, enrichment, masking, and routing as OpenPipeline processors | Critical |
 | Pipeline stage order | Filter → Parse → Enrich → Mask → Extract → Route (masking BEFORE storage) | Critical |
@@ -37,7 +37,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="bucket-design-retention"></a>
 ## 2. Bucket Design & Retention
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Create purpose-driven buckets | Minimum: `default_logs`, `debug_logs`, `error_logs`, `audit_logs`, `security_logs` | Critical |
 | Bucket naming convention | `<purpose>_logs` or `<environment>_<purpose>_logs` | Recommended |
@@ -51,7 +51,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="data-masking"></a>
 ## 3. Data Masking
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Apply masking BEFORE storage | Masking processors execute first in pipeline — data never stored unmasked | Critical |
 | Mask email addresses | Pattern: `[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}` → `[EMAIL-MASKED]` | Critical |
@@ -67,7 +67,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="dql-query-patterns"></a>
 ## 4. DQL Query Patterns
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Always specify time range | `fetch logs, from:-1h` — never bare `fetch logs` | Critical |
 | Filter early, sort/limit last | `filter` immediately after `fetch`; `sort` and `limit` as final commands | Critical |
@@ -85,7 +85,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="metric-extraction"></a>
 ## 5. Metric Extraction
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Extract dimensional metrics at ingestion | Create `log.request.count`, `log.response.duration`, `log.error.count` with service/method/status dimensions | Recommended |
 | Minimum metric dimensions | `k8s.namespace.name`, `k8s.workload.name`, `loglevel` | Recommended |
@@ -95,7 +95,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="cost-optimization"></a>
 ## 6. Cost Optimization
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Calculate droppable log percentage weekly | Health check + heartbeat + debug as % of total — target dropping 10-30% | Recommended |
 | Measure storage by log level daily | `fieldsAdd content_bytes = stringLength(content)` then `summarize sum(content_bytes)/1048576.0, by:{loglevel}` | Recommended |
@@ -104,7 +104,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="security-access-control"></a>
 ## 7. Security & Access Control
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Bucket-level IAM policies | `"permissions": ["storage:logs:read"], "conditions": [{"bucket": ["audit_logs"]}]` | Critical |
 | Default bucket: all-authenticated read | Grant `storage:logs:read` on `default_logs` to all authenticated users | Recommended |
@@ -115,7 +115,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 <a id="monitoring-alerting"></a>
 ## 8. Monitoring & Alerting
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Error rate alert threshold | >5% per entity over 15-minute window, minimum 100 records | Recommended |
 | Error count threshold | >10 per namespace per 15 minutes | Recommended |

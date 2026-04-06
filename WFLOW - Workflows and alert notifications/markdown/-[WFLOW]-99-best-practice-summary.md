@@ -29,7 +29,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="workflow-design-architecture"></a>
 ## 1. Workflow Design & Architecture
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Use Workflows for all new automation | Workflows (not legacy alerting profiles) | Critical | WFLOW-01 |
 | 2 | Stay within execution time limit | Max 15 minutes per workflow execution | Critical | WFLOW-01 |
@@ -43,7 +43,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="triggers"></a>
 ## 2. Triggers
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Use Davis Problem trigger for incident alerts | `type: davis-problem` | Critical | WFLOW-02 |
 | 2 | Use Davis Event trigger for proactive metric thresholds | `type: davis-event` with DQL query and `evaluationFrequency: "5m"` | Critical | WFLOW-02 |
@@ -59,7 +59,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="connections-credentials"></a>
 ## 3. Connections & Credentials
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Use descriptive connection names | Pattern: `<service>-<environment>-<purpose>` (e.g., `slack-prod-oncall`) | Critical | WFLOW-03 |
 | 2 | Separate connections per environment | Distinct connections for prod vs staging vs dev | Critical | WFLOW-03 |
@@ -72,7 +72,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="notification-channels"></a>
 ## 4. Notification Channels
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Multi-channel for Critical production problems | PagerDuty + Slack #urgent + Email simultaneously | Critical | WFLOW-03, WFLOW-04 |
 | 2 | Slack for High production problems | Slack #alerts + Email | Recommended | WFLOW-04 |
@@ -84,7 +84,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="message-formatting-templates"></a>
 ## 5. Message Formatting & Templates
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Structure messages: Severity + Title + Key metrics + Link | Line 1: severity indicator + title; Line 2: impact; Line 3: affected entities; Line 4: action link | Critical | WFLOW-06 |
 | 2 | Use severity-coded visual indicators | Slack: `:red_circle:` CRITICAL, `:large_orange_circle:` HIGH, `:large_yellow_circle:` MEDIUM, `:large_blue_circle:` LOW | Critical | WFLOW-06 |
@@ -103,7 +103,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="routing-escalation"></a>
 ## 6. Routing & Escalation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Route by severity | CRITICAL: PagerDuty + Slack + Email; HIGH: Slack + Email; MEDIUM: Slack; LOW: Slack business hours only | Critical | WFLOW-04 |
 | 2 | Route by team ownership via entity tags | Condition: `"team:checkout" in event().get("tags", [])` maps to `#checkout-alerts` | Critical | WFLOW-04 |
@@ -118,7 +118,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="incident-management-integration"></a>
 ## 7. Incident Management Integration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Deduplicate PagerDuty incidents | `dedupKey: "dynatrace-{{ event()['display_id'] }}"` | Critical | WFLOW-05 |
 | 2 | Deduplicate ServiceNow incidents | `correlation_id: "DT-{{ event()['display_id'] }}"` | Critical | WFLOW-05 |
@@ -134,7 +134,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="auto-remediation"></a>
 ## 8. Auto-Remediation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Rate-limit remediation attempts | Max 3 remediations per hour per entity | Critical | WFLOW-07 |
 | 2 | Enforce time-window guardrails | Remediation only during safe hours: weekdays 06:00-22:00 | Critical | WFLOW-07 |
@@ -151,7 +151,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="javascript-http-actions"></a>
 ## 9. JavaScript & HTTP Actions
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Always use `export default async function` | Required function signature for every JavaScript action | Critical | WFLOW-08 |
 | 2 | Wrap all external calls in try-catch | Return `{success: false, error: error.message}` on failure instead of throwing | Critical | WFLOW-08 |
@@ -168,7 +168,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="security"></a>
 ## 10. Security
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Never hardcode secrets in workflows | Use `{{ env.SECRET_NAME }}` in YAML or `env.SECRET_NAME` in JavaScript | Critical | WFLOW-09 |
 | 2 | Sanitize all dynamic inputs | Remove `"'\\` characters, limit string length to 200 chars before using in queries | Critical | WFLOW-09 |
@@ -180,7 +180,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="access-control"></a>
 ## 11. Access Control
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Grant minimum permissions per role | Viewers: `automation:workflows:read`; App teams: `read` + `write` + `run` (own workflows); SRE: `read` + `write` + `run` (all); Admins: `admin` | Critical | WFLOW-09 |
 | 2 | Restrict workflow write to owners | IAM policy: `ALLOW automation:workflows:write WHERE workflow.owner == "${user.email}"` | Recommended | WFLOW-09 |
@@ -190,7 +190,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="observability-monitoring"></a>
 ## 12. Observability & Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Alert on workflow success rate | Threshold: < 95% success rate over 7 days | Critical | WFLOW-09 |
 | 2 | Alert on average execution duration | Threshold: > 5 minutes average | Recommended | WFLOW-09 |
@@ -204,7 +204,7 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 <a id="operations-change-management"></a>
 ## 13. Operations & Change Management
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
 | 1 | Name workflows consistently | Pattern: `<team>-<function>-<environment>` (e.g., `sre-problem-notifications-prod`) | Critical | WFLOW-09 |
 | 2 | Export workflows as JSON for version control | `GET /platform/automation/v1/workflows/<id>` saved to Git | Recommended | WFLOW-09 |

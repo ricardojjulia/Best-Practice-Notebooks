@@ -1,6 +1,6 @@
 # S2S-08: Step 8 — Enable: Parallel Operation and Stakeholder Handover
 
-> **Series:** S2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -80,6 +80,17 @@ fetch dt.entity.host
         else: if(isNotNull(azureResourceGroupName), then: "Azure", else: "On-Premises"))
     | summarize count = count(), by:{provider}
   ]
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize total_hosts = count()
+// | append [
+// smartscapeNodes HOST
+// | fieldsAdd provider = if(isNotNull(awsNameTag), then: "AWS",
+// else: if(isNotNull(azureResourceGroupName), then: "Azure", else: "On-Premises"))
+// | summarize count = count(), by:{provider}
+// ]
+
 ```
 
 ### Validate Log Continuity

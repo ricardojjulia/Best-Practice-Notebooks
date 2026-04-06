@@ -1,11 +1,10 @@
 # ADOPT-01: Observability Maturity Model
 
-> **Series:** ADOPT | **Notebook:** 1 of 5 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** ADOPT | **Notebook:** 1 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Observability maturity is not a binary state — organizations progress through distinct levels as their practices, tooling, and culture evolve. This notebook introduces a five-level maturity model for Dynatrace-powered observability, provides assessment criteria for each level, and demonstrates how to use DQL queries to gauge your current position. Understanding where you stand today is the first step toward building a roadmap for improvement.
-
 
 ---
 
@@ -23,7 +22,6 @@ Observability maturity is not a binary state — organizations progress through 
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ Observability maturity is not a binary state — organizations progress through 
 | **Permissions** | `storage:logs:read`, `storage:metrics:read`, `storage:entities:read`, `storage:events:read` |
 | **Data** | At least 24 hours of ingested monitoring data |
 | **Audience** | Platform engineers, SREs, engineering managers, and leadership stakeholders |
-
 
 <a id="maturity-levels"></a>
 
@@ -49,7 +46,6 @@ The observability maturity model defines five progressive levels. Each level bui
 | **5** | Autonomous | Self-healing, automated remediation, closed-loop operations | "The platform resolves problems without human intervention" |
 
 Most organizations operate between Level 1 and Level 3. The goal is not necessarily to reach Level 5 everywhere, but to deliberately choose the appropriate level for each service based on business criticality.
-
 
 <a id="level-1-reactive"></a>
 
@@ -79,7 +75,6 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 - Basic infrastructure monitoring
 - Default Davis AI alerting (often not yet configured)
 
-
 <a id="level-2-proactive"></a>
 
 ## 3. Level 2 — Proactive Monitoring
@@ -108,7 +103,6 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 - Davis AI problem detection enabled
 - Custom metric alerting profiles
 - Basic synthetic monitoring for key URLs
-
 
 <a id="level-3-data-driven"></a>
 
@@ -140,7 +134,6 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 - Distributed tracing with span analytics
 - Real User Monitoring (RUM) and Session Replay
 
-
 <a id="level-4-predictive"></a>
 
 ## 5. Level 4 — Predictive Observability
@@ -168,7 +161,6 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 - Metric forecasting and trend analysis
 - Business event correlation
 - Ownership and team assignment for entities
-
 
 <a id="level-5-autonomous"></a>
 
@@ -198,7 +190,6 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 - Configuration-as-code (Monaco) for drift detection
 - Full API-driven operations
 
-
 <a id="assessing-current-level"></a>
 
 ## 7. Assessing Your Current Level
@@ -209,7 +200,6 @@ The following DQL queries help you assess where your organization stands today. 
 
 Understanding how many entities Dynatrace is monitoring gives a baseline for agent deployment coverage.
 
-
 ```dql
 // Count monitored entities by type to assess coverage breadth
 fetch dt.entity.host
@@ -217,12 +207,18 @@ fetch dt.entity.host
 | append [fetch dt.entity.service | summarize service_count = count()]
 | append [fetch dt.entity.process_group | summarize process_group_count = count()]
 | append [fetch dt.entity.application | summarize application_count = count()]
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize host_count = count()
+// | append [fetch dt.entity.service | summarize service_count = count()]
+// | append [fetch dt.entity.process_group | summarize process_group_count = count()]
+// | append [fetch dt.entity.application | summarize application_count = count()]
+
 ```
 
 ### 7.2 Data Ingestion Diversity
 
 Mature organizations ingest multiple telemetry types. This query checks which data sources are actively flowing into Grail.
-
 
 ```dql
 // Check log ingestion volume over the last 24 hours
@@ -240,7 +236,6 @@ fetch spans, from:-24h
 
 Active Davis AI problem detection is a key indicator of Level 2+ maturity. If few or no problems are being detected, it may indicate insufficient instrumentation or misconfigured alerting.
 
-
 ```dql
 // Count Davis problems in the last 7 days by status
 fetch dt.davis.problems, from:-7d
@@ -251,7 +246,6 @@ fetch dt.davis.problems, from:-7d
 ### 7.4 Alerting Quality Check
 
 A high ratio of duplicate or frequent events suggests noisy alerting — a characteristic of lower maturity levels.
-
 
 ```dql
 // Assess alerting noise: frequent and duplicate problems vs unique problems
@@ -268,7 +262,6 @@ fetch dt.davis.problems, from:-7d
 > - **< 20%** — Healthy alerting (Level 3+)
 > - **20-50%** — Moderate noise, review alerting profiles (Level 2)
 > - **> 50%** — Significant noise, alerting needs overhaul (Level 1)
-
 
 <a id="feature-mapping"></a>
 
@@ -297,7 +290,6 @@ Use this table to identify which Dynatrace capabilities to adopt next based on y
 
 > **Tip:** You do not need to adopt every feature at every level. Focus on the features that address your most pressing gaps.
 
-
 <a id="summary"></a>
 
 ## 9. Summary and Next Steps
@@ -315,8 +307,6 @@ Use this table to identify which Dynatrace capabilities to adopt next based on y
 - Use the maturity assessment results to prioritize features for adoption
 - Share the maturity model with leadership to align on observability investment priorities
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

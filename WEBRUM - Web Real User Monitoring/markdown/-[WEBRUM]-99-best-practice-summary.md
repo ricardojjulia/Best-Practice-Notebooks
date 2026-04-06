@@ -1,6 +1,6 @@
 # WEBRUM-99: Best Practice Summary
 
-> **Series:** WEBRUM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** WEBRUM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -35,10 +35,10 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 1. RUM Agent Configuration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 1 | Use automatic injection | Injection method: **Automatic** (OneAgent modifies HTML responses at the web server) | Critical | WEBRUM-01 |
-| 2 | Filter out bots from all RUM queries | Always apply `filter user.type == "REAL_USER"` in every DQL query against `dt.rum.user_session` | Critical | WEBRUM-01 |
+| 2 | Filter out bots from all RUM queries | Always apply `filter user.type == "REAL_USER"` in every DQL query against `user.sessions` | Critical | WEBRUM-01 |
 | 3 | Use manual injection for CDN/static-hosted apps | Add RUM `<script>` tag to `<head>` before all other scripts when no server-side OneAgent exists | Recommended | WEBRUM-02 |
 | 4 | Use agentless RUM only as last resort | Select agentless monitoring only when OneAgent cannot be deployed at all | Optional | WEBRUM-02 |
 | 5 | Set session timeout to 30 minutes | Keep the default 30-minute inactivity timeout for session boundaries | Recommended | WEBRUM-01 |
@@ -49,7 +49,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 2. SPA Instrumentation
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 8 | Enable SPA route change capture | **Settings > Web and mobile monitoring > Async web requests and SPAs > SPA route changes**: **Enabled** | Critical | WEBRUM-02 |
 | 9 | Enable Async Web Requests capture | **Settings > Web and mobile monitoring > Async web requests and SPAs > Async web requests**: **Enabled** | Critical | WEBRUM-02 |
@@ -67,7 +67,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 3. Core Web Vitals Thresholds
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 19 | Target LCP at or below 2.5 seconds | **Largest Contentful Paint p75 <= 2500ms**. Poor threshold: > 4000ms | Critical | WEBRUM-03 |
 | 20 | Target INP at or below 200 milliseconds | **Interaction to Next Paint p75 <= 200ms**. Poor threshold: > 500ms | Critical | WEBRUM-03 |
@@ -86,7 +86,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 4. Performance Optimization
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 31 | Target TTFB at or below 800 milliseconds | **Time to First Byte p75 <= 800ms** (Google recommendation) | Critical | WEBRUM-06 |
 | 32 | Use DNS prefetching for third-party domains | Add `<link rel="dns-prefetch" href="//cdn.example.com">` for external resources | Recommended | WEBRUM-06 |
@@ -103,7 +103,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 5. Error Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 41 | Target error session rate below 2% | **% of sessions with error.count > 0 < 2%** | Critical | WEBRUM-05, WEBRUM-08 |
 | 42 | Rank errors by affected session count, not occurrence count | A retry loop in one session inflates occurrence count; `countDistinct(session.id)` is the true impact metric | Critical | WEBRUM-05 |
@@ -118,7 +118,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 6. Session Replay and Privacy
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 49 | Set Session Replay default masking to "Mask user input" | **Settings > Session Replay > Data privacy > Default masking level**: **Mask user input** | Critical | WEBRUM-07 |
 | 50 | Block entire PII containers with `data-dtrum-block="true"` | Add `data-dtrum-block="true"` to any `<div>` containing sensitive data (SSN, CC, health info) | Critical | WEBRUM-07 |
@@ -135,7 +135,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 7. Session Analysis
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 59 | Define custom session properties for business context | Configure **Settings > Web and mobile monitoring > Session and user action properties** with: `session.user_id`, `session.plan_type`, `session.cart_value`, `session.ab_variant` | Critical | WEBRUM-04 |
 | 60 | Target bounce rate below 40% | **% of sessions with action.count == 1 < 40%** | Recommended | WEBRUM-04, WEBRUM-08 |
@@ -149,7 +149,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 8. Dashboards and Alerting
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 66 | Set Apdex threshold T = 3 seconds for page loads | Satisfied: <= 3s, Tolerating: 3-12s, Frustrated: > 12s | Critical | WEBRUM-08 |
 | 67 | Set Apdex threshold T = 2.5 seconds for XHR and route changes | Satisfied: <= 2.5s, Tolerating: 2.5-10s, Frustrated: > 10s | Critical | WEBRUM-08 |
@@ -170,7 +170,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 
 ## 9. DQL Query Patterns
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
 | 80 | Always include `from:` time range on RUM queries | Use `from:-1h` for real-time, `from:-24h` for daily, `from:-7d` for trends | Critical | WEBRUM-01 |
 | 81 | Always filter `user.type == "REAL_USER"` on session queries | Excludes bots (`ROBOT`) and synthetic monitors (`SYNTHETIC`) from real-user analysis | Critical | WEBRUM-01 |

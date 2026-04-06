@@ -1,6 +1,6 @@
 # CLOUD-02: AWS Integration
 
-> **Series:** CLOUD | **Notebook:** 2 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD | **Notebook:** 2 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -144,6 +144,13 @@ fetch dt.entity.ec2_instance
 | fieldsKeep id, entity.name, tags, awsInstanceType, awsAvailabilityZone
 | sort entity.name asc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_EC2_INSTANCE
+// | fieldsKeep id, name, tags, awsInstanceType, awsAvailabilityZone
+// | sort name asc
+// | limit 20
+
 ```
 
 ### Count EC2 Instances by Instance Type
@@ -163,6 +170,13 @@ fetch dt.entity.aws_lambda_function
 | fieldsKeep id, entity.name, tags, awsLambdaFunctionRuntime
 | sort entity.name asc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes AWS_LAMBDA_FUNCTION
+// | fieldsKeep id, name, tags, awsLambdaFunctionRuntime
+// | sort name asc
+// | limit 20
+
 ```
 
 ### List RDS Instances
@@ -173,6 +187,7 @@ fetch dt.entity.relational_database_service
 | fieldsKeep id, entity.name, tags
 | sort entity.name asc
 | limit 20
+
 ```
 
 <a id="aws-metrics"></a>

@@ -18,6 +18,7 @@ End-to-end guidance for managing logs with Dynatrace OpenPipeline.
 6. [Topology](markdown/-[OPLOGS]-06-topology.md) — Log topology and relationships
 7. [Analytics](markdown/-[OPLOGS]-07-analytics.md) — Advanced log analytics
 8. [Security](markdown/-[OPLOGS]-08-security.md) — Security, masking, and compliance
+99. [Best Practice Summary](markdown/-[OPLOGS]-99-best-practice-summary.md) — Consolidated best practices from the OPLOGS series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

@@ -1,11 +1,10 @@
 # BIZEV-01: Business Events Fundamentals
 
-> **Series:** BIZEV | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** BIZEV | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Business events are purpose-built telemetry that captures meaningful business transactions — purchases, logins, form submissions, API calls — as first-class observability data in Dynatrace Grail. Unlike generic events or logs that focus on infrastructure health, business events (`bizevents`) tie technical signals directly to business outcomes. This notebook introduces the business events data model, explains how they differ from generic events, and demonstrates the core DQL patterns for exploring business event data.
-
 
 ---
 
@@ -21,7 +20,6 @@ Business events are purpose-built telemetry that captures meaningful business tr
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -30,7 +28,6 @@ Business events are purpose-built telemetry that captures meaningful business tr
 | **Permissions** | `storage:events:read`, `storage:bizevents:read` |
 | **Data** | Business events being ingested (OneAgent auto-capture or API) |
 | **Knowledge** | Basic DQL query skills |
-
 
 <a id="what-are-business-events"></a>
 
@@ -55,9 +52,7 @@ Business events are stored in the `bizevents` data object in Dynatrace Grail. Th
 
 > **Note:** Business events can also carry arbitrary custom attributes as part of their payload — product IDs, order amounts, user segments, geographic data, and more.
 
-
 Let's start by fetching recent business events to see what data is available in your environment.
-
 
 ```dql
 // Fetch the most recent business events to explore available data
@@ -82,7 +77,6 @@ Dynatrace has two distinct event data objects. Understanding the difference is c
 | **DQL table** | `fetch bizevents` | `fetch events` |
 
 > **Important:** Do not confuse `bizevents` with `events`. They are separate data objects with different schemas and use cases. Business events are designed for business analytics; generic events are designed for operational monitoring.
-
 
 ```dql
 // Compare the volume of business events vs generic events
@@ -129,7 +123,6 @@ currency: "USD"
 customer_segment: "premium"
 payment_method: "credit_card"
 ```
-
 
 ```dql
 // Explore the schema of business events — see all available fields
@@ -204,7 +197,6 @@ sendBizEvent({
 });
 ```
 
-
 ```dql
 // Identify ingestion sources — which providers are sending business events?
 fetch bizevents, from:-24h
@@ -223,7 +215,6 @@ Now that we understand the data model, let's explore business events using core 
 
 The most fundamental query — how many events of each type are being captured?
 
-
 ```dql
 // Count business events by type over the last 24 hours
 fetch bizevents, from:-24h
@@ -236,7 +227,6 @@ fetch bizevents, from:-24h
 
 Visualize how business event volume changes throughout the day. This helps identify peak business hours and detect anomalies.
 
-
 ```dql
 // Business event volume over time, grouped by event type
 fetch bizevents, from:-24h
@@ -244,7 +234,7 @@ fetch bizevents, from:-24h
 ```
 
 ```dql
-// Total business event volume per hour (all types combined)
+// Total business event volume per getHour(all types combined)
 fetch bizevents, from:-24h
 | makeTimeseries total_events = count(), interval:1h
 ```
@@ -254,7 +244,6 @@ fetch bizevents, from:-24h
 ## 6. Event Providers and Categories
 
 Understanding which providers are sending events and how they are categorized helps organize your business analytics.
-
 
 ```dql
 // Breakdown by provider and category
@@ -292,8 +281,6 @@ In this notebook, you learned:
 - [Business Events API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/business-events)
 - [CloudEvents Specification](https://cloudevents.io/)
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

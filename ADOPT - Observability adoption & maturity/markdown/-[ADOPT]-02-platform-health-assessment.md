@@ -1,11 +1,10 @@
 # ADOPT-02: Platform Health Assessment
 
-> **Series:** ADOPT | **Notebook:** 2 of 5 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** ADOPT | **Notebook:** 2 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 A healthy observability platform is the foundation for everything else — alerting, troubleshooting, capacity planning, and automation all depend on complete and accurate data. This notebook provides a structured approach to assessing Dynatrace platform health: OneAgent deployment coverage, data ingestion rates, entity monitoring completeness, ActiveGate status, and license consumption. The result is a platform health scorecard you can review regularly.
-
 
 ---
 
@@ -22,7 +21,6 @@ A healthy observability platform is the foundation for everything else — alert
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ A healthy observability platform is the foundation for everything else — alert
 | **Data** | At least 24 hours of OneAgent data |
 | **Audience** | Platform engineers, Dynatrace administrators |
 
-
 <a id="oneagent-coverage"></a>
 
 ## 1. OneAgent Deployment Coverage
@@ -41,17 +38,19 @@ OneAgent coverage is the most fundamental health indicator. Gaps in deployment m
 
 ### 1.1 Total Monitored Hosts
 
-
 ```dql
 // Count all monitored hosts and break down by monitoring mode
 fetch dt.entity.host
 | summarize total_hosts = count()
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize total_hosts = count()
+
 ```
 
 ### 1.2 Hosts by Monitoring Mode
 
 Dynatrace supports multiple monitoring modes. Full-stack provides the deepest visibility, while infrastructure-only and cloud-only modes have limited capabilities.
-
 
 ```dql
 // Break down hosts by monitoring mode
@@ -64,7 +63,6 @@ fetch dt.entity.host
 
 Running outdated OneAgent versions can lead to missed features, security vulnerabilities, and compatibility issues. This query identifies the distribution of agent versions across your environment.
 
-
 ```dql
 // Identify OneAgent version distribution across hosts
 fetch dt.entity.host
@@ -74,7 +72,6 @@ fetch dt.entity.host
 ```
 
 > **Tip:** If you see more than 3-4 distinct agent versions, consider enabling auto-update or scheduling a coordinated update. A single major version across the fleet reduces support complexity.
-
 
 <a id="host-monitoring"></a>
 
@@ -86,7 +83,6 @@ Beyond simple counts, we need to verify that monitored hosts are actively report
 
 This query provides a quick health check — if hosts are reporting CPU metrics, the agent is functional.
 
-
 ```dql
 // Top 10 hosts by average CPU usage over last 1 hour
 timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
@@ -96,7 +92,6 @@ timeseries avgCpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 ```
 
 ### 2.2 Host Memory Utilization
-
 
 ```dql
 // Top 10 hosts by average memory usage over last 1 hour
@@ -114,16 +109,19 @@ Auto-discovered services and process groups indicate the depth of application-le
 
 ### 3.1 Service Count and Types
 
-
 ```dql
 // Count services by service type
 fetch dt.entity.service
 | summarize service_count = count(), by:{serviceType}
 | sort service_count desc
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize service_count = count(), by:{serviceType}
+// | sort service_count desc
+
 ```
 
 ### 3.2 Process Group Inventory
-
 
 ```dql
 // Count process groups by technology type
@@ -131,6 +129,12 @@ fetch dt.entity.process_group
 | summarize pg_count = count(), by:{softwareTechnologies}
 | sort pg_count desc
 | limit 15
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes PROCESS
+// | summarize pg_count = count(), by:{softwareTechnologies}
+// | sort pg_count desc
+// | limit 15
+
 ```
 
 <a id="data-ingestion"></a>
@@ -141,7 +145,6 @@ Understanding how much data flows into Dynatrace helps with capacity planning, c
 
 ### 4.1 Log Ingestion Volume Over Time
 
-
 ```dql
 // Log ingestion trend over the last 24 hours by hour
 fetch logs, from:-24h
@@ -149,7 +152,6 @@ fetch logs, from:-24h
 ```
 
 ### 4.2 Log Ingestion by Source
-
 
 ```dql
 // Top 10 log sources by volume in the last 24 hours
@@ -160,7 +162,6 @@ fetch logs, from:-24h
 ```
 
 ### 4.3 Span Ingestion Volume
-
 
 ```dql
 // Span ingestion trend over the last 24 hours
@@ -176,18 +177,17 @@ ActiveGates serve as routing, monitoring extension, and API endpoints. Their hea
 
 ### 5.1 ActiveGate Inventory
 
-
 ```dql
 // List all ActiveGates with their properties
 fetch dt.entity.environment_active_gate
 | fieldsAdd entity.name
 | summarize ag_count = count()
+
 ```
 
 ### 5.2 ActiveGate Metric Health
 
 Self-monitoring metrics confirm ActiveGates are processing data. A flat or zero metric suggests the ActiveGate is unhealthy.
-
 
 ```dql
 // ActiveGate connection count over the last 1 hour
@@ -204,7 +204,6 @@ Tracking license consumption helps prevent unexpected overages and ensures you a
 
 Host units are a primary consumption metric. Each host consumes units based on its memory size and monitoring mode.
 
-
 ```dql
 // Estimate host unit consumption by monitoring mode
 fetch dt.entity.host
@@ -213,7 +212,6 @@ fetch dt.entity.host
 ```
 
 ### 6.2 Log Ingestion Volume for Cost Awareness
-
 
 ```dql
 // Daily log record count over the last 7 days
@@ -249,7 +247,6 @@ Combine the results from the queries above into a regular health scorecard. Revi
 | **4-5 green** | Significant gaps | Prioritize remediation |
 | **< 4 green** | Critical | Escalate to platform team |
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -267,8 +264,6 @@ Combine the results from the queries above into a regular health scorecard. Revi
 - Schedule a recurring health scorecard review (weekly recommended for new deployments)
 - Compare discovered entities against your CMDB to identify coverage gaps
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

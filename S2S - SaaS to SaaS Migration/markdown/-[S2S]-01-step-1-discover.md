@@ -1,6 +1,6 @@
 # S2S-01: Step 1 — Discover: Migration Scenarios and Inventory
 
-> **Series:** S2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 The first step in any SaaS-to-SaaS migration is understanding *why* you are migrating between tenants, inventorying what you have, and confirming what migrates automatically versus what requires manual effort. This notebook guides you through discovery, scenario identification, and tool selection.
 
@@ -142,6 +142,14 @@ fetch dt.entity.host
     else: if(isNotNull(azureResourceGroupName), then: "Azure", else: "On-Premises"))
 | summarize count = count(), by:{provider, osType}
 | sort count desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsAdd provider = if(isNotNull(awsNameTag), then: "AWS",
+// else: if(isNotNull(azureResourceGroupName), then: "Azure", else: "On-Premises"))
+// | summarize count = count(), by:{provider, osType}
+// | sort count desc
+
 ```
 
 ### Kubernetes Cluster Inventory
@@ -151,6 +159,12 @@ fetch dt.entity.host
 fetch dt.entity.kubernetes_cluster
 | fields entity.name, id
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name, id
+// | sort name asc
+
 ```
 
 ### Service Inventory
@@ -160,6 +174,12 @@ fetch dt.entity.kubernetes_cluster
 fetch dt.entity.service
 | summarize count = count(), by:{serviceType}
 | sort count desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize count = count(), by:{serviceType}
+// | sort count desc
+
 ```
 
 ### Application and Synthetic Inventory
@@ -169,6 +189,7 @@ fetch dt.entity.service
 fetch dt.entity.application
 | summarize app_count = count()
 | append [fetch dt.entity.synthetic_test | summarize synthetic_count = count()]
+
 ```
 
 ### ActiveGate Inventory
@@ -191,7 +212,8 @@ fetch logs, from:-30d
 | filter matchesPhrase(log.source, "audit")
 | filter contains(content, "settings")
 | parse content, "JSON:json"
-| summarize changes = count(), by:{json["schemaId"]}
+| fieldsAdd schemaId = json["schemaId"]
+| summarize changes = count(), by:{schemaId}
 | sort changes desc
 | limit 20
 ```

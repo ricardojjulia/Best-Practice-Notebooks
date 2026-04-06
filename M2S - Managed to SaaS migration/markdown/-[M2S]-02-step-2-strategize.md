@@ -1,6 +1,6 @@
 # M2S-02: Step 2 — Strategize: Define Your Migration Approach
 
-> **Series:** M2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 With your discovery complete, it's time to turn inventory into action. This notebook helps you select a migration approach, sequence your operations, assess risks, and build a timeline that earns stakeholder confidence.
 
@@ -201,7 +201,7 @@ These are the non-obvious factors that derail migrations when overlooked.
 | **New ActiveGates required** | SaaS requires Environment ActiveGates — cannot reuse Managed Cluster ActiveGates |
 | **Network zones** | Must be recreated in SaaS — plan ActiveGate placement per zone |
 | **Firewall rules** | New outbound rules to `*.live.dynatrace.com` and `*.apps.dynatrace.com` on port 443 |
-| **OneAgent version compatibility** | Dynatrace supports OneAgent versions for 9-12 months — verify your oldest agents are within support |
+| **OneAgent version compatibility** | Dynatrace supports OneAgent versions for 9 months (Standard) / 12 months (Enterprise) — verify your oldest agents are within support |
 
 ### Configuration
 
@@ -238,11 +238,18 @@ The queries from Step 1 (Discover) provide the data you need to assess these dep
 Once your agents are reporting to SaaS, use these DQL queries to validate coverage and identify gaps.
 
 ```dql
-// Check OneAgent version distribution — agents outside the 9-12 month support window need upgrading before migration
+// Check OneAgent version distribution — agents outside the 9-month (Standard) / 12-month (Enterprise) support window need upgrading before migration
 fetch dt.entity.host
 | fieldsAdd version = installerVersion
 | summarize hostCount = count(), by:{version}
 | sort hostCount desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsAdd version = installerVersion
+// | summarize hostCount = count(), by:{version}
+// | sort hostCount desc
+
 ```
 
 ```dql
@@ -251,6 +258,13 @@ fetch dt.entity.host | summarize hosts = count()
 | append [fetch dt.entity.service | summarize services = count()]
 | append [fetch dt.entity.application | summarize applications = count()]
 | append [fetch dt.entity.process_group | summarize process_groups = count()]
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE | summarize hosts = count()
+// | append [fetch dt.entity.service | summarize services = count()]
+// | append [fetch dt.entity.application | summarize applications = count()]
+// | append [fetch dt.entity.process_group | summarize process_groups = count()]
+
 ```
 
 ```dql
@@ -258,6 +272,7 @@ fetch dt.entity.host | summarize hosts = count()
 fetch dt.entity.active_gate
 | fieldsAdd entity.name, networkZone
 | sort entity.name asc
+
 ```
 
 <a id="risk-assessment"></a>

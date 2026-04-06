@@ -32,7 +32,7 @@ This notebook consolidates every actionable best practice from the SYNTH series 
 
 Choose the right monitor type for each use case.
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Use **HTTP monitors** for API health checks and REST endpoints | Monitor type: HTTP single request | Critical |
 | Use **HTTP multi-step** for auth-token-then-API workflows | Monitor type: HTTP multi-step with variable extraction | Critical |
@@ -47,7 +47,7 @@ Choose the right monitor type for each use case.
 <a id="http-monitor-configuration"></a>
 ## 2. HTTP Monitor Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Set explicit request timeout | Timeout: **30 seconds** (default) | Critical |
 | Set `Content-Type` and `Accept` headers on every request | `Content-Type: application/json`, `Accept: application/json` | Critical |
@@ -63,7 +63,7 @@ Choose the right monitor type for each use case.
 <a id="browser-monitor-configuration"></a>
 ## 3. Browser Monitor Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Set viewport to match target audience device | Desktop: **1920x1080**, Laptop: **1366x768**, Tablet: **768x1024**, Mobile: **375x667** | Critical |
 | Use CSS selectors as the primary element selector type | Selector: `#login-btn` or `[data-testid='login']` | Critical |
@@ -78,7 +78,7 @@ Choose the right monitor type for each use case.
 <a id="network-monitor-configuration"></a>
 ## 4. Network Monitor Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Set ICMP packet count to 3-10 per execution | Packet count: **5** (balanced accuracy vs speed) | Recommended |
 | Set ICMP timeout to 5 seconds per packet | Timeout: **5 seconds** | Recommended |
@@ -92,7 +92,7 @@ Choose the right monitor type for each use case.
 <a id="scheduling-and-frequency"></a>
 ## 5. Scheduling and Frequency
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Run HTTP monitors at **1-5 minute** intervals for critical APIs | Frequency: **1 min** (critical), **5 min** (standard) | Critical |
 | Run browser monitors at **5-15 minute** intervals | Frequency: **5 min** (critical), **15 min** (standard) | Critical |
@@ -104,7 +104,7 @@ Choose the right monitor type for each use case.
 <a id="location-strategy"></a>
 ## 6. Location Strategy
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Assign a minimum of **3 public locations** per external-facing monitor | Locations: 3+ geographically distributed | Critical |
 | Select locations that match your user base geography | Choose regions where real users access the app | Critical |
@@ -116,7 +116,7 @@ Choose the right monitor type for each use case.
 <a id="private-locations-and-activegate"></a>
 ## 7. Private Locations and ActiveGate
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Deploy ActiveGate with `--enable-synthetic` capability | Capability: **synthetic** | Critical |
 | Provision ActiveGate with minimum **4 CPU cores, 8 GB RAM, 50 GB disk** | Resources: 4 cores / 8 GB / 50 GB (recommended) | Critical |
@@ -131,7 +131,7 @@ Choose the right monitor type for each use case.
 <a id="validation-and-assertions"></a>
 ## 8. Validation and Assertions
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Add at least one content validation rule to every monitor | Validation: text-present or JSON-path assertion | Critical |
 | Validate positive content ("Welcome", "status: ok") rather than only checking for absence of errors | Validation type: **Text Present** | Critical |
@@ -144,7 +144,7 @@ Choose the right monitor type for each use case.
 <a id="authentication-and-security"></a>
 ## 9. Authentication and Security
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Store all credentials in the Dynatrace Credential Vault | Path: Settings > Integration > Credential vault | Critical |
 | Reference credentials with `${credentials.vault.myCredential}` syntax | Never hardcode tokens or passwords in monitor config | Critical |
@@ -161,7 +161,7 @@ Choose the right monitor type for each use case.
 
 Set definitive thresholds for synthetic response time and web vitals.
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | HTTP monitor response time target | Good: **< 2s**, Warning: **2-5s**, Critical: **> 5s** | Critical |
 | DNS resolution time target | Good: **< 50ms**, Warning: **50-200ms**, Critical: **> 200ms** | Recommended |
@@ -178,7 +178,7 @@ Set definitive thresholds for synthetic response time and web vitals.
 <a id="alerting-configuration"></a>
 ## 11. Alerting Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Require **2-3 consecutive failures** before triggering an availability alert | Consecutive failures: **3** (recommended) | Critical |
 | Require failures from **2+ locations** to confirm a global outage | Location threshold: **2** | Critical |
@@ -193,7 +193,7 @@ Set definitive thresholds for synthetic response time and web vitals.
 <a id="slos-and-error-budgets"></a>
 ## 12. SLOs and Error Budgets
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Define an availability SLO for every critical synthetic monitor | SLO target: **99.9%** (8.76 hours downtime/year) | Critical |
 | Define a performance SLO for P95 response time | SLO: **95%** of executions < **3000ms** | Recommended |
@@ -206,7 +206,7 @@ Set definitive thresholds for synthetic response time and web vitals.
 <a id="dashboard-and-reporting"></a>
 ## 13. Dashboard and Reporting
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Build a synthetic dashboard with these 6 tiles: Overall Availability (single value), Availability Trend (line chart), P95 Response Time by Monitor (bar chart), Location Map, Failures Table, SLO Status (gauge) | Dashboard layout: KPI row + trend row + detail row + table row | Recommended |
 | Show overall availability as a single-value tile | Tile: `countIf(available) * 100 / count()` over 24h | Recommended |
@@ -219,7 +219,7 @@ Set definitive thresholds for synthetic response time and web vitals.
 <a id="operational-hygiene"></a>
 ## 14. Operational Hygiene
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Name monitors descriptively: `[Type] Target - Purpose` | Example: `[HTTP] api.example.com/health - API Health` | Recommended |
 | Name private locations with a consistent convention that distinguishes them from public locations | Example: `PRIVATE-DC1-US-EAST` | Recommended |

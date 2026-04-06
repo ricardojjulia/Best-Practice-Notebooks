@@ -1,6 +1,6 @@
 # WEBRUM-08: Dashboards and Alerting
 
-> **Series:** WEBRUM | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -49,15 +49,15 @@ Executive dashboards should be simple, business-focused, and actionable. Key met
 
 ```dql
 // Executive KPI summary — single-query dashboard tile
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | summarize
     total_sessions = count(),
-    error_sessions = countIf(error.count > 0),
-    bounce_sessions = countIf(action.count == 1),
-    avg_actions = avg(action.count),
+    error_sessions = countIf(totalErrorCount > 0),
+    bounce_sessions = countIf(userActionCount == 1),
+    avg_actions = avg(userActionCount),
     avg_duration_min = avg(toDouble(duration) / 60000000000.0),
-    by:{app.name}
+    by:{application}
 | fieldsAdd error_rate_pct = round(toDouble(error_sessions) / toDouble(total_sessions) * 100.0, decimals: 1),
     bounce_rate_pct = round(toDouble(bounce_sessions) / toDouble(total_sessions) * 100.0, decimals: 1),
     avg_duration_min = round(avg_duration_min, decimals: 1)
@@ -66,9 +66,9 @@ fetch dt.rum.user_session, from:-24h
 
 ```dql
 // Session volume trend — 7-day daily session counts
-fetch dt.rum.user_session, from:-7d
-| filter user.type == "REAL_USER"
-| makeTimeseries session_count = count(), interval:1d, by:{app.name}
+fetch user.sessions, from:-7d
+| filter userType == "REAL_USER"
+| makeTimeseries session_count = count(), interval:1d, by:{application}
 ```
 
 <a id="apdex"></a>
@@ -106,7 +106,7 @@ fetch user.events, from:-24h
     satisfied = countIf(duration_sec <= 3),
     tolerating = countIf(duration_sec > 3 and duration_sec <= 12),
     frustrated = countIf(duration_sec > 12),
-    by:{app.name}
+    by:{application}
 | fieldsAdd apdex = round((toDouble(satisfied) + toDouble(tolerating) / 2.0) / toDouble(total), decimals: 3)
 | sort apdex asc
 ```
@@ -158,16 +158,18 @@ Operations teams need real-time visibility into errors, performance anomalies, a
 
 ```dql
 // Real-time error rate — errors per 15 minutes over the last 6 hours
-fetch dt.rum.error, from:-6h
+fetch user.events, from:-6h
+| filter type == "Error"
 | makeTimeseries error_count = count(), interval:15m, by:{error.type}
 ```
 
 ```dql
 // Active error summary — current top errors in the last hour
-fetch dt.rum.error, from:-1h
+fetch user.events, from:-1h
+| filter type == "Error"
 | summarize error_count = count(),
-    affected_sessions = countDistinct(session.id),
-    by:{error.message, error.type, app.name}
+    affected_sessions = countDistinct(sessionId),
+    by:{error.message, error.type, application}
 | sort affected_sessions desc
 | limit 10
 ```
@@ -179,7 +181,7 @@ fetch user.events, from:-1h
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | summarize total = count(),
     under_3s = countIf(duration_sec <= 3),
-    by:{app.name}
+    by:{application}
 | fieldsAdd sla_pct = round(toDouble(under_3s) / toDouble(total) * 100.0, decimals: 1)
 | sort sla_pct asc
 ```
@@ -221,23 +223,24 @@ The following queries provide the data foundation for error rate alerting. Use t
 
 ```dql
 // Error rate per 15-minute window — alert threshold data
-fetch dt.rum.user_session, from:-6h
-| filter user.type == "REAL_USER"
-| fieldsAdd has_error = if(error.count > 0, 1.0, else: 0.0)
+fetch user.sessions, from:-6h
+| filter userType == "REAL_USER"
+| fieldsAdd has_error = if(totalErrorCount > 0, 1.0, else: 0.0)
 | makeTimeseries
     total_sessions = count(),
     error_sessions = sum(has_error),
     interval:15m,
-    by:{app.name}
+    by:{application}
 ```
 
 ```dql
-// New errors — errors first seen in the last hour (potential deployment issue)
-fetch dt.rum.error, from:-1h
+// New errors — errors first seen in the last getHour(potential deployment issue)
+fetch user.events, from:-1h
+| filter type == "Error"
 | summarize first_seen = min(timestamp),
     error_count = count(),
-    affected_sessions = countDistinct(session.id),
-    by:{error.message, app.name}
+    affected_sessions = countDistinct(sessionId),
+    by:{error.message, application}
 | sort first_seen desc
 | limit 10
 ```
@@ -253,7 +256,7 @@ Detect when page load performance degrades beyond acceptable thresholds.
 fetch user.events, from:-6h
 | filter action.type == "Load"
 | fieldsAdd duration_ms = toDouble(duration) / 1000000.0
-| makeTimeseries p75_duration = percentile(duration_ms, 75), interval:15m, by:{app.name}
+| makeTimeseries p75_duration = percentile(duration_ms, 75), interval:15m, by:{application}
 ```
 
 ```dql
@@ -264,7 +267,7 @@ fetch user.events, from:-6h
 | fieldsAdd apdex_score = if(duration_sec <= 3, 1.0,
     else: if(duration_sec <= 12, 0.5,
     else: 0.0))
-| makeTimeseries avg_apdex = avg(apdex_score), interval:15m, by:{app.name}
+| makeTimeseries avg_apdex = avg(apdex_score), interval:15m, by:{application}
 ```
 
 > **Tip:** For production alerting, use Davis AI anomaly detection rather than static thresholds. Davis automatically baselines normal behavior and detects deviations, reducing false positives from seasonal traffic patterns.
@@ -289,26 +292,26 @@ Use `append` to compare RUM and synthetic performance for the same application:
 
 ```dql
 // RUM session summary — real user experience
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | summarize rum_sessions = count(),
-    rum_error_sessions = countIf(error.count > 0),
-    rum_avg_actions = avg(action.count),
-    by:{app.name}
+    rum_error_sessions = countIf(totalErrorCount > 0),
+    rum_avg_actions = avg(userActionCount),
+    by:{application}
 | fieldsAdd monitoring_type = "RUM",
     error_rate_pct = round(toDouble(rum_error_sessions) / toDouble(rum_sessions) * 100.0, decimals: 1)
 ```
 
 ```dql
 // Synthetic vs RUM — compare session types for the same app
-fetch dt.rum.user_session, from:-24h
+fetch user.sessions, from:-24h
 | summarize session_count = count(),
     avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
-    error_sessions = countIf(error.count > 0),
-    by:{app.name, user.type}
-| filter user.type == "REAL_USER" or user.type == "SYNTHETIC"
+    error_sessions = countIf(totalErrorCount > 0),
+    by:{application, userType}
+| filter userType == "REAL_USER" or userType == "SYNTHETIC"
 | fieldsAdd error_rate_pct = round(toDouble(error_sessions) / toDouble(session_count) * 100.0, decimals: 1)
-| sort app.name asc, user.type asc
+| sort application asc, userType asc
 ```
 
 <a id="summary"></a>

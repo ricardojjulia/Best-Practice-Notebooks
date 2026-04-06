@@ -24,7 +24,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="migration-planning"></a>
 ## 1. Migration Planning
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Inventory all log sources first | `fetch logs, from:-7d \| summarize count(), by:{log.source} \| sort count desc` | Critical |
 | Score sources with weighted priority matrix | Volume 25%, Cost Savings 25%, Security Risk 25%, Parsing Complexity 10%, Business Criticality 15% | Critical |
@@ -36,7 +36,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="pipeline-configuration"></a>
 ## 2. Pipeline Configuration
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | One pipeline per use case | Name as `{source}-{purpose}` (e.g., `nginx-access-logs`) | Critical |
 | Max 30 pipelines per scope | Consolidate with conditional processors if approaching limit | Recommended |
@@ -51,7 +51,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="routing-rules"></a>
 ## 3. Routing Rules
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Specific routes before general routes | First match wins — compliance routes at highest priority | Critical |
 | Max 100 routes per scope | Combine conditions with AND/OR to stay within limit | Recommended |
@@ -65,7 +65,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="bucket-strategy-cost"></a>
 ## 4. Bucket Strategy & Cost
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | 3-tier bucket strategy (small/medium orgs) | `critical_logs` 90d (10-15%), `default_logs` 35d (60-70%), `ephemeral_logs` 7d (20-30%) | Critical |
 | 5-tier bucket strategy (enterprise) | Add `compliance_logs` 365d (3-5%) and `security_logs` 180d (2-5%) | Critical |
@@ -79,7 +79,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="processing-parsing"></a>
 ## 5. Processing & Parsing
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Use built-in Technology Parsers first | JSON parser for JSON logs, Apache parser for access logs, Syslog for RFC 3164/5424 | Recommended |
 | Apache/Nginx DPL pattern | `IPADDR:client_ip SPACE '-' SPACE LD:user SPACE '[' TIMESTAMP(...):timestamp ']' SPACE '"' LD:method SPACE LD:request_path SPACE LD:protocol '"' SPACE INT:status_code SPACE INT:response_bytes` | Recommended |
@@ -93,7 +93,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="metric-extraction-red"></a>
 ## 6. Metric Extraction (RED)
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Rate metric | Counter: `log.api.request_rate` with dimensions `method`, `path`, `status_category`, `service.name` | Recommended |
 | Error metric | Counter: `log.api.request_errors` matching `status >= 500 OR loglevel == "ERROR"` | Recommended |
@@ -107,7 +107,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="security-masking"></a>
 ## 7. Security & Masking
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Masking processors FIRST in every pipeline | Sensitive data redacted before parsing, routing, storage | Critical |
 | Credit cards | Built-in `CREDITCARD` matcher → `[CC_REDACTED]` | Critical |
@@ -127,7 +127,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="compliance"></a>
 ## 8. Compliance
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | PCI-DSS | Bucket `pci_payment_logs`, 365 days, mask PANs/CVV, payment team + security + auditors only | Critical |
 | SOC 2 | Bucket `soc2_audit_logs`, 365 days, immutable after 30-day grace, security + auditors only | Critical |
@@ -139,7 +139,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="troubleshooting-validation"></a>
 ## 9. Troubleshooting & Validation
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Post-migration validation checklist | All sources flowing, volumes match, no data loss, timestamps correct, routing correct, masking working, metrics generating | Critical |
 | Monitor pipeline volume hourly | `makeTimeseries count(), by:{dt.openpipeline.pipelines}, interval:1h` — drops = routing failures | Recommended |
@@ -152,7 +152,7 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 <a id="data-limits-constraints"></a>
 ## 10. Data Limits & Constraints
 
-| Practice | Setting | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
 | Max record size | 1 MB before processing, 16 MB after — exceeding = rejected/dropped | Critical |
 | Timestamp window | Logs: 24h past to 10min future. Spans: 2h past. Metrics: 1h past to 1min future | Critical |

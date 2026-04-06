@@ -1,6 +1,6 @@
 # Deploying OneAgent
 
-> **Series:** ONBRD | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Getting Data Into Dynatrace
 OneAgent is the foundation of Dynatrace monitoring. This notebook covers deployment strategies, installation methods, and verification steps to ensure your infrastructure is reporting data.
@@ -160,7 +160,7 @@ The Dynatrace Operator supports multiple deployment modes. Choose based on your 
 | **Application Only** | Sidecar | Yes | No | PaaS, shared nodes, OpenShift |
 | **Host Monitoring** | DaemonSet | No | Yes | When code-level monitoring not needed |
 
-> **Note:** Classic FullStack mode is deprecated. Dynatrace recommends migrating to Cloud Native FullStack for all Kubernetes environments.
+> **Note:** Classic FullStack mode is **not recommended for new deployments**. Dynatrace recommends Cloud Native FullStack for all Kubernetes environments.
 
 ### Deployment Method: Helm vs Manifests
 
@@ -381,6 +381,14 @@ fetch dt.entity.host
 | filter state == "RUNNING"
 | sort entity.name
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fields name, state, monitoringMode
+// | filter state == "RUNNING"
+// | sort name
+// | limit 50
+
 ```
 
 ```dql
@@ -404,6 +412,13 @@ fetch dt.entity.service
 | fields entity.name, serviceType
 | summarize service_count = count(), by: {serviceType}
 | sort service_count desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fields name, serviceType
+// | summarize service_count = count(), by: {serviceType}
+// | sort service_count desc
+
 ```
 
 ```dql
@@ -412,6 +427,13 @@ fetch dt.entity.process_group
 | fields entity.name
 | sort entity.name
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes PROCESS
+// | fields name
+// | sort name
+// | limit 50
+
 ```
 
 ### Host Verification Commands

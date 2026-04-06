@@ -1,11 +1,10 @@
 # DBMON-01: Database Monitoring Fundamentals
 
-> **Series:** DBMON | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DBMON | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 This notebook introduces how Dynatrace monitors databases across your environment. You will learn how OneAgent automatically detects database calls through distributed tracing, how database spans capture query-level detail, and how the Dynatrace entity model represents database services. We also cover ActiveGate extensions for remote database monitoring and the full range of supported database technologies.
-
 
 ---
 
@@ -22,7 +21,6 @@ This notebook introduces how Dynatrace monitors databases across your environmen
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ This notebook introduces how Dynatrace monitors databases across your environmen
 | **OneAgent** | Deployed on application hosts making database calls |
 | **Permissions** | `storage:spans:read`, `storage:entities:read`, `storage:metrics:read` |
 | **Data** | At least 1 hour of application traffic generating database calls |
-
 
 <a id="how-database-monitoring-works"></a>
 
@@ -55,13 +52,11 @@ OneAgent captures every database call as a **span** in the distributed trace. Th
 
 > **Note:** Dynatrace normalizes SQL statements by replacing literal values with `?` placeholders. This groups identical query patterns together regardless of parameter values.
 
-
 <a id="database-span-anatomy"></a>
 
 ## 2. Database Span Anatomy
 
 Let's examine the structure of a database span by querying for recent database calls and inspecting the available fields.
-
 
 ```dql
 // Inspect database span fields — sample 10 recent DB calls
@@ -86,13 +81,11 @@ The query above returns the key attributes of each database span:
 | `duration` | Execution time in nanoseconds | `1500000` (1.5ms) |
 | `span.kind` | Always `CLIENT` for outgoing DB calls | `CLIENT` |
 
-
 <a id="discovering-database-services"></a>
 
 ## 3. Discovering Database Services
 
 Dynatrace automatically creates **database service entities** when it detects database calls. These entities represent the logical database endpoint, not the host. Let's discover what database services exist in your environment.
-
 
 ```dql
 // Discover all database service entities in the environment
@@ -101,10 +94,17 @@ fetch dt.entity.service
 | fields entity.name, databaseHostNames, databaseVendor, softwareTechnologies
 | sort entity.name asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | filter serviceType == "DATABASE_SERVICE"
+// | fields name, databaseHostNames, databaseVendor, softwareTechnologies
+// | sort name asc
+// | limit 50
+
 ```
 
 You can also discover databases through the spans themselves, which is useful when entity detection hasn't yet completed or when you want to see databases called from specific services.
-
 
 ```dql
 // Discover database technologies from span data
@@ -123,7 +123,6 @@ fetch spans, from:-1h
 ## 4. Database Span Exploration
 
 Understanding the distribution of database calls helps identify which databases are most heavily used and where optimization efforts should focus.
-
 
 ```dql
 // Database call volume by technology over the last hour
@@ -170,7 +169,6 @@ Dynatrace supports a broad range of database technologies through OneAgent auto-
 
 > **Important:** The `db.system` field follows the OpenTelemetry semantic conventions. The exact values may vary depending on the database driver and instrumentation version.
 
-
 ```dql
 // Discover which database technologies are active in your environment
 fetch spans, from:-24h
@@ -208,13 +206,11 @@ While OneAgent captures database calls from the application side (client spans),
 
 > **Note:** Extensions 2.0 require a **host-based ActiveGate**, not a Kubernetes-based deployment. See the Dynatrace documentation for extension installation procedures.
 
-
 <a id="baseline-database-metrics"></a>
 
 ## 7. Baseline Database Metrics
 
 Establishing a performance baseline is essential for detecting anomalies. The following queries help you understand your typical database performance characteristics.
-
 
 ```dql
 // Database response time baseline — hourly P50, P95, P99 over the last 24 hours
@@ -253,8 +249,6 @@ In this notebook you learned:
 - **DBMON-02: SQL Database Monitoring** — Deep dive into relational database analysis with PostgreSQL, MySQL, MS SQL, and Oracle
 - **DBMON-03: NoSQL Database Monitoring** — MongoDB, Cassandra, DynamoDB, and Cosmos DB analysis
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

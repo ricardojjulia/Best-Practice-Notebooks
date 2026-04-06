@@ -1,6 +1,6 @@
 # AUTOM-99: Best Practice Summary
 
-> **Series:** AUTOM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** AUTOM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 This notebook consolidates every actionable best practice from the AUTOM series (notebooks 01-08) into a single reference. Each practice is definitive: it tells you exactly what to set, not what to consider.
 
@@ -20,6 +20,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 8. [Governance Architecture](#governance)
 9. [Migration Automation](#migration)
 10. [Tool Selection](#tool-selection)
+11. [Community Resources](#community-resources)
 
 ---
 
@@ -36,7 +37,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="authentication"></a>
 ## 1. Authentication & Token Management
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use least-privilege scopes | Grant only `settings.read`, `settings.write`, `ReadConfig`, `WriteConfig` for config tools. Add `ExternalSyntheticIntegration` only when managing synthetics. | Critical |
 | Use Platform Token + API Token together | Platform Token handles Settings 2.0 and Gen3 resources; API Token (`dt0c01.*`) handles Synthetics and SLOs. Configure both in provider. | Critical |
@@ -52,7 +53,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="settings-api"></a>
 ## 2. Settings API
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use Settings 2.0 API for all new configuration | Endpoint: `/api/v2/settings/objects`. Do not use Classic Config API for new configs. | Critical |
 | Discover schemas before creating objects | Call `GET /api/v2/settings/schemas` to find the correct `schemaId`, then `GET /api/v2/settings/schemas/{schemaId}` for field requirements. | Critical |
@@ -67,7 +68,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="monaco"></a>
 ## 3. Monaco Configuration-as-Code
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Always run `monaco validate` before deploy | Run `monaco validate manifest.yaml` to catch YAML syntax and schema errors before touching the tenant. | Critical |
 | Always run `monaco deploy --dry-run` before apply | Preview what will change. Never deploy blind. | Critical |
@@ -86,7 +87,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="terraform"></a>
 ## 4. Terraform Infrastructure-as-Code
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Pin the provider version | `version = "~> 1.91"` in `required_providers` block. Never use unpinned versions. | Critical |
 | Use remote state storage | Configure `backend "s3"` or `terraform.cloud` block. Never use local state for teams. | Critical |
@@ -106,7 +107,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="workflows"></a>
 ## 5. Dynatrace Workflows
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | One workflow, one purpose | Each workflow handles a single responsibility (e.g., "problem email notification" not "do everything on problem"). | Critical |
 | Make tasks idempotent | Tasks must be safe to run multiple times without side effects (e.g., check if ticket exists before creating). | Critical |
@@ -126,7 +127,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="sdks"></a>
 ## 6. SDKs & Programmatic Access
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use environment variables for credentials | Set `DT_URL` and `DT_API_TOKEN` as environment variables. Never pass tokens as function arguments or config literals. | Critical |
 | Handle paginated responses | Always iterate through all pages. Check for `nextPageKey` in responses and loop until exhausted. | Critical |
@@ -141,7 +142,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="cicd-gitops"></a>
 ## 7. CI/CD & GitOps
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Store all config in Git | Every Dynatrace configuration (Monaco YAML, Terraform HCL) lives in version control. No exceptions. | Critical |
 | Require PR reviews for production changes | Enable branch protection on `main`. Require at least 1 approval. Use CODEOWNERS for Dynatrace config paths. | Critical |
@@ -162,7 +163,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="governance"></a>
 ## 8. Governance Architecture
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Separate IAM pipeline from config pipeline | Pipeline A (central team) manages `dynatrace_iam_*` resources. Pipeline B (LOB teams) manages configs under grants from Pipeline A. | Critical |
 | Single service account writer in production | Only one SA writes to prod. All humans get read-only. Teams develop in dev/test tenant with UI write access. | Critical |
@@ -182,11 +183,11 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 <a id="migration"></a>
 ## 9. Migration Automation
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Export before migrating | Run `monaco download` or `terraform-provider-dynatrace -export` on the source tenant. Keep the full backup. | Critical |
 | Replace hardcoded entity IDs with selectors | Dashboards and alerting profiles contain entity IDs. Replace with entity selectors (e.g., `type(SERVICE),tag(environment:production)`) before deploying to target. | Critical |
-| Validate counts after each migration step | Compare `fetch dt.settings \| filter schemaId == "<schema>" \| summarize count()` between source and target tenants. | Critical |
+| Validate counts after each migration step | Use the Settings API: `GET /api/v2/settings/objects?schemaIds=<schema>` to compare object counts between source and target tenants. Note: `fetch dt.settings` is not valid DQL. | Critical |
 | Test migration in a non-production tenant first | Deploy exported config to a dev/test tenant before touching production. | Critical |
 | Re-enter credentials manually | Credential Vault entries, API tokens, SSL certificates, and cloud integration secrets do not migrate. Re-create them in the target. | Critical |
 | Use Monaco for SaaS-to-SaaS migration | Download from source, edit manifests to point at target, validate, dry-run, deploy. | Recommended |
@@ -222,6 +223,42 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 | Hardcoded secrets in config files | Security breach risk | Use env vars, Vault, or secret managers |
 | Distributing environment-wide write tokens to teams | No access isolation | Use brokered self-service or scoped OAuth |
 | Using `fetch dt.metrics` in DQL | Invalid command | Use `timeseries` for metrics |
+
+---
+
+<a id="community-resources"></a>
+## 11. Community Resources
+
+Key GitHub repositories organized by tool, providing starter templates, working examples, and hands-on exercises.
+
+### Monaco Repositories
+
+| Repository | Description |
+|------------|-------------|
+| [dynatrace-configuration-as-code](https://github.com/Dynatrace/dynatrace-configuration-as-code) | Official Monaco CLI (v2.28.5) |
+| [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | 9 Monaco starter templates, pipeline observability configs, CI validation scripts |
+| [easytrade](https://github.com/Dynatrace/easytrade) | Real-world Monaco project structure (manifest.yaml, detection rules, workflows) |
+| [Dynatrace-Config-Manager](https://github.com/Dynatrace/Dynatrace-Config-Manager) | GUI tool for tenant-to-tenant config migration |
+| [monaco-self-paced-exercises](https://github.com/dynatrace-ace/monaco-self-paced-exercises) | 6 structured hands-on exercises |
+
+### Terraform Repositories
+
+| Repository | Description |
+|------------|-------------|
+| [terraform-provider-dynatrace](https://github.com/dynatrace-oss/terraform-provider-dynatrace) | Official provider (v1.93.0, 180 releases) with export capability |
+| [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | 10 Terraform starter templates, reusable modules, DQL data source, IAM onboarding |
+
+### CI/CD & Platform Engineering
+
+| Repository | Description |
+|------------|-------------|
+| [dynatrace-automation-tools](https://github.com/Dynatrace/dynatrace-automation-tools) | SRG + Events CLI for CI/CD pipelines (v1.0.3) |
+| [platform-engineering-demo](https://github.com/dynatrace-perfclinics/platform-engineering-demo) | Full IDP reference: ArgoCD + Backstage + Keptn + Dynatrace |
+| [demo-crossplane](https://github.com/Dynatrace/demo-crossplane) | Crossplane + Terraform GitOps pattern |
+| [monaco-demo](https://github.com/dt-demos/monaco-demo) | Working GitHub Actions workflow for Monaco deploy |
+| [obslab-release-validation](https://github.com/Dynatrace/obslab-release-validation) | Release validation with k6, business events, and SRG |
+
+> **Migration note:** The `Dynatrace/community-examples` repository has an empty `configuration-as-code/` directory with a note that CaC samples will migrate from `dynatrace-configuration-as-code-samples` in a future update. Reference both repos until the migration completes.
 
 ---
 

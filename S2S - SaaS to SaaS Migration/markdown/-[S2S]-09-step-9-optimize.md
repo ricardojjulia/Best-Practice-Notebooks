@@ -1,6 +1,6 @@
 # S2S-09: Step 9 — Optimize: Cutover Validation and Decommission
 
-> **Series:** S2S | **Notebook:** 9 of 9 | **Phase:** Run | **Step:** Optimize | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 9 of 9 | **Phase:** Run | **Step:** Optimize | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -137,6 +137,14 @@ fetch dt.entity.host
     else: if(isNotNull(azureResourceGroupName), then: "Azure", else: "On-Premises"))
 | summarize count = count(), by:{provider}
 | sort count desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fieldsAdd provider = if(isNotNull(awsNameTag), then: "AWS",
+// else: if(isNotNull(azureResourceGroupName), then: "Azure", else: "On-Premises"))
+// | summarize count = count(), by:{provider}
+// | sort count desc
+
 ```
 
 ### Service Count Validation
@@ -146,6 +154,12 @@ fetch dt.entity.host
 fetch dt.entity.service
 | summarize count = count(), by:{serviceType}
 | sort count desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize count = count(), by:{serviceType}
+// | sort count desc
+
 ```
 
 ### Log Flow Validation

@@ -1,6 +1,6 @@
 # 🌐 Synthetic Network Monitoring
 
-> **Series:** SYNTH | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SYNTH | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Network Availability, DNS, and ICMP Monitoring
 This notebook covers Dynatrace Synthetic Network Availability Monitors, including ICMP (ping), DNS, and TCP port monitoring capabilities introduced in recent Dynatrace releases.
@@ -24,8 +24,6 @@ This notebook covers Dynatrace Synthetic Network Availability Monitors, includin
 - ✅ Access to a Dynatrace environment with Synthetic Monitoring
 - ✅ Completed SYNTH-01 through SYNTH-04
 - ✅ Private synthetic locations (for internal network monitoring)
-
-
 
 ## 1. Network Monitoring Overview <a name="overview"></a>
 
@@ -106,7 +104,7 @@ Network monitors complement application-level monitoring by testing at different
 // ICMP monitor results (last 24h)
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") OR matchesValue(event.type, "*ping*")
+| filter matchesValue(event.type, "*icmp*") or matchesValue(event.type, "*ping*")
 | fields timestamp,
          monitor = dt.entity.synthetic_test,
          location = dt.entity.synthetic_location,
@@ -121,7 +119,7 @@ fetch bizevents, from: now() - 24h
 // ICMP latency statistics by target
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") OR matchesValue(event.type, "*ping*")
+| filter matchesValue(event.type, "*icmp*") or matchesValue(event.type, "*ping*")
 | filter synthetic.availability == true
 | summarize {
     avg_latency_ms = avg(toDouble(synthetic.response_time)),
@@ -232,7 +230,7 @@ fetch bizevents, from: now() - 24h
 // TCP port monitor results (last 24h)
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*tcp*") OR matchesValue(event.type, "*port*")
+| filter matchesValue(event.type, "*tcp*") or matchesValue(event.type, "*port*")
 | fields timestamp,
          monitor = dt.entity.synthetic_test,
          location = dt.entity.synthetic_location,
@@ -246,7 +244,7 @@ fetch bizevents, from: now() - 24h
 // TCP connection time statistics
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*tcp*") OR matchesValue(event.type, "*port*")
+| filter matchesValue(event.type, "*tcp*") or matchesValue(event.type, "*port*")
 | filter synthetic.availability == true
 | summarize {
     avg_connect_ms = avg(toDouble(synthetic.response_time)),
@@ -327,10 +325,10 @@ Step 3: TCP Port Check
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event.type, "*icmp*") 
-        OR matchesValue(event.type, "*dns*") 
-        OR matchesValue(event.type, "*tcp*")
-        OR matchesValue(event.type, "*ping*")
-        OR matchesValue(event.type, "*port*")
+        or matchesValue(event.type, "*dns*") 
+        or matchesValue(event.type, "*tcp*")
+        or matchesValue(event.type, "*ping*")
+        or matchesValue(event.type, "*port*")
 | summarize {
     total_executions = count(),
     successful = countIf(synthetic.availability == true),
@@ -348,10 +346,10 @@ fetch bizevents, from: now() - 24h
 fetch bizevents, from: now() - 7d
 | filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event.type, "*icmp*") 
-        OR matchesValue(event.type, "*dns*") 
-        OR matchesValue(event.type, "*tcp*")
-        OR matchesValue(event.type, "*ping*")
-        OR matchesValue(event.type, "*port*")
+        or matchesValue(event.type, "*dns*") 
+        or matchesValue(event.type, "*tcp*")
+        or matchesValue(event.type, "*ping*")
+        or matchesValue(event.type, "*port*")
 | fieldsAdd hour_bucket = bin(timestamp, 1h)
 | summarize {
     success_count = countIf(synthetic.availability == true),
@@ -367,10 +365,10 @@ fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
 | filter synthetic.availability == true
 | filter matchesValue(event.type, "*icmp*") 
-        OR matchesValue(event.type, "*dns*") 
-        OR matchesValue(event.type, "*tcp*")
-        OR matchesValue(event.type, "*ping*")
-        OR matchesValue(event.type, "*port*")
+        or matchesValue(event.type, "*dns*") 
+        or matchesValue(event.type, "*tcp*")
+        or matchesValue(event.type, "*ping*")
+        or matchesValue(event.type, "*port*")
 | makeTimeseries {
     avg_latency_ms = avg(toDouble(synthetic.response_time)),
     p95_latency_ms = percentile(toDouble(synthetic.response_time), 95)
@@ -383,10 +381,10 @@ fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
 | filter synthetic.availability == false
 | filter matchesValue(event.type, "*icmp*") 
-        OR matchesValue(event.type, "*dns*") 
-        OR matchesValue(event.type, "*tcp*")
-        OR matchesValue(event.type, "*ping*")
-        OR matchesValue(event.type, "*port*")
+        or matchesValue(event.type, "*dns*") 
+        or matchesValue(event.type, "*tcp*")
+        or matchesValue(event.type, "*ping*")
+        or matchesValue(event.type, "*port*")
 | fields timestamp,
          event.type,
          monitor = dt.entity.synthetic_test,
@@ -401,10 +399,10 @@ fetch bizevents, from: now() - 24h
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
 | filter matchesValue(event.type, "*icmp*") 
-        OR matchesValue(event.type, "*dns*") 
-        OR matchesValue(event.type, "*tcp*")
-        OR matchesValue(event.type, "*ping*")
-        OR matchesValue(event.type, "*port*")
+        or matchesValue(event.type, "*dns*") 
+        or matchesValue(event.type, "*tcp*")
+        or matchesValue(event.type, "*ping*")
+        or matchesValue(event.type, "*port*")
 | summarize {
     total = count(),
     successful = countIf(synthetic.availability == true),

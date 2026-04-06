@@ -1,11 +1,10 @@
 # ADOPT-03: Success Metrics
 
-> **Series:** ADOPT | **Notebook:** 3 of 5 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** ADOPT | **Notebook:** 3 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 What gets measured gets improved. This notebook defines the key success metrics for an observability practice: Mean Time to Detect (MTTD), Mean Time to Resolve (MTTR), change failure rate, problem count trends, and alert noise ratio. For each metric, we provide a baseline DQL query, explain how to interpret results, and describe how to track improvement over time. These metrics translate observability investment into language that leadership understands.
-
 
 ---
 
@@ -22,7 +21,6 @@ What gets measured gets improved. This notebook defines the key success metrics 
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ What gets measured gets improved. This notebook defines the key success metrics 
 | **Permissions** | `storage:events:read`, `storage:logs:read`, `storage:metrics:read` |
 | **Data** | At least 7 days of Davis problem data for meaningful baselines |
 | **Audience** | SREs, engineering managers, VP of Engineering, CTO |
-
 
 <a id="why-metrics-matter"></a>
 
@@ -49,7 +46,6 @@ Success metrics serve three purposes:
 
 The DORA (DevOps Research and Assessment) metrics framework provides industry-standard benchmarks. We map Dynatrace capabilities to DORA metrics throughout this notebook.
 
-
 <a id="mttd"></a>
 
 ## 2. Mean Time to Detect (MTTD)
@@ -66,12 +62,11 @@ MTTD measures how long it takes from when a problem begins to when it is detecte
 
 Davis AI problems have an `event.start` timestamp (when the underlying condition began). By comparing this against the record timestamp, we can estimate detection lag.
 
-
 ```dql
 // Estimate MTTD: gap between problem start and Davis detection
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | fieldsAdd detection_lag_minutes = (toDouble(timestamp - event.start)) / 60000000000.0
 | summarize
     avg_mttd_minutes = avg(detection_lag_minutes),
@@ -84,7 +79,6 @@ fetch dt.davis.problems, from:-7d
 > - **< 5 minutes** — Excellent. Davis AI is detecting issues rapidly.
 > - **5-15 minutes** — Good. Typical for most environments.
 > - **> 15 minutes** — Review alert configurations and instrumentation coverage.
-
 
 <a id="mttr"></a>
 
@@ -100,24 +94,22 @@ MTTR measures the total time from problem detection to resolution. It captures t
 
 ### 3.1 MTTR Trend Over 7 Days
 
-
 ```dql
 // MTTR trend: average resolution time in hours, trended by day
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | filter maintenance.is_under_maintenance == false
 | makeTimeseries avg_mttr_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0), time:event.end
 ```
 
 ### 3.2 MTTR Summary Statistics
 
-
 ```dql
 // MTTR summary: average, median, and p95 resolution time in hours
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | filter maintenance.is_under_maintenance == false
 | fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
 | summarize
@@ -131,12 +123,11 @@ fetch dt.davis.problems, from:-7d
 
 Different problem categories often have very different resolution times. Breaking MTTR down by category helps identify which problem types need process improvement.
 
-
 ```dql
 // MTTR breakdown by problem category
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
 | summarize
     avg_mttr = avg(duration_hours),
@@ -154,7 +145,6 @@ fetch dt.davis.problems, from:-7d
 > | Medium | < 1 week |
 > | Low | > 1 week |
 
-
 <a id="problem-trends"></a>
 
 ## 4. Problem Count Trends
@@ -163,11 +153,10 @@ Tracking the total number of problems over time reveals whether your environment
 
 ### 4.1 Weekly Problem Trend
 
-
 ```dql
 // Weekly problem count trend over the last 30 days
 fetch dt.davis.problems, from:-30d
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | fieldsAdd week = getWeekOfYear(timestamp)
 | summarize problem_count = count(), by:{week}
 | sort week asc
@@ -175,11 +164,10 @@ fetch dt.davis.problems, from:-30d
 
 ### 4.2 Problems by Category Over Time
 
-
 ```dql
 // Problem trend by category over the last 7 days
 fetch dt.davis.problems, from:-7d
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | makeTimeseries problem_count = count(), interval:1d, by:{event.category}
 ```
 
@@ -187,11 +175,10 @@ fetch dt.davis.problems, from:-7d
 
 Identifying the most frequent problem types helps prioritize remediation efforts.
 
-
 ```dql
 // Top 10 recurring problem types in the last 30 days
 fetch dt.davis.problems, from:-30d
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | summarize occurrences = count(), by:{event.name}
 | sort occurrences desc
 | limit 10
@@ -205,13 +192,12 @@ Alert fatigue is one of the greatest threats to operational effectiveness. When 
 
 ### 5.1 Alert Noise Analysis
 
-
 ```dql
 // Alert noise analysis: actionable vs non-actionable problems
 fetch dt.davis.problems, from:-7d
 | summarize
     total = count(),
-    actionable = countIf(dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false),
+    actionable = countIf(dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false),
     frequent = countIf(dt.davis.is_frequent_event == true),
     duplicate = countIf(dt.davis.is_duplicate == true)
 | fieldsAdd actionable_pct = round(toDouble(actionable) / toDouble(total) * 100, decimals: 1)
@@ -220,13 +206,12 @@ fetch dt.davis.problems, from:-7d
 
 ### 5.2 Noise Trend Over Time
 
-
 ```dql
 // Daily noise trend: percentage of non-actionable problems per day
 fetch dt.davis.problems, from:-7d
 | makeTimeseries
     total = count(),
-    noisy = countIf(dt.davis.is_frequent_event == true OR dt.davis.is_duplicate == true),
+    noisy = countIf(dt.davis.is_frequent_event == true or dt.davis.is_duplicate == true),
     interval:1d
 ```
 
@@ -234,7 +219,6 @@ fetch dt.davis.problems, from:-7d
 > - Adjusting Davis AI sensitivity settings
 > - Configuring maintenance windows for known noisy periods
 > - Reviewing alerting profiles and notification filters
-
 
 <a id="change-failure-rate"></a>
 
@@ -252,7 +236,6 @@ Dynatrace tracks deployment events and can correlate them with Davis problems. T
 
 ### 6.1 Deployment Event Count
 
-
 ```dql
 // Count deployment events in the last 7 days
 fetch events, from:-7d
@@ -264,12 +247,11 @@ fetch events, from:-7d
 
 When Davis detects a problem, it often identifies a recent deployment as the root cause. Problems tagged with deployment correlation indicate change-related failures.
 
-
 ```dql
 // Problems in the last 7 days that may correlate with changes
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| filter dt.davis.is_frequent_event == false AND dt.davis.is_duplicate == false
+| filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | summarize
     total_problems = count(),
     by:{event.category}
@@ -284,7 +266,6 @@ fetch dt.davis.problems, from:-7d
 > | High | 5-10% |
 > | Medium | 10-15% |
 > | Low | > 15% |
-
 
 <a id="establishing-baselines"></a>
 
@@ -312,7 +293,6 @@ Record your current values and set improvement targets:
 - Record baselines per team or service if organizational structure allows
 - **Re-baseline quarterly** to account for growth and environmental changes
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -331,8 +311,6 @@ Record your current values and set improvement targets:
 - Create a recurring notebook or dashboard that runs these queries weekly
 - Share baseline metrics with leadership to establish accountability
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

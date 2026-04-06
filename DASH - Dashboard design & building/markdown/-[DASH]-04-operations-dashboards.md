@@ -1,11 +1,10 @@
 # DASH-04: Operations Dashboards
 
-> **Series:** DASH | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Operations dashboards serve as the real-time control panel for SREs, platform engineers, and NOC teams. Unlike executive dashboards that summarize weekly trends, operations dashboards focus on what is happening right now — service response times, error rates, log volume anomalies, active problems, and infrastructure health. This notebook covers tile selection, query patterns for real-time monitoring, and layout strategies for operations-tier dashboards.
-
 
 ---
 
@@ -22,7 +21,6 @@ Operations dashboards serve as the real-time control panel for SREs, platform en
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ Operations dashboards serve as the real-time control panel for SREs, platform en
 | **Data** | Active services with span data, log ingestion, host metrics |
 | **Prior Reading** | DASH-01, DASH-02 |
 
-
 <a id="service-response-time"></a>
 
 ## 1. Service Response Time Monitoring
@@ -40,7 +37,6 @@ Operations dashboards serve as the real-time control panel for SREs, platform en
 Response time is the most watched metric on an operations dashboard. Show it as a timeseries line chart with p50, p90, and p95 lines for context.
 
 ### Response Time Trend (All Services)
-
 
 ```dql
 // Service response time trend — p50, p90, p95 over last 2 hours
@@ -50,7 +46,6 @@ fetch spans, from:-2h
 ```
 
 ### Response Time by Service (Top 10 Slowest)
-
 
 ```dql
 // Top 10 slowest services by average response time
@@ -69,7 +64,6 @@ Error rate as a percentage shows which services are degraded. Display as a bar c
 
 ### Current Error Rate Table
 
-
 ```dql
 // Error rate by service — operations bar chart
 fetch spans, from:-1h
@@ -81,7 +75,6 @@ fetch spans, from:-1h
 ```
 
 ### Error Rate Trend Over Time
-
 
 ```dql
 // Overall error rate trend — operations line chart
@@ -99,7 +92,6 @@ Sudden log volume changes often indicate problems before Davis detects them. Tra
 
 ### Log Volume by Severity Level
 
-
 ```dql
 // Log volume by severity — stacked area chart
 fetch logs, from:-2h
@@ -108,7 +100,6 @@ fetch logs, from:-2h
 ```
 
 ### Top Log Sources by Error Volume
-
 
 ```dql
 // Top 10 log sources generating errors — operations table
@@ -122,7 +113,6 @@ fetch logs, from:-1h
 ### Log Volume Spike Detection
 
 Compare current hour to the same hour yesterday to detect anomalous volume increases.
-
 
 ```dql
 // Log volume comparison: current hour vs same hour yesterday
@@ -142,7 +132,6 @@ Active problems should be front and center on every operations dashboard. Show b
 
 ### Active Problems List
 
-
 ```dql
 // Active problems detail table — operations dashboard
 fetch dt.davis.problems, from:-24h
@@ -154,7 +143,6 @@ fetch dt.davis.problems, from:-24h
 ```
 
 ### Problem Status Over Time
-
 
 ```dql
 // Concurrently open problems over time — area chart
@@ -170,14 +158,12 @@ Infrastructure tiles provide context for service-level issues. CPU, memory, and 
 
 ### Host CPU Usage
 
-
 ```dql
 // Host CPU usage — operations line chart
 timeseries avg_cpu = avg(dt.host.cpu.usage), from:-2h, by:{dt.entity.host}
 ```
 
 ### Top Hosts by CPU — Identifying Hot Spots
-
 
 ```dql
 // Top 5 hosts by average CPU usage
@@ -188,7 +174,6 @@ timeseries avg_cpu = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 ```
 
 ### Host Memory Usage
-
 
 ```dql
 // Host memory usage — operations line chart
@@ -203,11 +188,10 @@ Deployments are the most common cause of production issues. Overlaying deploymen
 
 ### Recent Deployment Events
 
-
 ```dql
 // Recent deployment events — operations context table
 fetch events, from:-6h
-| filter event.kind == "DEPLOYMENT_EVENT" OR event.type == "CUSTOM_DEPLOYMENT"
+| filter event.kind == "DEPLOYMENT_EVENT" or event.type == "CUSTOM_DEPLOYMENT"
 | fieldsKeep timestamp, event.type, dt.entity.service, event.name
 | sort timestamp desc
 | limit 20
@@ -236,7 +220,6 @@ fetch events, from:-6h
 | No problem context | Team sees metrics but not root cause | Add active problems table |
 | Missing deployment markers | Cannot correlate changes with incidents | Add deployment events section |
 
-
 <a id="summary-and-next-steps"></a>
 
 ## 8. Summary and Next Steps
@@ -252,8 +235,6 @@ In this notebook you learned:
 
 **Next:** In **DASH-05: Engineering Dashboards**, we move to the deepest tier — trace-level analysis, database performance, endpoint metrics, and before/after deployment comparisons.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

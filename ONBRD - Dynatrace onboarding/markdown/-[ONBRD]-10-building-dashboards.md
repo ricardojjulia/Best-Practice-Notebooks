@@ -1,6 +1,6 @@
 # Building Dashboards
 
-> **Series:** ONBRD | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Visualizing Your Data
 Dashboards provide at-a-glance visibility into your environment's health and performance. This notebook covers dashboard creation, common visualization patterns, and sharing with your team.
@@ -197,6 +197,12 @@ fetch spans, from: now() - 1h
 fetch dt.entity.host
 | filter state == "RUNNING"
 | summarize host_count = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | filter state == "RUNNING"
+// | summarize host_count = count()
+
 ```
 
 ```dql

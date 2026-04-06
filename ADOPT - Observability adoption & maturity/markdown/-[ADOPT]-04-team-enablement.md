@@ -1,11 +1,10 @@
 # ADOPT-04: Team Enablement
 
-> **Series:** ADOPT | **Notebook:** 4 of 5 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** ADOPT | **Notebook:** 4 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 Technology alone does not drive observability maturity — people do. This notebook provides a framework for team enablement: role-based learning paths, recommended notebook study sequences, skill assessment approaches, and strategies for building internal champions. The goal is to move from a small group of Dynatrace experts to broad organizational capability.
-
 
 ---
 
@@ -22,7 +21,6 @@ Technology alone does not drive observability maturity — people do. This noteb
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ Technology alone does not drive observability maturity — people do. This noteb
 | **Permissions** | `storage:logs:read`, `storage:metrics:read`, `storage:entities:read` |
 | **Audience** | Engineering managers, platform team leads, learning & development |
 | **Context** | Completed ADOPT-01 (maturity model) and ADOPT-02 (platform health) assessments |
-
 
 <a id="enablement-challenge"></a>
 
@@ -56,7 +53,6 @@ Move from a model where knowledge is concentrated to one where every team has at
 - Navigate the Dynatrace UI independently
 - Create dashboards for their service
 - Respond to Davis AI problems without escalation
-
 
 <a id="role-based-paths"></a>
 
@@ -98,7 +94,6 @@ Different roles need different depths of Dynatrace knowledge. The following lear
 | **Beginner** | Read dashboards, understand SLO status, interpret problem impact |
 | **Intermediate** | Define SLOs for their team's services, review MTTR/MTTD trends |
 | **Advanced** | Drive observability culture, allocate resources for monitoring investment |
-
 
 <a id="study-sequences"></a>
 
@@ -144,7 +139,6 @@ Map roles to notebook series from this repository for structured learning.
 | 2 | ONBRD (notebooks 1-3) | Platform overview | 3 days |
 | 3 | ORGNZ (notebook 1) | Data organization concepts | 1 day |
 
-
 <a id="skill-assessment"></a>
 
 ## 4. Skill Assessment Framework
@@ -174,7 +168,6 @@ Use practical DQL exercises to assess current skill levels. The following catego
 - Can they configure OpenPipeline routing rules?
 - Can they design a Grail bucket strategy?
 - Can they create a Workflow for automated remediation?
-
 
 <a id="internal-champions"></a>
 
@@ -208,7 +201,6 @@ Internal champions are the force multiplier for observability adoption. They are
 | Teams with self-service dashboards | 100% within 6 months |
 | DQL-literate team members | At least 2 per team within 6 months |
 
-
 <a id="practical-exercises"></a>
 
 ## 6. Practical Exercises — Exploring Your Environment
@@ -217,17 +209,21 @@ The following DQL queries serve as starter exercises for new users. Each one ans
 
 ### Exercise 1: "What services are running in my environment?"
 
-
 ```dql
 // List all monitored services with their types
 fetch dt.entity.service
 | fieldsAdd entity.name, serviceType
 | sort entity.name asc
 | limit 25
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fieldsAdd name, serviceType
+// | sort name asc
+// | limit 25
+
 ```
 
 ### Exercise 2: "What happened in the last hour?"
-
 
 ```dql
 // Count error logs in the last hour by log level
@@ -237,7 +233,6 @@ fetch logs, from:-1h
 ```
 
 ### Exercise 3: "Which hosts are using the most CPU?"
-
 
 ```dql
 // Top 5 hosts by CPU usage in the last hour
@@ -249,7 +244,6 @@ timeseries cpuUsage = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 
 ### Exercise 4: "Are there any active problems?"
 
-
 ```dql
 // List currently active Davis problems
 fetch dt.davis.problems, from:-24h
@@ -259,7 +253,6 @@ fetch dt.davis.problems, from:-24h
 ```
 
 ### Exercise 5: "How much log data are we ingesting?"
-
 
 ```dql
 // Log ingestion volume over the last 24 hours by source
@@ -293,7 +286,6 @@ Use this template to plan a 12-week enablement program for your organization.
 | Escalation tickets to platform team | 30% reduction |
 | Champions identified and trained | 1 per team |
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -313,8 +305,6 @@ Use this template to plan a 12-week enablement program for your organization.
 - Schedule the first "Platform Orientation" session for weeks 1-2
 - Create a shared Slack/Teams channel for Dynatrace knowledge sharing
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

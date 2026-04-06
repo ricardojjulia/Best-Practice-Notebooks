@@ -1,6 +1,6 @@
 # MOBL-01: Mobile Monitoring Fundamentals
 
-> **Series:** MOBL | **Notebook:** 1 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL | **Notebook:** 1 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -129,6 +129,7 @@ The following query lists all configured mobile applications in your environment
 fetch dt.entity.device_application
 | fields entity.name, id, tags
 | sort entity.name asc
+
 ```
 
 <a id="beacon-data-flow"></a>

@@ -1,6 +1,6 @@
 # K8S-13: Kafka Monitoring with Kpow
 
-> **Series:** K8S | **Notebook:** 13 of 13 | **Created:** February 2026 | **Last Updated:** 02/09/2026
+> **Series:** K8S | **Notebook:** 13 of 13 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -499,6 +499,14 @@ fetch dt.entity.process_group_instance
 | fields entity.name, tags
 | sort entity.name asc
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes PROCESS
+// | filter contains(name, "kafka") or contains(name, "Kafka")
+// | fields name, tags
+// | sort name asc
+// | limit 20
+
 ```
 
 ## Summary

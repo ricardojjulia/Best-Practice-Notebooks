@@ -1,6 +1,6 @@
 # K8S-99: Best Practice Summary
 
-> **Series:** K8S | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** K8S | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 
@@ -45,7 +45,7 @@ This notebook consolidates every actionable best practice for Dynatrace Kubernet
 <a id="deployment-mode-selection"></a>
 ## 1. Deployment Mode Selection
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 1 | Use `cloudNativeFullStack` for new deployments | `spec.oneAgent.cloudNativeFullStack: {}` | **Critical** | Deployment |
 | 2 | Do NOT use `classicFullStack` for new deployments | Remove `spec.oneAgent.classicFullStack` | **Critical** | Deployment |
@@ -58,7 +58,7 @@ This notebook consolidates every actionable best practice for Dynatrace Kubernet
 <a id="operator-installation"></a>
 ## 2. Operator Installation
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 6 | Install operator via Helm OCI | `helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.8.1 --namespace dynatrace --create-namespace --wait` | **Critical** | Installation |
 | 7 | Enable CSI driver | `csidriver.enabled: true` in Helm values | **Critical** | Installation |
@@ -75,7 +75,7 @@ This notebook consolidates every actionable best practice for Dynatrace Kubernet
 <a id="dynakube-core-configuration"></a>
 ## 3. DynaKube Core Configuration
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 11 | Use API version v1beta5 or v1beta6 | `apiVersion: dynatrace.com/v1beta5` | **Critical** | Configuration |
 | 12 | Set `apiUrl` to your SaaS tenant | `spec.apiUrl: https://ENVIRONMENT_ID.live.dynatrace.com/api` | **Critical** | Configuration |
@@ -116,7 +116,7 @@ spec:
 <a id="activegate-configuration"></a>
 ## 4. ActiveGate Configuration
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 18 | Enable `kubernetes-monitoring` capability | `spec.activeGate.capabilities: [kubernetes-monitoring, routing]` | **Critical** | ActiveGate |
 | 19 | Add `dynatrace-api` capability | Add `dynatrace-api` to capabilities list | Recommended | ActiveGate |
@@ -136,7 +136,7 @@ spec:
 <a id="namespace-and-injection-control"></a>
 ## 5. Namespace and Injection Control
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 23 | Use `namespaceSelector` to control injection scope | `spec.oneAgent.cloudNativeFullStack.namespaceSelector.matchLabels: {dynatrace-injection: enabled}` | Recommended | Injection |
 | 24 | Do not use the `default` namespace for workloads | Enforce via policy | Recommended | Namespace |
@@ -150,9 +150,9 @@ spec:
 <a id="feature-flags-and-annotations"></a>
 ## 6. Feature Flags and Annotations
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
-| 31 | Enable Kubernetes app detection | `feature.dynatrace.com/k8s-app-enabled: "true"` on DynaKube metadata | Recommended | Feature Flag |
+| 31 | Enable Kubernetes app detection (unofficial — not in Dynatrace docs; verify before using) | `feature.dynatrace.com/k8s-app-enabled: "true"` on DynaKube metadata | Recommended | Feature Flag |
 | 32 | Enable version detection from K8s labels | `feature.dynatrace.com/label-version-detection: "true"` | Recommended | Feature Flag |
 | 33 | Set injection failure policy to `fail` in non-prod | `feature.dynatrace.com/injection-failure-policy: "fail"` | Recommended | Feature Flag |
 | 34 | Set injection failure policy to `silent` in prod | `feature.dynatrace.com/injection-failure-policy: "silent"` | **Critical** | Feature Flag |
@@ -163,7 +163,7 @@ spec:
 <a id="metadata-enrichment"></a>
 ## 7. Metadata Enrichment
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 38 | Enable metadata enrichment | `spec.metadataEnrichment.enabled: true` | **Critical** | Enrichment |
 | 39 | Use settings-based enrichment (not pod annotations) | Configure rules in Settings > Cloud and virtualization > Kubernetes telemetry enrichment | **Critical** | Enrichment |
@@ -176,7 +176,7 @@ spec:
 <a id="log-monitoring"></a>
 ## 8. Log Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 45 | Enable log monitoring with empty object | `spec.logMonitoring: {}` | Recommended | Logs |
 | 46 | Configure log monitoring resources under `templates` | `spec.templates.logMonitoring.resources: {limits: {cpu: 500m, memory: 512Mi}}` | **Critical** | Logs |
@@ -188,7 +188,7 @@ spec:
 <a id="otel-collector-and-telemetry-ingest"></a>
 ## 9. OTel Collector and Telemetry Ingest
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 51 | Pin OTel Collector image to a specific version | `spec.templates.otelCollector.imageRef.tag: "0.16.0"` | **Critical** | OTel |
 | 52 | Never use `latest` tag for OTel Collector | Always specify explicit version tag | **Critical** | OTel |
@@ -200,7 +200,7 @@ spec:
 <a id="csi-driver-configuration"></a>
 ## 10. CSI Driver Configuration
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 57 | Enable CSI driver in Helm values | `csidriver.enabled: true` | **Critical** | CSI |
 | 58 | Set resource limits on provisioner container | `provisioner.resources.limits: {cpu: 500m, memory: 256Mi}` | **Critical** | CSI |
@@ -221,7 +221,7 @@ spec:
 <a id="resource-sizing"></a>
 ## 11. Resource Sizing
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 60 | Set OneAgent resources for cloudNativeFullStack | `requests: {cpu: 100m, memory: 256Mi}`, `limits: {cpu: 300m, memory: 512Mi}` | Recommended | Sizing |
 | 61 | Size ActiveGate by cluster node count | See ActiveGate Sizing Reference in Section 4 | **Critical** | Sizing |
@@ -232,7 +232,7 @@ spec:
 <a id="security-and-secrets"></a>
 ## 12. Security and Secrets
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 65 | Never store API tokens in Git | Use External Secrets Operator, Sealed Secrets, or SOPS | **Critical** | Security |
 | 66 | Use External Secrets Operator for token management | `ExternalSecret` CR referencing Vault, AWS Secrets Manager, or GCP Secret Manager | Recommended | Security |
@@ -243,7 +243,7 @@ spec:
 <a id="gitops-and-lifecycle"></a>
 ## 13. GitOps and Lifecycle
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 70 | Manage DynaKube via GitOps (ArgoCD or Flux) | Store DynaKube YAML in Git, apply via GitOps controller | Recommended | Lifecycle |
 | 71 | Use Kustomize overlays for environment-specific config | `base/dynakube.yaml` + `overlays/{dev,staging,prod}/` patches | Recommended | Lifecycle |
@@ -258,7 +258,7 @@ spec:
 <a id="cluster-health-alerting"></a>
 ## 14. Cluster Health Alerting
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 79 | Alert on Node NotReady | Node condition != Ready for >5 min = Critical | **Critical** | Alerting |
 | 80 | Alert on high node CPU | CPU > 85% for 15 min = Warning | Recommended | Alerting |
@@ -275,7 +275,7 @@ spec:
 <a id="workload-and-application-monitoring"></a>
 ## 15. Workload and Application Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 90 | Alert on container CPU usage > 85% sustained | Monitor `dt.kubernetes.container.cpu_usage` vs limits | Recommended | Workload |
 | 91 | Alert on container memory usage > 90% | Monitor `dt.kubernetes.container.memory_working_set` vs limits | **Critical** | Workload |
@@ -287,7 +287,7 @@ spec:
 <a id="specialized-monitoring"></a>
 ## 16. Specialized Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 96 | Instrument NGINX Ingress via ConfigMap `main-snippet` | `load_module /opt/dynatrace/oneagent-paas/agent/bin/current/linux-musl-x86-64/liboneagentnginx.so;` | Recommended | NGINX |
 | 97 | NGINX instrumentation requires x86-64 and OneAgent 1.227+ | No ARM support; pod name must contain `ingress-nginx-` | Recommended | NGINX |
@@ -298,7 +298,7 @@ spec:
 <a id="troubleshooting-practices"></a>
 ## 17. Troubleshooting Practices
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 101 | Check DynaKube status first | `kubectl -n dynatrace get dynakube` — expect `Running` phase | **Critical** | Troubleshooting |
 | 102 | Verify all Dynatrace pods are running | `kubectl -n dynatrace get pods` — no CrashLoopBackOff or Error | **Critical** | Troubleshooting |

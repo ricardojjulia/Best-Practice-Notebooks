@@ -1,6 +1,6 @@
 # Terraform Provider
 
-> **Series:** AUTOM | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 02/17/2026
+> **Series:** AUTOM | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -120,7 +120,7 @@ terraform {
   required_providers {
     dynatrace = {
       source  = "dynatrace-oss/dynatrace"
-      version = "~> 1.91"        # Current: v1.91.1 (March 2026)
+      version = "~> 1.93"        # Current: v1.93.0 (March 2026)
     }
   }
 }
@@ -921,7 +921,7 @@ provider "dynatrace" {
   dt_env_url       = var.dynatrace_env_url
 
   # Service User + OAuth — for Gen3/platform resources (scoped via IAM)
-  client_id     = var.dt_client_id           # Canonical attribute (v1.91+)
+  client_id     = var.dt_client_id           # Canonical attribute (v1.93+)
   client_secret = var.dt_client_secret
   account_id    = var.dt_account_id
 
@@ -1041,7 +1041,7 @@ terraform-provider-dynatrace \
 
 ### Additional Resources
 
-- [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) (v1.91.1, March 2026)
+- [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) (v1.93.0, March 2026)
 - [Provider GitHub Repository](https://github.com/dynatrace-oss/terraform-provider-dynatrace)
 - [Terraform Style Guide](https://developer.hashicorp.com/terraform/language/style)
 - [Dynatrace OAuth Client Guide](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/guides/create-oauth-client)
@@ -1065,6 +1065,48 @@ In this notebook, you learned:
 ---
 
 *Continue to **AUTOM-05: Dynatrace Workflows** to learn event-driven automation.*
+
+## Community Resources & Examples
+
+The following GitHub repositories provide starter templates, reusable modules, and real-world examples for the Dynatrace Terraform provider:
+
+### Official Repositories
+
+| Repository | Description |
+|------------|-------------|
+| [terraform-provider-dynatrace](https://github.com/dynatrace-oss/terraform-provider-dynatrace) | Official provider (v1.93.0, 180 releases) -- supports hundreds of resource types with export capability |
+| [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | Official samples repo with 10 Terraform starter templates in `basic-templates-terraform` |
+
+### Starter Templates & Modules (in `dynatrace-configuration-as-code-samples`)
+
+| Template Directory | What It Demonstrates |
+|--------------------|----------------------|
+| `basic-templates-terraform` | 10 starter resources: alerting, app detection, synthetic, SLOs, auto-tags, ownership teams |
+| `terraform_modules` | Reusable module pattern for synthetic HTTP and NAM monitors |
+| `terraform_dql_example` | DQL as a Terraform `data` source -- query entities and create configs dynamically |
+| `terraform_team_onboarding` | IAM policies, groups, and Azure Entra ID integration for team onboarding |
+| `iam_tf_sample` | IAM policies, Grail buckets, OpenPipelines, segments, and team access |
+
+### Pipeline Observability Samples (Terraform Variants)
+
+| Directory | CI/CD Platform |
+|-----------|---------------|
+| `github_pipeline_observability_terraform` | GitHub Actions |
+| `gitlab_pipeline_observability_terraform` | GitLab CI |
+| `argocd_observability_terraform` | ArgoCD |
+
+### Provider Export Feature
+
+The provider binary can export existing Dynatrace configuration to `.tf` files:
+
+```bash
+# Export all configs from a tenant as HCL
+./terraform-provider-dynatrace -export -env <environment-url> -token <api-token>
+```
+
+This is the fastest path from an existing tenant to Terraform-managed configuration.
+
+---
 
 ---
 

@@ -1,6 +1,6 @@
 # WEBRUM-01: Web RUM Fundamentals
 
-> **Series:** WEBRUM | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -83,7 +83,7 @@ Dynatrace RUM data is organized into a hierarchical model:
 | Level | Data Object | Description |
 |-------|-------------|-------------|
 | 1 | Application | Web app monitored by RUM JS agent |
-| 2 | User Session (dt.rum.user_session) | One complete visit |
+| 2 | User Session (user.sessions) | One complete visit |
 | 3 | User Action (user.events) | Page load, XHR, or custom action |
 | 4 | Action Properties | Timing, errors, and resources |
 For environments where SVG doesn't render
@@ -93,9 +93,9 @@ For environments where SVG doesn't render
 
 | DQL Data Object | Description | Key Fields |
 |----------------|-------------|------------|
-| `dt.rum.user_session` | A complete user visit from first page to last | `session.id`, `user.type`, `duration`, `action.count`, `error.count` |
+| `user.sessions` | A complete user visit from first page to last | `sessionId`, `userType`, `duration`, `userActionCount`, `totalErrorCount` |
 | `user.events` | A single user interaction (page load, click, XHR) | `action.name`, `action.type`, `duration`, `dom.interactive.time` |
-| `dt.rum.error` | JavaScript or XHR error | `error.message`, `error.type`, `error.source` |
+| `user.events` | JavaScript or XHR error | `error.message`, `error.type`, `error.source` |
 
 ### Session Types
 
@@ -105,7 +105,7 @@ For environments where SVG doesn't render
 | `ROBOT` | Bot or crawler detected by Dynatrace |
 | `SYNTHETIC` | Synthetic monitor execution |
 
-> **Note:** Always filter for `user.type == "REAL_USER"` when analyzing genuine user experience to exclude bots and synthetic executions.
+> **Note:** Always filter for `userType == "REAL_USER"` when analyzing genuine user experience to exclude bots and synthetic executions.
 
 <a id="exploring-user-sessions"></a>
 
@@ -115,9 +115,9 @@ Let's start by examining what a user session looks like in Grail. A session repr
 
 ```dql
 // Explore recent user sessions — sample 10 sessions to see available fields
-fetch dt.rum.user_session, from:-1h
-| filter user.type == "REAL_USER"
-| fieldsKeep session.id, app.name, user.type, duration, action.count, error.count, city, country, os.family, browser.family
+fetch user.sessions, from:-1h
+| filter userType == "REAL_USER"
+| fieldsKeep sessionId, application, userType, duration, userActionCount, totalErrorCount, city, country, osFamily, browserFamily
 | sort duration desc
 | limit 10
 ```
@@ -130,8 +130,8 @@ Understanding how long sessions last helps identify engagement patterns:
 
 ```dql
 // Session duration distribution — bucket sessions by duration range
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
 | fieldsAdd duration_bucket = if(duration_sec < 10, "< 10s",
     else: if(duration_sec < 30, "10-30s",
@@ -189,8 +189,8 @@ Tracking session and action volume over time reveals traffic patterns, peak hour
 
 ```dql
 // Session count over the last 24 hours, bucketed by hour
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | makeTimeseries session_count = count(), interval:1h
 ```
 
@@ -202,13 +202,13 @@ fetch user.events, from:-24h
 
 ```dql
 // Sessions and actions per application — high-level overview
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | summarize session_count = count(),
-    total_actions = sum(action.count),
-    total_errors = sum(error.count),
+    total_actions = sum(userActionCount),
+    total_errors = sum(totalErrorCount),
     avg_duration = avg(duration),
-    by:{app.name}
+    by:{application}
 | sort session_count desc
 ```
 

@@ -234,7 +234,7 @@ Add hour-of-day filtering to exclude off-hours:
 fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | fieldsAdd hour = toLong(formatTimestamp(timestamp, format:"HH"))
-| filter hour >= 8 AND hour < 18
+| filter hour >= 8 and hour < 18
 | makeTimeseries count = count(), interval:1m
 ```
 

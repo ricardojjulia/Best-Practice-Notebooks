@@ -1,6 +1,6 @@
 # 🔒 Security & Data Protection
 
-> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Sensitive Data Discovery, Masking, and Compliance
 This notebook covers sensitive data discovery, OpenPipeline masking configuration, security event monitoring, and compliance reporting.
@@ -171,7 +171,7 @@ Step 4: Verify Masking
 
 ### Configuration Path
 
-1. Settings → Log processing → OpenPipeline
+1. Settings → Process and contextualize → OpenPipeline
 2. Select or create pipeline
 3. Add "Mask value" or "Hash value" processor
 4. Configure field and pattern

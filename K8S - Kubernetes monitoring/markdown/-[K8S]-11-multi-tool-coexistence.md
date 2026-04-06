@@ -1,6 +1,6 @@
 # Multi-Tool Coexistence & Advanced Configuration
 
-> **Series:** K8S | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Running Dynatrace Alongside Other Monitoring Tools
 Many organizations run multiple monitoring tools during migrations or for specialized use cases. This notebook covers patterns for running Dynatrace alongside tools like New Relic, Datadog, or Prometheus without conflicts.
@@ -162,7 +162,7 @@ metadata:
 | `automatic-injection` | `true`/`false` | `true` | Global injection control |
 | `injection-failure-policy` | `fail`/`silent` | `silent` | Pod startup behavior on injection failure |
 | `label-version-detection` | `true`/`false` | `false` | Detect version from K8s labels |
-| `k8s-app-enabled` | `true`/`false` | `false` | Enable K8s application detection |
+| `k8s-app-enabled` | `true`/`false` | `false` | Enable K8s application detection (unofficial — not in Dynatrace docs; verify before using) |
 | `max-csi-mount-attempts` | `1-10` | `2` | CSI mount retry attempts |
 | `ignore-unknown-state` | `true`/`false` | `false` | Ignore unknown OneAgent state |
 
@@ -171,7 +171,7 @@ metadata:
 ```yaml
 metadata:
   annotations:
-    # Enable Kubernetes application detection
+    # Enable Kubernetes app detection (unofficial — not in Dynatrace docs; verify before using)
     feature.dynatrace.com/k8s-app-enabled: "true"
     
     # Opt-in mode - only monitor labeled namespaces
@@ -337,6 +337,7 @@ fetch dt.entity.cloud_application_instance
 | summarize count = count(), by:{entity.name}
 | sort count desc
 | limit 20
+
 ```
 
 ```dql
@@ -346,6 +347,14 @@ fetch dt.entity.service
 | fields entity.name, tags
 | sort entity.name asc
 | limit 30
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | filter isNotNull(tags)
+// | fields name, tags
+// | sort name asc
+// | limit 30
+
 ```
 
 <a id="complete-configuration-example"></a>
@@ -361,7 +370,7 @@ metadata:
   labels:
     dynatrace.com/created-by: dynatrace.kubernetes
   annotations:
-    # Enable Kubernetes app monitoring
+    # Enable Kubernetes app detection (unofficial — not in Dynatrace docs; verify before using)
     feature.dynatrace.com/k8s-app-enabled: "true"
     
     # Opt-in mode for coexistence with other tools

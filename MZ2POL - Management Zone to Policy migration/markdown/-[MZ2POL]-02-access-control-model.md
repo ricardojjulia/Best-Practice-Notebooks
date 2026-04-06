@@ -1,6 +1,6 @@
 # MZ2POL-02: Understanding the New Access Control Model
 
-> **Series:** MZ2POL | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -321,6 +321,16 @@ fetch dt.entity.service
 | filter isNotNull(dt.security_context)
 | sort entity.name asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | fields name,
+// dt.security_context,
+// managementZones
+// | filter isNotNull(dt.security_context)
+// | sort name asc
+// | limit 50
+
 ```
 
 ### Analyze Entity Types and Their Attributes
@@ -335,6 +345,14 @@ fetch dt.entity.host
          tags,
          managementZones
 | limit 20
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | fields name,
+// tags,
+// managementZones
+// | limit 20
+
 ```
 
 ### Check Kubernetes Cluster Distribution
@@ -349,6 +367,14 @@ fetch dt.entity.kubernetes_cluster
          tags,
          managementZones
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name,
+// tags,
+// managementZones
+// | sort name asc
+
 ```
 
 ---

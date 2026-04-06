@@ -1,6 +1,6 @@
 # S2S-05: Step 5 — Execute: Configuration Import and Agent Cutover
 
-> **Series:** S2S | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -285,6 +285,8 @@ For environments with hundreds of hosts, use configuration management tools:
 | **SCCM/Intune** | Push script to Windows fleet |
 | **SSM Run Command** | Execute on AWS EC2 instances by tag |
 
+> **Tip — OneAgent Attribute Enrichment (1.331+):** During agent redirect, consider adding primary tags and fields at the same time using `oneagentctl --set-host-tag`. This enriches all telemetry at the source with `primary_tags.environment`, `dt.security_context`, `dt.cost.costcenter`, etc. — eliminating the need for some server-side auto-tagging rules. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
 ### Validate Host Migration
 
 After each wave, verify hosts are reporting to the target tenant:
@@ -294,6 +296,12 @@ After each wave, verify hosts are reporting to the target tenant:
 fetch dt.entity.host
 | summarize host_count = count()
 | fieldsAdd validation = "Compare this count against the pre-migration baseline from Step 4"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize host_count = count()
+// | fieldsAdd validation = "Compare this count against the pre-migration baseline from Step 4"
+
 ```
 
 ```dql
@@ -301,6 +309,12 @@ fetch dt.entity.host
 fetch dt.entity.service
 | summarize service_count = count()
 | fieldsAdd validation = "Services should appear within 5 minutes of agent reconnection"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize service_count = count()
+// | fieldsAdd validation = "Services should appear within 5 minutes of agent reconnection"
+
 ```
 
 <a id="kubernetes-operator-migration"></a>

@@ -29,6 +29,7 @@ Organizing data in Dynatrace Grail using buckets, segments, and security context
    - [LAB: Enterprise Patterns](markdown/-[ORGNZ]-09-[LAB]-enterprise-patterns.md) — Hands-on exercises
 10. [Advanced Segment Definitions](markdown/-[ORGNZ]-10-advanced-segment-definitions.md) — Complex segment filters with multi-include patterns
     - [LAB: Advanced Segment Definitions](markdown/-[ORGNZ]-10-[LAB]-advanced-segment-definitions.md) — Hands-on exercises
+99. [Best Practice Summary](markdown/-[ORGNZ]-99-best-practice-summary.md) — Consolidated best practices from the ORGNZ series
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.

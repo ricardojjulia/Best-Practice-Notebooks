@@ -16,6 +16,7 @@ Series covering Dynatrace Synthetic Monitoring (browser, HTTP, private locations
 4. [Private Locations](markdown/-[SYNTH]-04-private-locations.md) — Deploying private synthetic locations
 5. [Network Monitoring](markdown/-[SYNTH]-05-network-monitoring.md) — Network performance monitoring
 6. [Analytics](markdown/-[SYNTH]-06-analytics.md) — Analyzing synthetic monitoring data
+99. [Best Practice Summary](markdown/-[SYNTH]-99-best-practice-summary.md) — Consolidated best practices from the SYNTH series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

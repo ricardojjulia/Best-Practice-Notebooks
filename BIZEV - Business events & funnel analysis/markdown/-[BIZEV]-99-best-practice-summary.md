@@ -34,7 +34,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 1. Data Model and Schema
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 1 | Use `bizevents` for business transactions | `fetch bizevents` — never use `events` or `logs` for business analytics | Critical | Data Source |
 | 2 | Always populate `event.type` | Set to a reverse-domain string (e.g., `com.myapp.order.completed`) on every event | Critical | Schema |
@@ -49,7 +49,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 2. Ingestion and Instrumentation
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 9 | Start with OneAgent auto-capture for web apps | Configure capture rules in **Settings > Business Analytics > OneAgent > Capture rules** | Critical | Ingestion |
 | 10 | Use CloudEvents format for API ingestion | `Content-Type: application/cloudevents+json` with `specversion`, `type`, `source`, `data` fields | Critical | Ingestion |
@@ -65,7 +65,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 3. Event Naming and Payload Design
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 18 | Use reverse-domain notation with action verb | Format: `com.<company>.<domain>.<action>` (e.g., `com.myapp.order.created`) | Critical | Naming |
 | 19 | Use all-lowercase, dot-separated names | `com.myapp.payment.processed` — never `PaymentProcessed` or `PAYMENT_PROCESSED` | Critical | Naming |
@@ -82,7 +82,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 4. Funnel Analysis
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 28 | Define explicit funnel steps as distinct event types | Each step gets its own `event.type`: `product.viewed` → `cart.updated` → `checkout.started` → `payment.processed` → `order.completed` | Critical | Funnel Design |
 | 29 | Use `countIf` for funnel step counts in a single query | `summarize step1 = countIf(event.type == "..."), step2 = countIf(...)` — never run separate queries per step | Critical | DQL Pattern |
@@ -99,7 +99,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 5. Revenue and Impact Analysis
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 38 | Correlate Davis problems with business event volume | Overlay `fetch dt.davis.problems` timelines with `fetch bizevents` volume to visualize impact | Critical | Incident Impact |
 | 39 | Use `spread:` for concurrent problem timelines | `makeTimeseries count = count(), spread: timeframe(from: event.start, to: coalesce(event.end, now()))` | Recommended | DQL Pattern |
@@ -115,7 +115,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 6. KPIs and Metric Extraction
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 47 | Define KPIs that are Specific, Measurable, Actionable, and Time-bound | Every KPI must answer a concrete business question with a formula | Critical | KPI Design |
 | 48 | Track these five core KPIs at minimum | Transaction Volume (`count()`), AOV (`avg(amount)`), Conversion Rate, Error Rate, Revenue per Hour (`sum(amount)` per hour) | Critical | KPI Design |
@@ -132,7 +132,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 7. Executive Reporting and Dashboards
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 57 | Lead with business outcomes, not infrastructure metrics | Report transactions, revenue, conversion rates — never CPU or memory to executives | Critical | Presentation |
 | 58 | Always provide baseline context | Compare against yesterday, last week, or last month — never show a number without comparison | Critical | Presentation |
@@ -150,7 +150,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 8. DQL Query Patterns
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 68 | Always specify a time range on `fetch bizevents` | `fetch bizevents, from:-24h` — never omit the time range | Critical | Performance |
 | 69 | Filter early, sort late, limit last | Place `filter` immediately after `fetch`, `sort` after `summarize`, `limit` at the end | Critical | Performance |
@@ -168,7 +168,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 ## 9. SLA and SLO Tracking
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 79 | Define a Transaction Success Rate SLO | Target: 99.5% — Formula: `successful / total * 100` from payment events | Critical | SLO |
 | 80 | Define a Business Availability SLO | Target: 99.9% — Formula: hours with at least 1 business event / total hours * 100 | Critical | SLO |

@@ -1,6 +1,6 @@
 # MZ2POL-03: Assessment and Migration Planning
 
-> **Series:** MZ2POL | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -168,6 +168,15 @@ fetch dt.entity.service
          managementZones,
          tags
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | filter isNull(dt.security_context)
+// | fields name,
+// managementZones,
+// tags
+// | limit 50
+
 ```
 
 ```dql

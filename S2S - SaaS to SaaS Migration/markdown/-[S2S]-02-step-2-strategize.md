@@ -1,6 +1,6 @@
 # S2S-02: Step 2 — Strategize: Define Your Migration Approach
 
-> **Series:** S2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 With your discovery complete, it's time to turn inventory into action. This notebook helps you select a migration approach, sequence your operations, assess risks, and build a timeline that earns stakeholder confidence.
 
@@ -251,6 +251,14 @@ fetch dt.entity.host
 | append [fetch dt.entity.service | summarize services = count()]
 | append [fetch dt.entity.application | summarize applications = count()]
 | append [fetch dt.entity.process_group | summarize process_groups = count()]
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hosts = count()
+// | append [fetch dt.entity.service | summarize services = count()]
+// | append [fetch dt.entity.application | summarize applications = count()]
+// | append [fetch dt.entity.process_group | summarize process_groups = count()]
+
 ```
 
 ```dql
@@ -258,6 +266,7 @@ fetch dt.entity.host
 fetch dt.entity.active_gate
 | fieldsAdd entity.name, networkZone
 | sort entity.name asc
+
 ```
 
 ```dql

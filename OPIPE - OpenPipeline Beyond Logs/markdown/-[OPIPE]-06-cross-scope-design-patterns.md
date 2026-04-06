@@ -1,6 +1,6 @@
 # OPIPE-06: Cross-Scope Design Patterns
 
-> **Series:** OPIPE | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Correlating Logs, Spans, Metrics, and Events Across Scopes
 
@@ -61,11 +61,11 @@ If a critical dimension is missing from one scope, **add it via OpenPipeline enr
 ```dql
 // Cross-scope: Correlate error logs with error spans by service entity
 fetch logs, from:-1h
-| filter loglevel == "ERROR" AND isNotNull(dt.entity.service)
+| filter loglevel == "ERROR" and isNotNull(dt.entity.service)
 | summarize error_logs = count(), by:{dt.entity.service}
 | lookup [
     fetch spans, from:-1h
-    | filter http.response.status_code >= 500 AND isNotNull(dt.entity.service)
+    | filter http.response.status_code >= 500 and isNotNull(dt.entity.service)
     | summarize error_spans = count(), by:{dt.entity.service}
   ], sourceField:dt.entity.service, lookupField:dt.entity.service, fields:{error_spans}
 | sort error_logs desc
@@ -94,14 +94,14 @@ The comparison itself is diagnostic — the divergence tells you something about
 ```dql
 // Compare: Error counts from logs vs. spans by service
 fetch logs, from:-1h
-| filter loglevel == "ERROR" AND isNotNull(dt.entity.service)
+| filter loglevel == "ERROR" and isNotNull(dt.entity.service)
 | summarize log_errors = count(), by:{dt.entity.service}
 | lookup [
     fetch spans, from:-1h
-    | filter http.response.status_code >= 500 AND isNotNull(dt.entity.service)
+    | filter http.response.status_code >= 500 and isNotNull(dt.entity.service)
     | summarize span_errors = count(), by:{dt.entity.service}
   ], sourceField:dt.entity.service, lookupField:dt.entity.service, fields:{span_errors}
-| fieldsAdd ratio = if(isNotNull(span_errors) AND span_errors > 0,
+| fieldsAdd ratio = if(isNotNull(span_errors) and span_errors > 0,
     then: round(toDouble(log_errors) / toDouble(span_errors), decimals: 1),
     else: -1.0)
 | sort log_errors desc
@@ -135,7 +135,7 @@ Span → generates Event → Event triggers Metric → Metric drives SLO
 ```dql
 // Identify slow transactions that could trigger a cascade
 fetch spans, from:-1h
-| filter span.kind == "server" AND duration > 5000000000
+| filter span.kind == "server" and duration > 5000000000
 | summarize slow_count = count(), avg_duration_ms = avg(toDouble(duration) / 1000000),
     by:{service.name}
 | sort slow_count desc

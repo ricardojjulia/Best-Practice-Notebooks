@@ -28,7 +28,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-01*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Record your tenant ID | Write down the tenant ID from `https://{tenant-id}.apps.dynatrace.com` on day one | Critical |
 | Bookmark tenant URL | Save `https://{tenant-id}.apps.dynatrace.com` in browser bookmarks | Critical |
@@ -43,7 +43,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-02*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Configure IAM before deploying agents | Set up SAML/SSO and groups **before** inviting users or deploying OneAgent | Critical |
 | Enable SAML 2.0 or OIDC SSO | Configure enterprise SSO via Account Management > Identity & access management > Single sign-on | Critical |
@@ -66,7 +66,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-03*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Deploy ActiveGate for restricted networks | Required when hosts cannot reach `*.dynatrace.com` on port 443 directly | Critical |
 | Deploy ActiveGate for Extensions 2.0 | Required for SNMP, database extensions, VMware, and custom data sources | Critical |
@@ -91,7 +91,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-04*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Configure cloud integrations before OneAgent | Set up AWS/Azure/GCP integration first so Smartscape topology includes cloud services from day one | Recommended |
 | Use IAM Role for AWS (not access keys) | Create an IAM role with CloudWatch read permissions and a trust relationship for Dynatrace's AWS account | Critical |
@@ -109,7 +109,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-05*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use phased rollout | Phase 1: 2-5 non-critical hosts (pilot). Phase 2: one application tier. Phase 3: full production | Critical |
 | Generate dedicated deployment tokens | Create token with `InstallerDownload` scope named `{env}-oneagent-deployment` | Critical |
@@ -127,7 +127,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-03, ONBRD-05*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use Cloud Native FullStack mode | Set `oneAgent.cloudNativeFullStack` in DynaKube CR; this is the recommended mode for all modern K8s | Critical |
 | Use DynaKube API v1beta5 or v1beta6 | Set `apiVersion: dynatrace.com/v1beta5` (or `v1beta6`); v1beta3 is removed in Operator 1.8.0 | Critical |
@@ -146,7 +146,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-06*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Tag at the source | Set host properties, cloud tags, K8s labels, and OTel attributes at the origin; do not rely on Dynatrace-side rule engines | Critical |
 | Define five standard host properties | Set `env`, `team`, `app`, `cost-center`, and `tier` on every OneAgent installation | Critical |
@@ -164,7 +164,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-07, ONBRD-08*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Always specify a time range on fetch | Use `fetch logs, from:-1h` not bare `fetch logs`; default 2h scans excessive data | Critical |
 | Filter early in the pipeline | Place `filter` immediately after `fetch`; never `sort` or `summarize` before filtering | Critical |
@@ -184,7 +184,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-09*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use Workflows for all alerting | Configure alerts in Automate > Workflows; do not use legacy Alerting Profiles | Critical |
 | Create a Davis problem trigger workflow first | Set trigger to "Davis problem" with event = problem opens; this is the minimum viable alerting setup | Critical |
@@ -203,7 +203,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 
 *Source: ONBRD-10*
 
-| Practice | Setting / Value | Priority |
+| Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use Dashboards for monitoring, Notebooks for investigation | Dashboards auto-refresh for NOC/status screens; Notebooks for ad-hoc analysis and RCA | Critical |
 | Build an Executive Summary dashboard first | Include KPI row (uptime, errors, avg response, active problems), trend chart, problem list, service health tiles | Critical |

@@ -1,6 +1,6 @@
 # Troubleshooting Kubernetes Monitoring
 
-> **Series:** K8S | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 03/14/2026
+> **Series:** K8S | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Debugging Dynatrace Monitoring in Kubernetes
 When monitoring doesn't work as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic procedures, and resolution steps for Dynatrace Kubernetes monitoring.
@@ -267,6 +267,12 @@ kubectl label namespace <namespace> dynatrace-injection=enabled
 fetch dt.entity.kubernetes_cluster
 | fields entity.name, lifetime
 | sort lifetime desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name, lifetime
+// | sort lifetime desc
+
 ```
 
 ```dql

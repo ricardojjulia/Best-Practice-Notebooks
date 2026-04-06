@@ -38,7 +38,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 1. Agent Deployment and Host Monitoring
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 1.1 | **OneAgent host coverage** | > 95% of all known hosts monitored (compare entity count against CMDB) | Critical | ADOPT-02 |
 | 1.2 | **Monitoring mode for application hosts** | Set to `FULL_STACK` for all hosts running application workloads | Critical | ADOPT-01, ADOPT-02 |
@@ -52,7 +52,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 2. Data Ingestion and Grail Configuration
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 2.1 | **Multi-signal ingestion** | Ingest all 5 telemetry types: metrics, logs, spans, events, and business events | Critical | ADOPT-01 |
 | 2.2 | **Log ingestion stability** | Daily variance < 10%; monitor with a 7-day rolling trend query | Recommended | ADOPT-02 |
@@ -67,7 +67,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 3. Alerting and Davis AI
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 3.1 | **Alert noise ratio** | Keep below 20% (frequent + duplicate problems / total problems); above 50% = overhaul needed | Critical | ADOPT-01, ADOPT-03 |
 | 3.2 | **Davis AI enabled** | Davis AI problem detection must be active; verify by confirming problems are detected in the last 7 days | Critical | ADOPT-01, ADOPT-02 |
@@ -82,7 +82,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 4. SLOs and Success Metrics
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 4.1 | **Define SLOs for top 10 services** | Set availability and latency SLOs for the 10 most business-critical services | Critical | ADOPT-05 |
 | 4.2 | **SLO burn-rate alerting** | Enable burn-rate alerting on every SLO; static thresholds are insufficient | Critical | ADOPT-01, ADOPT-05 |
@@ -98,7 +98,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 5. Cost Optimization
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 5.1 | **Audit high-volume log sources** | Identify top 15 log sources by volume weekly; evaluate each for filtering, sampling, or reduced retention | Recommended | ADOPT-05 |
 | 5.2 | **Log retention tiers** | High-value logs: 35 days. Standard logs: 14 days. Debug/verbose: 7 days | Recommended | ADOPT-05 |
@@ -113,7 +113,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 6. Automation and Workflows
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 6.1 | **Automate alert triage and routing** | Create a Dynatrace Workflow that routes Davis problems to the correct team channel; run daily | Critical | ADOPT-05 |
 | 6.2 | **Automate top 5 frequent problem responses** | Build Workflows for the 5 most frequent, well-understood problem types; start with triage, progress to remediation | Recommended | ADOPT-05 |
@@ -126,7 +126,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 7. IAM and Access Control
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 7.1 | **Eliminate shared admin accounts** | Replace shared admin credentials with individual user accounts bound to IAM groups | Critical | ADOPT-05 |
 | 7.2 | **Least-privilege IAM policies** | Define policies per team granting only the permissions required for their role | Critical | ADOPT-05 |
@@ -137,7 +137,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 8. Team Enablement and Organizational Readiness
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 8.1 | **1 Dynatrace champion per team** | Identify and train at least 1 internal champion per engineering team; complete the platform engineer track within 6 weeks | Critical | ADOPT-04 |
 | 8.2 | **2 DQL-literate members per team** | Every team must have at least 2 people who can write `fetch`, `filter`, `summarize` queries independently | Critical | ADOPT-04 |
@@ -152,7 +152,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 9. Dashboards and Reporting
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 9.1 | **3 standard dashboard templates** | Create exactly 3 organizational templates: Infrastructure Health, Application Health, Business KPIs | Recommended | ADOPT-05 |
 | 9.2 | **Retire unused dashboards** | Audit dashboards quarterly; delete any dashboard with no views in the last 90 days | Optional | ADOPT-05 |
@@ -165,7 +165,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 10. Configuration Management
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 10.1 | **Configuration-as-code with Monaco** | Export all Dynatrace configuration to Monaco format and store in a Git repository | Recommended | ADOPT-01, ADOPT-05 |
 | 10.2 | **CI/CD pipeline for config deployment** | Deploy Dynatrace configuration changes through a CI/CD pipeline; never apply changes manually in production | Recommended | ADOPT-05 |
@@ -176,7 +176,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 11. Distributed Tracing and Spans
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 11.1 | **OpenTelemetry for uninstrumented services** | Implement OpenTelemetry SDKs for any service not covered by OneAgent auto-instrumentation | Recommended | ADOPT-05 |
 | 11.2 | **OTLP endpoint routing** | Send all OTel data through the Dynatrace OTLP endpoint; do not use a separate collector unless required | Recommended | ADOPT-05 |
@@ -187,7 +187,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 ## 12. Business Observability
 
-| # | Best Practice | Setting / Value | Priority | Source |
+| # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 12.1 | **Instrument 3-5 key business transactions** | Identify the 3-5 highest-value business transactions (e.g., checkout, login, search) and emit business events for each | Recommended | ADOPT-05 |
 | 12.2 | **Business-context alerting** | Create alerts that trigger on business metric thresholds (e.g., revenue drop, conversion rate decline), not just technical metrics | Recommended | ADOPT-05 |

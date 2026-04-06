@@ -19,6 +19,7 @@ Automating workflows and configuring alert notifications in Dynatrace.
 7. [Remediation](markdown/-[WFLOW]-07-remediation.md) — Automated remediation workflows
 8. [JavaScript & HTTP](markdown/-[WFLOW]-08-javascript-http.md) — JavaScript actions and HTTP requests
 9. [Governance](markdown/-[WFLOW]-09-governance.md) — Workflow governance and best practices
+99. [Best Practice Summary](markdown/-[WFLOW]-99-best-practice-summary.md) — Consolidated best practices from the WFLOW series
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.

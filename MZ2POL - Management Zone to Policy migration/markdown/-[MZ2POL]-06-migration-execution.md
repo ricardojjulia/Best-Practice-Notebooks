@@ -1,6 +1,6 @@
 # MZ2POL-06: Migration Execution
 
-> **Series:** MZ2POL | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -120,6 +120,16 @@ fetch dt.entity.service
     withoutContext = countIf(isNull(dt.security_context))
 | fields total, withContext, withoutContext,
          coveragePercent = 100.0 * withContext / total
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize
+// total = count(),
+// withContext = countIf(isNotNull(dt.security_context)),
+// withoutContext = countIf(isNull(dt.security_context))
+// | fields total, withContext, withoutContext,
+// coveragePercent = 100.0 * withContext / total
+
 ```
 
 ### Assignment Methods

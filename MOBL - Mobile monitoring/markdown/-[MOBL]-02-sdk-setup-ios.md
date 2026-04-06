@@ -1,6 +1,6 @@
 # MOBL-02: iOS SDK Setup (Swift & SwiftUI)
 
-> **Series:** MOBL | **Notebook:** 2 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL | **Notebook:** 2 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -316,6 +316,7 @@ fetch dt.entity.device_application
 | filter contains(toString(entity.name), "iOS") or contains(toString(tags), "iOS")
 | fields entity.name, id, tags
 | sort entity.name asc
+
 ```
 
 ### Verify Beacon Data Arriving

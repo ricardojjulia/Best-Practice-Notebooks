@@ -25,7 +25,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="bucket-design"></a>
 ## 1. Bucket Design
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 1 | Keep per-bucket ingest under 1 TB/day | Target: <1 TB/day per bucket; never exceed 3 TB/day | Critical | Performance |
 | 2 | One data type per bucket | Each bucket stores exactly one table type (logs, metrics, spans, events, bizevents, security_events) | Critical | Architecture |
@@ -41,7 +41,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="retention-strategy"></a>
 ## 2. Retention Strategy
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 11 | Set debug/development log retention to 3-7 days | Bucket retention: 7 days maximum for DEBUG-level logs | Critical | Cost |
 | 12 | Set standard operational log retention to 35 days | Bucket retention: 35 days for application and infrastructure logs | Recommended | Operations |
@@ -54,7 +54,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="data-routing"></a>
 ## 3. Data Routing
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 18 | Route data to custom buckets via OpenPipeline | Configure OpenPipeline routing rules with conditions on `loglevel`, `host.group`, `service.name`, `log.source` | Critical | Architecture |
 | 19 | Always define a default route | Set `default: "default_logs"` (or appropriate default bucket) as the fallback in every OpenPipeline routing configuration | Critical | Reliability |
@@ -65,7 +65,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="iam-and-access-control"></a>
 ## 4. IAM and Access Control
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 23 | Always include `storage:buckets:read` in every data access policy | Without bucket read, users cannot query any data; always pair with table permissions | Critical | Security |
 | 24 | Assign policies to groups, never to individual users | Create IAM groups per team/role; assign all policies at the group level | Critical | Governance |
@@ -82,7 +82,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="security-context"></a>
 ## 5. Security Context
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 34 | Use `dt.security_context` for record-level access control | Set via OpenPipeline Security Context processor or OneAgent host properties | Critical | Security |
 | 35 | Use hierarchical encoding in security context values | Format: `<org>/<department>/<team>` (e.g., `acme/engineering/platform`); enables department-level access with `MATCH ('acme/engineering/*')` | Critical | Scalability |
@@ -95,7 +95,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="segment-design"></a>
 ## 6. Segment Design
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 41 | Use segments for dynamic data views, not access control | Segments filter at query time; they do not enforce security boundaries — IAM policies do | Critical | Architecture |
 | 42 | Stay within the 20-include limit per segment | Maximum 20 include blocks per segment; plan rule complexity accordingly | Critical | Architecture |
@@ -114,7 +114,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="metadata-enrichment"></a>
 ## 7. Metadata Enrichment
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 54 | Enrich all signals with Primary Grail Fields before building segments | Verify `dt.host_group.id`, `k8s.namespace.name`, `k8s.cluster.name` are present on logs, spans, and metrics | Critical | Architecture |
 | 55 | Set `dt.security_context` via host properties for dedicated infrastructure | Deployment Status → select hosts → Modify host properties → set `dt.security_context=<team>` | Recommended | Security |
@@ -127,7 +127,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="query-performance"></a>
 ## 8. Query Performance
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 61 | Understand the 500 GB scan limit | Maximum 500 GB scanned per query; at 1 TB/day ingest, queryable window is ~12 hours | Critical | Performance |
 | 62 | Target specific buckets in queries | Use `fetch logs, bucket:{"team_logs", "app_logs_*"}` to avoid scanning all buckets | Recommended | Performance |
@@ -140,7 +140,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 <a id="governance-and-operations"></a>
 ## 9. Governance and Operations
 
-| # | Best Practice | Setting / Value | Priority | Category |
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|-----------------|----------|----------|
 | 68 | Schedule regular access reviews | Quarterly review of all IAM policies and group memberships; remove unnecessary permissions | Critical | Governance |
 | 69 | Document all bucket purposes | Maintain a registry mapping each bucket to its owner, data type, retention, cost center, and routing rule | Recommended | Governance |

@@ -1,11 +1,10 @@
 # BIZEV-04: Revenue Impact Analysis
 
-> **Series:** BIZEV | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** BIZEV | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 When a Dynatrace Davis problem fires, the immediate question from stakeholders is: "What is the business impact?" This notebook demonstrates how to correlate Davis AI problems with business event data to quantify revenue loss during incidents, measure SLA impact, compare incident periods against baselines, and filter analysis to business hours. The goal is to translate technical incidents into business language that executives and product owners understand.
-
 
 ---
 
@@ -22,7 +21,6 @@ When a Dynatrace Davis problem fires, the immediate question from stakeholders i
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ When a Dynatrace Davis problem fires, the immediate question from stakeholders i
 | **Permissions** | `storage:bizevents:read`, `storage:events:read` |
 | **Data** | Business events with revenue/amount fields; Davis problems data |
 | **Knowledge** | BIZEV-01 through BIZEV-03, Davis problems concepts |
-
 
 <a id="connecting-problems-to-business-impact"></a>
 
@@ -47,7 +44,6 @@ Davis AI detects infrastructure and application problems. Business events captur
 4. Calculate the delta as "lost" transactions or revenue
 
 Let's start by examining recent closed problems.
-
 
 ```dql
 // Recent closed Davis problems with duration
@@ -75,7 +71,6 @@ To measure impact, compare the business event rate during an incident against a 
 - The same time period on the previous day
 - The average for that hour of the week
 - The 7-day rolling average
-
 
 ```dql
 // Compare today's business event volume vs yesterday (hourly)
@@ -107,7 +102,6 @@ fetch bizevents, from:-24h
 If your business events include an `amount` or `total` field, you can calculate actual revenue impact.
 
 > **Note:** Replace `amount` with the actual field name in your business events that carries the transaction value.
-
 
 ```dql
 // Total revenue from completed orders in the last 24 hours
@@ -146,13 +140,12 @@ fetch bizevents, from:-24h
 
 Not all hours are equal. An incident at 3 AM on a Sunday has different business impact than one at 10 AM on a Tuesday. Filter analysis to business hours for more meaningful impact assessment.
 
-
 ```dql
 // Business events during business hours only (Mon-Fri, 9 AM - 5 PM)
 fetch bizevents, from:-7d
 | fieldsAdd dow = getDayOfWeek(timestamp),
            hour = getHour(timestamp)
-| filter dow >= 1 AND dow <= 5 AND hour >= 9 AND hour < 17
+| filter dow >= 1 and dow <= 5 and hour >= 9 and hour < 17
 | summarize business_hours_events = count(),
            by:{day = bin(timestamp, 1d)}
 | sort day asc
@@ -165,7 +158,7 @@ fetch bizevents, from:-7d
 | filter isNotNull(amount)
 | fieldsAdd dow = getDayOfWeek(timestamp),
            hour = getHour(timestamp)
-| fieldsAdd period = if(dow >= 1 AND dow <= 5 AND hour >= 9 AND hour < 17,
+| fieldsAdd period = if(dow >= 1 and dow <= 5 and hour >= 9 and hour < 17,
                         then: "Business Hours",
                         else: "After Hours")
 | summarize total_revenue = sum(toDouble(amount)),
@@ -178,7 +171,6 @@ fetch bizevents, from:-7d
 ## 5. Day-Over-Day Business Comparison
 
 Compare today's business metrics against yesterday to quickly spot anomalies.
-
 
 ```dql
 // Day-over-day comparison: today vs yesterday order counts
@@ -206,7 +198,6 @@ fetch bizevents, from:-14d
 ## 6. SLA Impact Measurement
 
 Service Level Agreements (SLAs) often include business availability targets. By correlating problem duration with business event volume, you can measure whether SLAs were met.
-
 
 ```dql
 // Total problem duration this week (hours of impact)
@@ -236,7 +227,6 @@ fetch dt.davis.problems, from:-7d
 ## 7. Building an Impact Timeline
 
 An impact timeline overlays business event volume with Davis problems to visualize how incidents affect business operations.
-
 
 ```dql
 // Business event volume over the past 7 days
@@ -277,8 +267,6 @@ In this notebook, you learned:
 - [Davis AI Problems](https://docs.dynatrace.com/docs/platform/davis-ai/basics/davis-ai-problems)
 - [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/platform-modules/business-analytics)
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

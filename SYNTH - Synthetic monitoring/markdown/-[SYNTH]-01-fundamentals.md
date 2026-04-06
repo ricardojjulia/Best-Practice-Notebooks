@@ -1,6 +1,6 @@
 # 🔬 Synthetic Monitoring Fundamentals
 
-> **Series:** SYNTH | **Notebook:** 1 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SYNTH | **Notebook:** 1 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Understanding Proactive Availability and Performance Testing
 This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive testing of application availability, functionality, and performance from locations around the world.
@@ -23,8 +23,6 @@ This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive
 - ✅ Access to a Dynatrace environment with Synthetic Monitoring enabled
 - ✅ DQL query permissions (viewer role minimum)
 - ✅ Basic understanding of web applications and APIs
-
-
 
 <a id="what-is-synthetic-monitoring"></a>
 ## 1. What is Synthetic Monitoring?
@@ -168,6 +166,7 @@ fetch dt.entity.synthetic_test
 | fields id, entity.name
 | sort entity.name asc
 | limit 50
+
 ```
 
 ```dql
@@ -186,6 +185,7 @@ fetch dt.entity.synthetic_location
 | fields id, entity.name
 | sort entity.name asc
 | limit 50
+
 ```
 
 ```dql

@@ -23,6 +23,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 11. [Multi-Tool Coexistence](markdown/-[K8S]-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
 12. [Specialized Monitoring](markdown/-[K8S]-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
 13. [Kafka Monitoring with Kpow](markdown/-[K8S]-13-kafka-monitoring-with-kpow.md) — Kafka observability using Kpow Prometheus metrics
+99. [Best Practice Summary](markdown/-[K8S]-99-best-practice-summary.md) — Consolidated best practices from the K8S series
 
 ## Usage
 1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.

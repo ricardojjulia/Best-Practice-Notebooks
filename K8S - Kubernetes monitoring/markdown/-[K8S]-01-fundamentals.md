@@ -1,6 +1,6 @@
 # Kubernetes Monitoring Fundamentals
 
-> **Series:** K8S | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Introduction to Kubernetes Observability with Dynatrace
 Kubernetes introduces unique observability challenges: ephemeral workloads, dynamic scaling, complex networking, and multi-layer abstractions. Dynatrace provides comprehensive Kubernetes monitoring through the DynaKube operator, which deploys and manages monitoring components automatically.
@@ -191,12 +191,23 @@ Dynatrace collects multiple signal types from Kubernetes:
 fetch dt.entity.kubernetes_cluster
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name, tags
+// | sort name asc
+
 ```
 
 ```dql
 // Count all Kubernetes nodes
 fetch dt.entity.kubernetes_node
 | summarize nodeCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NODE
+// | summarize nodeCount = count()
+
 ```
 
 ```dql
@@ -205,6 +216,13 @@ fetch dt.entity.cloud_application_namespace
 | fields entity.name, tags
 | sort entity.name asc
 | limit 50
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_NAMESPACE
+// | fields name, tags
+// | sort name asc
+// | limit 50
+
 ```
 
 <a id="your-first-kubernetes-queries"></a>

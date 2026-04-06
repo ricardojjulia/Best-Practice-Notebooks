@@ -1,6 +1,6 @@
 # Deploying ActiveGate
 
-> **Series:** ONBRD | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Your Network Gateway to Dynatrace
 ActiveGate is a lightweight component that routes traffic between your infrastructure and Dynatrace. This notebook covers when you need ActiveGate, how many to deploy, where to place them, and installation steps - including comprehensive Kubernetes deployment options.
@@ -60,9 +60,33 @@ ActiveGate is a proxy and routing component that connects your environment to Dy
 | **Traffic Routing** | Proxies OneAgent data to Dynatrace |
 | **Extensions 2.0** | Runs Python-based extensions locally |
 | **Synthetic Monitoring** | Private synthetic locations |
-| **Cloud Integrations** | AWS, Azure, GCP metric collection |
+| **Cloud Integrations** | AWS, Azure, GCP metric collection (or use Clouds app for direct connections) |
 | **Kubernetes API** | Cluster monitoring via API |
 | **Log Ingest** | Generic log ingest endpoint |
+
+> **OneAgent Attribute Enrichment (1.331+):** OneAgent can enrich all telemetry (metrics, spans, logs, events) with primary fields (`dt.security_context`, `dt.cost.costcenter`) and primary tags (`primary_tags.environment`, `primary_tags.team`) at the source. More efficient than auto-tags — feeds directly into OpenPipeline routing, bucket assignment, and Grail permissions. Configure via `oneagentctl --set-host-tag` or `--set-host-tag` at install time. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
+### Dynatrace Version Support Policy
+
+| Component | Standard Support | Enterprise Support |
+|-----------|-----------------|-------------------|
+| **OneAgent** | 9 months | 12 months |
+| **ActiveGate** | 9 months | 12 months |
+| **Dynatrace Operator** | Independent release cycle — check [release notes](https://docs.dynatrace.com/docs/whats-new) |
+
+### Technology Support Tiers
+
+| Tier | Meaning |
+|------|---------|
+| **Full Support** | All monitoring features maintained, bugs fixed, enhancements delivered |
+| **Early Adopter** | Newly introduced — functional but may lack full feature parity; feedback welcome |
+| **End of Life (EOL)** | No updates, fixes, or enhancements; monitoring may still work but issues won't be addressed |
+
+### Third-Party Technology EOL Policy
+
+Dynatrace continues to support monitoring a third-party technology for **6 months beyond the vendor's end-of-life date**. End-of-support announcements are published 6 months in advance.
+
+> **Reference:** [Technology Support Model](https://docs.dynatrace.com/docs/ingest-from/technology-support/support-model-and-issues) | [End-of-Support Announcements](https://docs.dynatrace.com/docs/whats-new/technology/end-of-support-news) | [Support Policy](https://www.dynatrace.com/company/trust-center/support-policy/)
 
 <a id="when-do-you-need-activegate"></a>
 ## 2. When Do You Need ActiveGate?
@@ -75,6 +99,8 @@ ActiveGate is a proxy and routing component that connects your environment to Dy
 | **Extensions 2.0** | Custom data sources (SNMP, databases, etc.) |
 | **AWS/Azure/GCP monitoring** | Pull cloud metrics via API |
 | **VMware monitoring** | vCenter integration |
+
+> **Update — Clouds App (2025):** The **Clouds app** now supports direct cloud connections **without ActiveGate** for AWS (GA), Azure (preview), and GCP (preview). If your environment has the Clouds app, you can configure cloud integrations without deploying an ActiveGate. ActiveGate is still required for **Extensions 2.0**, **private synthetic locations**, and environments without Clouds app access. See [Clouds app documentation](https://docs.dynatrace.com/docs/platform-modules/infrastructure-monitoring/cloud-platform-monitoring).
 | **Kubernetes full-stack** | Cluster API access for events, metrics |
 
 ### Optional but Recommended
@@ -95,7 +121,7 @@ ActiveGate is a proxy and routing component that connects your environment to Dy
 | Can all hosts reach Dynatrace directly? | AG optional | AG required |
 | Need private synthetic monitoring? | AG required | Continue |
 | Using Extensions 2.0? | AG required | Continue |
-| Monitoring AWS/Azure/GCP? | AG required | Continue |
+| Monitoring AWS/Azure/GCP? | AG required (or use Clouds app) | Continue |
 | More than 500 hosts? | AG recommended | AG optional |
 -->
 

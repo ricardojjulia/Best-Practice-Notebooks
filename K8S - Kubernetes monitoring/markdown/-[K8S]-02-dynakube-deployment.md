@@ -1,6 +1,6 @@
 # DynaKube Operator Deployment
 
-> **Series:** K8S | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Installing and Configuring the Dynatrace Operator
 The DynaKube operator is the recommended way to deploy Dynatrace monitoring in Kubernetes. This notebook covers installation via Helm, configuration options, and deployment modes for different use cases.
@@ -28,6 +28,8 @@ The DynaKube operator is the recommended way to deploy Dynatrace monitoring in K
 | **Helm** | v3.x installed |
 | **kubectl** | Configured for your cluster |
 | **API Tokens** | Operator token + Data ingest token |
+
+> **Version Support Policy:** OneAgent and ActiveGate versions are supported for **9 months (Standard)** or **12 months (Enterprise)**. Third-party technologies are supported for 6 months beyond vendor EOL. See [Support Policy](https://www.dynatrace.com/company/trust-center/support-policy/).
 
 ## 1. Operator Overview
 
@@ -184,6 +186,9 @@ spec:
       - routing
       - dynatrace-api
 ```
+
+> **API Version Note:** `v1beta6` is the current DynaKube API version (introduced in Operator 1.8.0). `v1beta5` remains supported and all examples in this series use it. When starting new deployments, consider using `v1beta6`.
+
 
 ### Apply the DynaKube
 
@@ -440,6 +445,12 @@ kubectl -n dynatrace get pods -l app.kubernetes.io/component=activegate
 fetch dt.entity.kubernetes_cluster
 | fields entity.name, tags
 | sort entity.name asc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes K8S_CLUSTER
+// | fields name, tags
+// | sort name asc
+
 ```
 
 ```dql

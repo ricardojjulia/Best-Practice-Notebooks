@@ -1,6 +1,6 @@
 # WEBRUM-05: Error Analysis
 
-> **Series:** WEBRUM | **Notebook:** 5 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM | **Notebook:** 5 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
@@ -54,13 +54,14 @@ Dynatrace captures several categories of browser-side errors:
 | `error.type` | Error classification |
 | `error.source` | Source file and line number |
 | `action.name` | User action during which the error occurred |
-| `session.id` | Session containing the error |
-| `app.name` | Application name |
+| `sessionId` | Session containing the error |
+| `application` | Application name |
 
 ```dql
 // Recent RUM errors — explore the data structure
-fetch dt.rum.error, from:-1h
-| fieldsKeep timestamp, error.message, error.type, error.source, action.name, app.name, session.id
+fetch user.events, from:-1h
+| filter type == "Error"
+| fieldsKeep timestamp, error.message, error.type, error.source, action.name, application, sessionId
 | sort timestamp desc
 | limit 20
 ```
@@ -73,24 +74,27 @@ Start by understanding overall error volume and how it changes over time.
 
 ```dql
 // Error count by type over last 24 hours
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | summarize error_count = count(), by:{error.type}
 | sort error_count desc
 ```
 
 ```dql
 // Error trend over 24 hours — hourly bucketed by error type
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | makeTimeseries error_count = count(), interval:1h, by:{error.type}
 ```
 
 ```dql
 // Error volume by application — which apps have the most errors?
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | summarize error_count = count(),
     unique_errors = countDistinct(error.message),
-    affected_sessions = countDistinct(session.id),
-    by:{app.name}
+    affected_sessions = countDistinct(sessionId),
+    by:{application}
 | sort error_count desc
 ```
 
@@ -102,9 +106,10 @@ Error messages often contain variable data (stack traces, URLs, IDs). Grouping b
 
 ```dql
 // Top 15 errors by frequency — the most common error messages
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | summarize error_count = count(),
-    affected_sessions = countDistinct(session.id),
+    affected_sessions = countDistinct(sessionId),
     by:{error.message, error.type}
 | sort error_count desc
 | limit 15
@@ -112,7 +117,8 @@ fetch dt.rum.error, from:-24h
 
 ```dql
 // Errors by page — which pages generate the most errors?
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | filter isNotNull(action.name)
 | summarize error_count = count(),
     unique_errors = countDistinct(error.message),
@@ -129,9 +135,10 @@ Not all errors are equal. An error affecting 1 session is different from one aff
 
 ```dql
 // Error impact — errors ranked by number of affected sessions
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | summarize total_occurrences = count(),
-    affected_sessions = countDistinct(session.id),
+    affected_sessions = countDistinct(sessionId),
     by:{error.message}
 | sort affected_sessions desc
 | limit 10
@@ -139,11 +146,11 @@ fetch dt.rum.error, from:-24h
 
 ```dql
 // Error rate per application — percentage of sessions with errors
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
 | summarize total_sessions = count(),
-    error_sessions = countIf(error.count > 0),
-    by:{app.name}
+    error_sessions = countIf(totalErrorCount > 0),
+    by:{application}
 | fieldsAdd error_rate_pct = round(toDouble(error_sessions) / toDouble(total_sessions) * 100.0, decimals: 2)
 | sort error_rate_pct desc
 ```
@@ -158,10 +165,11 @@ XHR/fetch errors indicate backend API failures impacting the frontend. These are
 
 ```dql
 // XHR errors by action — identify failing API calls
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | filter error.type == "XHR_ERROR" or error.type == "FETCH_ERROR"
 | summarize error_count = count(),
-    affected_sessions = countDistinct(session.id),
+    affected_sessions = countDistinct(sessionId),
     by:{error.message, action.name}
 | sort error_count desc
 | limit 15
@@ -169,7 +177,8 @@ fetch dt.rum.error, from:-24h
 
 ```dql
 // XHR error trend — are backend errors increasing?
-fetch dt.rum.error, from:-24h
+fetch user.events, from:-24h
+| filter type == "Error"
 | filter error.type == "XHR_ERROR" or error.type == "FETCH_ERROR"
 | makeTimeseries error_count = count(), interval:1h
 ```
@@ -190,9 +199,9 @@ Dynatrace captures rage clicks as user action properties. They can also be detec
 ```dql
 // Sessions with rage clicks — identify frustrated users
 fetch user.events, from:-24h
-| filter isNotNull(rage.click) and rage.click == true
+| filter type == "RageClick"
 | summarize rage_count = count(),
-    by:{action.name, app.name}
+    by:{action.name, application}
 | sort rage_count desc
 | limit 10
 ```
@@ -200,7 +209,7 @@ fetch user.events, from:-24h
 ```dql
 // Rage click trend over 7 days — is frustration increasing?
 fetch user.events, from:-7d
-| filter isNotNull(rage.click) and rage.click == true
+| filter type == "RageClick"
 | makeTimeseries rage_count = count(), interval:1d
 ```
 
@@ -212,25 +221,25 @@ Understanding how errors correlate with session outcomes (bounce, low engagement
 
 ```dql
 // Compare sessions with and without errors — engagement impact
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
-| fieldsAdd has_errors = if(error.count > 0, "With Errors", else: "No Errors")
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
+| fieldsAdd has_errors = if(totalErrorCount > 0, "With Errors", else: "No Errors")
 | summarize session_count = count(),
-    avg_actions = avg(action.count),
+    avg_actions = avg(userActionCount),
     avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
-    bounce_rate = countIf(action.count == 1),
+    bounce_rate = countIf(userActionCount == 1),
     by:{has_errors}
 | fieldsAdd bounce_pct = round(toDouble(bounce_rate) / toDouble(session_count) * 100.0, decimals: 1)
 ```
 
 ```dql
 // Errors by browser — are certain browsers more error-prone?
-fetch dt.rum.user_session, from:-24h
-| filter user.type == "REAL_USER"
-| filter isNotNull(browser.family)
+fetch user.sessions, from:-24h
+| filter userType == "REAL_USER"
+| filter isNotNull(browserFamily)
 | summarize total = count(),
-    with_errors = countIf(error.count > 0),
-    by:{browser.family}
+    with_errors = countIf(totalErrorCount > 0),
+    by:{browserFamily}
 | fieldsAdd error_rate = round(toDouble(with_errors) / toDouble(total) * 100.0, decimals: 1)
 | filter total > 10
 | sort error_rate desc

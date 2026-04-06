@@ -1,11 +1,35 @@
 # ADOPT-05: Optimization Roadmap
 
-> **Series:** ADOPT | **Notebook:** 5 of 5 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** ADOPT | **Notebook:** 5 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 
 An optimization roadmap translates maturity assessment results and success metrics into a prioritized plan of action. This notebook covers monthly milestone planning, the distinction between quick wins and strategic investments, cost optimization opportunities (bucket management, sampling, retention tuning), automation candidates, and methods for measuring the return on observability investment. The roadmap framework is designed to be adapted to any organization's size and pace.
 
+
+> **OneAgent Attribute Enrichment (1.331+):** OneAgent can enrich all telemetry (metrics, spans, logs, events) with primary fields (`dt.security_context`, `dt.cost.costcenter`) and primary tags (`primary_tags.environment`, `primary_tags.team`) at the source. More efficient than auto-tags — feeds directly into OpenPipeline routing, bucket assignment, and Grail permissions. Configure via `oneagentctl --set-host-tag` or `--set-host-tag` at install time. See [docs](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment).
+
+### Dynatrace Version Support Policy
+
+| Component | Standard Support | Enterprise Support |
+|-----------|-----------------|-------------------|
+| **OneAgent** | 9 months | 12 months |
+| **ActiveGate** | 9 months | 12 months |
+| **Dynatrace Operator** | Independent release cycle — check [release notes](https://docs.dynatrace.com/docs/whats-new) |
+
+### Technology Support Tiers
+
+| Tier | Meaning |
+|------|---------|
+| **Full Support** | All monitoring features maintained, bugs fixed, enhancements delivered |
+| **Early Adopter** | Newly introduced — functional but may lack full feature parity; feedback welcome |
+| **End of Life (EOL)** | No updates, fixes, or enhancements; monitoring may still work but issues won't be addressed |
+
+### Third-Party Technology EOL Policy
+
+Dynatrace continues to support monitoring a third-party technology for **6 months beyond the vendor's end-of-life date**. End-of-support announcements are published 6 months in advance.
+
+> **Reference:** [Technology Support Model](https://docs.dynatrace.com/docs/ingest-from/technology-support/support-model-and-issues) | [End-of-Support Announcements](https://docs.dynatrace.com/docs/whats-new/technology/end-of-support-news) | [Support Policy](https://www.dynatrace.com/company/trust-center/support-policy/)
 
 ---
 
@@ -22,7 +46,6 @@ An optimization roadmap translates maturity assessment results and success metri
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +54,6 @@ An optimization roadmap translates maturity assessment results and success metri
 | **Permissions** | `storage:logs:read`, `storage:metrics:read`, `storage:entities:read`, `storage:buckets:read` |
 | **Context** | Completed ADOPT-01 through ADOPT-04 |
 | **Audience** | Platform team leads, engineering directors, VP of Engineering, CTO |
-
 
 <a id="roadmap-principles"></a>
 
@@ -63,7 +85,6 @@ Every initiative has a learning component. Allocate time for team enablement (AD
 | Months 2-3 | Foundation — platform hygiene | Medium effort, foundational |
 | Months 4-6 | Strategic — transformative initiatives | High effort, long-term value |
 
-
 <a id="quick-wins"></a>
 
 ## 2. Quick Wins — Month 1
@@ -81,7 +102,6 @@ Quick wins require minimal effort but deliver visible results. They establish cr
 - Document alerting ownership per service
 
 Use this query to identify the noisiest problem sources:
-
 
 ```dql
 // Top 10 most frequent problem types in the last 30 days
@@ -104,12 +124,16 @@ fetch dt.davis.problems, from:-30d
 - Enable auto-update for non-production hosts
 - Schedule coordinated updates for production
 
-
 ```dql
 // Agent version distribution — identify outdated versions
 fetch dt.entity.host
 | summarize host_count = count(), by:{agentVersion}
 | sort host_count desc
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize host_count = count(), by:{agentVersion}
+// | sort host_count desc
+
 ```
 
 ### 2.3 Dashboard Consolidation
@@ -120,7 +144,6 @@ fetch dt.entity.host
 - Audit existing dashboards for overlap and staleness
 - Create 3 standard templates: Infrastructure Health, Application Health, Business KPIs
 - Retire unused dashboards
-
 
 <a id="foundation-building"></a>
 
@@ -146,7 +169,6 @@ Foundation work addresses platform hygiene and establishes the infrastructure fo
 - Design a bucket naming convention (e.g., `<team>_<datatype>_<env>`)
 - Configure OpenPipeline routing to direct data to appropriate buckets
 - Set retention policies per bucket based on compliance and cost requirements
-
 
 ```dql
 // Analyze log volume by source to inform bucket strategy
@@ -174,7 +196,6 @@ fetch logs, from:-24h
 - Define IAM groups per team (see IAM series for detailed guidance)
 - Implement least-privilege policies
 - Configure data-scoped access (segments, management zones)
-
 
 <a id="strategic-investments"></a>
 
@@ -222,7 +243,6 @@ Strategic investments are higher-effort initiatives that deliver transformative 
 - Build dashboards correlating technical health with business KPIs
 - Establish business-context alerting (e.g., revenue impact of slowdowns)
 
-
 <a id="cost-optimization"></a>
 
 ## 5. Cost Optimization Opportunities
@@ -232,7 +252,6 @@ Cost optimization is not about reducing observability — it is about ensuring e
 ### 5.1 High-Volume Log Sources
 
 Identify the sources generating the most log data. High-volume sources are candidates for filtering, sampling, or reduced retention.
-
 
 ```dql
 // Top 15 log sources by volume in the last 7 days
@@ -245,7 +264,6 @@ fetch logs, from:-7d
 ### 5.2 Debug and Verbose Log Analysis
 
 Debug-level logs are often the largest contributor to ingestion volume but rarely needed in production. This query quantifies the opportunity.
-
 
 ```dql
 // Log volume breakdown by severity level over the last 24 hours
@@ -260,11 +278,9 @@ fetch logs, from:-24h
 > - **Sample:** Use sampling for high-cardinality, low-value data
 > - **Aggregate:** Replace raw log storage with metric extraction for patterns you only need to count
 
-
 ### 5.3 Entity Monitoring Mode Review
 
 Not every host requires full-stack monitoring. Infrastructure-only mode costs fewer host units and may be appropriate for non-application hosts.
-
 
 ```dql
 // Host count by monitoring mode — identify over-provisioned monitoring
@@ -276,7 +292,6 @@ fetch dt.entity.host
 ### 5.4 Span Volume Analysis
 
 Distributed tracing can generate significant data volume. Identify services producing the most spans to evaluate whether head-based or tail-based sampling is appropriate.
-
 
 ```dql
 // Top 10 services by span volume in the last 24 hours
@@ -294,7 +309,6 @@ fetch spans, from:-24h
 | **Spans** | Sample at 10:1 | Sample at 2:1 | Full retention |
 | **Metrics** | Reduce resolution | Standard resolution | Full resolution |
 | **Events** | Filter noise | Standard retention | Full retention |
-
 
 <a id="automation-candidates"></a>
 
@@ -318,7 +332,6 @@ Automation reduces toil and improves consistency. Prioritize automating tasks th
 
 The simplest and highest-impact automation is routing noisy alerts. Use this query to identify candidates:
 
-
 ```dql
 // Problems that auto-resolve within 5 minutes — candidates for suppression
 fetch dt.davis.problems, from:-7d
@@ -334,7 +347,6 @@ fetch dt.davis.problems, from:-7d
 > - Delayed notification (wait 5 minutes before alerting)
 > - Automated acknowledgment
 > - Workflow-based triage that only escalates if the problem persists
-
 
 <a id="measuring-roi"></a>
 
@@ -376,7 +388,6 @@ Create a monthly ROI report combining:
 4. Team enablement progress (from ADOPT-04)
 5. Estimated cost avoidance (calculated from the formulas above)
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Series Conclusion
@@ -410,8 +421,6 @@ With the ADOPT series complete, your organization has:
 
 The next step is execution. Use the other notebook series in this repository (ONBRD, K8S, IAM, AUTOM, WFLOW, etc.) as practical guides for implementing each roadmap initiative.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-
