@@ -1,17 +1,16 @@
 # M2S-04: Step 4 — Prepare: Readiness and Pre-Migration
 
-> **Series:** M2S | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 With the target architecture designed, it is time to prepare everything needed for migration execution. This step ensures your SaaS tenant is provisioned, identity is configured, ActiveGates are deployed in parallel, and rollback procedures are tested—so that when you flip the switch in Step 5, there are no surprises.
 
-> **Migration Framework — Step 4 Highlighted**
+> **M2S Migration Journey — 3 Phases / 9 Steps**
 >
-> | Phase | Step 1 | Step 2 | Step 3 | Step 4 | Step 5 | Step 6 | Step 7 | Step 8 | Step 9 |
-> |-------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
-> | **Plan** | Discover | Strategize | Design | | | | | | |
-> | **Upgrade** | | | | **▶ Prepare** | Execute | Integrate | | | |
-> | **Run** | | | | | | | Expand | Enable | Optimize |
-
+> **Plan:** 1. Discover | 2. Strategize | 3. Design
+>
+> **Upgrade:** **4. Prepare** | 5. Execute | 6. Integrate
+>
+> **Run:** 7. Expand | 8. Enable | 9. Optimize
 ---
 
 ## Table of Contents
@@ -311,6 +310,8 @@ fetch dt.entity.active_gate
 | fields entity.name, version, networkZone
 | sort entity.name asc
 
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 ```dql
@@ -318,6 +319,9 @@ fetch dt.entity.active_gate
 fetch dt.entity.active_gate
 | summarize agCount = count(), by:{networkZone}
 | sort agCount desc
+
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 ### 4.6 Connectivity Validation Checklist
@@ -449,6 +453,9 @@ fetch dt.entity.active_gate
 | fieldsAdd entity.name, zone = networkZone
 | fields entity.name, zone
 | sort zone asc, entity.name asc
+
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 ### 6.5 Zone Topology Validation

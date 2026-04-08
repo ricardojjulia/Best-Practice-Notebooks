@@ -1,17 +1,16 @@
 # M2S-03: Step 3 — Design: Create Target Architecture
 
-> **Series:** M2S | **Notebook:** 3 of 9 | **Phase:** Plan | **Step:** Design | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** M2S | **Notebook:** 3 of 9 | **Phase:** Plan | **Step:** Design | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 With discovery and strategy complete, it’s time to design the target architecture for your Dynatrace SaaS environment. This step produces the technical blueprints that guide every subsequent migration activity—network connectivity, ActiveGate topology, security controls, and high availability.
 
-> **Migration Framework — Step 3 Highlighted**
+> **M2S Migration Journey — 3 Phases / 9 Steps**
 >
-> | Phase | Step 1 | Step 2 | Step 3 | Step 4 | Step 5 | Step 6 | Step 7 | Step 8 | Step 9 |
-> |-------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
-> | **Plan** | Discover | Strategize | **▶ Design** | | | | | | |
-> | **Upgrade** | | | | Prepare | Execute | Integrate | | | |
-> | **Run** | | | | | | | Expand | Enable | Optimize |
-
+> **Plan:** 1. Discover | 2. Strategize | **3. Design**
+>
+> **Upgrade:** 4. Prepare | 5. Execute | 6. Integrate
+>
+> **Run:** 7. Expand | 8. Enable | 9. Optimize
 ---
 
 ## Table of Contents
@@ -343,6 +342,8 @@ fetch dt.entity.active_gate
 | fields entity.name, version, networkZone
 | sort entity.name asc
 
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 ![Security Model](images/03-security-model.png)
@@ -497,6 +498,9 @@ Your responsibility is ensuring no single points of failure in the agent-to-SaaS
 fetch dt.entity.active_gate
 | summarize agCount = count(), by:{networkZone}
 | sort agCount desc
+
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 <a id="architecture-design-checklist"></a>

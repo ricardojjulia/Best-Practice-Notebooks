@@ -1,6 +1,6 @@
 # M2S-09: Step 9 — Optimize: Validate, Optimize, and Decommission
 
-> **Series:** M2S | **Notebook:** 9 of 9 | **Phase:** Run | **Step:** Optimize | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** M2S | **Notebook:** 9 of 9 | **Phase:** Run | **Step:** Optimize | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 The migration is functionally complete. Agents are reporting, configurations are applied, integrations are reconnected, SaaS-exclusive features are adopted, and users are trained. This final step closes the loop: validate that every success criterion is met, optimize the SaaS environment for long-term performance, obtain stakeholder sign-off, and decommission the Managed cluster.
 
@@ -119,6 +119,8 @@ fetch dt.entity.service
 fetch dt.entity.application
 | summarize appCount = count()
 
+// Note: smartscapeNodes WEB_APPLICATION is not yet available on Grail
+// Continue using fetch dt.entity.application until Smartscape coverage expands
 ```
 
 ```dql
@@ -137,6 +139,8 @@ fetch dt.entity.process_group
 fetch dt.entity.synthetic_test
 | summarize syntheticCount = count()
 
+// Note: smartscapeNodes SYNTHETIC_TEST is not yet available on Grail
+// Continue using fetch dt.entity.synthetic_test until Smartscape coverage expands
 ```
 
 ### Entity Coverage Comparison
@@ -425,12 +429,20 @@ These correspond to items 9-11 in the overall migration order of operations: Val
 // Final host count in SaaS — this is the definitive count before Managed shutdown
 fetch dt.entity.host
 | summarize finalHostCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize finalHostCount = count()
 ```
 
 ```dql
 // Final service count in SaaS
 fetch dt.entity.service
 | summarize finalServiceCount = count()
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize finalServiceCount = count()
 ```
 
 ```dql

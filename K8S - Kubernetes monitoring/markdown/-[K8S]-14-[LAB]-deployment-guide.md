@@ -92,8 +92,8 @@ Copy both tokens immediately after generation. You cannot retrieve them later.
 
 ```bash
 # Store tokens as environment variables for the next steps
-export API_TOKEN="<your-api-token>"
-export DATA_INGEST_TOKEN="<your-api-token>"
+export API_TOKEN="dt0c01.XXXXXXXX.YYYYYYYYYYYYYYYY"
+export DATA_INGEST_TOKEN="dt0c01.XXXXXXXX.ZZZZZZZZZZZZZZZZ"
 ```
 
 <a id="install-dynatrace-operator"></a>
@@ -169,10 +169,9 @@ spec:
     enabled: true
 
   oneAgent:
+    # Host group — scopes dashboards and alerts per cluster
+    hostGroup: <cluster-name>
     cloudNativeFullStack:
-      # Host group — scopes dashboards and alerts per cluster
-      hostGroup: <cluster-name>
-
       # Opt-in namespace selector
       namespaceSelector:
         matchLabels:
