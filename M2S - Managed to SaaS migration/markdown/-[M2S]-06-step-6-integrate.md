@@ -1,6 +1,6 @@
 # M2S-06: Step 6 — Integrate: Reconnect Integrations
 
-> **Series:** M2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** M2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 With OneAgents reporting to SaaS and configurations migrated, the next challenge is ensuring every external system that depends on Dynatrace is reconnected. Dashboards need updated links, alerting channels need validation, CI/CD pipelines need new API endpoints, and ITSM integrations need reconfiguration. This notebook provides a systematic approach to reconnecting every integration point.
 
@@ -355,6 +355,8 @@ fetch dt.entity.active_gate
 | fieldsAdd entity.name
 | sort entity.name asc
 
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 <a id="api-script-migration"></a>
@@ -460,6 +462,8 @@ fetch dt.entity.synthetic_test
 | fieldsAdd entity.name
 | summarize monitorCount = count()
 
+// Note: smartscapeNodes SYNTHETIC_TEST is not yet available on Grail
+// Continue using fetch dt.entity.synthetic_test until Smartscape coverage expands
 ```
 
 ```dql
@@ -467,6 +471,9 @@ fetch dt.entity.synthetic_test
 fetch dt.entity.synthetic_test
 | fieldsAdd entity.name, type
 | sort entity.name asc
+
+// Note: smartscapeNodes SYNTHETIC_TEST is not yet available on Grail
+// Continue using fetch dt.entity.synthetic_test until Smartscape coverage expands
 ```
 
 ```dql

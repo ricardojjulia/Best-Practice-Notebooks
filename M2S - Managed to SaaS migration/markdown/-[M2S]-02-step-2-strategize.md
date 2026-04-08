@@ -1,12 +1,16 @@
 # M2S-02: Step 2 — Strategize: Define Your Migration Approach
 
-> **Series:** M2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** M2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 With your discovery complete, it's time to turn inventory into action. This notebook helps you select a migration approach, sequence your operations, assess risks, and build a timeline that earns stakeholder confidence.
 
-> **Migration Journey — You Are Here**
+> **M2S Migration Journey — 3 Phases / 9 Steps**
 >
-> **Plan:** 1. Discover → **2. Strategize** → 3. Design | **Upgrade:** 4. Prepare → 5. Execute → 6. Integrate | **Run:** 7. Expand → 8. Enable → 9. Optimize
+> **Plan:** 1. Discover | **2. Strategize** | 3. Design
+>
+> **Upgrade:** 4. Prepare | 5. Execute | 6. Integrate
+>
+> **Run:** 7. Expand | 8. Enable | 9. Optimize
 
 ---
 
@@ -273,6 +277,8 @@ fetch dt.entity.active_gate
 | fieldsAdd entity.name, networkZone
 | sort entity.name asc
 
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 <a id="risk-assessment"></a>
@@ -328,6 +334,11 @@ Define measurable success criteria before migration starts. These criteria deter
 fetch dt.entity.host
 | summarize totalHosts = count()
 | fieldsAdd target = "<YOUR_DISCOVERY_COUNT>", coverage = "Compare totalHosts to target"
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize totalHosts = count()
+// | fieldsAdd target = "<YOUR_DISCOVERY_COUNT>", coverage = "Compare totalHosts to target"
 ```
 
 ```dql

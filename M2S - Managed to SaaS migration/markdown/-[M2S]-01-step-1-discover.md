@@ -1,6 +1,6 @@
 # M2S-01: Step 1 — Discover: Understand SaaS Differences
 
-> **Series:** M2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** M2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 The first step in any Managed-to-SaaS migration is understanding what you are moving to and why. This notebook helps you document the benefits of Dynatrace SaaS for your organization, take inventory of your current Managed environment, and confirm your use cases and goals for the upgrade.
 
@@ -141,6 +141,11 @@ fetch dt.entity.host
 fetch dt.entity.host
 | summarize hostCount = count(), by:{osType}
 | sort hostCount desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hostCount = count(), by:{osType}
+// | sort hostCount desc
 ```
 
 **Managed alternative (Entities API v2):**
@@ -169,6 +174,11 @@ fetch dt.entity.service
 fetch dt.entity.service
 | summarize serviceCount = count(), by:{serviceType}
 | sort serviceCount desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes SERVICE
+// | summarize serviceCount = count(), by:{serviceType}
+// | sort serviceCount desc
 ```
 
 ### Application Inventory
@@ -178,6 +188,8 @@ fetch dt.entity.service
 fetch dt.entity.application
 | summarize appCount = count()
 
+// Note: smartscapeNodes WEB_APPLICATION is not yet available on Grail
+// Continue using fetch dt.entity.application until Smartscape coverage expands
 ```
 
 ### Synthetic Test Inventory
@@ -187,6 +199,8 @@ fetch dt.entity.application
 fetch dt.entity.synthetic_test
 | summarize syntheticCount = count()
 
+// Note: smartscapeNodes SYNTHETIC_TEST is not yet available on Grail
+// Continue using fetch dt.entity.synthetic_test until Smartscape coverage expands
 ```
 
 ```dql
@@ -194,6 +208,9 @@ fetch dt.entity.synthetic_test
 fetch dt.entity.synthetic_test
 | summarize testCount = count(), by:{type}
 | sort testCount desc
+
+// Note: smartscapeNodes SYNTHETIC_TEST is not yet available on Grail
+// Continue using fetch dt.entity.synthetic_test until Smartscape coverage expands
 ```
 
 ### OneAgent Version Assessment
@@ -205,6 +222,11 @@ Understanding your OneAgent version spread is important because SaaS supports a 
 fetch dt.entity.host
 | summarize hostCount = count(), by:{installerVersion}
 | sort hostCount desc
+
+// Alternative: Smartscape on Grail (entity.name → name)
+// smartscapeNodes HOST
+// | summarize hostCount = count(), by:{installerVersion}
+// | sort hostCount desc
 ```
 
 ### ActiveGate Assessment
@@ -215,6 +237,8 @@ fetch dt.entity.active_gate
 | fieldsAdd entity.name
 | summarize activeGateCount = count()
 
+// Note: smartscapeNodes ACTIVE_GATE is not yet available on Grail
+// Continue using fetch dt.entity.active_gate until Smartscape coverage expands
 ```
 
 ### Environment Size Summary

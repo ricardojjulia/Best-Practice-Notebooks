@@ -1,6 +1,6 @@
 # M2S-08: Step 8 — Enable: User Enablement and Communication
 
-> **Series:** M2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** M2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 A successful migration is measured not by the technical cutover but by whether every team in the organization can use the new platform effectively. Step 8 focuses on communication, training, documentation, and establishing the support structures that ensure adoption. Without deliberate enablement, teams will struggle with new URLs, unfamiliar interfaces, and unanswered questions — undermining the value of the migration.
 
