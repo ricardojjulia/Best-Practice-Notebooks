@@ -37,7 +37,6 @@ By completing this notebook, you will:
 
 ---
 
-
 ---
 
 ## Security Stage Overview

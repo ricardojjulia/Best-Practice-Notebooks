@@ -30,8 +30,6 @@ This notebook covers DQL query syntax, filtering, string matching, and DPL (Dyna
 - ✅ Completed OPLOGS-01 through OPLOGS-04
 - ✅ Basic understanding of regular expressions (helpful)
 
-
-
 <a id="dql-fundamentals"></a>
 ## 1. DQL Fundamentals
 ### Query Structure

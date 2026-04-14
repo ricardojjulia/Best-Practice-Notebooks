@@ -29,8 +29,6 @@ This notebook covers Grail bucket architecture, retention policies, routing conf
 - ✅ Understanding of OpenPipeline basics (OPLOGS-01 to OPLOGS-03)
 - ✅ Admin access for bucket configuration (optional)
 
-
-
 ```python
 // Discover all buckets with log data
 fetch logs, from: now() - 24h

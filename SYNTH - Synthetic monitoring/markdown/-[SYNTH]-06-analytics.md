@@ -26,9 +26,6 @@ This notebook covers advanced analytics for synthetic monitoring, including buil
 - ✅ Completed SYNTH-01 through SYNTH-05
 - ✅ Active synthetic monitors generating data
 
-
-
-
 ## 1. Analytics Overview <a name="overview"></a>
 
 ### Key Metrics for Synthetic Monitoring

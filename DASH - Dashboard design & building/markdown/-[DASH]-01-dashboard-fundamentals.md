@@ -6,7 +6,6 @@
 
 Dashboards are the primary visualization layer in Dynatrace, turning raw observability data into actionable insights. This notebook covers the distinction between dashboards and notebooks, when to use each, the architecture of Dynatrace dashboards (tiles, sections, variables), and core design principles that make dashboards effective. Whether you are building your first dashboard or refining an existing library, these fundamentals provide the foundation for every notebook in this series.
 
-
 ---
 
 ## Table of Contents
@@ -20,7 +19,6 @@ Dashboards are the primary visualization layer in Dynatrace, turning raw observa
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -29,7 +27,6 @@ Dashboards are the primary visualization layer in Dynatrace, turning raw observa
 | **Permissions** | `storage:logs:read`, `storage:metrics:read`, `storage:events:read` |
 | **Access** | Dashboard creation privileges (`document:documents:write`) |
 | **Data** | At least 1 hour of ingested logs and metrics |
-
 
 <a id="dashboards-vs-notebooks"></a>
 
@@ -61,7 +58,6 @@ Dynatrace provides two primary visualization tools, each designed for different 
 - **Knowledge sharing** — documented analysis with explanatory text
 - **Training** — step-by-step DQL tutorials (like this series)
 
-
 <a id="dashboard-architecture"></a>
 
 ## 2. Dashboard Architecture
@@ -89,7 +85,6 @@ Sections group related tiles visually. Use sections to organize dashboards by th
 ### Variables
 
 Variables make dashboards dynamic. A single dashboard template can serve multiple teams by letting users select entities, environments, or time ranges from dropdown controls. Variables are covered in depth in **DASH-06**.
-
 
 <a id="design-principles"></a>
 
@@ -131,7 +126,6 @@ If a tile does not lead to a decision, consider removing it.
 - **Group related tiles** — use sections to cluster related metrics
 - **Limit tile count** — aim for 8-12 tiles per dashboard; more than 15 creates cognitive overload
 
-
 <a id="dashboard-creation-workflow"></a>
 
 ## 4. Dashboard Creation Workflow
@@ -167,7 +161,6 @@ Make the dashboard reusable by adding entity and time range variables.
 
 Share with the target audience, collect feedback, and refine. A dashboard is never "done" — it evolves with the team's needs.
 
-
 <a id="your-first-dashboard-query"></a>
 
 ## 5. Your First Dashboard Query
@@ -177,7 +170,6 @@ Before building a dashboard, you need validated DQL queries. Let's start with a 
 ### Total Log Volume by Level
 
 This query provides a quick overview of log health — useful as a bar chart tile.
-
 
 ```dql
 // Log volume breakdown by severity level
@@ -190,7 +182,6 @@ fetch logs, from:-1h
 
 A single-value tile showing how many Davis problems are currently active — the most common executive KPI.
 
-
 ```dql
 // Count of currently active Davis problems
 fetch dt.davis.problems, from:-24h
@@ -202,7 +193,6 @@ fetch dt.davis.problems, from:-24h
 
 A line chart showing error frequency — ideal for spotting spikes and correlating with deployments.
 
-
 ```dql
 // Error log trend over the last 6 hours
 fetch logs, from:-6h
@@ -213,7 +203,6 @@ fetch logs, from:-6h
 ### Host CPU Overview
 
 A timeseries query for a line chart showing CPU usage across hosts.
-
 
 ```dql
 // Average CPU usage by host over the last hour
@@ -234,8 +223,6 @@ In this notebook you learned:
 
 **Next:** In **DASH-02: Dashboard Hierarchy**, we explore the three-tier model — Executive, Operations, and Engineering dashboards — and how to design information density for each audience.
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

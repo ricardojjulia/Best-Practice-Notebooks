@@ -6,7 +6,6 @@
 
 This notebook covers monitoring caches and message brokers with Dynatrace. Caches (Redis, Memcached) and message brokers (Kafka, RabbitMQ) are critical infrastructure components that behave differently from traditional databases. You will learn how to analyze Redis operation performance, Kafka consumer throughput, message broker queue health, and Elasticsearch query patterns using span data.
 
-
 ---
 
 ## Table of Contents
@@ -21,7 +20,6 @@ This notebook covers monitoring caches and message brokers with Dynatrace. Cache
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ This notebook covers monitoring caches and message brokers with Dynatrace. Cache
 | **Permissions** | `storage:spans:read`, `storage:metrics:read` |
 | **Data** | Application traffic generating cache/messaging calls |
 | **Prior Reading** | DBMON-01: Database Monitoring Fundamentals |
-
 
 <a id="cache-messaging-overview"></a>
 
@@ -49,7 +46,6 @@ Caches and message brokers serve fundamentally different purposes from databases
 
 > **Note:** Cache and messaging systems often have sub-millisecond latency. Even small increases in response time can indicate significant issues (memory pressure, network problems, or hot keys).
 
-
 ```dql
 // Discover active cache and messaging systems
 fetch spans, from:-1h
@@ -66,7 +62,6 @@ fetch spans, from:-1h
 ## 2. Redis Performance Analysis
 
 Redis is the most commonly used in-memory data store. Monitoring Redis involves tracking operation types (GET, SET, DEL, HGET, etc.), latency distribution, and error rates. Since Redis operations should complete in microseconds, even small latency increases warrant investigation.
-
 
 ```dql
 // Redis operation breakdown — which commands are most used?
@@ -120,7 +115,6 @@ fetch spans, from:-1h
 
 > **Tip:** Redis commands like `KEYS *`, `SMEMBERS` on large sets, or `LRANGE` with large ranges are known to cause latency spikes. If you see slow operations, check if the command is operating on a large data structure.
 
-
 <a id="kafka-monitoring"></a>
 
 ## 3. Kafka Consumer and Producer Monitoring
@@ -136,7 +130,6 @@ Apache Kafka monitoring through spans captures both producer (publish) and consu
 | `messaging.destination.name` | Topic name | `orders.created` |
 | `messaging.kafka.consumer.group` | Consumer group ID | `order-processor-group` |
 | `messaging.kafka.destination.partition` | Partition number | `3` |
-
 
 ```dql
 // Kafka message throughput by topic — producer and consumer activity
@@ -179,7 +172,6 @@ fetch spans, from:-1h
 
 RabbitMQ monitoring focuses on message publish/consume rates, queue depth, and consumer processing latency. High queue depth with low consumer throughput indicates backpressure.
 
-
 ```dql
 // RabbitMQ message flow by queue
 fetch spans, from:-1h
@@ -205,7 +197,6 @@ fetch spans, from:-6h
 ## 5. Elasticsearch Query Performance
 
 Elasticsearch is used for full-text search, log aggregation, and analytics. Monitoring focuses on query latency, indexing throughput, and identifying expensive search operations.
-
 
 ```dql
 // Elasticsearch operation breakdown
@@ -235,7 +226,6 @@ fetch spans, from:-1h
 ## 6. Cross-System Performance Dashboard
 
 Combining all cache and messaging systems into a single view provides a quick health check across your data infrastructure.
-
 
 ```dql
 // Unified performance summary — all cache and messaging systems
@@ -269,8 +259,6 @@ In this notebook you learned:
 - **DBMON-05: Query Analysis** — Deep query analysis including N+1 detection and optimization patterns
 - **DBMON-06: Dashboards and Alerting** — Building database monitoring dashboards and alerting rules
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

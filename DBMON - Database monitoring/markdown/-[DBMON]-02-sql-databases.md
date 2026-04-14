@@ -6,7 +6,6 @@
 
 This notebook focuses on monitoring relational SQL databases with Dynatrace. You will learn how to analyze query performance for PostgreSQL, MySQL, Microsoft SQL Server, and Oracle databases. We cover slow query detection, operation-level breakdowns, connection monitoring, and response time analysis using distributed trace spans.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ This notebook focuses on monitoring relational SQL databases with Dynatrace. You
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook focuses on monitoring relational SQL databases with Dynatrace. You
 | **Permissions** | `storage:spans:read`, `storage:entities:read` |
 | **Data** | Application traffic generating SQL database calls (PostgreSQL, MySQL, MS SQL, or Oracle) |
 | **Prior Reading** | DBMON-01: Database Monitoring Fundamentals |
-
 
 <a id="sql-database-landscape"></a>
 
@@ -49,7 +46,6 @@ Relational databases share a common monitoring model: they all execute SQL state
 | IBM Db2 | `db2` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | 50000 |
 
 Let's start by identifying which SQL databases are active in your environment.
-
 
 ```dql
 // Discover active SQL databases in the environment
@@ -68,7 +64,6 @@ fetch spans, from:-1h
 ## 2. Query Performance Analysis
 
 The most important aspect of SQL database monitoring is understanding query performance. Dynatrace normalizes SQL statements by replacing literal values with `?` placeholders, allowing you to group identical query patterns together.
-
 
 ```dql
 // Top 20 SQL queries by total execution time (highest impact)
@@ -96,7 +91,6 @@ fetch spans, from:-6h
 ## 3. Slow Query Detection
 
 Slow queries are the most common cause of database-related performance problems. A query is considered "slow" relative to its own baseline or an absolute threshold. We use both approaches below.
-
 
 ```dql
 // Detect slow queries — calls exceeding 500ms
@@ -141,7 +135,6 @@ fetch spans, from:-1h
 
 Understanding which tables receive the most read and write traffic helps identify hot spots. We parse the table name from the normalized SQL statement to group by table.
 
-
 ```dql
 // Operation mix by database — read vs write ratio
 fetch spans, from:-1h
@@ -169,7 +162,6 @@ fetch spans, from:-1h
 ## 5. Connection Pool Monitoring
 
 Connection pool exhaustion is a common source of application errors. While Dynatrace does not directly expose connection pool counters through spans, you can infer connection pressure by analyzing concurrent database calls and error patterns.
-
 
 ```dql
 // Database calls per service — identify which services make the most DB calls
@@ -205,7 +197,6 @@ Each SQL database has unique characteristics worth monitoring. The following que
 
 PostgreSQL is commonly used in cloud-native applications. Key concerns: vacuum operations, index bloat, and lock contention.
 
-
 ```dql
 // PostgreSQL — query performance breakdown by database
 fetch spans, from:-1h
@@ -222,7 +213,6 @@ fetch spans, from:-1h
 
 MySQL monitoring focuses on query cache effectiveness, InnoDB buffer pool usage, and replication lag.
 
-
 ```dql
 // MySQL — response time trend over 6 hours
 fetch spans, from:-6h
@@ -238,7 +228,6 @@ fetch spans, from:-6h
 ## 7. Response Time Distribution
 
 Understanding the distribution of response times helps set realistic SLOs and identify bimodal patterns (e.g., cached vs uncached queries).
-
 
 ```dql
 // Response time distribution buckets — group queries into latency tiers
@@ -286,8 +275,6 @@ In this notebook you learned:
 - **DBMON-03: NoSQL Database Monitoring** — MongoDB, Cassandra, DynamoDB, and Cosmos DB analysis
 - **DBMON-05: Query Analysis** — Deep dive into N+1 detection, query frequency patterns, and optimization
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

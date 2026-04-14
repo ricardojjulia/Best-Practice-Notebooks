@@ -15,6 +15,9 @@
     <filter id="trShadow">
       <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
     </filter>
+    <marker id="costArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
   </defs>
 
   <!-- Background -->
@@ -49,7 +52,7 @@
   <text x="660" y="140" font-family="Arial, sans-serif" font-size="10" fill="#ef4444" text-anchor="middle">$$$$$</text>
 
   <!-- Arrow showing progression -->
-  <path d="M70,155 L730,155" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M70,155 L730,155" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#costArrow)"/>
   <text x="400" y="168" font-family="Arial, sans-serif" font-size="10" fill="#64748b" text-anchor="middle">Increasing DDU Cost →</text>
 
   <!-- Use Case Guide -->

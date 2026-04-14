@@ -6,7 +6,6 @@
 
 This notebook provides deep query analysis techniques for identifying database performance problems. You will learn how to detect N+1 query anti-patterns, analyze query frequency and duration distributions, identify queries that may lack proper indexes, detect connection pool exhaustion, and use query normalization for effective grouping. These techniques apply across all database technologies.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ This notebook provides deep query analysis techniques for identifying database p
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook provides deep query analysis techniques for identifying database p
 | **Permissions** | `storage:spans:read` |
 | **Data** | Significant application traffic with diverse database query patterns |
 | **Prior Reading** | DBMON-01 through DBMON-03 for database monitoring context |
-
 
 <a id="n-plus-one-detection"></a>
 
@@ -48,7 +45,6 @@ N+1 patterns have these characteristics:
 - Individual query execution times are fast, but total time is high due to volume
 
 We detect this by looking for query patterns with unusually high call counts per trace.
-
 
 ```dql
 // Detect N+1 patterns — query patterns with high repetition per trace
@@ -66,7 +62,6 @@ fetch spans, from:-1h
 The query above shows query patterns that are repeated 10 or more times within a single trace. A high `calls_per_trace` value (especially 50+) strongly suggests an N+1 pattern.
 
 > **Tip:** Focus on patterns where `avg_ms` is low but `total_ms` is high. This indicates many fast individual queries that accumulate to a significant total. The fix is typically to replace N individual queries with a single batch query using `IN` clauses or joins.
-
 
 ```dql
 // Aggregate N+1 candidates — which query patterns are most frequently repeated?
@@ -87,7 +82,6 @@ fetch spans, from:-1h
 ## 2. Query Frequency Analysis
 
 Understanding which queries run most often helps prioritize optimization. A query that runs millions of times per hour has far more impact than a slow query that runs once a day.
-
 
 ```dql
 // Top 20 most frequent queries — highest call volume
@@ -130,7 +124,6 @@ fetch spans, from:-1h
 
 Analyzing how query durations are distributed reveals bimodal patterns (e.g., cached vs uncached responses), tail latency problems, and outlier behavior.
 
-
 ```dql
 // Duration percentile breakdown by database system
 fetch spans, from:-1h
@@ -147,7 +140,6 @@ fetch spans, from:-1h
 ```
 
 The `tail_ratio` column shows how much worse the 99th percentile is compared to the median. A ratio above 10 suggests significant tail latency — a small percentage of queries take disproportionately long.
-
 
 ```dql
 // Latency bucket distribution — visualize where queries cluster
@@ -178,7 +170,6 @@ Queries that consistently have high latency and high call count may indicate mis
 | P95 >> P50 for the same query pattern | Some executions hit different data sizes |
 | Query latency increasing over time | Table growing without proper indexing |
 | High variance in execution time | Inconsistent query plans |
-
 
 ```dql
 // Index candidate detection — high-volume queries with high latency and variance
@@ -213,7 +204,6 @@ fetch spans, from:-24h
 ## 5. Connection Pool Analysis
 
 Connection pool exhaustion causes application threads to wait for available connections, leading to increased response times and timeouts. We detect connection pressure through concurrency analysis and error pattern monitoring.
-
 
 ```dql
 // Concurrent database calls per service — identify connection pressure
@@ -261,7 +251,6 @@ Dynatrace automatically normalizes SQL queries by replacing literal values with 
 | `INSERT INTO orders (id, amount) VALUES (1, 99.50)` | `INSERT INTO orders (id, amount) VALUES (?, ?)` |
 | `UPDATE products SET stock = 5 WHERE sku = 'ABC123'` | `UPDATE products SET stock = ? WHERE sku = ?` |
 
-
 ```dql
 // Query pattern diversity — how many unique normalized patterns per database?
 fetch spans, from:-1h
@@ -285,13 +274,11 @@ fetch spans, from:-1h
 
 > **Warning:** A high number of one-off query patterns suggests dynamic SQL generation or poor query parameterization. This prevents the database from caching execution plans and can degrade performance significantly.
 
-
 <a id="optimization-prioritization"></a>
 
 ## 7. Optimization Prioritization
 
 Not all slow queries are worth optimizing. Use the **impact score** to prioritize: combine call frequency, average duration, and error rate into a single ranking.
-
 
 ```dql
 // Query optimization priority — ranked by total time impact
@@ -317,7 +304,6 @@ The `total_time_ms` column represents the cumulative time spent on each query pa
 | **Medium** | High total time + low call count + high avg | Likely missing index — add index |
 | **Low** | Low total time regardless of avg | Minimal impact — defer optimization |
 
-
 <a id="summary"></a>
 
 ## 8. Summary and Next Steps
@@ -336,8 +322,6 @@ In this notebook you learned:
 
 - **DBMON-06: Dashboards and Alerting** — Build database monitoring dashboards and configure alerting rules
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

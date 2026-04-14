@@ -6,7 +6,6 @@
 
 This notebook covers building database monitoring dashboards and configuring alerting for database health. You will learn dashboard design patterns for database KPIs, how to create alert-ready queries for slow query detection, connection pool thresholds, error rate monitoring, and database-specific SLO definitions. These queries are designed to be directly usable in Dynatrace dashboards and metric events.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ This notebook covers building database monitoring dashboards and configuring ale
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -32,7 +30,6 @@ This notebook covers building database monitoring dashboards and configuring ale
 | **Permissions** | `storage:spans:read`, `storage:metrics:read`, `storage:entities:read` |
 | **Data** | Active database traffic across monitored services |
 | **Prior Reading** | DBMON-01 through DBMON-05 for context on database monitoring techniques |
-
 
 <a id="database-kpis"></a>
 
@@ -49,13 +46,11 @@ Effective database monitoring revolves around a small set of key performance ind
 | **Connection Errors** | Timeout and refused connections | Counter | Any occurrence |
 | **Top Queries by Time** | Highest-impact query patterns | Table | Total time > SLO budget |
 
-
 <a id="health-overview"></a>
 
 ## 2. Health Overview Dashboard
 
 The health overview provides a single-pane summary of all database systems. Use these queries as dashboard tiles for an executive-level view.
-
 
 ```dql
 // Dashboard tile: Database health summary — one row per database system
@@ -99,7 +94,6 @@ fetch spans, from:-1h
 
 Response time monitoring is the most critical aspect of database dashboards. These queries provide both real-time and trend views.
 
-
 ```dql
 // Dashboard tile: Database response time trend by system (6-hour view)
 fetch spans, from:-6h
@@ -137,7 +131,6 @@ fetch spans, from:-6h
 ## 4. Error Rate Alerting
 
 Database errors (connection timeouts, deadlocks, constraint violations) should trigger alerts when they exceed normal baseline levels.
-
 
 ```dql
 // Alert query: Database error rate per 5-minute window
@@ -177,13 +170,11 @@ fetch spans, from:-24h
 | Any connection refused error | Critical | Immediate page |
 | Deadlock detected | Warning | Notification |
 
-
 <a id="throughput-capacity"></a>
 
 ## 5. Throughput and Capacity
 
 Monitoring query throughput helps detect traffic anomalies and plan for capacity. A sudden drop in throughput may indicate an upstream failure, while a spike may indicate a runaway process.
-
 
 ```dql
 // Dashboard tile: Queries per minute by database system
@@ -220,7 +211,6 @@ fetch spans, from:-24h
 ## 6. Slow Query Alerting
 
 Slow query alerts detect when query performance degrades beyond acceptable thresholds. Configure these as metric events in Dynatrace.
-
 
 ```dql
 // Alert query: Slow query count per 5-minute window (> 500ms threshold)
@@ -262,7 +252,6 @@ fetch spans, from:-6h
 | Cache (Redis, Memcached) | P95 > 5ms | P95 > 20ms | 5 minutes |
 | Search (Elasticsearch) | P95 > 500ms | P95 > 2000ms | 5 minutes |
 
-
 <a id="database-slos"></a>
 
 ## 7. Database SLO Definitions
@@ -276,7 +265,6 @@ Service Level Objectives (SLOs) for databases define the expected performance co
 | **Availability** | 99.9% of calls succeed | Error rate < 0.1% |
 | **Latency** | 95% of calls under threshold | P95 < vendor-specific threshold |
 | **Throughput** | No more than 50% drop from baseline | Queries/min vs 7-day average |
-
 
 ```dql
 // SLO measurement: Database availability — success rate over 24 hours
@@ -335,8 +323,6 @@ This is the final notebook in the DBMON series. For a complete database monitori
 5. **DBMON-05** — Advanced query analysis and optimization
 6. **DBMON-06** — (This notebook) Dashboards, alerting, and SLOs
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

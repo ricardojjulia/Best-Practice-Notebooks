@@ -110,7 +110,7 @@ Monaco requires an API token with specific scopes to read and write configuratio
 # Set your Dynatrace environment URL and API token
 # Replace with your actual values
 export DT_ENV_URL="https://<your-environment-id>.live.dynatrace.com"
-export DT_API_TOKEN="<your-api-token>"
+export DT_API_TOKEN="dt0c01.XXXXXXXX.YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
 
 # Verify the variables are set
 echo "Environment: $DT_ENV_URL"

@@ -40,7 +40,6 @@ By completing this notebook, you will:
 
 ---
 
-
 ---
 
 ## Processing Stage Overview
@@ -514,7 +513,6 @@ parse content, "LD:protocol '://' LD:hostname (':' INT:port)? LD:path ('?' LD:qu
 
 ---
 
-
 ---
 
 <a id="elklogstash-migration-patterns-new"></a>
@@ -573,7 +571,6 @@ filter {
 3. DQL add: `fieldsAdd env = "production"`
 
 ---
-
 
 ---
 
