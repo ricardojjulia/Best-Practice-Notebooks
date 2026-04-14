@@ -38,7 +38,6 @@ By completing this notebook, you will:
 
 ---
 
-
 ---
 
 ## Extraction Stage Overview
@@ -570,7 +569,6 @@ Option 2: Extract metrics + drop logs
 - ❌ Compliance/audit (keep logs)
 
 ---
-
 
 ---
 

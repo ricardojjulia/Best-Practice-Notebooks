@@ -29,8 +29,6 @@ This notebook explores how Dynatrace enriches logs with entity context (hosts, p
 - ✅ Completed OPLOGS-01 through OPLOGS-05
 - ✅ Understanding of Dynatrace entity model (helpful)
 
-
-
 ## 1. Entity Types Overview
 
 Dynatrace automatically enriches logs with entity context:

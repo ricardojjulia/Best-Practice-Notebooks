@@ -28,8 +28,6 @@ This notebook guides you through assessing your current log environment and plan
 - ✅ Completed OPLOGS-01 fundamentals
 - ✅ Knowledge of your current log sources and volumes
 
-
-
 <a id="migration-assessment"></a>
 ## 1. Migration Assessment
 Before migrating, you need to understand your current log landscape.

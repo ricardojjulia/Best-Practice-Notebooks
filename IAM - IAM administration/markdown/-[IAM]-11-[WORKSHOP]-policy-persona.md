@@ -43,7 +43,6 @@ This workshop walks you through a structured, six-goal process to design that mo
 
 > **Recommended Reading:** Complete **IAM-06** (User Lifecycle) and **IAM-10** (Templated Policy Assignments) before this workshop for the full context on provisioning and parameterized policies.
 
-
 ## Learning Objectives
 
 By the end of this workshop, you will:
@@ -55,7 +54,6 @@ By the end of this workshop, you will:
 - Design configuration policies following the three-domain model (UI, Data, Config)
 - Apply naming standards for policies, groups, and boundaries
 - Validate your IAM design using DQL audit queries
-
 
 <a id="tips-and-principles"></a>
 
@@ -113,7 +111,6 @@ Group similar roles into a smaller set. Two developers who differ only by team c
 | Security analyst | **Security Viewer** |
 | DT admin | **Admin** |
 
-
 #### Step 3: Build Your Personas Table
 
 Create a single-row table with one column per consolidated persona. This table will be your column header for the permission matrices in Goals 3-6. Fill each cell with a short label you will use consistently throughout this workshop and in your policy/group names.
@@ -127,7 +124,6 @@ Create a single-row table with one column per consolidated persona. This table w
 #### Deliverable
 
 A finalized personas table with clear labels and one-line scope descriptions.
-
 
 #### Finding Available Configuration Schemas
 
@@ -196,7 +192,6 @@ A mapping table showing each persona, its AD group, and the provisioning method:
 | Security Viewer | `DT-Security-Viewers` | SCIM | Security lead | Read-only audit access |
 | Admin | `DT-Admins` | Manual | CISO + quarterly review | Break-glass; see **IAM-08** |
 
-
 <a id="goal-3-ui-audit"></a>
 
 ### Goal 3: Audit the Dynatrace UI for Configuration Permissions
@@ -215,7 +210,6 @@ Walk through the Dynatrace settings UI and catalog which configuration schemas e
    - **write** — Persona can read and modify
 
 > **Tip:** Start with the defaults: Standard Users get **read** on most schemas and **none** on sensitive ones. Admins get **write** on everything. Then adjust the middle tiers.
-
 
 #### Reference: Schema Audit Table
 
@@ -256,7 +250,6 @@ Beyond classic settings schemas, Gen3 introduces platform-level permissions that
 #### Deliverable
 
 A completed schema audit table with a permission level in every cell. This drives your **configuration policies** in Goal 6.
-
 
 <a id="goal-4-ui-audit-persona"></a>
 
@@ -347,7 +340,6 @@ Consider five dimensions:
 
 A completed data access matrix. This becomes the basis for your **data policies** and **boundary assignments**.
 
-
 <a id="goal-6-config-policy"></a>
 
 ### Goal 6: Design Configuration Policies Per Persona
@@ -422,7 +414,6 @@ Every persona needs at least one policy in each domain:
 For environments where images don't render
 -->
 
-
 **Config Policy** — Controls which settings and configurations the persona can read or modify. Scoped by schema ID or schema group.
 
 ![Config Policy Domain — maps schema IDs and schema groups to read/write permissions per persona](images/policy-config-domain.png)
@@ -435,7 +426,6 @@ For environments where images don't render
 | Key permissions | settings:objects:read, settings:objects:write |
 For environments where images don't render
 -->
-
 
 ### Assembling a Complete Persona Policy Set
 
@@ -531,7 +521,6 @@ bnd-<ISOLATION-TYPE>-<SCOPE>
 | `bnd-env-production` | Data scoped to production environment |
 | `bnd-audit-security` | Audit logs only |
 
-
 <a id="policy-flow"></a>
 
 ## Policy Flow and Examples
@@ -554,7 +543,6 @@ For environments where images don't render
 
 > **Next Step:** Once your policies are defined and bound, use **IAM-10: Templated Policy Assignments** to parameterize policies that repeat across teams or scopes, and manage everything as code with Monaco.
 
-
 <a id="validating-design"></a>
 
 ## Validating Your Design
@@ -572,7 +560,6 @@ After binding your policies to groups, validate that the implementation matches 
 | SCIM sync functioning | Monitor SCIM provisioning events for errors | **IAM-06** lifecycle events |
 
 Use the following DQL query to audit recent IAM changes and confirm your policy bindings are in place:
-
 
 ```dql
 // Audit recent IAM policy and group changes (last 7 days)
@@ -605,7 +592,6 @@ The complete provisioning script — including OAuth setup, group creation, poli
 | **Troubleshooting** | Error codes, silent-failure checklist, templated-policy debugging |
 
 > **Why a separate notebook?** The provisioning scripts are operational tooling — they change every time you add a persona or team. Keeping them in IAM-12 lets you iterate on the scripts without touching the workshop design in this notebook.
-
 
 <a id="appendix"></a>
 
@@ -648,7 +634,6 @@ ALLOW storage:fieldsets:read
 
 > **Note:** An unconditional fieldset permission overrides any conditional ones (same precedence logic as bucket/table permissions).
 
-
 ### References
 
 **IAM Series Cross-References:**
@@ -675,4 +660,3 @@ ALLOW storage:fieldsets:read
 ---
 
 > **\u26a0\ufe0f DISCLAIMER**: This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official [Dynatrace documentation](https://docs.dynatrace.com/docs).
-

@@ -6,7 +6,6 @@
 
 Capturing meaningful business events requires deliberate instrumentation. This notebook covers the practical techniques for generating business events — from OneAgent auto-detection of web request data, to custom API ingestion, SDK integration, and OpenTelemetry span-to-bizevent mapping. You will also learn best practices for event naming conventions, payload design, and cardinality management to keep your business analytics clean and performant.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ Capturing meaningful business events requires deliberate instrumentation. This n
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ Capturing meaningful business events requires deliberate instrumentation. This n
 | **Permissions** | `storage:bizevents:read`, `bizevents.ingest` |
 | **OneAgent** | Deployed on at least one application host (for auto-detection) |
 | **Knowledge** | BIZEV-01 fundamentals, basic REST API concepts |
-
 
 <a id="oneagent-auto-detection"></a>
 
@@ -60,7 +57,6 @@ When a capture rule matches, OneAgent creates a business event with:
 - Automatic correlation with the trace context (span ID, trace ID)
 
 > **Tip:** Start with auto-detection for existing web applications, then add custom instrumentation for backend processes that don't have HTTP endpoints.
-
 
 ```dql
 // Check which business events are being captured by OneAgent auto-detection
@@ -119,7 +115,6 @@ For high-volume scenarios, send multiple events in a single request using `appli
 ```
 
 > **Important:** The API has rate limits. For sustained high throughput (>1000 events/second), use batch ingestion and implement retry logic with exponential backoff.
-
 
 ```dql
 // Verify API-ingested events are arriving
@@ -185,7 +180,6 @@ sdk.send_biz_event(
 
 > **Tip:** SDK-generated events are automatically correlated with the active PurePath, linking business events to the full distributed trace.
 
-
 <a id="opentelemetry-span-to-bizevent-mapping"></a>
 
 ## 4. OpenTelemetry Span-to-Bizevent Mapping
@@ -217,7 +211,6 @@ pipelines:
 ```
 
 > **Note:** This approach avoids double-instrumentation. If your spans already carry business data, use OpenPipeline rather than adding SDK calls.
-
 
 ```dql
 // Look for business events that may have originated from spans
@@ -262,7 +255,6 @@ com.<company>.<domain>.<action>
 | `com.myapp.order.created.v2` | Version in name fragments data | Use payload versioning |
 | `event_12345` | Meaningless identifier | Use descriptive domain names |
 
-
 ```dql
 // Audit event naming — find event types that may need standardization
 fetch bizevents, from:-7d
@@ -302,7 +294,6 @@ High-cardinality fields (fields with millions of unique values) can degrade quer
 
 > **Warning:** Using `summarize by:{order_id}` on millions of unique order IDs will produce a massive result set and slow queries. Use high-cardinality fields for filtering (`filter order_id == "ORD-123"`) rather than grouping.
 
-
 ```dql
 // Assess cardinality of common fields in your business events
 fetch bizevents, from:-24h
@@ -317,7 +308,6 @@ fetch bizevents, from:-24h
 ## 7. Verifying Instrumentation with DQL
 
 After setting up instrumentation, validate that events are arriving correctly and contain the expected data.
-
 
 ```dql
 // Check for gaps in business event ingestion over the last 24 hours
@@ -362,8 +352,6 @@ In this notebook, you learned:
 - [OneAgent SDK for Business Events](https://docs.dynatrace.com/docs/platform-modules/business-analytics/ba-events-capturing)
 - [OpenPipeline Processing](https://docs.dynatrace.com/docs/platform/openpipeline)
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

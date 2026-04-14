@@ -6,7 +6,6 @@
 
 Business events contain the raw signals needed to compute meaningful Key Performance Indicators (KPIs) — transaction volume, average order value, error rates by business process, and more. This notebook shows how to define and compute business KPIs from event data using DQL, extract metrics from business events via OpenPipeline for long-term retention, build composite business health scores, and perform trend analysis to detect shifts in business performance.
 
-
 ---
 
 ## Table of Contents
@@ -22,7 +21,6 @@ Business events contain the raw signals needed to compute meaningful Key Perform
 
 ---
 
-
 ## Prerequisites
 
 | Requirement | Details |
@@ -31,7 +29,6 @@ Business events contain the raw signals needed to compute meaningful Key Perform
 | **Permissions** | `storage:bizevents:read`, `storage:metrics:read` |
 | **Data** | Business events with transaction types and value fields |
 | **Knowledge** | BIZEV-01 through BIZEV-03, DQL `summarize` and `makeTimeseries` |
-
 
 <a id="defining-business-kpis"></a>
 
@@ -57,13 +54,11 @@ A KPI is a quantifiable measure of business performance. The best KPIs are:
 | **Revenue per Hour** | `sum(amount)` per hour | What is the hourly revenue run rate? |
 | **Time to Complete** | Avg time from start to end event | How long does a transaction take? |
 
-
 <a id="transaction-volume-kpis"></a>
 
 ## 2. Transaction Volume KPIs
 
 Transaction volume is the most fundamental business KPI — it tells you how active your business is.
-
 
 ```dql
 // Transaction volume by event type over the last 24 hours
@@ -94,7 +89,6 @@ fetch bizevents, from:-7d
 Revenue KPIs require an `amount` or `total` field in your business events. These are the metrics executives care about most.
 
 > **Note:** Replace `amount` with the actual field name in your business events that carries the monetary value.
-
 
 ```dql
 // Revenue KPI summary for the last 24 hours
@@ -134,7 +128,6 @@ fetch bizevents, from:-7d
 ## 4. Error Rate KPIs
 
 Business process error rates measure the percentage of transactions that fail. This differs from HTTP error rates — a payment can fail (business error) even when the HTTP call succeeds (200 OK).
-
 
 ```dql
 // Business error rate by event type
@@ -205,7 +198,6 @@ pipelines:
 | DQL on bizevents | Seconds | Event retention (default 35 days) | Manual threshold | Scans event data |
 | Extracted metrics | Sub-second | Metric retention (default 5 years) | Native Davis/SLO | Pre-aggregated |
 
-
 ```dql
 // If you have extracted business metrics, query them with timeseries
 // Replace with your actual metric key
@@ -226,7 +218,6 @@ A composite health score combines multiple KPIs into a single indicator. This si
 | Error rate | 30% | < 1% | 1-5% | > 5% |
 | Average order value (vs baseline) | 20% | > 95% of baseline | 80-95% | < 80% |
 | Conversion rate (vs baseline) | 20% | > 90% of baseline | 70-90% | < 70% |
-
 
 ```dql
 // Compute a simple business health dashboard — key metrics at a glance
@@ -257,7 +248,6 @@ fetch bizevents, from:-24h
 ## 7. Trend Analysis
 
 Trends reveal whether KPIs are improving or degrading over time. Use `makeTimeseries` for visual trends and `summarize` with `bin()` for tabular comparisons.
-
 
 ```dql
 // Weekly trend — transaction volume per day for the past 4 weeks
@@ -307,8 +297,6 @@ In this notebook, you learned:
 - [OpenPipeline Metric Extraction](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [DQL makeTimeseries Command](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands/make-timeseries-command)
 
-
 ---
 
 <sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
-

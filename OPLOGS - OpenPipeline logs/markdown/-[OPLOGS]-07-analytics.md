@@ -29,8 +29,6 @@ This notebook covers aggregation functions, time series analysis, statistical pa
 - ✅ Completed OPLOGS-01 through OPLOGS-06
 - ✅ Familiarity with dashboard concepts
 
-
-
 <a id="aggregation-functions"></a>
 ## 1. Aggregation Functions
 ![Aggregation Functions](images/aggregation-functions.png)
