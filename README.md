@@ -12,7 +12,22 @@ Each topic follows the same structure:
 - markdown/ — Markdown exports of the same content
 - README.md — Topic overview and usage guide
 
-## Table of Contents
+## Categories
+
+Series are grouped into six categories for navigation. An alphabetical index follows below.
+
+- **Foundations & Adoption** — getting started, maturity, access, data organization
+  [ONBRD](#onbrd---dynatrace-onboarding) · [ADOPT](#adopt---observability-adoption--maturity) · [IAM](#iam---iam-administration) · [ORGNZ](#orgnz---organize-data-buckets-segments-security)
+- **Data Sources & Instrumentation** — what you monitor and how to instrument it
+  [K8S](#k8s---kubernetes-monitoring) · [CLOUD](#cloud---cloud-provider-integrations) · [MOBL](#mobl---mobile-monitoring) · [WEBRUM](#webrum---web-real-user-monitoring) · [SYNTH](#synth---synthetic-monitoring) · [DBMON](#dbmon---database-monitoring) · [OTEL](#otel---opentelemetry-integration)
+- **Data Processing & Analytics** — ingestion, shaping, querying, dashboards
+  [OPLOGS](#oplogs---openpipeline-logs) · [OPIPE](#opipe---openpipeline-beyond-logs) · [SPANS](#spans---distributed-tracing-and-spans) · [BIZEV](#bizev---business-events--funnel-analysis) · [DASH](#dash---dashboard-design--building)
+- **Automation & Workflows** — configuration-as-code and operational workflows
+  [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications)
+- **Migrations** — moving to Dynatrace or between Dynatrace environments
+  [M2S](#m2s---managed-to-saas-migration) · [S2S](#s2s---saas-to-saas-migration) · [S2D](#s2d---splunk-to-dynatrace-migration) · [NR2DT](#nr2dt---new-relic-to-dynatrace-migration-steps) · [NRLC](#nrlc---new-relic-to-dynatrace-migration-deep-dives) · [OPMIG](#opmig---openpipeline-migration) · [MZ2POL](#mz2pol---management-zone-to-policy-migration)
+
+## All Series (A–Z)
 
 ### [ADOPT - Observability adoption & maturity](ADOPT%20-%20Observability%20adoption%20%26%20maturity/README.md)
 Framework for assessing and advancing Dynatrace observability adoption across the organization.
@@ -152,6 +167,31 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 - [MZ2POL-07: Validation & Troubleshooting](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-07-validation-troubleshooting.md) — Validating and resolving issues
 - [MZ2POL-08: Templated Policies Migration](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-08-templated-policies-migration.md) — Policy templates for bulk MZ migration
 - [MZ2POL-99: Best Practice Summary](MZ2POL%20-%20Management%20Zone%20to%20Policy%20migration/markdown/-%5BMZ2POL%5D-99-best-practice-summary.md) — Consolidated best practices from the MZ2POL series
+
+### [NR2DT - New Relic to Dynatrace migration steps](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/README.md)
+Step-by-step migration path from New Relic to Dynatrace, from discovery through cutover and decommission.
+- [NR2DT-01: Step 1 — Discover](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-01-step-1-discover.md) — Inventorying the New Relic environment and understanding migration scope
+- [NR2DT-02: Step 2 — Strategize](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-02-step-2-strategize.md) — Planning the migration strategy, phasing, and execution approach
+- [NR2DT-03: Step 3 — Design](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-03-step-3-design.md) — Designing the target Dynatrace architecture and configuration
+- [NR2DT-04: Step 4 — Translate](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-04-step-4-translate.md) — Translating NRQL queries, dashboards, and alerts to Dynatrace equivalents
+- [NR2DT-05: Step 5 — Migrate Dashboards & Alerts](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-05-step-5-migrate-dashboards-alerts.md) — Porting dashboards and alerting rules
+- [NR2DT-06: Step 6 — Migrate Synthetics, SLOs & Workloads](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-06-step-6-migrate-synthetics-slos-workloads.md) — Moving synthetic monitors, SLOs, and workload definitions
+- [NR2DT-07: Step 7 — Migrate Logs, Tags & Drop Rules](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-07-step-7-migrate-logs-tags-drops.md) — Migrating log ingestion, tagging schemes, and drop rules
+- [NR2DT-08: Step 8 — Validate](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-08-step-8-validate.md) — Parallel-run validation and diff checks between source and target
+- [NR2DT-09: Step 9 — Cutover, Rollback & Decommission](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-09-step-9-cutover-rollback-decommission.md) — Executing cutover, preparing rollback plans, and decommissioning New Relic
+- [NR2DT-99: Best Practice Summary](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20migration%20steps/markdown/-%5BNR2DT%5D-99-best-practice-summary.md) — Consolidated best practices from the NR2DT series
+
+### [NRLC - New Relic to Dynatrace migration deep dives](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/README.md)
+Technical deep-dive companion to the NR2DT series — focused reference notebooks for query translation, dashboard migration, alerting, synthetics, SLOs, logs, and validation.
+- [NRLC-01: Platform Comparison](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-01-platform-comparison.md) — Side-by-side comparison of New Relic and Dynatrace concepts
+- [NRLC-02: NRQL → DQL Translation](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-02-nrql-to-dql-translation.md) — Translating NRQL queries into DQL with worked examples
+- [NRLC-03: Dashboard Migration](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-03-dashboard-migration.md) — Rebuilding New Relic dashboards in Dynatrace
+- [NRLC-04: Alert & Workflow Migration](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-04-alert-workflow-migration.md) — Migrating alert conditions and notification workflows
+- [NRLC-05: Synthetic Monitor Migration](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-05-synthetic-monitor-migration.md) — Moving synthetic monitors and private locations
+- [NRLC-06: SLO & Workload Migration](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-06-slo-workload-migration.md) — Porting SLOs and workload definitions
+- [NRLC-07: Logs, Tags & Drop Rules](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-07-logs-tags-drops.md) — Log pipelines, tagging strategies, and drop-rule equivalents
+- [NRLC-08: Validation, Diff & Rollback](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-08-validation-diff-rollback.md) — Parallel-run validation, diff checks, and rollback strategy
+- [NRLC-09: Toolchain Reference & End-to-End Runbook](NRLC%20-%20New%20Relic%20to%20Dynatrace%20migration%20deep%20dives/markdown/-%5BNRLC%5D-09-toolchain-reference.md) — Tooling reference and end-to-end migration runbook
 
 ### [ONBRD - Dynatrace onboarding](ONBRD%20-%20Dynatrace%20onboarding/README.md)
 Step-by-step onboarding series for new Dynatrace users.

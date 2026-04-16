@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="36" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">NR → DT Migration Toolchain Overview</text>
+  <text x="465" y="60" text-anchor="middle" fill="#94A3B8" font-size="13">Three open-source projects · how they fit together</text>
+
+  <defs>
+    <marker id="nr10arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <!-- TOP: Orchestrator -->
+  <rect x="200" y="90" width="530" height="100" fill="#73BE28" opacity="0.15" stroke="#73BE28" stroke-width="2" rx="10"/>
+  <text x="465" y="118" text-anchor="middle" fill="#D9F99D" font-size="15" font-weight="700">Dynatrace-NewRelic (Python orchestrator)</text>
+  <text x="465" y="138" text-anchor="middle" fill="#94A3B8" font-size="11">migrate.py CLI · 9 transformers · migration state · diff/rollback · 894 tests</text>
+
+  <g font-size="10">
+    <rect x="220" y="150" width="100" height="28" fill="#1E293B" stroke="#73BE28" rx="3"/>
+    <text x="270" y="168" text-anchor="middle" fill="#D9F99D">--full / --diff</text>
+    <rect x="330" y="150" width="100" height="28" fill="#1E293B" stroke="#73BE28" rx="3"/>
+    <text x="380" y="168" text-anchor="middle" fill="#D9F99D">--report</text>
+    <rect x="440" y="150" width="100" height="28" fill="#1E293B" stroke="#73BE28" rx="3"/>
+    <text x="490" y="168" text-anchor="middle" fill="#D9F99D">--rollback</text>
+    <rect x="550" y="150" width="100" height="28" fill="#1E293B" stroke="#73BE28" rx="3"/>
+    <text x="600" y="168" text-anchor="middle" fill="#D9F99D">audit-slos</text>
+    <rect x="660" y="150" width="60" height="28" fill="#1E293B" stroke="#73BE28" rx="3"/>
+    <text x="690" y="168" text-anchor="middle" fill="#D9F99D">batch</text>
+  </g>
+
+  <!-- MIDDLE LEFT: nrql-engine -->
+  <rect x="60" y="225" width="320" height="160" fill="#A78BFA" opacity="0.15" stroke="#A78BFA" stroke-width="2" rx="10"/>
+  <text x="220" y="252" text-anchor="middle" fill="#DDD6FE" font-size="14" font-weight="700">nrql-engine (TypeScript library)</text>
+  <text x="220" y="270" text-anchor="middle" fill="#94A3B8" font-size="10">npm: @timstewart-dynatrace/nrql-engine</text>
+
+  <g font-size="10">
+    <rect x="80" y="285" width="135" height="28" fill="#1E293B" stroke="#A78BFA" rx="3"/>
+    <text x="148" y="303" text-anchor="middle" fill="#EDE9FE">NRQLCompiler</text>
+    <rect x="225" y="285" width="135" height="28" fill="#1E293B" stroke="#A78BFA" rx="3"/>
+    <text x="293" y="303" text-anchor="middle" fill="#EDE9FE">DQLSyntaxValidator</text>
+    <rect x="80" y="320" width="135" height="28" fill="#1E293B" stroke="#A78BFA" rx="3"/>
+    <text x="148" y="338" text-anchor="middle" fill="#EDE9FE">DTEnvRegistry</text>
+    <rect x="225" y="320" width="135" height="28" fill="#1E293B" stroke="#A78BFA" rx="3"/>
+    <text x="293" y="338" text-anchor="middle" fill="#EDE9FE">10 transformers</text>
+  </g>
+  <text x="220" y="370" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">292 NRQL→DQL patterns · 838 tests</text>
+
+  <!-- MIDDLE RIGHT: nrql-translator -->
+  <rect x="400" y="225" width="320" height="160" fill="#22D3EE" opacity="0.15" stroke="#22D3EE" stroke-width="2" rx="10"/>
+  <text x="560" y="252" text-anchor="middle" fill="#A5F3FC" font-size="14" font-weight="700">nrql-translator (CLI)</text>
+  <text x="560" y="270" text-anchor="middle" fill="#94A3B8" font-size="10">npm: @timstewart-dynatrace/nrql-translator</text>
+
+  <g font-size="10">
+    <rect x="420" y="285" width="135" height="28" fill="#1E293B" stroke="#22D3EE" rx="3"/>
+    <text x="488" y="303" text-anchor="middle" fill="#CFFAFE">query (single)</text>
+    <rect x="565" y="285" width="135" height="28" fill="#1E293B" stroke="#22D3EE" rx="3"/>
+    <text x="633" y="303" text-anchor="middle" fill="#CFFAFE">excel (batch)</text>
+    <rect x="420" y="320" width="135" height="28" fill="#1E293B" stroke="#22D3EE" rx="3"/>
+    <text x="488" y="338" text-anchor="middle" fill="#CFFAFE">validate</text>
+    <rect x="565" y="320" width="135" height="28" fill="#1E293B" stroke="#22D3EE" rx="3"/>
+    <text x="633" y="338" text-anchor="middle" fill="#CFFAFE">notebook (gen)</text>
+  </g>
+  <text x="560" y="370" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">Thin wrapper · all logic delegates to engine</text>
+
+  <!-- Arrows -->
+  <g stroke="#64748B" stroke-width="2" fill="none">
+    <line x1="350" y1="190" x2="220" y2="225" marker-end="url(#nr10arr)"/>
+    <line x1="580" y1="190" x2="560" y2="225" marker-end="url(#nr10arr)"/>
+    <line x1="380" y1="305" x2="400" y2="305" marker-end="url(#nr10arr)"/>
+  </g>
+
+  <!-- Bottom: Outputs -->
+  <text x="465" y="420" text-anchor="middle" fill="#F8FAFC" font-size="13" font-weight="700">Outputs</text>
+
+  <g font-size="11">
+    <rect x="60" y="435" width="180" height="50" fill="#1E293B" stroke="#1496FF" rx="5"/>
+    <text x="150" y="455" text-anchor="middle" fill="#BFDBFE" font-weight="600">Direct API import</text>
+    <text x="150" y="472" text-anchor="middle" fill="#94A3B8" font-size="10">DT Settings · Documents · Synthetic</text>
+
+    <rect x="260" y="435" width="180" height="50" fill="#1E293B" stroke="#FFB800" rx="5"/>
+    <text x="350" y="455" text-anchor="middle" fill="#FEF3C7" font-weight="600">Monaco YAML</text>
+    <text x="350" y="472" text-anchor="middle" fill="#94A3B8" font-size="10">SUA tar.gz upload (one-time)</text>
+
+    <rect x="460" y="435" width="180" height="50" fill="#1E293B" stroke="#73BE28" rx="5"/>
+    <text x="550" y="455" text-anchor="middle" fill="#D9F99D" font-weight="600">Terraform HCL</text>
+    <text x="550" y="472" text-anchor="middle" fill="#94A3B8" font-size="10">GitOps (long-term)</text>
+
+    <rect x="660" y="435" width="180" height="50" fill="#1E293B" stroke="#22D3EE" rx="5"/>
+    <text x="750" y="455" text-anchor="middle" fill="#A5F3FC" font-weight="600">DT Notebook</text>
+    <text x="750" y="472" text-anchor="middle" fill="#94A3B8" font-size="10">migrated dashboard.ipynb</text>
+  </g>
+</svg>
