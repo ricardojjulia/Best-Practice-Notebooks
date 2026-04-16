@@ -1,6 +1,6 @@
 # S2S-01: Step 1 — Discover: Migration Scenarios and Inventory
 
-> **Series:** S2S | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** S2S | **Notebook:** 1 of 10 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/16/2026
 
 The first step in any SaaS-to-SaaS migration is understanding *why* you are migrating between tenants, inventorying what you have, and confirming what migrates automatically versus what requires manual effort. This notebook guides you through discovery, scenario identification, and tool selection.
 
@@ -20,9 +20,10 @@ The first step in any SaaS-to-SaaS migration is understanding *why* you are migr
 2. [What Migrates and What Does Not](#what-migrates-and-what-does-not)
 3. [Entity Inventory](#entity-inventory)
 4. [Configuration Inventory](#configuration-inventory)
-5. [Migration Tools Comparison](#migration-tools-comparison)
-6. [The 90/10 Rule](#the-90-10-rule)
-7. [Step Completion Checklist](#step-completion-checklist)
+5. [Davis Problem Triage and Configuration Debt](#davis-problem-triage)
+6. [Migration Tools Comparison](#migration-tools-comparison)
+7. [The 90/10 Rule](#the-90-10-rule)
+8. [Step Completion Checklist](#step-completion-checklist)
 
 ---
 
@@ -270,6 +271,50 @@ Beyond entities, you need a count of configuration objects to estimate migration
 | Segments | Segment API | ___ | 1–20 |
 | K8s enrichment rules | Settings API: `builtin:kubernetes.metadata.enrichment` | ___ | 1–20 |
 
+```python
+// Davis problem inventory — run on source tenant before migration
+// High active problem counts indicate noise that will carry to the target
+fetch dt.davis.problems, from:-30d
+| summarize
+    total = count(),
+    active = countIf(event.status == "ACTIVE"),
+    frequent = countIf(dt.davis.is_frequent_event == true),
+    duplicate = countIf(dt.davis.is_duplicate == true)
+| fieldsAdd triage_recommendation = if(active > 500,
+    then: "TRIAGE BEFORE MIGRATION — suppress frequent/duplicate events",
+    else: "Manageable — review active problems during parallel period")
+```
+
+<a id="davis-problem-triage"></a>
+
+## 5. Davis Problem Triage and Configuration Debt
+
+Discovery is not just about counting what you have — it is also about identifying what you should **not** migrate. Active Davis problems and stale configuration carry over to the target tenant if not triaged, creating noise that obscures real issues during the critical parallel operation period.
+
+### Davis Problem Inventory
+
+Run these queries against the source tenant to understand the current problem landscape. Large numbers of active problems (especially frequent/duplicate events) indicate configuration debt that should be resolved *before* migration — not after.
+
+| Signal | Action |
+|--------|--------|
+| Active problems > 500 | Triage before migration — most are likely noise or duplicates |
+| Frequent events > 50% of total | Suppress or tune anomaly detection before export |
+| Problems older than 30 days | Investigate — likely stale or auto-resolved but not closed |
+
+### Configuration Debt Cleanup Opportunity
+
+Migration is the best time to leave legacy behind. Stale configuration inflates the export, slows Monaco deploy, and creates confusion in the target tenant.
+
+| Candidate | How to Identify | Recommendation |
+|-----------|----------------|----------------|
+| **Disabled notification rules** | `settings.read` audit — any notification with `enabled: false` | Do not migrate |
+| **Inactive synthetic monitors** | Monitors with no executions in 30+ days | Triage — migrate only active monitors |
+| **Stale maintenance windows** | Windows with past end dates or no recurrence | Do not migrate |
+| **Unused management zones** | Zones with zero entity matches | Do not migrate |
+| **Legacy auto-tag rules** | Tags that duplicate OneAgent attribute enrichment | Replace with primary tags at agent level |
+
+> **Lesson from real migrations:** One engagement discovered 366 maintenance windows in the source tenant — all with expired dates. Migrating them would have cluttered the target tenant with useless configuration. Triaging before export saved significant cleanup effort later.
+
 <a id="migration-tools-comparison"></a>
 
 ## 5. Migration Tools Comparison
@@ -342,7 +387,7 @@ The 90/10 rule is the defining reality of SaaS-to-SaaS migration:
 
 <a id="step-completion-checklist"></a>
 
-## 7. Step Completion Checklist
+## 8. Step Completion Checklist
 
 Before proceeding to **Step 2 — Strategize**, confirm that you have completed each item:
 
@@ -351,6 +396,8 @@ Before proceeding to **Step 2 — Strategize**, confirm that you have completed 
 | Migration scenario identified (consolidation, split, regional relocation, cloud transformation) | [ ] |
 | Entity inventory complete (hosts, services, K8s clusters, applications, synthetics, ActiveGates) | [ ] |
 | Configuration inventory complete (Gen2 counts + Gen3 counts) | [ ] |
+| Davis problem triage complete — frequent/duplicate events suppressed or tuned | [ ] |
+| Configuration debt identified — stale maintenance windows, disabled rules, inactive monitors cataloged | [ ] |
 | Non-portable items identified (credentials, tokens, entity IDs, historical data) | [ ] |
 | Migration tools selected (Monaco for bulk config + Terraform for IAM) | [ ] |
 | 90/10 manual items documented | [ ] |

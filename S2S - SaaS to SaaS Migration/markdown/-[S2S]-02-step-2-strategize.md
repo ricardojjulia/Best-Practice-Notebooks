@@ -1,6 +1,6 @@
 # S2S-02: Step 2 — Strategize: Define Your Migration Approach
 
-> **Series:** S2S | **Notebook:** 2 of 9 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** S2S | **Notebook:** 2 of 10 | **Phase:** Plan | **Step:** Strategize | **Created:** March 2026 | **Last Updated:** 04/16/2026
 
 With your discovery complete, it's time to turn inventory into action. This notebook helps you select a migration approach, sequence your operations, assess risks, and build a timeline that earns stakeholder confidence.
 
@@ -118,6 +118,20 @@ Migrate by geography (EMEA → APAC → Americas) or by application criticality.
 | **Requires** | Complex coordination, extended parallel operation |
 | **Risk** | Lowest — isolated blast radius per wave |
 
+### Multi-Source Consolidation (Sequential Pattern)
+
+When consolidating multiple source tenants into a single target, migrate sources **sequentially**, not in parallel. Complete one source before starting the next.
+
+| Factor | Detail |
+|--------|--------|
+| **Pattern** | Source 1 → validate → Source 2 → validate → ... → Source N |
+| **Why sequential** | Isolates issues to a single source; avoids configuration collisions; simplifies rollback |
+| **Best for** | Tenant consolidation (M&A, regional merge) |
+| **K8s complexity** | If one source has Kubernetes and another does not, migrate the simpler source first — K8s requires DynaKube redeployment (not `oneagentctl`) and introduces additional validation steps |
+| **Typical duration** | Add 2-3 weeks per additional source tenant |
+
+> **Lesson from real migrations:** A two-source consolidation (70 non-K8s hosts + 38 K8s hosts) used sequential migration — the simpler source first to validate the Monaco → SUA → target workflow, then the K8s source second. This isolated a DynaKube redeployment issue that would have been much harder to diagnose if both sources migrated simultaneously.
+
 ### S2S Advantages Over M2S
 
 SaaS-to-SaaS migration has inherent advantages that affect approach selection:
@@ -149,6 +163,7 @@ SaaS-to-SaaS migration has inherent advantages that affect approach selection:
 | Complex integrations | Risky | Recommended | Recommended |
 | Short timeline required | Fastest | Moderate | Longest |
 | Risk-averse organization | Higher risk | Lower risk | Lowest risk |
+| Multi-source consolidation | Not recommended | Sequential by source | Sequential by source |
 
 <a id="order-of-operations"></a>
 

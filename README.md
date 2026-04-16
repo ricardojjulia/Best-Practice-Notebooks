@@ -292,6 +292,7 @@ Comprehensive guide to migrating between Dynatrace SaaS environments.
 - [S2S-07: Step 7 — Expand: OpenPipeline, SLOs, and Alerting](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-07-step-7-expand.md) — Configuring data pipelines, SLOs, and alerting rules
 - [S2S-08: Step 8 — Enable: Parallel Operation and Stakeholder Handover](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-08-step-8-enable.md) — Running source and target in parallel and handing over to operations
 - [S2S-09: Step 9 — Optimize: Cutover Validation and Decommission](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-09-step-9-optimize.md) — Validating the migration, optimizing the target, and decommissioning source
+- [S2S-10: Migration Scripts](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-10-migration-scripts.md) — Reusable Bash and PowerShell scripts for Monaco export and SaaS Upgrade Assistant packaging
 - [S2S-99: Best Practice Summary](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-99-best-practice-summary.md) — Comprehensive reference of all best practices from the S2S series
 
 ### [SPANS - Distributed tracing and spans](SPANS%20-%20Distributed%20tracing%20and%20spans/README.md)
