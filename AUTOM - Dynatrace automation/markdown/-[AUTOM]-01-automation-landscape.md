@@ -1,6 +1,6 @@
 # Automation Landscape
 
-> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/11/2026
+> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
 
 Dynatrace provides multiple ways to automate configuration management and operational tasks. This series covers all major automation options, helping you choose the right approach for your needs.
 
@@ -84,7 +84,7 @@ Dynatrace automation tools form a hierarchy from low-level APIs to high-level ab
 | Low | Settings API | Direct REST calls |
 -->
 
-![Automation Pyramid](images/autom-pyramid.png)
+![Automation Pyramid](images/autom-pyramid_930x500.png)
 
 ---
 
@@ -97,6 +97,19 @@ Dynatrace automation tools form a hierarchy from low-level APIs to high-level ab
 | **Terraform** | IaC environments, full stack | Medium | Yes | Yes |
 | **Workflows** | Event-driven, auto-remediation | Low | N/A | No |
 | **SDKs** | Custom apps, complex logic | Medium | Yes | Yes |
+
+![Automation Tool Comparison](images/autom-tool-comparison_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Tool | Best For | Learning Curve | CI/CD Ready | Multi-Tenant |
+|------|----------|----------------|-------------|---------------|
+| Settings API | Custom integrations, scripts | Medium | Manual | Yes |
+| Monaco | Config-as-code, migrations | Low | Yes | Yes |
+| Terraform | IaC environments, full stack | Medium | Yes | Yes |
+| Workflows | Event-driven, auto-remediation | Low | N/A | No |
+| SDKs | Custom apps, complex logic | Medium | Yes | Yes |
+For environments where SVG doesn't render
+-->
 
 ### Settings API
 
@@ -220,7 +233,7 @@ Use this flowchart to choose the right automation approach:
 | Building a custom app? | SDK | Monaco |
 -->
 
-![Decision Framework](images/autom-decision-tree.png)
+![Decision Framework](images/autom-decision-tree_930x500.png)
 
 ---
 
