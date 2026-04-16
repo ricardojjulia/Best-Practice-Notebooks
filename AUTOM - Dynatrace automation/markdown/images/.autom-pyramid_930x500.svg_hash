@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="38" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">Dynatrace Automation Pyramid</text>
+  <text x="465" y="62" text-anchor="middle" fill="#94A3B8" font-size="13">From low-level APIs to high-level abstractions</text>
+
+  <!-- Pyramid layers, bottom (widest) to top (narrowest) -->
+  <!-- Layer 1: Settings API -->
+  <polygon points="180,430 750,430 670,360 260,360" fill="#6366f1" opacity="0.85"/>
+  <text x="465" y="390" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="700">Settings API</text>
+  <text x="465" y="412" text-anchor="middle" fill="#e0e7ff" font-size="12">Direct REST API access · foundation for everything else</text>
+
+  <!-- Layer 2: SDKs -->
+  <polygon points="260,360 670,360 590,290 340,290" fill="#8b5cf6" opacity="0.85"/>
+  <text x="465" y="320" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">Dynatrace SDKs</text>
+  <text x="465" y="342" text-anchor="middle" fill="#e0e7ff" font-size="12">TypeScript / Python clients for custom apps</text>
+
+  <!-- Layer 3: Workflows -->
+  <polygon points="340,290 590,290 520,220 410,220" fill="#a78bfa" opacity="0.9"/>
+  <text x="465" y="250" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">Workflows</text>
+  <text x="465" y="272" text-anchor="middle" fill="#e0e7ff" font-size="11">Event-driven automation (Gen3)</text>
+
+  <!-- Layer 4: Monaco / Terraform (peak) -->
+  <polygon points="410,220 520,220 485,145 445,145" fill="#c4b5fd" opacity="0.95"/>
+  <text x="465" y="175" text-anchor="middle" fill="#1e293b" font-size="13" font-weight="700">Monaco</text>
+  <text x="465" y="195" text-anchor="middle" fill="#374151" font-size="11">Terraform</text>
+
+  <!-- Side arrow and labels -->
+  <text x="790" y="400" fill="#94A3B8" font-size="12" font-weight="600">Low-level</text>
+  <text x="820" y="416" fill="#94A3B8" font-size="10">direct API</text>
+  <line x1="800" y1="380" x2="800" y2="200" stroke="#94A3B8" stroke-width="2"/>
+  <polygon points="800,190 794,205 806,205" fill="#94A3B8"/>
+  <text x="790" y="175" fill="#94A3B8" font-size="12" font-weight="600">High-level</text>
+  <text x="812" y="190" fill="#94A3B8" font-size="10">declarative IaC</text>
+
+  <!-- Legend -->
+  <rect x="60" y="380" width="160" height="90" rx="6" fill="#1E293B" stroke="#334155"/>
+  <text x="140" y="402" text-anchor="middle" fill="#F8FAFC" font-size="12" font-weight="700">Abstraction Layer</text>
+  <rect x="75" y="414" width="14" height="14" fill="#c4b5fd"/>
+  <text x="98" y="425" fill="#CBD5E1" font-size="11">High (IaC)</text>
+  <rect x="75" y="434" width="14" height="14" fill="#a78bfa"/>
+  <text x="98" y="445" fill="#CBD5E1" font-size="11">Medium</text>
+  <rect x="75" y="454" width="14" height="14" fill="#6366f1"/>
+  <text x="98" y="465" fill="#CBD5E1" font-size="11">Low (raw API)</text>
+</svg>

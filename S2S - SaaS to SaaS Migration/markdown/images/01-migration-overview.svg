@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="sourceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="exportGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="transformGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <linearGradient id="importGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="targetGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <linearGradient id="autoBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="90%" style="stop-color:#10b981"/>
+      <stop offset="90%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="400" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="350" y="32" text-anchor="middle" fill="#f1f5f9" font-family="Arial, sans-serif" font-size="16" font-weight="bold">SaaS-to-SaaS Migration Flow</text>
+
+  <!-- Pipeline boxes -->
+  <!-- Source Tenant -->
+  <rect x="20" y="100" width="110" height="70" rx="8" fill="url(#sourceGrad)" filter="url(#shadow)"/>
+  <text x="75" y="128" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Source</text>
+  <text x="75" y="144" text-anchor="middle" fill="#dbeafe" font-family="Arial, sans-serif" font-size="10">SaaS Tenant</text>
+  <rect x="35" y="155" width="80" height="10" rx="3" fill="rgba(255,255,255,0.15)"/>
+  <rect x="35" y="155" width="60" height="10" rx="3" fill="rgba(255,255,255,0.3)"/>
+
+  <!-- Arrow 1 -->
+  <line x1="134" y1="135" x2="158" y2="135" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowHead)"/>
+  <polygon points="158,130 168,135 158,140" fill="#94a3b8"/>
+
+  <!-- Export -->
+  <rect x="170" y="100" width="110" height="70" rx="8" fill="url(#exportGrad)" filter="url(#shadow)"/>
+  <text x="225" y="124" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Export</text>
+  <text x="225" y="140" text-anchor="middle" fill="#ede9fe" font-family="Arial, sans-serif" font-size="10">Monaco Download</text>
+  <text x="225" y="155" text-anchor="middle" fill="#ede9fe" font-family="Arial, sans-serif" font-size="10">Terraform Import</text>
+
+  <!-- Arrow 2 -->
+  <line x1="284" y1="135" x2="308" y2="135" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="308,130 318,135 308,140" fill="#94a3b8"/>
+
+  <!-- Transform -->
+  <rect x="320" y="100" width="110" height="70" rx="8" fill="url(#transformGrad)" filter="url(#shadow)"/>
+  <text x="375" y="122" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Transform</text>
+  <text x="375" y="138" text-anchor="middle" fill="#fef3c7" font-family="Arial, sans-serif" font-size="10">Entity ID Remap</text>
+  <text x="375" y="153" text-anchor="middle" fill="#fef3c7" font-family="Arial, sans-serif" font-size="10">Config Adjust</text>
+  <text x="375" y="163" text-anchor="middle" fill="#fef3c7" font-family="Arial, sans-serif" font-size="9">URL/Token Update</text>
+
+  <!-- Arrow 3 -->
+  <line x1="434" y1="135" x2="458" y2="135" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="458,130 468,135 458,140" fill="#94a3b8"/>
+
+  <!-- Import -->
+  <rect x="470" y="100" width="110" height="70" rx="8" fill="url(#importGrad)" filter="url(#shadow)"/>
+  <text x="525" y="124" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Import</text>
+  <text x="525" y="140" text-anchor="middle" fill="#ede9fe" font-family="Arial, sans-serif" font-size="10">Terraform Apply</text>
+  <text x="525" y="155" text-anchor="middle" fill="#ede9fe" font-family="Arial, sans-serif" font-size="10">Validation</text>
+
+  <!-- Arrow 4 -->
+  <line x1="584" y1="135" x2="608" y2="135" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="608,130 618,135 608,140" fill="#94a3b8"/>
+
+  <!-- Target Tenant -->
+  <rect x="620" y="100" width="60" height="70" rx="8" fill="url(#targetGrad)" filter="url(#shadow)"/>
+  <text x="650" y="128" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Target</text>
+  <text x="650" y="144" text-anchor="middle" fill="#d1fae5" font-family="Arial, sans-serif" font-size="10">SaaS</text>
+  <text x="650" y="158" text-anchor="middle" fill="#d1fae5" font-family="Arial, sans-serif" font-size="10">Tenant</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="205" x2="660" y2="205" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- 90/10 Split Section -->
+  <text x="350" y="232" text-anchor="middle" fill="#f1f5f9" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Automation Split</text>
+
+  <!-- 90% Automated bar -->
+  <rect x="70" y="250" width="560" height="36" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <rect x="70" y="250" width="504" height="36" rx="6" fill="#10b981" opacity="0.85"/>
+  <rect x="574" y="250" width="56" height="36" rx="6" fill="#f59e0b" opacity="0.85"/>
+  <!-- Fix corners on the green bar right side -->
+  <rect x="560" y="250" width="14" height="36" fill="#10b981" opacity="0.85"/>
+
+  <!-- Labels on bar -->
+  <text x="322" y="273" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="13" font-weight="bold">90% Automated</text>
+  <text x="602" y="273" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">10%</text>
+
+  <!-- Legend -->
+  <rect x="120" y="302" width="14" height="14" rx="3" fill="#10b981"/>
+  <text x="140" y="314" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Automated via Terraform/Monaco</text>
+
+  <rect x="370" y="302" width="14" height="14" rx="3" fill="#f59e0b"/>
+  <text x="390" y="314" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Manual Effort (validation, testing)</text>
+
+  <!-- Automated items -->
+  <text x="100" y="345" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Dashboards</text>
+  <text x="185" y="345" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Alerting</text>
+  <text x="253" y="345" fill="#10b981" font-family="Arial, sans-serif" font-size="10">SLOs</text>
+  <text x="302" y="345" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Policies</text>
+  <text x="370" y="345" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Workflows</text>
+
+  <!-- Manual items -->
+  <text x="460" y="345" fill="#f59e0b" font-family="Arial, sans-serif" font-size="10">Agent Tokens</text>
+  <text x="555" y="345" fill="#f59e0b" font-family="Arial, sans-serif" font-size="10">OAuth Clients</text>
+
+  <!-- Subtitle under pipeline -->
+  <text x="75" y="185" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="9">Existing Env</text>
+  <text x="225" y="185" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="9">Bulk Extract</text>
+  <text x="375" y="185" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="9">Adapt Config</text>
+  <text x="525" y="185" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="9">Deploy to Target</text>
+  <text x="650" y="185" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="9">New Env</text>
+
+  <!-- Footer -->
+  <text x="350" y="388" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="9">S2S Migration Pipeline - Configuration as Code</text>
+</svg>

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="350" viewBox="0 0 700 400">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="bigBangGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316"/>
+      <stop offset="100%" style="stop-color:#ea580c"/>
+    </linearGradient>
+    <linearGradient id="phasedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#16a34a"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="350" fill="url(#bgGrad)"/>
+
+  <!-- Title -->
+  <text x="350" y="35" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="20" font-weight="bold">Migration Approaches Comparison</text>
+
+  <!-- Big Bang Section -->
+  <g transform="translate(30, 60)">
+    <rect width="310" height="270" rx="8" fill="#1e293b" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
+
+    <!-- Header -->
+    <rect width="310" height="45" rx="8" fill="url(#bigBangGrad)"/>
+    <rect y="35" width="310" height="10" fill="url(#bigBangGrad)"/>
+    <text x="155" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Big Bang Migration</text>
+
+    <!-- Timeline visualization -->
+    <g transform="translate(20, 60)">
+      <text x="0" y="15" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Timeline:</text>
+      <rect x="0" y="25" width="270" height="30" rx="4" fill="#334155"/>
+      <rect x="110" y="25" width="50" height="30" rx="4" fill="#f97316"/>
+      <text x="135" y="44" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">MIGRATE</text>
+      <text x="55" y="70" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Managed</text>
+      <text x="215" y="70" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">SaaS</text>
+    </g>
+
+    <!-- Characteristics -->
+    <g transform="translate(20, 135)">
+      <text x="0" y="0" fill="#f8fafc" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Characteristics:</text>
+      <circle cx="10" cy="20" r="3" fill="#f97316"/>
+      <text x="20" y="24" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Single maintenance window</text>
+      <circle cx="10" cy="42" r="3" fill="#f97316"/>
+      <text x="20" y="46" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Complete cutover at once</text>
+      <circle cx="10" cy="64" r="3" fill="#f97316"/>
+      <text x="20" y="68" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Simpler coordination</text>
+    </g>
+
+    <!-- Best For -->
+    <g transform="translate(20, 220)">
+      <text x="0" y="0" fill="#4ade80" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Best for:</text>
+      <text x="0" y="18" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">&lt; 500 hosts, tight timelines</text>
+      <text x="155" y="0" fill="#f87171" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Risk:</text>
+      <text x="155" y="18" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Higher</text>
+    </g>
+  </g>
+
+  <!-- Phased Section -->
+  <g transform="translate(360, 60)">
+    <rect width="310" height="270" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+
+    <!-- Header -->
+    <rect width="310" height="45" rx="8" fill="url(#phasedGrad)"/>
+    <rect y="35" width="310" height="10" fill="url(#phasedGrad)"/>
+    <text x="155" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Phased Migration</text>
+
+    <!-- Timeline visualization -->
+    <g transform="translate(20, 60)">
+      <text x="0" y="15" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Timeline:</text>
+      <rect x="0" y="25" width="270" height="30" rx="4" fill="#334155"/>
+      <rect x="45" y="25" width="35" height="30" rx="4" fill="#22c55e"/>
+      <rect x="110" y="25" width="35" height="30" rx="4" fill="#22c55e"/>
+      <rect x="175" y="25" width="35" height="30" rx="4" fill="#22c55e"/>
+      <text x="62" y="44" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">P1</text>
+      <text x="127" y="44" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">P2</text>
+      <text x="192" y="44" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">P3</text>
+      <text x="25" y="70" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Managed</text>
+      <text x="245" y="70" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">SaaS</text>
+    </g>
+
+    <!-- Characteristics -->
+    <g transform="translate(20, 135)">
+      <text x="0" y="0" fill="#f8fafc" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Characteristics:</text>
+      <circle cx="10" cy="20" r="3" fill="#22c55e"/>
+      <text x="20" y="24" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Multiple migration phases</text>
+      <circle cx="10" cy="42" r="3" fill="#22c55e"/>
+      <text x="20" y="46" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Gradual transition</text>
+      <circle cx="10" cy="64" r="3" fill="#22c55e"/>
+      <text x="20" y="68" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Learn from each phase</text>
+    </g>
+
+    <!-- Best For -->
+    <g transform="translate(20, 220)">
+      <text x="0" y="0" fill="#4ade80" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Best for:</text>
+      <text x="0" y="18" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">&gt; 1000 hosts, risk-averse</text>
+      <text x="155" y="0" fill="#f87171" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Risk:</text>
+      <text x="155" y="18" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Lower</text>
+    </g>
+  </g>
+</svg>

@@ -1,6 +1,6 @@
 # AUTOM-03 LAB: Monaco Configuration as Code
 
-> **Series:** AUTOM | **Notebook:** 3 of 8 (LAB) | **Created:** April 2026 | **Last Updated:** 04/04/2026
+> **Series:** AUTOM | **Notebook:** 3 of 8 (LAB) | **Created:** April 2026 | **Last Updated:** 04/15/2026
 
 ## Overview
 
@@ -744,6 +744,42 @@ Use GitHub [Environments](https://docs.github.com/en/actions/deployment/targetin
 | [Dynatrace-Config-Manager](https://github.com/Dynatrace/Dynatrace-Config-Manager) | GUI tool for tenant-to-tenant config migration |
 | [monaco-self-paced-exercises](https://github.com/dynatrace-ace/monaco-self-paced-exercises) | 6 structured exercises (install, auto-tag, download, variables, delete/restore, linking) |
 | [monaco-demo](https://github.com/dt-demos/monaco-demo) | Working GitHub Actions workflow for Monaco deploy |
+
+<a id="community-resources"></a>
+## Community Resources & Examples
+
+After completing the hands-on steps above, these repositories provide deeper examples and exercises to reinforce what you've practiced:
+
+### Official Repositories
+
+| Repository | Description |
+|------------|-------------|
+| [dynatrace-configuration-as-code](https://github.com/Dynatrace/dynatrace-configuration-as-code) | Official Monaco CLI (v2.28.5) — Go binary, Apache-2.0 |
+| [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | Official samples repo with 9 Monaco starter templates in `basic-templates-monaco` |
+| [easytrade](https://github.com/Dynatrace/easytrade) | Demo microservices app with a working `monaco/` directory (manifest.yaml, detection rules, workflows) |
+| [Dynatrace-Config-Manager](https://github.com/Dynatrace/Dynatrace-Config-Manager) | GUI tool for tenant-to-tenant config migration; complements Monaco for brownfield scenarios |
+
+### Training & Exercises (recommended next)
+
+| Repository | Description |
+|------------|-------------|
+| [monaco-self-paced-exercises](https://github.com/dynatrace-ace/monaco-self-paced-exercises) | 6 structured exercises: install, auto-tag, download, variables, delete/restore, linking configs |
+| [monaco-demo](https://github.com/dt-demos/monaco-demo) | Working GitHub Actions workflow for Monaco deploy with "crawl-walk-run" adoption methodology |
+
+### Pipeline Observability Samples
+
+Monaco configurations for ingesting CI/CD pipeline events via OpenPipeline:
+
+| Directory | CI/CD Platform |
+|-----------|---------------|
+| `github_pipeline_observability` | GitHub Actions |
+| `gitlab_pipeline_observability` | GitLab CI |
+| `azure_devops_observability` | Azure DevOps |
+| `argocd_observability` | ArgoCD |
+
+> **Note:** Monaco v1 (`dynatrace-oss/dynatrace-monitoring-as-code`) is deprecated. Use `monaco convert` to migrate v1 projects to v2.
+
+---
 
 ---
 

@@ -45,6 +45,12 @@ The Dynatrace Terraform provider supports three authentication methods. Each cov
 
 ---
 
+**Preference order (current Dynatrace guidance):**
+
+1. **Platform Token** — recommended default for most integrations. Pair with `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` to authenticate to Gen3 Platform resources. Any user can create one (no admin required); long-lived; inherits the creating user's privileges.
+2. **Classic API Token** — legacy; being phased out. Use only for surfaces Platform Token does not yet cover (synthetic monitors primarily).
+3. **OAuth Client** — specialized. Use for external-system integrations and account-level IAM automation (policies, groups, service users). Requires account admin to create.
+
 ## Learning Objectives
 
 By the end of this notebook, you will:
