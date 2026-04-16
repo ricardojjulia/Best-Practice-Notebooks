@@ -1,6 +1,6 @@
 # S2S-07: Step 7 — Expand: OpenPipeline, SLOs, and Alerting
 
-> **Series:** S2S | **Notebook:** 7 of 9 | **Phase:** Run | **Step:** Expand | **Created:** March 2026 | **Last Updated:** 03/30/2026
+> **Series:** S2S | **Notebook:** 7 of 10 | **Phase:** Run | **Step:** Expand | **Created:** March 2026 | **Last Updated:** 04/16/2026
 
 ## Overview
 
@@ -53,6 +53,16 @@ OpenPipeline processing rules define how ingested data is enriched, extracted, r
 | **Routing** | Direct data to specific Grail buckets based on conditions | **Update bucket references** to match target bucket names |
 | **Masking** | Redact sensitive data (PII, credentials, tokens) | Port as-is — verify compliance requirements match |
 
+### Enrichment Propagation Delay
+
+> **Warning:** On Kubernetes clusters (especially EKS), enrichment rules typically take ~45 minutes to propagate cluster-wide after deployment (observed; actual time varies by cluster size and ActiveGate configuration). Routing rules that depend on enriched attributes (e.g., `app.namespace`, `k8s.cluster.name`) will not match incoming data until propagation completes — data lands in `default_logs` during the gap.
+>
+> **Mitigation:** If deploying via Terraform or CI/CD, add a validation gate between enrichment deployment and routing deployment. Either use a fixed wait (45-60 min on EKS) or query for enriched fields before proceeding:
+> ```
+> fetch logs, from:-5m | filter isNotNull(app.namespace) | summarize count()
+> ```
+> If count > 0, enrichment is propagated and routing rules can be deployed safely.
+
 ### Deployment Order (Critical)
 
 OpenPipeline and related resources must be deployed in strict dependency order:
@@ -61,10 +71,11 @@ OpenPipeline and related resources must be deployed in strict dependency order:
 |-------|----------|----------------|
 | 1 | Grail buckets | Routing rules reference buckets — they must exist first |
 | 2 | K8s enrichment rules | Tags feed OpenPipeline conditions and downstream queries |
+| — | *Wait for enrichment propagation (~45 min on K8s)* | *Routing rules fail silently if enriched fields are not yet available* |
 | 3 | OpenPipeline processing rules | Now routing targets and enrichment sources exist |
 | 4 | Segments | Segment definitions may reference buckets and tags |
 
-> **Monaco note:** `monaco deploy` resolves these dependencies automatically within a single run. The order above is for teams using Terraform or manual deployment.
+> **Monaco note:** `monaco deploy` resolves these dependencies automatically within a single run. However, it does **not** wait for enrichment propagation — if you deploy buckets, enrichment, and routing in one `monaco deploy`, routing rules may not match incoming data for ~45 minutes. For production migrations, consider splitting the deploy into two runs with a validation gate between them.
 
 ### Coordinated Deployment Strategy
 

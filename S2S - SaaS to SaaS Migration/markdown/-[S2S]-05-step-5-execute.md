@@ -1,6 +1,6 @@
 # S2S-05: Step 5 — Execute: Configuration Import and Agent Cutover
 
-> **Series:** S2S | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** S2S | **Notebook:** 5 of 10 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 04/16/2026
 
 ## Overview
 
@@ -264,6 +264,24 @@ OneAgent instances must be redirected from the source tenant to the target tenan
 ```
 
 > **Application restart required.** After changing the server and tenant token, the monitored application must be restarted for the agent to reconnect. Plan application restarts as part of the wave execution.
+
+### ActiveGate Routing for Firewall-Restricted Hosts
+
+On-premises or DMZ hosts that cannot reach the SaaS target directly must route through ActiveGates. Use the ActiveGate communication endpoint instead of the SaaS URL:
+
+```bash
+# Route through a single ActiveGate
+/opt/dynatrace/oneagent/agent/tools/oneagentctl \
+  --set-server=https://<activegate-host>:9999/communication \
+  --set-tenant-token=<target-tenant-token>
+
+# Route through multiple ActiveGates (failover — semicolon-separated)
+/opt/dynatrace/oneagent/agent/tools/oneagentctl \
+  --set-server="https://ag-01.corp.com:9999/communication;https://ag-02.corp.com:9999/communication" \
+  --set-tenant-token=<target-tenant-token>
+```
+
+> **Network dependency:** ActiveGate routing requires firewall rules allowing the monitored host to reach the AG on port 9999. Coordinate with the network team early — firewall change lead times are a common critical path item.
 
 ### Wave Strategy
 

@@ -1,6 +1,6 @@
 # S2S-04: Step 4 — Prepare: Export and Pre-Stage
 
-> **Series:** S2S | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** S2S | **Notebook:** 4 of 10 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 04/16/2026
 
 ## Overview
 
@@ -186,7 +186,7 @@ terraform apply -var-file="target-tenant.tfvars"
 <a id="monaco-bulk-export"></a>
 ## 3. Monaco Bulk Export
 
-Monaco `download` exports all configuration from the source tenant into a structured directory. This export becomes the input for `monaco deploy` in Step 5.
+Monaco `download` exports all configuration from the source tenant into a structured directory. This export becomes the input for `monaco deploy` in Step 5, or can be packaged for upload to the SaaS Upgrade Assistant (SUA) on the target tenant.
 
 ### Export Commands
 
@@ -210,6 +210,17 @@ monaco download \
   --only-settings \
   --force
 ```
+
+### Automated Export with SUA Packaging
+
+For a streamlined workflow that handles Monaco download, checksum verification, and SUA-compatible `.tar.gz` packaging in a single command, see **S2S-10: Migration Scripts**. The scripts automate:
+
+- Platform-aware Monaco binary download (macOS, Linux, Windows)
+- Temporary read-only API token creation with minimal scopes
+- Full `monaco download` execution
+- Packaging in SaaS Upgrade Assistant format (`.tar.gz` with `exportMetadata.json`)
+
+> **Important:** The SaaS Upgrade Assistant requires `.tar.gz` format — `.zip` archives are rejected. If packaging manually, ensure the archive contains an `exportMetadata.json` at the root and the exported config in an `export/` subdirectory. See **S2S-10** for the exact format specification.
 
 ### Export Directory Structure
 
