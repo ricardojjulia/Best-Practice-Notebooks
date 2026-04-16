@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="36" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">Platform Architecture: New Relic vs. Dynatrace</text>
+  <text x="465" y="60" text-anchor="middle" fill="#94A3B8" font-size="13">Different abstractions for the same observability problem</text>
+
+  <!-- LEFT: New Relic -->
+  <rect x="40" y="90" width="400" height="380" fill="#00AC69" opacity="0.08" stroke="#00AC69" stroke-width="2" rx="10"/>
+  <text x="240" y="118" text-anchor="middle" fill="#86EFAC" font-size="16" font-weight="700">New Relic</text>
+
+  <g font-size="11">
+    <rect x="60" y="135" width="360" height="50" fill="#1E293B" stroke="#00AC69" rx="5"/>
+    <text x="240" y="155" text-anchor="middle" fill="#86EFAC" font-weight="700">Multiple agents (APM / Infra / Browser / Mobile)</text>
+    <text x="240" y="172" text-anchor="middle" fill="#94A3B8" font-size="10">Per-signal-type collection</text>
+
+    <rect x="60" y="200" width="360" height="50" fill="#1E293B" stroke="#00AC69" rx="5"/>
+    <text x="240" y="220" text-anchor="middle" fill="#86EFAC" font-weight="700">NerdGraph (GraphQL API)</text>
+    <text x="240" y="237" text-anchor="middle" fill="#94A3B8" font-size="10">Unified query + config</text>
+
+    <rect x="60" y="265" width="360" height="80" fill="#1E293B" stroke="#00AC69" stroke-width="1.5" rx="5"/>
+    <text x="240" y="287" text-anchor="middle" fill="#86EFAC" font-size="13" font-weight="700">NRDB (column store)</text>
+    <text x="240" y="305" text-anchor="middle" fill="#94A3B8" font-size="10">Single store · uniform retention per data type</text>
+    <text x="240" y="322" text-anchor="middle" fill="#94A3B8" font-size="10">Events · Metrics · Logs · Traces</text>
+    <text x="240" y="338" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">Query: NRQL (SQL-like)</text>
+
+    <rect x="60" y="360" width="360" height="50" fill="#1E293B" stroke="#00AC69" stroke-dasharray="3,2" rx="5"/>
+    <text x="240" y="380" text-anchor="middle" fill="#86EFAC" font-weight="700">Workloads (manual entity grouping)</text>
+    <text x="240" y="397" text-anchor="middle" fill="#94A3B8" font-size="10">User-defined; tag- or GUID-based</text>
+
+    <rect x="60" y="425" width="360" height="35" fill="#0F172A" stroke="#64748B" stroke-dasharray="2,2" rx="5"/>
+    <text x="240" y="447" text-anchor="middle" fill="#94A3B8" font-size="10">Pricing: per-GB ingest + per-user; flat retention</text>
+  </g>
+
+  <!-- RIGHT: Dynatrace -->
+  <rect x="490" y="90" width="400" height="380" fill="#1496FF" opacity="0.08" stroke="#1496FF" stroke-width="2" rx="10"/>
+  <text x="690" y="118" text-anchor="middle" fill="#BFDBFE" font-size="16" font-weight="700">Dynatrace</text>
+
+  <g font-size="11">
+    <rect x="510" y="135" width="360" height="50" fill="#1E293B" stroke="#1496FF" rx="5"/>
+    <text x="690" y="155" text-anchor="middle" fill="#BFDBFE" font-weight="700">OneAgent (single agent + auto-discovery)</text>
+    <text x="690" y="172" text-anchor="middle" fill="#94A3B8" font-size="10">Code-level instrumentation; ActiveGate routes</text>
+
+    <rect x="510" y="200" width="360" height="50" fill="#1E293B" stroke="#1496FF" rx="5"/>
+    <text x="690" y="220" text-anchor="middle" fill="#BFDBFE" font-weight="700">Settings v2 / Documents v2 / Config v1 (REST)</text>
+    <text x="690" y="237" text-anchor="middle" fill="#94A3B8" font-size="10">Per-domain APIs · GraphQL not used</text>
+
+    <rect x="510" y="265" width="360" height="80" fill="#1E293B" stroke="#1496FF" stroke-width="1.5" rx="5"/>
+    <text x="690" y="287" text-anchor="middle" fill="#BFDBFE" font-size="13" font-weight="700">Grail (lakehouse · OpenPipeline)</text>
+    <text x="690" y="305" text-anchor="middle" fill="#94A3B8" font-size="10">Tiered buckets · per-data-class retention</text>
+    <text x="690" y="322" text-anchor="middle" fill="#94A3B8" font-size="10">Logs · Spans · Events · Bizevents · Metrics</text>
+    <text x="690" y="338" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">Query: DQL (pipeline-based)</text>
+
+    <rect x="510" y="360" width="360" height="50" fill="#1E293B" stroke="#1496FF" stroke-width="1.5" rx="5"/>
+    <text x="690" y="380" text-anchor="middle" fill="#BFDBFE" font-weight="700">Smartscape (auto-discovered topology)</text>
+    <text x="690" y="397" text-anchor="middle" fill="#94A3B8" font-size="10">Real-time entity graph · Davis AI causal</text>
+
+    <rect x="510" y="425" width="360" height="35" fill="#0F172A" stroke="#64748B" stroke-dasharray="2,2" rx="5"/>
+    <text x="690" y="447" text-anchor="middle" fill="#94A3B8" font-size="10">Pricing: DPS units · per-capability · tunable per bucket</text>
+  </g>
+
+  <!-- Center divider with key difference label -->
+  <text x="465" y="490" text-anchor="middle" fill="#FCD34D" font-size="11" font-style="italic">Smartscape vs. user-built workloads is the most consequential difference for migration design</text>
+</svg>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="36" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">NRQL → DQL Compiler Pipeline</text>
+  <text x="465" y="60" text-anchor="middle" fill="#94A3B8" font-size="13">AST-based · 292 patterns · confidence-scored output</text>
+
+  <defs>
+    <marker id="nr3arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#73BE28"/>
+    </marker>
+  </defs>
+
+  <!-- Input -->
+  <rect x="30" y="200" width="120" height="80" fill="#334155" stroke="#64748B" rx="6"/>
+  <text x="90" y="232" text-anchor="middle" fill="#F8FAFC" font-size="12" font-weight="700">NRQL string</text>
+  <text x="90" y="252" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="monospace">SELECT count(*)</text>
+  <text x="90" y="265" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="monospace">FROM Transaction</text>
+
+  <!-- Pipeline stages (5 boxes in middle) -->
+  <g font-size="11">
+    <rect x="180" y="120" width="120" height="60" fill="#1496FF" opacity="0.2" stroke="#1496FF" rx="6"/>
+    <text x="240" y="142" text-anchor="middle" fill="#BFDBFE" font-weight="700">Lexer</text>
+    <text x="240" y="160" text-anchor="middle" fill="#94A3B8" font-size="10">tokens</text>
+    <text x="240" y="174" text-anchor="middle" fill="#94A3B8" font-size="10">SELECT, count, *, ...</text>
+
+    <rect x="180" y="200" width="120" height="60" fill="#A78BFA" opacity="0.2" stroke="#A78BFA" rx="6"/>
+    <text x="240" y="222" text-anchor="middle" fill="#DDD6FE" font-weight="700">Parser</text>
+    <text x="240" y="240" text-anchor="middle" fill="#94A3B8" font-size="10">recursive descent</text>
+    <text x="240" y="254" text-anchor="middle" fill="#94A3B8" font-size="10">→ AST</text>
+
+    <rect x="180" y="280" width="120" height="60" fill="#22D3EE" opacity="0.2" stroke="#22D3EE" rx="6"/>
+    <text x="240" y="302" text-anchor="middle" fill="#A5F3FC" font-weight="700">Emitter</text>
+    <text x="240" y="320" text-anchor="middle" fill="#94A3B8" font-size="10">AST → DQL</text>
+    <text x="240" y="334" text-anchor="middle" fill="#94A3B8" font-size="10">292 patterns</text>
+
+    <rect x="340" y="160" width="120" height="60" fill="#73BE28" opacity="0.2" stroke="#73BE28" rx="6"/>
+    <text x="400" y="182" text-anchor="middle" fill="#D9F99D" font-weight="700">Validator</text>
+    <text x="400" y="200" text-anchor="middle" fill="#94A3B8" font-size="10">syntax check</text>
+    <text x="400" y="214" text-anchor="middle" fill="#94A3B8" font-size="10">tenant validation</text>
+
+    <rect x="340" y="240" width="120" height="60" fill="#FFB800" opacity="0.2" stroke="#FFB800" rx="6"/>
+    <text x="400" y="262" text-anchor="middle" fill="#FEF3C7" font-weight="700">Auto-fixer</text>
+    <text x="400" y="280" text-anchor="middle" fill="#94A3B8" font-size="10">named params</text>
+    <text x="400" y="294" text-anchor="middle" fill="#94A3B8" font-size="10">duration literals</text>
+  </g>
+
+  <!-- Arrows -->
+  <g stroke="#73BE28" stroke-width="2" fill="none">
+    <line x1="150" y1="240" x2="180" y2="150" marker-end="url(#nr3arr)"/>
+    <line x1="240" y1="180" x2="240" y2="200" marker-end="url(#nr3arr)"/>
+    <line x1="240" y1="260" x2="240" y2="280" marker-end="url(#nr3arr)"/>
+    <line x1="300" y1="310" x2="340" y2="270" marker-end="url(#nr3arr)"/>
+    <line x1="400" y1="220" x2="400" y2="240" marker-end="url(#nr3arr)"/>
+    <line x1="460" y1="270" x2="500" y2="270" marker-end="url(#nr3arr)"/>
+  </g>
+
+  <!-- Output -->
+  <rect x="510" y="200" width="180" height="120" fill="#334155" stroke="#73BE28" stroke-width="2" rx="6"/>
+  <text x="600" y="222" text-anchor="middle" fill="#F8FAFC" font-size="12" font-weight="700">CompileResult</text>
+  <text x="525" y="244" fill="#86EFAC" font-size="10" font-family="monospace">dql: "fetch spans..."</text>
+  <text x="525" y="260" fill="#86EFAC" font-size="10" font-family="monospace">confidence: HIGH</text>
+  <text x="525" y="276" fill="#86EFAC" font-size="10" font-family="monospace">score: 95</text>
+  <text x="525" y="292" fill="#86EFAC" font-size="10" font-family="monospace">notes: [...]</text>
+  <text x="525" y="308" fill="#86EFAC" font-size="10" font-family="monospace">fixes: [...]</text>
+
+  <!-- Confidence breakdown (right side) -->
+  <text x="800" y="120" text-anchor="middle" fill="#F8FAFC" font-size="13" font-weight="700">Confidence</text>
+
+  <g font-size="10">
+    <rect x="710" y="140" width="180" height="40" fill="#1E293B" stroke="#73BE28" rx="5"/>
+    <text x="725" y="158" fill="#86EFAC" font-weight="700">HIGH (90–100)</text>
+    <text x="725" y="173" fill="#94A3B8">Sample-validate 5–10%</text>
+
+    <rect x="710" y="190" width="180" height="40" fill="#1E293B" stroke="#FFB800" rx="5"/>
+    <text x="725" y="208" fill="#FEF3C7" font-weight="700">MEDIUM (60–89)</text>
+    <text x="725" y="223" fill="#94A3B8">100% review during dual-run</text>
+
+    <rect x="710" y="240" width="180" height="40" fill="#1E293B" stroke="#DE350B" rx="5"/>
+    <text x="725" y="258" fill="#FECACA" font-weight="700">LOW (0–59)</text>
+    <text x="725" y="273" fill="#94A3B8">Hand-translate; do not auto-import</text>
+  </g>
+
+  <text x="800" y="320" text-anchor="middle" fill="#94A3B8" font-size="10" font-style="italic">894 unit tests</text>
+  <text x="800" y="335" text-anchor="middle" fill="#94A3B8" font-size="10" font-style="italic">across the pipeline</text>
+
+  <!-- Bottom note -->
+  <rect x="180" y="380" width="540" height="80" fill="#0F172A" stroke="#334155" rx="5"/>
+  <text x="450" y="402" text-anchor="middle" fill="#F8FAFC" font-size="12" font-weight="700">Why a compiler, not regex</text>
+  <text x="450" y="421" text-anchor="middle" fill="#CBD5E1" font-size="10">Nested function calls · operator precedence · subqueries · time semantics · FACET CASES with nested if()</text>
+  <text x="450" y="438" text-anchor="middle" fill="#CBD5E1" font-size="10">all require AST traversal. The 2,197-line regex predecessor produced silent wrong DQL.</text>
+
+  <text x="465" y="480" text-anchor="middle" fill="#94A3B8" font-size="11">Open source: github.com/timstewart-dynatrace/nrql-engine</text>
+</svg>

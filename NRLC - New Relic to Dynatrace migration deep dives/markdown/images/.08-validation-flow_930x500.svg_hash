@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="36" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">Three-Tier Validation Flow</text>
+  <text x="465" y="60" text-anchor="middle" fill="#94A3B8" font-size="13">Syntax → Tenant → Behavioral · all three must pass before production</text>
+
+  <defs>
+    <marker id="nr9arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#73BE28"/>
+    </marker>
+  </defs>
+
+  <!-- Input: Translated DQL -->
+  <rect x="40" y="200" width="120" height="80" fill="#334155" stroke="#64748B" rx="6"/>
+  <text x="100" y="232" text-anchor="middle" fill="#F8FAFC" font-size="12" font-weight="700">Translated DQL</text>
+  <text x="100" y="250" text-anchor="middle" fill="#94A3B8" font-size="10">From compiler</text>
+  <text x="100" y="266" text-anchor="middle" fill="#94A3B8" font-size="10">(NRLC-03)</text>
+
+  <!-- Tier 1: Syntax -->
+  <rect x="200" y="180" width="170" height="120" fill="#1496FF" opacity="0.15" stroke="#1496FF" stroke-width="2" rx="8"/>
+  <text x="285" y="205" text-anchor="middle" fill="#BFDBFE" font-size="13" font-weight="700">Tier 1: Syntax</text>
+  <text x="285" y="225" text-anchor="middle" fill="#94A3B8" font-size="10">DQLSyntaxValidator</text>
+  <text x="285" y="245" text-anchor="middle" fill="#DBEAFE" font-size="10">POST validation endpoint</text>
+  <text x="285" y="262" text-anchor="middle" fill="#DBEAFE" font-size="10">(no execution)</text>
+  <text x="285" y="282" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">~ms · catches malformed DQL</text>
+
+  <!-- Auto-fix loop -->
+  <rect x="220" y="320" width="130" height="40" fill="#0F172A" stroke="#FFB800" stroke-dasharray="3,2" rx="4"/>
+  <text x="285" y="338" text-anchor="middle" fill="#FEF3C7" font-size="10" font-weight="600">Auto-fixer</text>
+  <text x="285" y="352" text-anchor="middle" fill="#FDE68A" font-size="9">retry on safe corrections</text>
+  <line x1="285" y1="300" x2="285" y2="320" stroke="#FFB800" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="285" y1="360" x2="200" y2="370" stroke="#FFB800" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="200" y1="370" x2="200" y2="240" stroke="#FFB800" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="200" y1="240" x2="200" y2="240" stroke="#FFB800" stroke-width="1"/>
+
+  <!-- Tier 2: Tenant -->
+  <rect x="395" y="180" width="170" height="120" fill="#A78BFA" opacity="0.15" stroke="#A78BFA" stroke-width="2" rx="8"/>
+  <text x="480" y="205" text-anchor="middle" fill="#DDD6FE" font-size="13" font-weight="700">Tier 2: Tenant</text>
+  <text x="480" y="225" text-anchor="middle" fill="#94A3B8" font-size="10">DTEnvironmentRegistry</text>
+  <text x="480" y="245" text-anchor="middle" fill="#EDE9FE" font-size="10">Metrics · Entities · MZs</text>
+  <text x="480" y="262" text-anchor="middle" fill="#EDE9FE" font-size="10">exist in target tenant?</text>
+  <text x="480" y="282" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">~seconds · catches drift</text>
+
+  <!-- Tier 3: Behavioral -->
+  <rect x="590" y="180" width="170" height="120" fill="#73BE28" opacity="0.15" stroke="#73BE28" stroke-width="2" rx="8"/>
+  <text x="675" y="205" text-anchor="middle" fill="#D9F99D" font-size="13" font-weight="700">Tier 3: Behavioral</text>
+  <text x="675" y="225" text-anchor="middle" fill="#94A3B8" font-size="10">Dual-run comparison</text>
+  <text x="675" y="245" text-anchor="middle" fill="#ECFCCB" font-size="10">NRQL on NR + DQL on DT</text>
+  <text x="675" y="262" text-anchor="middle" fill="#ECFCCB" font-size="10">delta within tolerance?</text>
+  <text x="675" y="282" text-anchor="middle" fill="#FCD34D" font-size="10" font-style="italic">~days · catches semantics</text>
+
+  <!-- Output: production-ready -->
+  <rect x="790" y="200" width="120" height="80" fill="#334155" stroke="#73BE28" stroke-width="2" rx="6"/>
+  <text x="850" y="232" text-anchor="middle" fill="#86EFAC" font-size="12" font-weight="700">Production</text>
+  <text x="850" y="250" text-anchor="middle" fill="#94A3B8" font-size="10">Cleared for cutover</text>
+  <text x="850" y="266" text-anchor="middle" fill="#94A3B8" font-size="10">at next gate</text>
+
+  <!-- Arrows -->
+  <g stroke="#73BE28" stroke-width="2" fill="none">
+    <line x1="160" y1="240" x2="200" y2="240" marker-end="url(#nr9arr)"/>
+    <line x1="370" y1="240" x2="395" y2="240" marker-end="url(#nr9arr)"/>
+    <line x1="565" y1="240" x2="590" y2="240" marker-end="url(#nr9arr)"/>
+    <line x1="760" y1="240" x2="790" y2="240" marker-end="url(#nr9arr)"/>
+  </g>
+
+  <!-- Tolerance table at bottom -->
+  <text x="465" y="395" text-anchor="middle" fill="#F8FAFC" font-size="13" font-weight="700">Behavioral Tolerance per Artifact Type</text>
+
+  <g font-size="11">
+    <rect x="100" y="410" width="160" height="60" fill="#1E293B" stroke="#334155" rx="5"/>
+    <text x="180" y="430" text-anchor="middle" fill="#CBD5E1" font-weight="600">Dashboards</text>
+    <text x="180" y="450" text-anchor="middle" fill="#86EFAC" font-size="14" font-weight="700">±5%</text>
+
+    <rect x="270" y="410" width="160" height="60" fill="#1E293B" stroke="#334155" rx="5"/>
+    <text x="350" y="430" text-anchor="middle" fill="#CBD5E1" font-weight="600">Alerts (dual-run)</text>
+    <text x="350" y="450" text-anchor="middle" fill="#FCD34D" font-size="14" font-weight="700">±10%</text>
+
+    <rect x="440" y="410" width="160" height="60" fill="#1E293B" stroke="#334155" rx="5"/>
+    <text x="520" y="430" text-anchor="middle" fill="#CBD5E1" font-weight="600">SLOs</text>
+    <text x="520" y="450" text-anchor="middle" fill="#FECACA" font-size="14" font-weight="700">±0.5%</text>
+
+    <rect x="610" y="410" width="160" height="60" fill="#1E293B" stroke="#334155" rx="5"/>
+    <text x="690" y="430" text-anchor="middle" fill="#CBD5E1" font-weight="600">Synthetics</text>
+    <text x="690" y="450" text-anchor="middle" fill="#FECACA" font-size="14" font-weight="700">±0.5%</text>
+  </g>
+</svg>
