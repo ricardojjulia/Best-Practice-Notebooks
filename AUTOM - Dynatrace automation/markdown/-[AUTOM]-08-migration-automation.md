@@ -302,6 +302,30 @@ For Managed-to-SaaS migrations, Dynatrace provides a guided tool.
 | **Progress Tracking** | Visual dashboard of migration status |
 | **Validation** | Post-migration validation checks |
 
+### Upload Format
+
+The SaaS Upgrade Assistant requires configuration archives in **`.tar.gz` format** (not `.zip`). The archive must contain:
+
+```
+configurationExport-<datetime>/
+├── exportMetadata.json          # Cluster UUID, Monaco version, timestamp
+└── export/                      # Monaco download output
+    └── saas/<tenantId>/
+        ├── <config-type>/
+        │   ├── config.yaml
+        │   └── *.json
+        └── ...
+```
+
+Create the archive with:
+
+| Platform | Command |
+|----------|----------|
+| **Bash** (macOS/Linux) | `tar -czf archive.tar.gz configurationExport-<datetime>` |
+| **PowerShell** (Windows 10+) | `tar -czf archive.tar.gz configurationExport-<datetime>` |
+
+> **Note:** Windows 10 version 1803+ and Windows 11 include `tar.exe` natively. On older Windows, use [7-Zip](https://www.7-zip.org/) to create the tar.gz.
+
 ### When to Use
 
 | Scenario | Recommended Tool |

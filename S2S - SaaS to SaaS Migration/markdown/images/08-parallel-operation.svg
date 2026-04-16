@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400">
+  <defs>
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="srcFull" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#2563eb"/>
+    </linearGradient>
+    <linearGradient id="srcReadOnly" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <linearGradient id="srcDecom" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444"/>
+      <stop offset="100%" style="stop-color:#dc2626"/>
+    </linearGradient>
+    <linearGradient id="tgtDev" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#22d3ee"/>
+      <stop offset="100%" style="stop-color:#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="tgtStag" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="tgtAll" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399"/>
+      <stop offset="100%" style="stop-color:#10b981"/>
+    </linearGradient>
+    <linearGradient id="tgtPrimary" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#059669"/>
+    </linearGradient>
+    <filter id="shadow3">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="700" height="400" fill="url(#bgGrad3)"/>
+
+  <!-- Title -->
+  <text x="350" y="30" text-anchor="middle" fill="#f1f5f9" font-family="Arial, sans-serif" font-size="16" font-weight="bold">Parallel Operation Timeline</text>
+
+  <!-- Timeline header -->
+  <line x1="140" y1="60" x2="660" y2="60" stroke="#475569" stroke-width="1"/>
+  <text x="140" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 0</text>
+  <line x1="140" y1="56" x2="140" y2="64" stroke="#475569" stroke-width="1"/>
+  <text x="227" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 2</text>
+  <line x1="227" y1="56" x2="227" y2="64" stroke="#475569" stroke-width="1"/>
+  <text x="314" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 4</text>
+  <line x1="314" y1="56" x2="314" y2="64" stroke="#475569" stroke-width="1"/>
+  <text x="400" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 6</text>
+  <line x1="400" y1="56" x2="400" y2="64" stroke="#475569" stroke-width="1"/>
+  <text x="487" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 8</text>
+  <line x1="487" y1="56" x2="487" y2="64" stroke="#475569" stroke-width="1"/>
+  <text x="573" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 10</text>
+  <line x1="573" y1="56" x2="573" y2="64" stroke="#475569" stroke-width="1"/>
+  <text x="660" y="52" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="10">Week 12</text>
+  <line x1="660" y1="56" x2="660" y2="64" stroke="#475569" stroke-width="1"/>
+
+  <!-- Source Tenant label -->
+  <text x="60" y="100" text-anchor="middle" fill="#f1f5f9" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Source</text>
+  <text x="60" y="115" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Tenant</text>
+
+  <!-- Source Tenant bars -->
+  <!-- Full operation -->
+  <rect x="140" y="85" width="260" height="36" rx="6" fill="url(#srcFull)" filter="url(#shadow3)" opacity="0.9"/>
+  <text x="270" y="108" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Full Operation</text>
+
+  <!-- Read-only -->
+  <rect x="400" y="85" width="130" height="36" rx="6" fill="url(#srcReadOnly)" filter="url(#shadow3)" opacity="0.85"/>
+  <text x="465" y="108" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Read-Only</text>
+
+  <!-- Decommission -->
+  <rect x="530" y="85" width="130" height="36" rx="6" fill="url(#srcDecom)" filter="url(#shadow3)" opacity="0.75"/>
+  <text x="595" y="108" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Decommission</text>
+
+  <!-- Overlap highlight zone -->
+  <rect x="140" y="132" width="390" height="62" rx="0" fill="#f59e0b" opacity="0.06"/>
+  <line x1="140" y1="132" x2="530" y2="132" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+  <line x1="140" y1="194" x2="530" y2="194" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+  <text x="335" y="166" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="11" font-weight="bold" opacity="0.7">Parallel Operation Window</text>
+
+  <!-- Target Tenant label -->
+  <text x="60" y="212" text-anchor="middle" fill="#f1f5f9" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Target</text>
+  <text x="60" y="227" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="11">Tenant</text>
+
+  <!-- Target Tenant bars -->
+  <!-- Dev only -->
+  <rect x="140" y="200" width="87" height="36" rx="6" fill="url(#tgtDev)" filter="url(#shadow3)" opacity="0.8"/>
+  <text x="183" y="223" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Dev Only</text>
+
+  <!-- Dev + Staging -->
+  <rect x="227" y="200" width="87" height="36" rx="6" fill="url(#tgtStag)" filter="url(#shadow3)" opacity="0.85"/>
+  <text x="270" y="218" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Dev +</text>
+  <text x="270" y="230" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Staging</text>
+
+  <!-- All Agents -->
+  <rect x="314" y="200" width="86" height="36" rx="6" fill="url(#tgtAll)" filter="url(#shadow3)" opacity="0.9"/>
+  <text x="357" y="218" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">All</text>
+  <text x="357" y="230" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Agents</text>
+
+  <!-- Primary -->
+  <rect x="400" y="200" width="260" height="36" rx="6" fill="url(#tgtPrimary)" filter="url(#shadow3)"/>
+  <text x="530" y="223" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Primary Tenant</text>
+
+  <!-- Davis AI Baseline annotation -->
+  <rect x="314" y="252" width="173" height="28" rx="5" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="400" y="270" text-anchor="middle" fill="#c4b5fd" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Davis AI Baseline Period</text>
+  <!-- Arrow from annotation to target bar -->
+  <line x1="400" y1="248" x2="400" y2="238" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="2,2"/>
+  <polygon points="397,240 400,236 403,240" fill="#8b5cf6"/>
+
+  <!-- Divider -->
+  <line x1="40" y1="298" x2="660" y2="298" stroke="#334155" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Key milestones -->
+  <text x="350" y="320" text-anchor="middle" fill="#f1f5f9" font-family="Arial, sans-serif" font-size="13" font-weight="bold">Key Milestones</text>
+
+  <!-- Milestone dots -->
+  <circle cx="140" cy="348" r="5" fill="#3b82f6"/>
+  <text x="140" y="368" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Config</text>
+  <text x="140" y="380" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Export</text>
+
+  <circle cx="270" cy="348" r="5" fill="#06b6d4"/>
+  <text x="270" y="368" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">First Agent</text>
+  <text x="270" y="380" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Cutover</text>
+
+  <circle cx="400" cy="348" r="5" fill="#10b981"/>
+  <text x="400" y="368" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">All Agents</text>
+  <text x="400" y="380" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Migrated</text>
+
+  <circle cx="530" cy="348" r="5" fill="#f59e0b"/>
+  <text x="530" y="368" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Source</text>
+  <text x="530" y="380" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Read-Only</text>
+
+  <circle cx="660" cy="348" r="5" fill="#ef4444"/>
+  <text x="660" y="368" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Source</text>
+  <text x="660" y="380" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="10">Retired</text>
+
+  <!-- Connecting line for milestones -->
+  <line x1="145" y1="348" x2="655" y2="348" stroke="#334155" stroke-width="1"/>
+
+  <!-- Footer -->
+  <text x="350" y="396" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="9">Parallel Operation - Both Tenants Active During Migration Window</text>
+</svg>

@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="36" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">Automation Tool Comparison</text>
+
+  <!-- Column widths (total ~860, left margin 40): Tool 130 | Best For 150 | Learning 100 | CI/CD 100 | State 110 | Use Case 270 -->
+  <!-- Header row -->
+  <g font-size="12" font-weight="700">
+    <rect x="40" y="62" width="130" height="38" fill="#334155"/>
+    <text x="105" y="86" text-anchor="middle" fill="#F8FAFC">Tool</text>
+
+    <rect x="170" y="62" width="150" height="38" fill="#334155"/>
+    <text x="245" y="86" text-anchor="middle" fill="#F8FAFC">Best For</text>
+
+    <rect x="320" y="62" width="100" height="38" fill="#334155"/>
+    <text x="370" y="86" text-anchor="middle" fill="#F8FAFC">Learning</text>
+
+    <rect x="420" y="62" width="100" height="38" fill="#334155"/>
+    <text x="470" y="86" text-anchor="middle" fill="#F8FAFC">CI/CD</text>
+
+    <rect x="520" y="62" width="110" height="38" fill="#334155"/>
+    <text x="575" y="86" text-anchor="middle" fill="#F8FAFC">State Mgmt</text>
+
+    <rect x="630" y="62" width="260" height="38" fill="#334155"/>
+    <text x="760" y="86" text-anchor="middle" fill="#F8FAFC">Use Case</text>
+  </g>
+
+  <!-- Row 1: Settings API -->
+  <g font-size="12">
+    <rect x="40" y="100" width="130" height="60" fill="#6366f1" opacity="0.3"/>
+    <text x="105" y="134" text-anchor="middle" fill="#a5b4fc" font-weight="700">Settings API</text>
+    <rect x="170" y="100" width="150" height="60" fill="#1E293B"/>
+    <text x="245" y="134" text-anchor="middle" fill="#CBD5E1">Custom scripts</text>
+    <rect x="320" y="100" width="100" height="60" fill="#1E293B"/>
+    <text x="370" y="134" text-anchor="middle" fill="#f59e0b" font-weight="600">Medium</text>
+    <rect x="420" y="100" width="100" height="60" fill="#1E293B"/>
+    <text x="470" y="134" text-anchor="middle" fill="#CBD5E1">Manual</text>
+    <rect x="520" y="100" width="110" height="60" fill="#1E293B"/>
+    <text x="575" y="134" text-anchor="middle" fill="#ef4444" font-weight="600">None</text>
+    <rect x="630" y="100" width="260" height="60" fill="#1E293B"/>
+    <text x="760" y="134" text-anchor="middle" fill="#CBD5E1">One-off ops · custom integrations</text>
+  </g>
+
+  <!-- Row 2: Monaco -->
+  <g font-size="12">
+    <rect x="40" y="160" width="130" height="60" fill="#14b8a6" opacity="0.3"/>
+    <text x="105" y="194" text-anchor="middle" fill="#5eead4" font-weight="700">Monaco</text>
+    <rect x="170" y="160" width="150" height="60" fill="#1E293B"/>
+    <text x="245" y="194" text-anchor="middle" fill="#CBD5E1">Config-as-code</text>
+    <rect x="320" y="160" width="100" height="60" fill="#1E293B"/>
+    <text x="370" y="194" text-anchor="middle" fill="#22c55e" font-weight="600">Low</text>
+    <rect x="420" y="160" width="100" height="60" fill="#1E293B"/>
+    <text x="470" y="194" text-anchor="middle" fill="#22c55e" font-weight="600">Native</text>
+    <rect x="520" y="160" width="110" height="60" fill="#1E293B"/>
+    <text x="575" y="194" text-anchor="middle" fill="#f59e0b" font-weight="600">Implicit</text>
+    <rect x="630" y="160" width="260" height="60" fill="#1E293B"/>
+    <text x="760" y="194" text-anchor="middle" fill="#CBD5E1">Tenant migration · GitOps</text>
+  </g>
+
+  <!-- Row 3: Terraform -->
+  <g font-size="12">
+    <rect x="40" y="220" width="130" height="60" fill="#8b5cf6" opacity="0.3"/>
+    <text x="105" y="254" text-anchor="middle" fill="#c4b5fd" font-weight="700">Terraform</text>
+    <rect x="170" y="220" width="150" height="60" fill="#1E293B"/>
+    <text x="245" y="254" text-anchor="middle" fill="#CBD5E1">IaC, full-stack</text>
+    <rect x="320" y="220" width="100" height="60" fill="#1E293B"/>
+    <text x="370" y="254" text-anchor="middle" fill="#f59e0b" font-weight="600">Medium</text>
+    <rect x="420" y="220" width="100" height="60" fill="#1E293B"/>
+    <text x="470" y="254" text-anchor="middle" fill="#22c55e" font-weight="600">Native</text>
+    <rect x="520" y="220" width="110" height="60" fill="#1E293B"/>
+    <text x="575" y="254" text-anchor="middle" fill="#22c55e" font-weight="600">Built-in</text>
+    <rect x="630" y="220" width="260" height="60" fill="#1E293B"/>
+    <text x="760" y="254" text-anchor="middle" fill="#CBD5E1">Multi-cloud IaC · state-managed</text>
+  </g>
+
+  <!-- Row 4: Workflows -->
+  <g font-size="12">
+    <rect x="40" y="280" width="130" height="60" fill="#f97316" opacity="0.3"/>
+    <text x="105" y="314" text-anchor="middle" fill="#fdba74" font-weight="700">Workflows</text>
+    <rect x="170" y="280" width="150" height="60" fill="#1E293B"/>
+    <text x="245" y="314" text-anchor="middle" fill="#CBD5E1">Event-driven</text>
+    <rect x="320" y="280" width="100" height="60" fill="#1E293B"/>
+    <text x="370" y="314" text-anchor="middle" fill="#22c55e" font-weight="600">Low</text>
+    <rect x="420" y="280" width="100" height="60" fill="#1E293B"/>
+    <text x="470" y="314" text-anchor="middle" fill="#CBD5E1">N/A</text>
+    <rect x="520" y="280" width="110" height="60" fill="#1E293B"/>
+    <text x="575" y="314" text-anchor="middle" fill="#CBD5E1">N/A</text>
+    <rect x="630" y="280" width="260" height="60" fill="#1E293B"/>
+    <text x="760" y="314" text-anchor="middle" fill="#CBD5E1">Auto-remediation · incident routing</text>
+  </g>
+
+  <!-- Row 5: SDKs -->
+  <g font-size="12">
+    <rect x="40" y="340" width="130" height="60" fill="#3b82f6" opacity="0.3"/>
+    <text x="105" y="374" text-anchor="middle" fill="#93c5fd" font-weight="700">SDKs</text>
+    <rect x="170" y="340" width="150" height="60" fill="#1E293B"/>
+    <text x="245" y="374" text-anchor="middle" fill="#CBD5E1">Custom apps</text>
+    <rect x="320" y="340" width="100" height="60" fill="#1E293B"/>
+    <text x="370" y="374" text-anchor="middle" fill="#f59e0b" font-weight="600">Medium</text>
+    <rect x="420" y="340" width="100" height="60" fill="#1E293B"/>
+    <text x="470" y="374" text-anchor="middle" fill="#22c55e" font-weight="600">Yes</text>
+    <rect x="520" y="340" width="110" height="60" fill="#1E293B"/>
+    <text x="575" y="374" text-anchor="middle" fill="#CBD5E1">Custom</text>
+    <rect x="630" y="340" width="260" height="60" fill="#1E293B"/>
+    <text x="760" y="374" text-anchor="middle" fill="#CBD5E1">Integration apps · bespoke UIs</text>
+  </g>
+
+  <!-- Legend -->
+  <rect x="40" y="420" width="400" height="60" rx="6" fill="#1E293B" stroke="#334155"/>
+  <text x="240" y="444" text-anchor="middle" fill="#F8FAFC" font-size="12" font-weight="700">Learning Curve</text>
+  <circle cx="80" cy="464" r="6" fill="#22c55e"/>
+  <text x="96" y="468" fill="#CBD5E1" font-size="11">Low</text>
+  <circle cx="180" cy="464" r="6" fill="#f59e0b"/>
+  <text x="196" y="468" fill="#CBD5E1" font-size="11">Medium</text>
+  <circle cx="300" cy="464" r="6" fill="#ef4444"/>
+  <text x="316" y="468" fill="#CBD5E1" font-size="11">High / not applicable</text>
+</svg>

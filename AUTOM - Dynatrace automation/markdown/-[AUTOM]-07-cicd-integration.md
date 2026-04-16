@@ -1,6 +1,6 @@
 # CI/CD Integration
 
-> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -85,7 +85,7 @@ By the end of this notebook, you will:
 | 6 | Merge triggers deploy |
 -->
 
-![GitOps Workflow](images/autom-gitops-workflow.png)
+![GitOps Workflow](images/autom-gitops-workflow_930x500.png)
 
 ---
 
