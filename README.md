@@ -25,7 +25,7 @@ Series are grouped into six categories for navigation. An alphabetical index fol
 - **Automation & Workflows** — configuration-as-code and operational workflows
   [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications)
 - **Migrations** — moving to Dynatrace or between Dynatrace environments
-  [M2S](#m2s---managed-to-saas-migration) · [S2S](#s2s---saas-to-saas-migration) · [S2D](#s2d---splunk-to-dynatrace-migration) · [NR2DT](#nr2dt---new-relic-to-dynatrace-migration-steps) · [NRLC](#nrlc---new-relic-to-dynatrace-migration-deep-dives) · [OPMIG](#opmig---openpipeline-migration) · [MZ2POL](#mz2pol---management-zone-to-policy-migration)
+  [M2S](#m2s---managed-to-saas-migration) · [S2S](#s2s---saas-to-saas-migration) · [S2D](#s2d---splunk-to-dynatrace-migration) · [SL2DT](#sl2dt---sumo-logic-to-dynatrace) · [NR2DT](#nr2dt---new-relic-to-dynatrace-migration-steps) · [NRLC](#nrlc---new-relic-to-dynatrace-migration-deep-dives) · [OPMIG](#opmig---openpipeline-migration) · [MZ2POL](#mz2pol---management-zone-to-policy-migration)
 
 ## All Series (A–Z)
 
@@ -294,6 +294,19 @@ Comprehensive guide to migrating between Dynatrace SaaS environments.
 - [S2S-09: Step 9 — Optimize: Cutover Validation and Decommission](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-09-step-9-optimize.md) — Validating the migration, optimizing the target, and decommissioning source
 - [S2S-10: Migration Scripts](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-10-migration-scripts.md) — Reusable Bash and PowerShell scripts for Monaco export and SaaS Upgrade Assistant packaging
 - [S2S-99: Best Practice Summary](S2S%20-%20SaaS%20to%20SaaS%20Migration/markdown/-%5BS2S%5D-99-best-practice-summary.md) — Comprehensive reference of all best practices from the S2S series
+
+### [SL2DT - Sumo Logic to Dynatrace](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/README.md)
+Step-by-step migration path from Sumo Logic to Dynatrace, from strategy and inventory through cutover and decommission.
+- [SL2DT-01: Overview & Migration Strategy](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-01-overview-and-migration-strategy.md) — Migration strategy, mental model, and the five-wave pattern
+- [SL2DT-02: Assessment & Inventory](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-02-assessment-and-inventory.md) — Inventorying Sumo Logic and producing the cut-scope decision artifact
+- [SL2DT-03: Log Ingest Architecture](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-03-log-ingest-architecture.md) — Designing Grail buckets and deploying OneAgent, OTel, and OpenPipeline
+- [SL2DT-04: SumoQL → DQL Translation](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-04-sumoql-to-dql-translation.md) — Translating SumoQL queries, dashboards, and monitor conditions to DQL
+- [SL2DT-05: Monitor & Alert Conversion](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-05-monitor-and-alert-conversion.md) — Rebuilding Sumo Monitors using Anomaly Detection, Workflows, or Metric Events
+- [SL2DT-06: Dashboard Conversion](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-06-dashboard-conversion.md) — Rebuilding in-scope Sumo dashboards in Dynatrace Notebooks and Dashboards
+- [SL2DT-07: User Governance & Access](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-07-user-governance-and-access.md) — Translating Sumo RBAC to Dynatrace Platform IAM groups and policies
+- [SL2DT-08: Automation & GitOps](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-08-automation-and-gitops.md) — CI/CD promotion paths for all migrated configuration via Monaco
+- [SL2DT-09: Cutover, Validation & Decommission](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-09-cutover-validation-decommission.md) — Parallel validation, declaring cutover, and decommissioning Sumo
+- [SL2DT-99: Summary & Runbook Index](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-99-summary-and-runbook-index.md) — Single-page index and reference card for the entire SL2DT series
 
 ### [SPANS - Distributed tracing and spans](SPANS%20-%20Distributed%20tracing%20and%20spans/README.md)
 Guidance for working with distributed traces and spans in Dynatrace.
