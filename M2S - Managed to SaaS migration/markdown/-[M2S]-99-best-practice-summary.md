@@ -149,7 +149,7 @@ Within the upgrade phase, follow this precise execution order:
 | Enable PII masking at ingest | Settings > Request attributes: enable masking on all attributes capturing user input, account numbers, or personal data. Configure session replay masking for RUM. | Critical |
 | Implement Workflows for automation | Replace Managed problem notifications with SaaS Workflow triggers + HTTP Request actions. Recreate custom webhook logic as workflow steps. | Recommended |
 | Right-size data retention for cost optimization | Configure Grail bucket retention by data type. Logs: set retention based on compliance needs. Metrics: leverage the 5-year aggregated retention. Use `bucket:` targeting in queries to limit scan scope. | Recommended |
-| Explore Davis Copilot for AI-assisted analysis | Enable Davis Copilot for natural language querying and root cause analysis. | Optional |
+| Explore Dynatrace Assist for AI-assisted analysis | Enable Dynatrace Assist for natural language querying and root cause analysis. | Optional |
 
 <a id="step-8-enable"></a>
 ## 8. Step 8: Enable — User Enablement and Communication
@@ -169,7 +169,7 @@ Within the upgrade phase, follow this precise execution order:
 
 | Practice | Recommended Setting/Value | Priority |
 |----------|--------------------------|----------|
-| Allow 7–14 days for Davis AI baselines | Response time and error rate baselines: **2–7 days**. Resource usage and traffic patterns: **7–14 days**. Expect higher alert volume during this period—do not disable alerting. | Critical |
+| Allow 7–14 days for Dynatrace Intelligence baselines | Response time and error rate baselines: **2–7 days**. Resource usage and traffic patterns: **7–14 days**. Expect higher alert volume during this period—do not disable alerting. | Critical |
 | Tune alert thresholds after baseline period | After 2 weeks: raise thresholds on noisy alerts, add time-based conditions, lower thresholds on missing alerts. | Recommended |
 | Compare entity counts against inventory | Run `fetch dt.entity.host \| summarize count()` (and service, application, process_group, synthetic_test). Counts must match the planning-phase inventory. | Critical |
 | Verify metrics flow with no gaps >15 minutes | Run `timeseries avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}` and check for nulls. Any host returning null has a data gap. | Critical |

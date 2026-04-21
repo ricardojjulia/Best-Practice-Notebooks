@@ -1,6 +1,6 @@
 # NR2DT-04: Step 4 — Translate
 
-> **Series:** NR2DT | **Notebook:** 4 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 4 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -75,7 +75,7 @@ LOW translations contain TODO markers or are missing entirely. Common causes:
 
 | Cause | Action |
 |-------|--------|
-| `apdex(field, t:N)` | Configure DT Apdex via custom DQL or use Davis SLO |
+| `apdex(field, t:N)` | Configure DT Apdex via custom DQL or use Dynatrace Intelligence SLO |
 | `funnel(...)` | Reformulate as nested `append`/`lookup` chain |
 | `cohort(...)` | No DT equivalent — reformulate the requirement |
 | Custom event type with no source mapping | Add ingest mapping via OpenPipeline first |
@@ -90,11 +90,10 @@ If a query can't be translated and the requirement can't be reformulated, docume
 Tier 1 syntax validation — confirm every DQL parses against the target tenant:
 
 ```bash
-python3 migrate.py validate --file translated-queries.csv \
-    --tier syntax
+python3 migrate.py compile --validate --file translated-queries.csv
 ```
 
-Failures attempt auto-fix (`DQLFixer`) and re-validate. Final report shows pass / fail / fixed-then-passed counts.
+The `--validate` flag on `compile` runs parser-level validation; failures attempt auto-fix (`DQLFixer`) and re-validate. Final report shows pass / fail / fixed-then-passed counts.
 
 **Tier 2 tenant validation** (referenced metrics/entities/buckets exist) runs in Step 8 before each component imports.
 

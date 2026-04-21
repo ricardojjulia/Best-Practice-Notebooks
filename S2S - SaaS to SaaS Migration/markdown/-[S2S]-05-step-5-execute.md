@@ -433,7 +433,7 @@ fetch logs, from:-15m
 ```
 
 ```dql
-// Target tenant: check for Davis problems generated during migration
+// Target tenant: check for detected problems generated during migration
 fetch dt.davis.problems, from:-1h
 | fields display_id, event.name, event.status, event.category
 | sort timestamp desc
@@ -450,7 +450,7 @@ fetch dt.davis.problems, from:-1h
 | Log count > 0 in target | Pass | Log pipeline functional |
 | Span count > 0 in target | Pass | Distributed tracing functional |
 | Metric data present | Pass | Infrastructure monitoring functional |
-| Davis problems from migration | Expected | Review each — suppress if migration-related |
+| detected problems from migration | Expected | Review each — suppress if migration-related |
 | Enrichment tags present | Pass | OpenPipeline rules functional |
 | Enrichment tags missing | Fail | Fix OpenPipeline rules before next wave |
 
@@ -470,7 +470,7 @@ Before proceeding to Step 6 (Integrate), verify all execution tasks are complete
 | **Wave 4: Remaining agents redirected** | ☐ | Platform / Infra | All agents reporting to target |
 | **K8s operators migrated** | ☐ | Platform / K8s | All clusters reporting |
 | **Source ActiveGates stopped** | ☐ | Infra | AG processes stopped (not uninstalled) |
-| **Davis problems reviewed** | ☐ | Platform | Migration-related problems documented |
+| **detected problems reviewed** | ☐ | Platform | Migration-related problems documented |
 | **Host count matches baseline** | ☐ | Platform | Within 5% of pre-migration count |
 
 > **Gate check:** Do not proceed to Step 6 until all agents are reporting to the target tenant and validation queries return expected results. Cloud integrations (Step 6) depend on agents providing entity context.

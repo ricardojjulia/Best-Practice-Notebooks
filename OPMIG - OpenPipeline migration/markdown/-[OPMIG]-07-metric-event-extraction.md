@@ -50,7 +50,7 @@ The Extraction stage runs **after** Processing and **before** Storage. It genera
 | Extraction Type | Output | Use Case |
 |-----------------|--------|----------|
 | Metric Extraction | Metrics (10yr retention) | SLI dashboards, alerts, low cardinality |
-| Event Extraction | Davis AI Events | Root cause analysis, problem detection |
+| Event Extraction | Dynatrace Intelligence Events | Root cause analysis, problem detection |
 | Business Event | Grail Bizevents | Revenue tracking, funnels, analytics |
 -->
 
@@ -60,7 +60,7 @@ The Extraction stage runs **after** Processing and **before** Storage. It genera
 |---------|-------------|
 | **Derived signals** | Create metrics from logs without app changes |
 | **Cost optimization** | Extract metrics, then drop verbose logs |
-| **Davis AI integration** | Generated events feed into AI analysis |
+| **Dynatrace Intelligence integration** | Generated events feed into AI analysis |
 | **Business visibility** | Business events enable analytics dashboards |
 
 ---
@@ -197,7 +197,7 @@ Dimensions: latency_bucket, service.name, endpoint
 
 <a id="event-extraction"></a>
 ## Event Extraction
-Extract events that Davis AI can analyze for root cause analysis.
+Extract events that Dynatrace Intelligence can analyze for root cause analysis.
 
 ### Event Configuration
 
@@ -588,9 +588,9 @@ Option 2: Extract metrics + drop logs
 
 | Practice | Reason |
 |----------|--------|
-| Meaningful event names | Easier to find in Davis AI |
+| Meaningful event names | Easier to find in Dynatrace Intelligence |
 | Descriptive templates | Context for troubleshooting |
-| Appropriate event types | Correct Davis AI handling |
+| Appropriate event types | Correct Dynatrace Intelligence handling |
 | Avoid over-extraction | Too many events = noise |
 
 ### Business Event Extraction
@@ -687,7 +687,7 @@ Now that you can extract metrics and events, continue with:
 - [OpenPipeline Data Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/concepts/data-extraction)
 - [Metric Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/metric-extraction)
 - [Business Event Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/bizevent-extraction)
-- [Davis AI Events](https://docs.dynatrace.com/docs/platform/davis-ai/basics/events)
+- [Dynatrace Intelligence Events](https://docs.dynatrace.com/docs/platform/davis-ai/basics/events)
 
 ---
 

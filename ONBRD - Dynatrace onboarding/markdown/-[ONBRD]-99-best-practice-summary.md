@@ -187,7 +187,7 @@ This notebook consolidates every actionable best practice from the ONBRD series 
 | Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
 | Use Workflows for all alerting | Configure alerts in Automate > Workflows; do not use legacy Alerting Profiles | Critical |
-| Create a Davis problem trigger workflow first | Set trigger to "Davis problem" with event = problem opens; this is the minimum viable alerting setup | Critical |
+| Create a detected problem trigger workflow first | Set trigger to "detected problem" with event = problem opens; this is the minimum viable alerting setup | Critical |
 | Route alerts by team using conditions | Use JavaScript conditions like `event["affected_entity_ids"].some(id => id.includes("checkout"))` to send to team-specific channels | Critical |
 | Create one workflow per team/routing need | Separate workflows per team for independent maintenance and condition tuning | Recommended |
 | Connect Slack via OAuth first | Go to Settings > Integration > Slack and complete OAuth before adding Slack actions to workflows | Recommended |

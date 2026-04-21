@@ -12,7 +12,7 @@ This notebook series provides comprehensive guidance for migrating monitoring ca
 | Source | Target | Coverage |
 |---|--------|----------|
 | Splunk Queries | DQL Queries | S2D-03 |
-| Splunk Alerts | Davis Anomaly Detectors | S2D-04 |
+| Splunk Alerts | Anomaly Detectors | S2D-04 |
 | Splunk Alerts | Workflows | S2D-05 |
 | Splunk Dashboards | Dynatrace Dashboards | S2D-08 |
 | Splunk Indexes | Dynatrace Buckets | S2D-02 |
@@ -45,7 +45,7 @@ By the end of this series, you will be able to:
 
 1. Validate that required log data is available in Dynatrace
 2. Translate SPL queries to DQL
-3. Migrate Splunk alerts to Davis Anomaly Detectors or Workflows
+3. Migrate Splunk alerts to Anomaly Detectors or Workflows
 4. Convert Splunk dashboards to Dynatrace format
 5. Apply consistent naming standards to migrated assets
 6. Request metric extraction for performance-critical queries
@@ -72,7 +72,7 @@ Understanding the fundamental differences between Splunk and Dynatrace is critic
 | **Frequency** | User-defined schedule | Every minute |
 | **Evaluation** | Single point-in-time | Sliding window |
 | **Threshold** | Total over period | Per-minute samples |
-| **Intelligence** | Rule-based | Davis AI-powered |
+| **Intelligence** | Rule-based | Dynatrace Intelligence powered |
 
 <a id="migration-planning"></a>
 ## Migration Planning
@@ -98,7 +98,7 @@ A successful migration follows this general sequence:
 
 ### Phase 4: Alert Migration
 
-1. **Choose alert type** - Davis Anomaly Detector or Workflow
+1. **Choose alert type** - Anomaly Detector or Workflow
 2. **Translate thresholds** - Apply conversion formula
 3. **Configure notifications** - Set up alerting profiles
 
@@ -115,7 +115,7 @@ A successful migration follows this general sequence:
 | **S2D-01** | Getting Started | This notebook - overview and planning |
 | **S2D-02** | Locating Logs | Validating log data availability |
 | **S2D-03** | SPL to DQL | Query translation fundamentals |
-| **S2D-04** | Davis Anomaly Detectors | Translating alerts to continuous monitoring |
+| **S2D-04** | Anomaly Detectors | Translating alerts to continuous monitoring |
 | **S2D-05** | Workflow Alerts | When and how to use workflow-based alerting |
 | **S2D-06** | ArrayMovingSum | Handling extended timeframes (>1 hour) |
 | **S2D-07** | Metric Creation | Creating log metrics via OpenPipeline |
@@ -162,7 +162,7 @@ Continue to **S2D-02: Locating Logs in Dynatrace** to learn the complete process
 ## References
 
 - [Dynatrace DQL Reference](https://docs.dynatrace.com/docs/shortlink/dql-reference)
-- [Davis Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
+- [Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
 - [Dynatrace Workflows](https://docs.dynatrace.com/docs/shortlink/workflows)
 - [Log Management](https://docs.dynatrace.com/docs/shortlink/log-management)
 

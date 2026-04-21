@@ -33,7 +33,7 @@ The most common workflow use case is sending alert notifications to Slack, Micro
 ### How Workflow Notifications Work
 
 ```
-Trigger (Davis Problem, Schedule, etc.)
+Trigger (Detected Problem, Schedule, etc.)
             ↓
     Workflow Executes
             ↓

@@ -27,7 +27,7 @@ Executive dashboards distill complex observability data into a handful of busine
 |-------------|----------|
 | **Dynatrace Environment** | SaaS or Managed with Grail enabled |
 | **Permissions** | `storage:events:read`, `storage:metrics:read`, `storage:spans:read` |
-| **Data** | Davis problems with closed events (for MTTR), service spans |
+| **Data** | detected problems with closed events (for MTTR), service spans |
 | **Prior Reading** | DASH-01 and DASH-02 |
 
 <a id="kpi-selection"></a>
@@ -64,12 +64,12 @@ Selecting the right KPIs is the most important decision in executive dashboard d
 
 Availability is the most commonly requested executive metric. There are several ways to calculate it depending on what "availability" means in your organization.
 
-### Approach 1: Based on Davis Problem Downtime
+### Approach 1: Based on Detected Problem Downtime
 
 Calculate the percentage of time with no AVAILABILITY-category problems.
 
 ```dql
-// Availability based on Davis problem downtime over 7 days
+// Availability based on detected problem downtime over 7 days
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter event.category == "AVAILABILITY"

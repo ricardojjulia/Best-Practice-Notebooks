@@ -4,7 +4,7 @@
 
 ## Overview
 
-With data pipelines, SLOs, and alerting configured in the target tenant (Step 7), this step focuses on the human side of migration: managing parallel operation, communicating changes to stakeholders, establishing Davis AI baselines, and preparing users for the cutover. Parallel operation is the most expensive phase of the migration — you are paying for two tenants — so the goal is to keep it as short as possible while ensuring confidence in the target tenant.
+With data pipelines, SLOs, and alerting configured in the target tenant (Step 7), this step focuses on the human side of migration: managing parallel operation, communicating changes to stakeholders, establishing Dynatrace Intelligence baselines, and preparing users for the cutover. Parallel operation is the most expensive phase of the migration — you are paying for two tenants — so the goal is to keep it as short as possible while ensuring confidence in the target tenant.
 
 > **S2S Migration Journey — 3 Phases / 9 Steps**
 >
@@ -19,7 +19,7 @@ With data pipelines, SLOs, and alerting configured in the target tenant (Step 7)
 ## Table of Contents
 
 1. [Parallel Operation Strategy](#parallel-operation-strategy)
-2. [Davis AI Baseline Establishment](#davis-ai-baseline-establishment)
+2. [Dynatrace Intelligence Baseline Establishment](#davis-ai-baseline-establishment)
 3. [SLO Continuity](#slo-continuity)
 4. [Stakeholder Communication](#stakeholder-communication)
 5. [Cost Management During Parallel Period](#cost-management-during-parallel-period)
@@ -42,14 +42,14 @@ With data pipelines, SLOs, and alerting configured in the target tenant (Step 7)
 
 ## 1. Parallel Operation Strategy
 
-During parallel operation, both the source and target tenants receive monitoring data. This period exists to validate the target tenant, build Davis AI baselines, and give users confidence before cutover.
+During parallel operation, both the source and target tenants receive monitoring data. This period exists to validate the target tenant, build Dynatrace Intelligence baselines, and give users confidence before cutover.
 
 ### Parallel Operation Timeline
 
 | Week | Activity | Key Milestones |
 |------|----------|----------------|
 | **Week 1** | Data validation | Confirm hosts, services, logs, and spans in target match source counts |
-| **Week 2** | Davis learning | Baselines begin forming; initial anomaly detection active |
+| **Week 2** | Dynatrace Intelligence learning | Baselines begin forming; initial anomaly detection active |
 | **Week 3** | SLO evaluation | 7-day rolling SLOs have full data; compare source vs target values |
 | **Week 4** | User acceptance | Key users validate dashboards, workflows, and alerts in target |
 | **Weeks 5–6** | Cutover preparation | Go/no-go decision, communication, maintenance window scheduled |
@@ -107,9 +107,9 @@ fetch logs, from:-24h
 
 <a id="davis-ai-baseline-establishment"></a>
 
-## 2. Davis AI Baseline Establishment
+## 2. Dynatrace Intelligence Baseline Establishment
 
-Davis AI requires historical data to establish baselines for anomaly detection. In the target tenant, Davis starts from zero — there is no way to transfer learned baselines.
+Dynatrace Intelligence requires historical data to establish baselines for anomaly detection. In the target tenant, Dynatrace Intelligence starts from zero — there is no way to transfer learned baselines.
 
 ### Baseline Types and Learning Times
 
@@ -123,30 +123,30 @@ Davis AI requires historical data to establish baselines for anomaly detection. 
 
 ### Accelerating Baseline Learning
 
-You cannot directly speed up Davis learning, but you can reduce noise:
+You cannot directly speed up Dynatrace Intelligence learning, but you can reduce noise:
 
 | Action | Impact |
 |--------|--------|
 | Suppress maintenance alerts during migration | Prevents false positives from polluting baselines |
 | Ensure consistent traffic patterns | Avoid load testing or unusual deployments during baseline period |
 | Configure sensitivity thresholds | Set anomaly detection sensitivity to match source tenant settings |
-| Migrate anomaly detection settings first | Ensures Davis uses the same thresholds from day one |
+| Migrate anomaly detection settings first | Ensures Dynatrace Intelligence uses the same thresholds from day one |
 
 ### Expected Behavior During Baseline Period
 
-| Week | Davis Behavior | Action Required |
+| Week | Dynatrace Intelligence Behavior | Action Required |
 |------|---------------|------------------|
 | Week 1 | Many false positives (no baseline context) | Suppress or route to staging alert channel |
 | Week 2 | Infrastructure baselines forming, fewer false positives | Monitor and triage manually |
-| Week 3 | Service baselines forming, anomaly detection improving | Compare Davis problems with source tenant |
+| Week 3 | Service baselines forming, anomaly detection improving | Compare detected problems with source tenant |
 | Week 4+ | Baselines stable for most metrics | Ready for production alerting |
 
-### Monitor Davis Problem Trends
+### Monitor Detected Problem Trends
 
-Track Davis problem volume in the target tenant to see baselines stabilize over time:
+Track detected problem volume in the target tenant to see baselines stabilize over time:
 
 ```dql
-// Davis problem trend over the last 7 days (target tenant)
+// detected problem trend over the last 7 days (target tenant)
 // Expect high volume in week 1, decreasing as baselines stabilize
 fetch dt.davis.problems, from:-7d
 | summarize problem_count = count(), by:{day = bin(timestamp, 1d)}
@@ -154,7 +154,7 @@ fetch dt.davis.problems, from:-7d
 ```
 
 ```dql
-// Davis problems by category — identify which areas are generating noise
+// detected problems by category — identify which areas are generating noise
 fetch dt.davis.problems, from:-7d
 | filter event.status == "ACTIVE" or event.status == "CLOSED"
 | summarize problem_count = count(), by:{event.category}
@@ -206,7 +206,7 @@ Include this table in your stakeholder communication:
 
 | Area | Impact | Duration | Mitigation |
 |------|--------|----------|------------|
-| **Davis AI** | Increased false positives in target tenant | 2–4 weeks | Alerts routed to staging channel |
+| **Dynatrace Intelligence** | Increased false positives in target tenant | 2–4 weeks | Alerts routed to staging channel |
 | **SLOs** | Incomplete evaluation in target tenant | 1–4 weeks (depends on window) | Dual reporting from both tenants |
 | **Historical data** | Not available in target tenant | Permanent | Source tenant available as read-only during buffer period |
 | **Dashboards** | New URLs, possible layout differences | One-time | User training and URL redirect documentation |
@@ -232,7 +232,7 @@ Parallel operation is expensive. Both tenants consume DPS for every monitored ho
 
 | Strategy | Savings | Risk |
 |----------|---------|------|
-| Shorten parallel period (2 weeks vs 4 weeks) | 50% reduction | Less baseline time for Davis |
+| Shorten parallel period (2 weeks vs 4 weeks) | 50% reduction | Less baseline time for Dynatrace Intelligence |
 | Phased migration (migrate by group) | Only migrated hosts are dual-cost | Longer total timeline |
 | Reduce source tenant data collection | 20–40% on source during parallel | Reduced source visibility |
 | Negotiate temporary parallel licensing | Cost-neutral | Requires account team engagement |
@@ -250,7 +250,7 @@ Users need to know what changes, what stays the same, and where to find things i
 | Persona | Training Focus | Format | Duration |
 |---------|---------------|--------|----------|
 | **Platform admin** | IAM, OpenPipeline, bucket management, API token generation | Hands-on workshop | 2 hours |
-| **SRE** | Dashboards, SLOs, alerting, Davis AI differences | Live demo + Q&A | 1 hour |
+| **SRE** | Dashboards, SLOs, alerting, Dynatrace Intelligence differences | Live demo + Q&A | 1 hour |
 | **Developer** | New tenant URL, notebook access, DQL querying | Self-service guide + office hours | 30 min |
 | **Service desk** | Escalation paths, known issues, FAQ | Runbook update | 30 min |
 
@@ -269,7 +269,7 @@ Users need to know what changes, what stays the same, and where to find things i
 | Question | Answer |
 |----------|--------|
 | Why are my dashboards showing less data? | The target tenant does not have historical data. Data accumulates from the migration date forward. |
-| Why am I getting more alerts than usual? | Davis AI is establishing baselines. False positives are expected for 2–4 weeks. |
+| Why am I getting more alerts than usual? | Dynatrace Intelligence is establishing baselines. False positives are expected for 2–4 weeks. |
 | Where is my old dashboard? | Dashboards have been migrated. Find them at `<target-tenant-url>/ui/dashboards`. |
 | Do I need a new API token? | Yes. All API tokens must be regenerated in the target tenant. |
 | When will SLOs be accurate? | SLOs need one full evaluation window of data. 7-day SLOs: 1 week. 30-day SLOs: 4 weeks. |
@@ -285,7 +285,7 @@ Before proceeding to **Step 9 — Optimize**, confirm that you have completed ea
 | Parallel operation model selected (full, phased, or reference) | [ ] |
 | Host count parity validated between source and target | [ ] |
 | Log and span volumes validated between source and target | [ ] |
-| Davis AI problem trend monitored — false positives decreasing | [ ] |
+| Dynatrace Intelligence problem trend monitored — false positives decreasing | [ ] |
 | SLO continuity strategy documented (temporary window, dual reporting, or holiday) | [ ] |
 | Stakeholder communication sent to all audiences | [ ] |
 | Cost optimization negotiated with account team | [ ] |
@@ -310,7 +310,7 @@ Before proceeding to **Step 9 — Optimize**, confirm that you have completed ea
 In Step 8, you:
 
 - Established a parallel operation strategy with a clear timeline (weeks 1–9+)
-- Monitored Davis AI baseline establishment and tracked false positive trends
+- Monitored Dynatrace Intelligence baseline establishment and tracked false positive trends
 - Documented SLO continuity strategy for the transition period
 - Communicated migration impact to all stakeholder audiences
 - Optimized cost during the dual-tenant parallel period
@@ -318,7 +318,7 @@ In Step 8, you:
 
 ### Additional Resources
 
-- [Davis AI Anomaly Detection](https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection)
+- [Dynatrace Intelligence Anomaly Detection](https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection)
 - [SLO Configuration](https://docs.dynatrace.com/docs/observe-and-explore/service-level-objectives)
 - [Dynatrace Notifications and Alerting](https://docs.dynatrace.com/docs/observe-and-explore/notifications-and-alerting)
 - [DPS Licensing](https://docs.dynatrace.com/docs/manage/subscription)

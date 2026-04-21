@@ -79,7 +79,7 @@ The S2S series follows a **9-step framework** (Discover through Optimize) suppor
 | 4 | Plan for entity ID changes | Entity IDs (HOST-xxx, SERVICE-xxx) are tenant-specific and will change; identify every dashboard, SLO, and alert that hardcodes an entity ID | **Critical** |
 | 5 | Document the 90/10 manual items | 90% of config migrates automatically; budget 90% of your effort for the remaining 10% — entity ID remapping, integration repointing, IAM redesign, credential recreation | **Critical** |
 | 6 | Build a comprehensive endpoint inventory | Document every agent URL, API call, webhook, and integration endpoint that references the source tenant URL | **Critical** |
-| 7 | Triage Davis problems before migration | Active problems (especially frequent/duplicate events) carry noise to the target tenant; suppress or tune anomaly detection for sources with >500 active problems | **Critical** |
+| 7 | Triage detected problems before migration | Active problems (especially frequent/duplicate events) carry noise to the target tenant; suppress or tune anomaly detection for sources with >500 active problems | **Critical** |
 | 8 | Identify configuration debt to leave behind | Catalog stale maintenance windows, disabled notification rules, inactive synthetic monitors, unused management zones — do not migrate these | **Critical** |
 | 9 | Inventory Extensions 2.0 separately | Extensions cannot be exported via Monaco or Terraform; list all extensions and plan for manual reinstallation from the Dynatrace Hub | **Recommended** |
 | 10 | Audit configuration changes from last 30 days | Query audit logs to identify recently changed settings that may not be in your last export | **Recommended** |
@@ -91,13 +91,13 @@ The S2S series follows a **9-step framework** (Discover through Optimize) suppor
 
 | # | Best Practice | Recommended Setting/Value | Priority |
 |---|--------------|---------------------------|----------|
-| 11 | Choose phased approach for environments with >500 hosts | Migrate dev first (weeks 1-2), staging (weeks 3-4), production (weeks 5-6); gives Davis AI time to build baselines | **Critical** |
+| 11 | Choose phased approach for environments with >500 hosts | Migrate dev first (weeks 1-2), staging (weeks 3-4), production (weeks 5-6); gives Dynatrace Intelligence time to build baselines | **Critical** |
 | 12 | Define success criteria before starting | Document measurable targets: host count parity, service count parity, log volume parity, SLO evaluation accuracy, alerting coverage | **Critical** |
 | 13 | Engage your account team for licensing early | Contact Dynatrace to discuss temporary parallel licensing; negotiate before the migration window opens | **Critical** |
-| 14 | Plan a 2-4 week parallel operation period | Historical data does not migrate; parallel is the only path to data continuity and Davis AI baseline stability | **Critical** |
+| 14 | Plan a 2-4 week parallel operation period | Historical data does not migrate; parallel is the only path to data continuity and Dynatrace Intelligence baseline stability | **Critical** |
 | 15 | Establish a configuration freeze window | No settings modifications in the source tenant during cutover; communicate freeze dates to all teams | **Critical** |
 | 16 | Migrate multi-source consolidations sequentially | Complete Source 1 → validate → Source 2 → validate; never migrate two sources in parallel; migrate the simpler source first (non-K8s before K8s) | **Critical** |
-| 17 | Align migration timing with stable traffic periods | Avoid holidays, sales events, or other atypical traffic patterns that would distort Davis AI baselines | **Recommended** |
+| 17 | Align migration timing with stable traffic periods | Avoid holidays, sales events, or other atypical traffic patterns that would distort Dynatrace Intelligence baselines | **Recommended** |
 | 18 | Expect the 90/10 rule | 90% of config migrates automatically; budget 90% of effort for the remaining 10% | **Critical** |
 | 19 | Prepare a rollback plan | Document how to revert agents to the source tenant if issues arise during cutover | **Recommended** |
 
@@ -213,11 +213,11 @@ The S2S series follows a **9-step framework** (Discover through Optimize) suppor
 | # | Best Practice | Recommended Setting/Value | Priority |
 |---|--------------|---------------------------|----------|
 | 84 | Run parallel operation for 2-4 weeks minimum | Historical data does not migrate; parallel is the only path to continuity | **Critical** |
-| 85 | Allow 7-14 days for Davis AI baselines to stabilize | Availability: 2-3 days; response time and error rate: 1-2 weeks; resource utilization: 2-4 weeks (full business cycle) | **Critical** |
+| 85 | Allow 7-14 days for Dynatrace Intelligence baselines to stabilize | Availability: 2-3 days; response time and error rate: 1-2 weeks; resource utilization: 2-4 weeks (full business cycle) | **Critical** |
 | 86 | Use phased parallel model to control cost | Migrate agents in waves so you never run 2x host units simultaneously; expect 1.1-1.5x cost | **Critical** |
 | 87 | Communicate to all personas | Engineering teams: 4 weeks before cutover; SRE/on-call: 2 weeks before; executives: weekly status | **Critical** |
 | 88 | Communicate the SLO baseline gap to stakeholders | SLOs start at 0% in the target and accumulate data over 7-30 days depending on evaluation window | **Critical** |
-| 89 | Warn about Davis AI false positives | Baselines are relearning during first 2-4 weeks; expect noisy alerting until stabilized | **Recommended** |
+| 89 | Warn about Dynatrace Intelligence false positives | Baselines are relearning during first 2-4 weeks; expect noisy alerting until stabilized | **Recommended** |
 | 90 | Negotiate dual licensing with Dynatrace | Contact your account team to discuss temporary parallel licensing to reduce cost | **Recommended** |
 | 91 | Configure SCIM provisioning for the target tenant | Set new SCIM URL and token; users sync automatically on first login | **Recommended** |
 | 92 | Export problem history before decommission | Problem history cannot migrate; export critical incidents as documentation for post-mortem reference | **Recommended** |
@@ -242,7 +242,7 @@ The S2S series follows a **9-step framework** (Discover through Optimize) suppor
 | 103 | Remove SAML/SSO application from IdP for source tenant | Eliminates stale IdP configuration and prevents confusion | **Recommended** |
 | 104 | Export final audit logs from source before decommission | Compliance requires audit trail retention; export before access is lost | **Critical** |
 | 105 | Update all documentation | Replace source tenant URLs, API endpoints, and dashboard links in runbooks, CI/CD pipelines, and architecture diagrams | **Critical** |
-| 106 | Tune Davis AI anomaly detection during weeks 1-2 post-cutover | Suppress known false positives; adjust sensitivity for noisy services | **Critical** |
+| 106 | Tune Dynatrace Intelligence anomaly detection during weeks 1-2 post-cutover | Suppress known false positives; adjust sensitivity for noisy services | **Critical** |
 | 107 | Expand SLO evaluation windows to full duration by week 4 | Move from `ROLLING_3_DAYS` to `ROLLING_WEEK` to `ROLLING_MONTH` as data accumulates | **Recommended** |
 | 108 | Consolidate redundant Synthetic monitors | If consolidating tenants, deduplicate monitors that tested the same endpoints from different tenants | **Optional** |
 | 109 | Replace all remaining entity ID references | Post-migration cleanup ensures configuration is fully portable for future migrations | **Recommended** |

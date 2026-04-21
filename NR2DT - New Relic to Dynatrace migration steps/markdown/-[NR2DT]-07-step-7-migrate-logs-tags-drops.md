@@ -1,6 +1,6 @@
 # NR2DT-07: Step 7 — Migrate Logs, Tags & Drop Rules
 
-> **Series:** NR2DT | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -33,8 +33,8 @@ Procedural — see **NRLC-07** (Logs, Tags & Drop Rules) for component depth.
 ## 1. Apply OpenPipeline Configuration
 
 ```bash
-python3 migrate.py --diff --components logs,drops,parsing,tags
-python3 migrate.py --import-only --components logs,drops,parsing,tags
+python3 migrate.py migrate --diff --components logs,drops,parsing,tags
+python3 migrate.py migrate --import-only --components logs,drops,parsing,tags
 ```
 
 This applies:

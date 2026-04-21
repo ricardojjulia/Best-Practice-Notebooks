@@ -578,9 +578,9 @@ With the base deployment complete, these additional configurations maximize the 
 |----------|---------------|-----------------|------------|
 | **High** | OpenPipeline log routing | Route logs to buckets by namespace, set retention tiers | OPLOGS series |
 | **High** | Custom Grail buckets | Separate retention for prod vs. non-prod, compliance data | ORGNZ-02 |
-| **High** | Davis anomaly detectors | Automated baseline alerting for CPU, memory, pod restarts | K8S-09 |
+| **High** | anomaly detectors | Automated baseline alerting for CPU, memory, pod restarts | K8S-09 |
 | **Medium** | Kubernetes dashboards | Cluster health overview, workload summary, namespace drill-down | DASH series |
-| **Medium** | Alerting workflows | Davis problem → Slack, Teams, PagerDuty, Jira | WFLOW series |
+| **Medium** | Alerting workflows | detected problem → Slack, Teams, PagerDuty, Jira | WFLOW series |
 | **Medium** | Prometheus scraping | Collect custom app metrics via pod annotations | K8S-13 |
 | **Low** | Multi-cluster federation | Unified view across dev/staging/prod clusters | K8S-04 |
 | **Low** | GitOps DynaKube management | Version-control DynaKube CR with ArgoCD or Flux | K8S-03 |

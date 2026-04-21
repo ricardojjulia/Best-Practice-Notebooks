@@ -70,7 +70,7 @@
 | Auto-translating LOW silently | DT alert fires/doesn't fire when NR's equivalent did the opposite | Set translator threshold; require manual triage |
 | Cutting over alerts without dual-alert window | On-call surprises in week 2 | Make 1–2 week dual-alert non-negotiable |
 | Migrating notification channels but not rotating secrets | Migrated webhooks fail silently | Document secret rotation as part of Wave 3 |
-| Trying to make DT behave like NR | Endless customization debt | Adopt DT patterns (Workflows, OpenPipeline, Davis) |
+| Trying to make DT behave like NR | Endless customization debt | Adopt DT patterns (Workflows, OpenPipeline, Dynatrace Intelligence) |
 | Single host group everywhere | Can't set per-environment thresholds | See USFOODS-G.01 — plan host grouping in Step 3 |
 | Default bucket as permanent destination | Compliance + cost + IAM all suffer | See USFOODS-G.02 — plan buckets in Step 3 |
 | Skipping SLO 7-day delta check | Compliance reporting drifts post-cutover | Run `audit-slos` before declaring Wave 4 done |

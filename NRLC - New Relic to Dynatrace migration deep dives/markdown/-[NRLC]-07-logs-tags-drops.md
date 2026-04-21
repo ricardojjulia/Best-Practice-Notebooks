@@ -252,16 +252,16 @@ Continue to **NRLC-08 Validation, Diff & Rollback** for the verification layer.
 
 ```bash
 # 1. Inventory NR log forwarding configs, drop rules, parsing rules, tags
-python3 migrate.py --export-only --components logs,drops,parsing,tags --output ./logs-export
+python3 migrate.py migrate --export-only --components logs,drops,parsing,tags --output ./logs-export
 
 # 2. Translate (Grok → DPL; tag rules → OpenPipeline enrichments; drops → OpenPipeline filters)
-python3 migrate.py --transform-only --components logs,drops,parsing,tags --report
+python3 migrate.py migrate --transform-only --components logs,drops,parsing,tags --report
 
 # 3. Diff
-python3 migrate.py --diff --components logs,drops,parsing,tags
+python3 migrate.py migrate --diff --components logs,drops,parsing,tags
 
 # 4. Apply OpenPipeline configurations to DT tenant
-python3 migrate.py --import-only --components logs,drops,parsing,tags
+python3 migrate.py migrate --import-only --components logs,drops,parsing,tags
 
 # 5. Reconfigure log forwarders (Filebeat / Fluent Bit / Lambda extension) to point at DT
 # 6. Dual-ship for 1–2 weeks; compare volume and confirm drops working

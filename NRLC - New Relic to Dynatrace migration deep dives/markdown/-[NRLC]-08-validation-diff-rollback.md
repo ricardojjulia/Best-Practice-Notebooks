@@ -1,6 +1,6 @@
 # NRLC-08: Validation, Diff & Rollback
 
-> **Series:** NRLC | **Notebook:** 8 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC | **Notebook:** 8 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -123,11 +123,10 @@ Both platforms produce numbers from the same underlying world. Validate they agr
 
 ### Comparison Tooling
 
-The `Dynatrace-NewRelic` CLI includes `migrate.py compare`:
+The `Dynatrace-NewRelic` CLI includes `migrate.py audit`, which drives the drift-audit comparison against a captured baseline:
 
 ```bash
-python3 migrate.py compare --nrql "SELECT count(*) FROM Transaction" \
-    --window 1h --tolerance 0.05
+python3 migrate.py audit --baseline baseline-counts.json
 ```
 
 Output:
@@ -137,6 +136,8 @@ NR result:  count = 4823
 DT result:  count = 4798
 Delta:      0.52%  ✅ within tolerance
 ```
+
+> The baseline file is produced by a prior export + capture step; the audit command compares current DT output against the baseline values.
 
 ### Tolerance by Artifact Type
 
@@ -158,7 +159,7 @@ Before importing migrated artifacts, diff them against what already exists in th
 - Recreating notifications when an existing one matches
 
 ```bash
-python3 migrate.py --diff --components dashboards,alerts
+python3 migrate.py migrate --diff --components dashboards,alerts
 ```
 
 Output classifies each migrated entity:
@@ -171,7 +172,7 @@ Output classifies each migrated entity:
 | `DUPLICATE_NAME` | Different entity with same name — rename or skip |
 | `MIGRATION_TAG_MATCH` | Already migrated by a previous run — update or skip |
 
-Always run `--diff` in dry-run before any `--full` import.
+Always run `migrate --diff` in dry-run before any full import.
 
 <a id="rollback"></a>
 ## 6. Rollback Manifests
@@ -198,7 +199,7 @@ Every migration run generates a **rollback manifest** — a JSON record of every
 ### Rollback Command
 
 ```bash
-python3 migrate.py --rollback --manifest run-2026-04-14.json
+python3 migrate.py migrate --rollback run-2026-04-14.json
 ```
 
 The rollback:
@@ -216,7 +217,7 @@ The rollback:
 After each migration phase, generate a quality report:
 
 ```bash
-python3 migrate.py --report --output report.html
+python3 migrate.py migrate --report --output report.html
 ```
 
 Report sections:

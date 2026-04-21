@@ -465,7 +465,7 @@ npx -y @dynatrace-oss/dynatrace-mcp-server@latest
 |------------|-------------|
 | **DQL Queries** | Execute DQL queries against Grail |
 | **Entity Discovery** | Find and explore entities by name or type |
-| **Problem Analysis** | Retrieve Davis problems and events |
+| **Problem Analysis** | Retrieve detected problems and events |
 | **Event Ingestion** | Send custom events into Grail |
 | **Natural Language** | AI assistants translate prompts to DQL |
 

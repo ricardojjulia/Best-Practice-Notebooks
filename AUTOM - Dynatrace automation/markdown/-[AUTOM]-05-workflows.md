@@ -50,7 +50,7 @@ By the end of this notebook, you will:
 | **Native Integration** | Direct access to all Dynatrace data |
 | **No Infrastructure** | No external systems to manage |
 | **Event-Driven** | React to problems, alerts, schedules |
-| **Context-Aware** | Full Davis AI context available |
+| **Context-Aware** | Full Dynatrace Intelligence context available |
 | **Secure** | Credentials stored in Dynatrace vault |
 
 ### Common Use Cases
@@ -84,7 +84,7 @@ By the end of this notebook, you will:
 
 | Trigger Type | Description | Example |
 |--------------|-------------|----------|
-| **Problem** | Davis problem event | Availability issue detected |
+| **Problem** | detected problem event | Availability issue detected |
 | **Event** | Custom or ingest event | Deployment completed |
 | **Schedule** | Time-based (cron) | Daily at 9 AM |
 | **Manual** | User-initiated | On-demand execution |
@@ -324,7 +324,7 @@ tasks:
       connection: servicenow-prod
       short_description: "Dynatrace: {{ event().title }}"
       description: |
-        Problem detected by Dynatrace Davis AI
+        Problem detected by Dynatrace Dynatrace Intelligence
         
         Title: {{ event().title }}
         Severity: {{ event().severity }}

@@ -217,7 +217,7 @@ Many EKS users start with CloudWatch Container Insights. Here is how it compares
 | **Setup complexity** | AWS-native, minimal | DynaKube operator deployment |
 | **Metric granularity** | 1-minute | 10-60 seconds |
 | **Distributed tracing** | X-Ray integration | Built-in PurePath |
-| **AI-powered root cause** | Basic alarms | Davis AI automatic root cause |
+| **AI-powered root cause** | Basic alarms | Dynatrace Intelligence automatic root cause |
 | **Code-level visibility** | None | Full (method-level) |
 | **Log analysis** | CloudWatch Logs Insights | Grail-powered DQL |
 | **Cost model** | Per metric, per log GB | DPS/DDU-based |

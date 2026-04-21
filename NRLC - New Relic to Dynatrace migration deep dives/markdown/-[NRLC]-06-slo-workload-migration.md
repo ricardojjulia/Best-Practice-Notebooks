@@ -1,6 +1,6 @@
 # NRLC-06: SLO & Workload Migration
 
-> **Series:** NRLC | **Notebook:** 6 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC | **Notebook:** 6 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -155,14 +155,16 @@ SELECT percentage(count(*), WHERE duration < 0.5) FROM Transaction
 
 The `Dynatrace-NewRelic` project includes an **SLO auditor** (`registry/SLOAuditor`) that validates SLO math equivalence:
 
-1. For each migrated SLO, run the original NRQL against NR for the past 7 days — capture SLI value.
+1. For each migrated SLO, run the original NRQL against NR — capture SLI value.
 2. Run the converted DQL against DT for the same window — capture SLI value.
-3. Compute delta. Pass if `|nr_sli - dt_sli| < 0.5%`.
+3. Compute delta. Pass if within configured tolerance (defaults set inside the auditor).
 4. Fail if delta exceeds tolerance — emit a diff report showing per-window values.
 
 ```bash
-python3 migrate.py audit-slos --window 7d --tolerance 0.005
+python3 migrate.py audit-slos
 ```
+
+> Note: the window and tolerance are set inside the auditor configuration, not via CLI flags. Tune those in the project's audit config rather than on the command line.
 
 Output:
 
@@ -175,7 +177,7 @@ SLO: Checkout Availability
 SLO: Search Latency p95
   NR SLI:  98.10%
   DT SLI:  97.20%
-  Delta:    0.90%  ❌ FAIL (tolerance 0.5%)
+  Delta:    0.90%  ❌ FAIL (exceeds configured tolerance)
   → see slo-diff-report.json for per-window analysis
 ```
 
@@ -237,19 +239,19 @@ Continue to **NRLC-07 Logs, Tags & Drop Rules**.
 
 ```bash
 # 1. Inventory NR SLOs and Workloads
-python3 migrate.py --export-only --components slos,workloads --output ./slo-export
+python3 migrate.py migrate --export-only --components slos,workloads --output ./slo-export
 
 # 2. Translate metric expressions; emit SLO + OpenPipeline enrichment definitions
-python3 migrate.py --transform-only --components slos,workloads --report
+python3 migrate.py migrate --transform-only --components slos,workloads --report
 
 # 3. Diff
-python3 migrate.py --diff --components slos,workloads
+python3 migrate.py migrate --diff --components slos,workloads
 
 # 4. Import
-python3 migrate.py --import-only --components slos,workloads
+python3 migrate.py migrate --import-only --components slos,workloads
 
-# 5. Run 7-day SLI delta validation (Pass: |NR SLI - DT SLI| < 0.5%)
-python3 migrate.py audit-slos --window 7d --tolerance 0.005
+# 5. Run SLO math-equivalence audit (window + tolerance configured in auditor config)
+python3 migrate.py audit-slos
 ```
 
 **SLO auditor output:**

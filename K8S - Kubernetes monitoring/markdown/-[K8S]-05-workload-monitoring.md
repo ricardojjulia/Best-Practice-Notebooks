@@ -285,9 +285,9 @@ fetch logs, from:-1h
 | **Error Storm** | Rapid error increase | Dependency failure |
 | **Latency Degradation** | Increasing response time | Resource contention |
 
-### Davis AI for Workloads
+### Dynatrace Intelligence for Workloads
 
-Dynatrace Davis AI automatically detects:
+Dynatrace Dynatrace Intelligence automatically detects:
 - Response time degradation
 - Error rate increases
 - Resource saturation

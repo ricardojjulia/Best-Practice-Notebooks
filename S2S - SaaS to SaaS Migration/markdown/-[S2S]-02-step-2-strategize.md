@@ -217,9 +217,9 @@ This is the single biggest difference between S2S and M2S. In a Managed-to-SaaS 
 
 > **Best Practice:** Before migration, refactor any configuration that references entity IDs to use tags, naming patterns, or properties instead. This makes migration significantly simpler.
 
-### Davis AI Baselines
+### Dynatrace Intelligence Baselines
 
-Davis AI learns normal behavior from historical data. In a new tenant, it starts from scratch.
+Dynatrace Intelligence learns normal behavior from historical data. In a new tenant, it starts from scratch.
 
 | Baseline Type | Time to Establish | Notes |
 |--------------|-------------------|-------|
@@ -235,7 +235,7 @@ Both tenants are cloud-hosted, which makes parallel operation easier than M2S bu
 | Consideration | Detail |
 |---------------|--------|
 | **Double licensing** | Both tenants consume DPS during parallel period — coordinate with Dynatrace account team |
-| **Duration** | 2-4 weeks minimum for Davis AI baselines; longer for complex environments |
+| **Duration** | 2-4 weeks minimum for Dynatrace Intelligence baselines; longer for complex environments |
 | **Agent dual-reporting** | OneAgent cannot report to two tenants — use phased waves, not dual-send |
 | **Cloud integrations** | Can point at both tenants simultaneously (separate credentials) |
 
@@ -249,7 +249,7 @@ Both tenants are cloud-hosted, which makes parallel operation easier than M2S bu
 | **API tokens** | Secrets, cannot be exported | Create new tokens in target |
 | **OAuth client secrets** | Secrets, cannot be exported | Create new OAuth clients in target |
 | **Historical data** | Stored in source tenant Grail | Accept data gap or extend parallel period |
-| **Davis AI baselines** | Learned from source data | Allow 2-4 weeks to retrain in target |
+| **Dynatrace Intelligence baselines** | Learned from source data | Allow 2-4 weeks to retrain in target |
 | **Problem history** | Stored in source tenant | Export key problems as documentation |
 | **Extensions 2.0** | Neither Monaco nor Terraform supports Extensions 2.0 | Manual reinstall from Dynatrace Hub |
 
@@ -304,7 +304,7 @@ Every migration carries risk. The goal is not to eliminate risk but to identify,
 |------|--------|------------|------------|
 | **Entity ID remapping failures** | High | High | Refactor configs to use tags/names before migration; validate entity references post-import |
 | **Data gaps during cutover** | High | Medium | Use phased approach; minimize per-wave gap to < 15 minutes |
-| **Davis AI false positives** | Medium | High | Communicate baseline learning period to on-call teams; suppress non-critical alerts for 2-4 weeks |
+| **Dynatrace Intelligence false positives** | Medium | High | Communicate baseline learning period to on-call teams; suppress non-critical alerts for 2-4 weeks |
 | **Configuration drift** | Medium | Medium | Freeze source tenant changes during migration; use Monaco manifest for consistent exports |
 | **Integration failures** | High | Medium | Test all webhooks and APIs in target before cutover; verify endpoints and tokens |
 | **Rollback complexity** | High | Low | Document rollback procedure; keep source tenant active during entire parallel period |
@@ -341,7 +341,7 @@ Define measurable success criteria before migration starts. These criteria deter
 | **Integration success** | 100% of external integrations operational | Test each webhook, API, and ITSM connection |
 | **User access** | All users can authenticate via SSO | Verify SSO login for each role/group |
 | **SLO accuracy** | All SLOs evaluating correctly | Confirm metric expressions resolve with target entity IDs |
-| **Baseline established** | Davis AI baseline period complete (2-4 weeks) | Confirm Davis is generating problems correctly — no excessive false positives |
+| **Baseline established** | Dynatrace Intelligence baseline period complete (2-4 weeks) | Confirm Dynatrace Intelligence is generating problems correctly — no excessive false positives |
 
 ```dql
 // Post-migration validation — compare host count to your discovery inventory
@@ -351,7 +351,7 @@ fetch dt.entity.host
 ```
 
 ```dql
-// Post-migration validation — check for recent Davis problems (confirms AI baseline is building)
+// Post-migration validation — check for recent detected problems (confirms AI baseline is building)
 fetch dt.davis.problems, from:-24h
 | summarize problemCount = count(), by:{event.status}
 | sort problemCount desc
@@ -371,7 +371,7 @@ Build your timeline working backward from the desired source tenant decommission
 | **Prepare** (Step 4) | 1-2 weeks | Target tenant provisioning, ActiveGate deployment, network validation |
 | **Execute** (Step 5) | 1-3 weeks | Config migration + OneAgent redirect (per wave for phased) |
 | **Integrate** (Step 6) | 1-2 weeks | Cloud integrations, webhooks, ITSM reconnection |
-| **Parallel operation** | 2-4 weeks | Both tenants running — critical for Davis AI baselines |
+| **Parallel operation** | 2-4 weeks | Both tenants running — critical for Dynatrace Intelligence baselines |
 | **Run** (Steps 7-9) | 2-4 weeks | Expand coverage, enable new features, optimize |
 | **Total** | **4-12 weeks** | Depends on environment size and approach |
 
@@ -383,7 +383,7 @@ Build your timeline working backward from the desired source tenant decommission
 | **Phased by Env** | Plan + Prepare | Dev wave | Staging wave | Prod wave | Parallel + Decommission |
 | **Phased by Region** | Plan + Prepare | Region 1 | Region 2 | Region 3 | Parallel + Decommission |
 
-> **Important:** The parallel operation period is non-negotiable. Davis AI needs 2-4 weeks to build baselines in the target tenant before you can trust its problem detection. Do not decommission the source tenant until baselines are established.
+> **Important:** The parallel operation period is non-negotiable. Dynatrace Intelligence needs 2-4 weeks to build baselines in the target tenant before you can trust its problem detection. Do not decommission the source tenant until baselines are established.
 
 ### Migration Plan Checklist
 
@@ -490,7 +490,7 @@ In this notebook, you:
 - Reviewed the three-phase, nine-step migration framework adapted for SaaS-to-SaaS
 - Selected a migration approach based on your environment size and risk tolerance
 - Documented the 11-step order of operations and critical dependencies
-- Assessed S2S-specific considerations including entity ID changes, Davis AI baselines, and parallel operation costs
+- Assessed S2S-specific considerations including entity ID changes, Dynatrace Intelligence baselines, and parallel operation costs
 - Completed a risk register with S2S-specific mitigations and owners
 - Defined measurable success criteria for migration completion
 - Built a timeline with milestone durations

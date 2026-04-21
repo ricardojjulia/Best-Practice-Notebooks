@@ -43,7 +43,7 @@ Dynatrace Workflows is the automation engine that enables event-driven automatio
 ### Key Benefits
 
 - **No Infrastructure** - Runs in Dynatrace, no external servers needed
-- **Event-Driven** - Triggers on Davis problems, metric events, schedules
+- **Event-Driven** - Triggers on detected problems, metric events, schedules
 - **Low-Code + Code** - Visual builder with JavaScript option
 - **Secure** - Built-in secrets management, RBAC, audit logs
 - **Observable** - Execution history, metrics, debugging
@@ -64,9 +64,9 @@ Dynatrace offers multiple automation approaches. When should you use Workflows?
 
 | Legacy Alerting | Workflow Equivalent |
 |-----------------|---------------------|
-| Problem notification → Email | Davis Problem trigger → Email task |
-| Problem notification → Webhook | Davis Problem trigger → HTTP Request task |
-| Custom integration | Davis Problem trigger → JavaScript + HTTP |
+| Problem notification → Email | Detected Problem trigger → Email task |
+| Problem notification → Webhook | Detected Problem trigger → HTTP Request task |
+| Custom integration | Detected Problem trigger → JavaScript + HTTP |
 
 > **Recommendation:** New implementations should use Workflows. Legacy alerting profiles will eventually be deprecated.
 
@@ -80,8 +80,8 @@ What starts the workflow:
 
 | Trigger Type | Starts When | Use Case |
 |--------------|-------------|----------|
-| **Davis Problem** | Davis AI detects a problem | Alert notifications |
-| **Davis Event** | Metric threshold breached | Capacity alerts |
+| **Detected Problem** | Dynatrace Intelligence detects a problem | Alert notifications |
+| **Detected Event** | Metric threshold breached | Capacity alerts |
 | **Schedule** | Cron expression matches | Daily reports |
 | **On-Demand** | Manual execution or API call | Testing, ad-hoc runs |
 | **Event Trigger** | Custom/business event ingested | Business process automation |
@@ -126,7 +126,7 @@ Dynamic values using Jinja2 syntax:
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description | Examples |
 |-------|-------------|----------|
-| Trigger | Event that starts workflow | Davis Problem, Schedule, On-Demand |
+| Trigger | Event that starts workflow | Detected Problem, Schedule, On-Demand |
 | Tasks | Actions to execute | Slack, HTTP, JavaScript, DQL |
 | Conditions | Logic to control flow | Severity checks, boolean expressions |
 | Results | Capture output | SUCCEEDED, FAILED, TIMED_OUT |

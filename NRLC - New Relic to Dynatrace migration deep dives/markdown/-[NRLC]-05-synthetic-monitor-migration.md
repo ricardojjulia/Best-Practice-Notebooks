@@ -1,6 +1,6 @@
 # NRLC-05: Synthetic Monitor Migration
 
-> **Series:** NRLC | **Notebook:** 5 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC | **Notebook:** 5 of 9 | **Created:** April 2026 | **Last Updated:** 04/20/2026
 
 ## Overview
 
@@ -41,12 +41,15 @@ Synthetic monitors don't contain NRQL queries, so there's no translation context
 ### Public location lookup (run at migration time)
 
 ```bash
-# Cache DT public location IDs into the transformer's lookup table
-curl -H "Authorization: Api-Token $DT_TOKEN" \
+# Cache DT public location IDs into the transformer's lookup table.
+# Match the Authorization scheme to your token prefix:
+#   dt0s16.* / dt0s01.* (Platform Token) → Bearer
+#   dt0c01.*             (Classic token) → Api-Token
+curl -H "Authorization: Bearer $DT_TOKEN" \
   https://<tenant>.live.dynatrace.com/api/v2/synthetic/locations
 ```
 
-Public location IDs are tenant-specific; the transformer queries on first run and caches.
+Public location IDs are tenant-specific; the transformer queries on first run and caches. The Dynatrace-NewRelic `migrate.py` tool auto-selects the correct scheme based on the token prefix — the scheme only matters when you run raw `curl` as above.
 
 ### Credential migration checklist
 
@@ -205,16 +208,16 @@ Continue to **NRLC-06 SLO & Workload Migration** for service-level migration.
 
 ```bash
 # 1. Inventory NR synthetic monitors (Ping, Browser, API, Step)
-python3 migrate.py --export-only --components synthetics --output ./synthetics-export
+python3 migrate.py migrate --export-only --components synthetics --output ./synthetics-export
 
 # 2. Transform (auto-converts Ping/Browser/API; stubs Step monitors)
-python3 migrate.py --transform-only --components synthetics --report
+python3 migrate.py migrate --transform-only --components synthetics --report
 
 # 3. Diff against existing DT synthetics
-python3 migrate.py --diff --components synthetics
+python3 migrate.py migrate --diff --components synthetics
 
 # 4. Import
-python3 migrate.py --import-only --components synthetics
+python3 migrate.py migrate --import-only --components synthetics
 
 # 5. Re-enter credentials in the DT credentials vault
 # 6. Validate via DT UI: confirm first scheduled run executes successfully

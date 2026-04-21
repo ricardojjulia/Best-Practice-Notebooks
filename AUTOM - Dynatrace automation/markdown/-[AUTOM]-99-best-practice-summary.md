@@ -117,7 +117,7 @@ Use this as a checklist when designing, implementing, or auditing Dynatrace conf
 | Route errors to a handler task | Define `on_error: error_handler` tasks that send Slack/Teams notifications on failure. | Recommended |
 | Validate entity type before remediation | Check `entity.type` in a JavaScript task before executing remediation (e.g., only restart `PROCESS_GROUP_INSTANCE`, not hosts). | Recommended |
 | Debounce flapping alerts | Add delays or deduplication checks for alerts that open/close rapidly. | Recommended |
-| Use manual triggers for testing | Test workflow logic with manual triggers before enabling Davis-problem triggers. | Recommended |
+| Use manual triggers for testing | Test workflow logic with manual triggers before enabling detected-problem triggers. | Recommended |
 | Log all remediation actions | Ensure every auto-remediation action writes to the Dynatrace audit trail and comments on the originating problem. | Recommended |
 | Use sub-workflows for reusable logic | Extract common patterns (e.g., "create ITSM ticket") into sub-workflows callable from multiple parent workflows. | Optional |
 | Use approval gates for risky remediations | Enable built-in Approval Requests for actions like scaling, restarts, or config changes. | Optional |

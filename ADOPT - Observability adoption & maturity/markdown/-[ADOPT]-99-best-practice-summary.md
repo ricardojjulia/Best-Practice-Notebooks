@@ -12,7 +12,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 1. [Agent Deployment and Host Monitoring](#agent-deployment)
 2. [Data Ingestion and Grail Configuration](#data-ingestion)
-3. [Alerting and Davis AI](#alerting-davis)
+3. [Alerting and Dynatrace Intelligence](#alerting-davis)
 4. [SLOs and Success Metrics](#slos-metrics)
 5. [Cost Optimization](#cost-optimization)
 6. [Automation and Workflows](#automation-workflows)
@@ -65,12 +65,12 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 <a id="alerting-davis"></a>
 
-## 3. Alerting and Davis AI
+## 3. Alerting and Dynatrace Intelligence
 
 | # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
 | 3.1 | **Alert noise ratio** | Keep below 20% (frequent + duplicate problems / total problems); above 50% = overhaul needed | Critical | ADOPT-01, ADOPT-03 |
-| 3.2 | **Davis AI enabled** | Davis AI problem detection must be active; verify by confirming problems are detected in the last 7 days | Critical | ADOPT-01, ADOPT-02 |
+| 3.2 | **Dynatrace Intelligence enabled** | Dynatrace Intelligence problem detection must be active; verify by confirming problems are detected in the last 7 days | Critical | ADOPT-01, ADOPT-02 |
 | 3.3 | **Suppress auto-resolving problems** | Problems that consistently resolve within 5 minutes: configure delayed notification (5-minute wait) or workflow-based triage | Recommended | ADOPT-05 |
 | 3.4 | **Maintenance windows** | Configure maintenance windows for all planned change periods to suppress known-noisy alerts | Recommended | ADOPT-03, ADOPT-05 |
 | 3.5 | **Alert ownership** | Assign every alerting profile to a specific team; no unowned alerts | Recommended | ADOPT-05 |
@@ -86,10 +86,10 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 |---|--------------|----------------|----------|--------|
 | 4.1 | **Define SLOs for top 10 services** | Set availability and latency SLOs for the 10 most business-critical services | Critical | ADOPT-05 |
 | 4.2 | **SLO burn-rate alerting** | Enable burn-rate alerting on every SLO; static thresholds are insufficient | Critical | ADOPT-01, ADOPT-05 |
-| 4.3 | **Track MTTD** | Target: < 5 minutes average. Measure weekly using Davis problem `event.start` vs detection timestamp | Critical | ADOPT-03 |
+| 4.3 | **Track MTTD** | Target: < 5 minutes average. Measure weekly using detected problem `event.start` vs detection timestamp | Critical | ADOPT-03 |
 | 4.4 | **Track MTTR** | Target: < 1 hour average (DORA Elite). Measure weekly; trend by problem category | Critical | ADOPT-03 |
 | 4.5 | **Track weekly problem count** | Trend must be flat or declining; an increasing trend signals environmental degradation | Recommended | ADOPT-03 |
-| 4.6 | **Track change failure rate** | Target: < 5% (DORA Elite). Correlate deployment events with post-deployment Davis problems | Recommended | ADOPT-03 |
+| 4.6 | **Track change failure rate** | Target: < 5% (DORA Elite). Correlate deployment events with post-deployment detected problems | Recommended | ADOPT-03 |
 | 4.7 | **Establish 30-day baselines** | Record current MTTD, MTTR, noise ratio, problem count, and CFR using a 30-day window before setting targets | Critical | ADOPT-03 |
 | 4.8 | **Re-baseline quarterly** | Recalculate baselines every 90 days to account for growth and environmental changes | Recommended | ADOPT-03 |
 | 4.9 | **Set 3-month and 6-month targets** | Define explicit improvement targets for each metric at 3-month and 6-month horizons | Recommended | ADOPT-03 |
@@ -115,12 +115,12 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 
 | # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|--------------|----------------|----------|--------|
-| 6.1 | **Automate alert triage and routing** | Create a Dynatrace Workflow that routes Davis problems to the correct team channel; run daily | Critical | ADOPT-05 |
+| 6.1 | **Automate alert triage and routing** | Create a Dynatrace Workflow that routes detected problems to the correct team channel; run daily | Critical | ADOPT-05 |
 | 6.2 | **Automate top 5 frequent problem responses** | Build Workflows for the 5 most frequent, well-understood problem types; start with triage, progress to remediation | Recommended | ADOPT-05 |
 | 6.3 | **Delayed notification for transient problems** | Configure a 5-minute delay before alerting on problem types that auto-resolve within 5 minutes | Recommended | ADOPT-05 |
 | 6.4 | **Scheduled DQL reports for leadership** | Create a weekly scheduled notebook that runs MTTR, MTTD, noise ratio, and problem count queries automatically | Recommended | ADOPT-05 |
 | 6.5 | **Automated postmortem data collection** | Build a Workflow triggered by problem closure that collects timeline, root cause, affected entities, and duration into a structured record | Optional | ADOPT-05 |
-| 6.6 | **Davis AI forecasting for capacity** | Enable Davis AI metric forecasting for CPU, memory, and disk on all production hosts; review monthly | Optional | ADOPT-01, ADOPT-05 |
+| 6.6 | **Dynatrace Intelligence forecasting for capacity** | Enable Dynatrace Intelligence metric forecasting for CPU, memory, and disk on all production hosts; review monthly | Optional | ADOPT-01, ADOPT-05 |
 
 <a id="iam-access"></a>
 
@@ -156,7 +156,7 @@ This notebook consolidates every actionable best practice from the ADOPT series 
 |---|--------------|----------------|----------|--------|
 | 9.1 | **3 standard dashboard templates** | Create exactly 3 organizational templates: Infrastructure Health, Application Health, Business KPIs | Recommended | ADOPT-05 |
 | 9.2 | **Retire unused dashboards** | Audit dashboards quarterly; delete any dashboard with no views in the last 90 days | Optional | ADOPT-05 |
-| 9.3 | **Weekly platform health scorecard** | Review 8 metrics weekly: host coverage, agent version currency, service discovery, log ingestion stability, span ingestion, ActiveGate health, Davis AI activity, alert noise ratio | Critical | ADOPT-02 |
+| 9.3 | **Weekly platform health scorecard** | Review 8 metrics weekly: host coverage, agent version currency, service discovery, log ingestion stability, span ingestion, ActiveGate health, Dynatrace Intelligence activity, alert noise ratio | Critical | ADOPT-02 |
 | 9.4 | **Scorecard thresholds** | 8/8 green = Healthy. 6-7 = Minor gaps (fix this sprint). 4-5 = Significant (prioritize). < 4 = Critical (escalate) | Critical | ADOPT-02 |
 | 9.5 | **Monthly ROI report** | Combine MTTR/MTTD trends, problem count trends, data volume, enablement progress, and estimated cost avoidance into a single monthly report for leadership | Recommended | ADOPT-05 |
 | 9.6 | **SLO dashboard for leadership** | Create a dedicated SLO dashboard showing burn rate and compliance for the top 10 services | Recommended | ADOPT-05 |

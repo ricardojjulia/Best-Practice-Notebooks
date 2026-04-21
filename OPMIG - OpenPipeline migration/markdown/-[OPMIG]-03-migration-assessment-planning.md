@@ -8,7 +8,7 @@
 ## Table of Contents
 
 1. [Discovery: Current Data Landscape](#discovery-current-data-landscape)
-2. [Using Davis Copilot for Discovery](#using-davis-copilot-for-discovery)
+2. [Using Dynatrace Assist for Discovery](#using-davis-copilot-for-discovery)
 3. [Volume Analysis](#volume-analysis)
 4. [Source Inventory](#source-inventory)
 5. [Parsing Requirements Analysis](#parsing-requirements-analysis)
@@ -27,7 +27,7 @@
 By the end of this notebook, you will:
 
 - ✅ Discover and analyze your current data landscape
-- ✅ **Use Davis Copilot for intelligent discovery**
+- ✅ **Use Dynatrace Assist for intelligent discovery**
 - ✅ Assess parsing requirements and coverage
 - ✅ Identify cost optimization opportunities
 - ✅ Detect sensitive data requiring masking
@@ -46,10 +46,10 @@ Start by understanding what data you're currently ingesting and how it's being p
 ---
 
 <a id="using-davis-copilot-for-discovery"></a>
-## Using Davis Copilot for Discovery
-If you have access to the Dynatrace MCP Server, you can use Davis Copilot to assist with migration discovery.
+## Using Dynatrace Assist for Discovery
+If you have access to the Dynatrace MCP Server, you can use Dynatrace Assist to assist with migration discovery.
 
-### Davis Copilot Capabilities
+### Dynatrace Assist Capabilities
 
 | Tool | Purpose | Example Use Case |
 |------|---------|------------------|
@@ -59,14 +59,14 @@ If you have access to the Dynatrace MCP Server, you can use Davis Copilot to ass
 | **verify_dql** | Validate DQL syntax | Check queries before running |
 | **execute_dql** | Run queries against tenant | Get real data |
 
-### Example: Discovery with Davis Copilot
+### Example: Discovery with Dynatrace Assist
 
-**Question to Davis:**
+**Question to Dynatrace Intelligence:**
 ```
 "What are the top 10 log sources by volume in the last 7 days?"
 ```
 
-**Davis generates DQL:**
+**Dynatrace Intelligence generates DQL:**
 ```dql
 fetch logs, from: now() - 7d
 | summarize {log_count = count()}, by: {log.source}
@@ -74,12 +74,12 @@ fetch logs, from: now() - 7d
 | limit 10
 ```
 
-**Question to Davis:**
+**Question to Dynatrace Intelligence:**
 ```
 "Show me logs that might contain credit card numbers"
 ```
 
-**Davis generates DQL:**
+**Dynatrace Intelligence generates DQL:**
 ```dql
 // Security pattern detection - look for potential credit card or payment data
 fetch logs, from: now() - 1h
@@ -98,7 +98,7 @@ fetch logs, from: now() - 1h
 | **Explanation** | Understand complex patterns |
 | **Faster Discovery** | Iterate quickly on queries |
 
-> 💡 **Tip:** Use Davis Copilot iteratively. Ask initial questions, review results, then refine your questions based on what you discover.
+> 💡 **Tip:** Use Dynatrace Assist iteratively. Ask initial questions, review results, then refine your questions based on what you discover.
 
 ### Discovery Workflow with MCP
 

@@ -240,7 +240,7 @@ Beyond classic settings schemas, Gen3 introduces platform-level permissions that
 
 | Capability | Standard User | Power User | SRE | Admin |
 |---|:---:|:---:|:---:|:---:|
-| Davis Anomaly Detector — Create | none | none | write | write |
+| Anomaly Detector — Create | none | none | write | write |
 | Extensions — Create | none | none | read | write |
 | Site Reliability Guardian — Read | read | read | read | read |
 | Synthetic HTTP & NAM — Create | none | write | write | write |

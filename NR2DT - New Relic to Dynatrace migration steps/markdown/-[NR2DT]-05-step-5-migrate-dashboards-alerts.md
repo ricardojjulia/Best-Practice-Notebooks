@@ -1,6 +1,6 @@
 # NR2DT-05: Step 5 — Migrate Dashboards & Alerts
 
-> **Series:** NR2DT | **Notebook:** 5 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 5 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -57,10 +57,10 @@ Dashboards are low-risk because they're read-only — users can compare visualiz
 
 ```bash
 # Diff first to avoid duplicates
-python3 migrate.py --diff --components dashboards
+python3 migrate.py migrate --diff --components dashboards
 
 # Import
-python3 migrate.py --import-only --components dashboards
+python3 migrate.py migrate --import-only --components dashboards
 ```
 
 **G1 — Dashboard parity:**
@@ -81,7 +81,7 @@ Document any dashboard with > 5% delta in `wave1-issues.md` for follow-up.
 ### Step 1: Import to silent test channels
 
 ```bash
-python3 migrate.py --import-only --components alerts,notifications
+python3 migrate.py migrate --import-only --components alerts,notifications
 ```
 
 Routing in this step goes to a **silent test Slack channel** (or equivalent). Update Workflow tasks to point at the test channel before enabling.

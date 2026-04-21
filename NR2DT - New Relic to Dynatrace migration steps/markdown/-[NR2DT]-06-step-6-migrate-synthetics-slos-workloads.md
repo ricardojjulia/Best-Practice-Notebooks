@@ -1,6 +1,6 @@
 # NR2DT-06: Step 6 — Migrate Synthetics, SLOs & Workloads
 
-> **Series:** NR2DT | **Notebook:** 6 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 6 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -34,10 +34,10 @@ Order: HTTP first (lowest risk), then Browser, then API multi-step. Scripted bro
 
 ```bash
 # Inventory + transform
-python3 migrate.py --diff --components synthetics
+python3 migrate.py migrate --diff --components synthetics
 
 # Import (auto-converts HTTP, Browser, API; stubs scripted)
-python3 migrate.py --import-only --components synthetics
+python3 migrate.py migrate --import-only --components synthetics
 ```
 
 **Re-enter secrets** in the DT credentials vault for any monitor that uses bearer tokens, basic auth, or OAuth.
@@ -57,15 +57,17 @@ python3 migrate.py --import-only --components synthetics
 SLOs depend on metric expressions being mathematically equivalent. Workloads become OpenPipeline enrichments + IAM bucket conditions (Gen3 pattern).
 
 ```bash
-python3 migrate.py --diff --components slos,workloads
-python3 migrate.py --import-only --components slos,workloads
+python3 migrate.py migrate --diff --components slos,workloads
+python3 migrate.py migrate --import-only --components slos,workloads
 ```
 
 **Run the SLO auditor** (the most important validation in this wave):
 
 ```bash
-python3 migrate.py audit-slos --window 7d --tolerance 0.005
+python3 migrate.py audit-slos
 ```
+
+> The audit window and tolerance are set inside the auditor configuration, not via CLI flags. Target your 7-day / 0.5%-tolerance policy in the project's audit config.
 
 Output per SLO:
 
@@ -73,7 +75,7 @@ Output per SLO:
 SLO: Checkout Availability
   NR SLI:  99.94%
   DT SLI:  99.92%
-  Delta:    0.02%  PASS (within 0.5% tolerance)
+  Delta:    0.02%  PASS (within configured tolerance)
 ```
 
 Any SLO with delta > 0.5% needs investigation:

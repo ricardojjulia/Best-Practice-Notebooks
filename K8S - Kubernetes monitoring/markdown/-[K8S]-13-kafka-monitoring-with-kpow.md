@@ -435,7 +435,7 @@ Connect metric events to Dynatrace Workflows for automated response:
 Announced at Perform 2026, Dynatrace Intelligence Agents can automate incident response by reasoning over real-time causal context. For Kafka scenarios, this means:
 
 - **SRE Agents** can correlate Kpow consumer lag spikes with upstream service errors detected by OneAgent
-- **Automated triage** links Kafka health metrics to Davis AI root-cause analysis
+- **Automated triage** links Kafka health metrics to Dynatrace Intelligence root-cause analysis
 - **Cross-domain correlation** connects Kafka platform metrics (via Kpow) with application traces and Kubernetes events
 
 > **Tip:** See **WFLOW-01** through **WFLOW-09** for comprehensive Dynatrace Workflow configuration patterns.

@@ -58,7 +58,7 @@ The `app_name` should match your organization's application naming convention (e
 
 <a id="alert-naming"></a>
 ## Alert Naming
-Davis Anomaly Detectors have two name fields:
+Anomaly Detectors have two name fields:
 
 ### 1. Configuration Name
 
@@ -240,7 +240,7 @@ This completes the S2D (Splunk to Dynatrace) migration series. You should now be
 
 1. ✅ Validate log data availability (S2D-02)
 2. ✅ Translate SPL queries to DQL (S2D-03)
-3. ✅ Migrate alerts to Davis Anomaly Detectors (S2D-04)
+3. ✅ Migrate alerts to Anomaly Detectors (S2D-04)
 4. ✅ Use workflows for specialized alerting (S2D-05)
 5. ✅ Handle extended timeframes with ArrayMovingSum (S2D-06)
 6. ✅ Request metric extraction for performance (S2D-07)
@@ -251,7 +251,7 @@ This completes the S2D (Splunk to Dynatrace) migration series. You should now be
 
 - [Dynatrace Documentation](https://docs.dynatrace.com/docs)
 - [DQL Reference](https://docs.dynatrace.com/docs/shortlink/dql-reference)
-- [Davis Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
+- [Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
 - [Workflows](https://docs.dynatrace.com/docs/shortlink/workflows)
 
 ---

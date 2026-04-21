@@ -88,7 +88,7 @@ fetch spans, from:-2h
 
 ## 3. Log Volume and Anomaly Tracking
 
-Sudden log volume changes often indicate problems before Davis detects them. Track log volume by level and source.
+Sudden log volume changes often indicate problems before Dynatrace Intelligence detects them. Track log volume by level and source.
 
 ### Log Volume by Severity Level
 

@@ -52,14 +52,14 @@ See **NRLC-09** for the full 42-transformer + 14-subcommand inventory and [COVER
 
 **New Relic** is built around a unified telemetry data platform (NRDB) where every signal — metrics, events, logs, traces — is stored as discrete events in a columnar database. Agents (APM, Infrastructure, Browser, Mobile, OpenTelemetry collector) push data via HTTP. NerdGraph (GraphQL) is the unified API for both data queries and configuration.
 
-**Dynatrace** is built around **Smartscape topology + Davis AI + Grail data lakehouse**. OneAgent does deep instrumentation including code-level discovery; ActiveGate handles routing. Configuration lives in Settings (v2) and Documents (v2) APIs; data lives in Grail (queried via DQL). The platform infers entity relationships automatically (Smartscape) and applies causal AI to detect root cause.
+**Dynatrace** is built around **Smartscape topology + Dynatrace Intelligence + Grail data lakehouse**. OneAgent does deep instrumentation including code-level discovery; ActiveGate handles routing. Configuration lives in Settings (v2) and Documents (v2) APIs; data lives in Grail (queried via DQL). The platform infers entity relationships automatically (Smartscape) and applies causal AI to detect root cause.
 
 | Aspect | New Relic | Dynatrace |
 |--------|-----------|-----------|
 | Storage backend | NRDB (column store) | Grail (lakehouse: logs, spans, events, bizevents, metrics) |
 | Agent model | Multiple agents per signal type | Single OneAgent (auto-discovery) + ActiveGate routing |
 | Topology | User-built workloads, manual entity grouping | Smartscape (auto-discovered, real-time) |
-| AI model | NRDB anomaly detection + APM Proactive Detection | Davis AI causal engine + adaptive baselines |
+| AI model | NRDB anomaly detection + APM Proactive Detection | Dynatrace Intelligence causal engine + adaptive baselines |
 | Configuration API | NerdGraph (GraphQL) | Settings v2, Documents v2, Config v1 (REST) |
 | Query language | NRQL (SQL-like) | DQL (pipeline-based) |
 
@@ -74,7 +74,7 @@ The most consequential difference: **Dynatrace infers entity relationships autom
 | Storage | NRDB column store | Grail lakehouse, tiered buckets |
 | Agent | Multiple per signal | OneAgent + ActiveGate |
 | Topology | User workloads | Smartscape (auto) |
-| AI | NRDB anomaly + APM Proactive | Davis causal + adaptive baselines |
+| AI | NRDB anomaly + APM Proactive | Dynatrace Intelligence causal + adaptive baselines |
 | API | NerdGraph (GraphQL) | Settings/Documents/Config (REST) |
 | Query | NRQL (SQL-like) | DQL (pipeline) |
 For environments where SVG doesn't render
@@ -186,7 +186,7 @@ Plus: Service → Service Group, Application → Application Group, custom entit
 
 ### Dynatrace
 - **Dynatrace Platform Subscription (DPS)**: consumption units (DPS) tied to specific capability use
-- Different DPS rates per capability: log ingest, log retention with included queries, log usage-based queries, full-stack monitoring (host hours), Davis problem analysis, etc.
+- Different DPS rates per capability: log ingest, log retention with included queries, log usage-based queries, full-stack monitoring (host hours), detected problem analysis, etc.
 - **Bucket pricing tiers** allow optimization: keep hot data with included queries, cold data on usage-based
 
 | Cost Driver | New Relic | Dynatrace |
@@ -210,7 +210,7 @@ Quick-reference table for every major concept this series touches:
 | Dashboard (multi-page) | Document (single-page × N) | NRLC-03 |
 | Alert Policy | Workflow (Gen3) | NRLC-04 |
 | NRQL Alert Condition | Metric Event | NRLC-04 |
-| APM Condition | Adaptive Baseline (Davis) | NRLC-04 |
+| APM Condition | Adaptive Baseline (Dynatrace Intelligence) | NRLC-04 |
 | Synthetic Ping | HTTP Monitor | NRLC-05 |
 | Synthetic Browser | Browser Monitor | NRLC-05 |
 | Synthetic API | HTTP Monitor (multi-step) | NRLC-05 |

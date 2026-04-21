@@ -432,7 +432,7 @@ Complement kubectl diagnostics with DQL queries that detect Dynatrace component 
 | **Injection Failure** | Missing init container | Events with `Failed` + `dynatrace` |
 | **ActiveGate OOM** | AG restarts, data gaps | Events with `OOMKilled` + `activegate` |
 | **OneAgent CrashLoop** | Incomplete monitoring | Events with `CrashLoopBackOff` + `oneagent` |
-| **Connection Loss** | Stale data, no updates | Davis events with `AGENT_CONNECTION` |
+| **Connection Loss** | Stale data, no updates | detected events with `AGENT_CONNECTION` |
 
 ```dql
 // Detect Dynatrace pod failures in the last 24h
@@ -450,7 +450,7 @@ fetch events, from:-24h
 ```
 
 ```dql
-// Detect ActiveGate connection issues via Davis events
+// Detect ActiveGate connection issues via detected events
 fetch dt.davis.events, from:-24h
 | filter contains(toString(event.type), "ACTIVEGATE") OR
         contains(toString(event.type), "AGENT_CONNECTION")

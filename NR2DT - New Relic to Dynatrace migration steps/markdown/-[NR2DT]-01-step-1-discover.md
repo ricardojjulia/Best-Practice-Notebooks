@@ -1,6 +1,6 @@
 # NR2DT-01: Step 1 — Discover
 
-> **Series:** NR2DT | **Notebook:** 1 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 1 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -36,7 +36,7 @@ By the end of this step you will have these artifacts checked into your migratio
 
 | Artifact | Format | Purpose |
 |----------|--------|---------|
-| `inventory.json` | JSON | Full enumeration of all NR entity classes |
+| `inventory/exports/newrelic_export.json` | JSON | Full enumeration of all NR entity classes |
 | `nrql-conversion-report.csv` | CSV | Every NRQL query with HIGH/MEDIUM/LOW confidence + DQL output |
 | `effort-estimate.md` | Markdown | Hours/days/weeks per component class |
 | `gap-analysis.md` | Markdown | Entities flagged for manual work (APM conditions, scripted browsers) |
@@ -76,6 +76,24 @@ export NR_ACCOUNT_ID="<numeric>"
 export NR_REGION="US"  # or EU
 ```
 
+
+### DT platform token
+
+Step 5 (effort report) and Step 8 (validation) connect to the target Dynatrace tenant, so you also need DT credentials configured before you run them:
+
+```bash
+export DYNATRACE_API_TOKEN="dt0c01.XXXXX..."  # platform token recommended
+export DYNATRACE_ENVIRONMENT_URL="https://<env-id>.live.dynatrace.com"
+```
+
+Store these in `.env` rather than the shell for long-running work. Verify with:
+
+```bash
+python3 migrate.py preflight
+```
+
+`preflight` probes the tenant for Settings 2.0 / Document API / Automation API availability. Green here means Step 5+ will actually connect.
+
 ### Tooling
 
 Clone the migration framework:
@@ -93,16 +111,16 @@ cp .env.example .env  # populate NR_* vars
 **Command:**
 
 ```bash
-python3 migrate.py --export-only --output ./inventory
+python3 migrate.py migrate --export-only --output ./inventory
 ```
 
-This runs the NerdGraph enumeration for every entity class and writes per-component JSON files plus the consolidated `inventory.json`.
+This runs the NerdGraph enumeration for every entity class and writes per-component JSON files plus the consolidated `inventory/exports/newrelic_export.json`.
 
 **Check the output:**
 
 ```bash
 ls -lh inventory/
-head inventory/inventory.json | jq '.summary'
+cat inventory/exports/newrelic_export.json | jq '. | keys, [.dashboards|length, .alert_policies|length, .synthetic_monitors|length, .slos|length, .workloads|length]'
 ```
 
 **Expected counts to capture** (your numbers, for the wave plan in Step 2):
@@ -115,18 +133,66 @@ head inventory/inventory.json | jq '.summary'
 - Notification channels by type
 - Drop rules + log parsing rules + tag rules
 
+
+### Extract NRQL for the translation pass
+
+`compile` and `batch` (Step 4) need a flat list of NRQL queries. The export JSON has the NRQL embedded inside dashboards, alert conditions, and SLO indicators — use the `extract-nrql` subcommand to pull them into a file:
+
+```bash
+# Plain text (one NRQL per line — feeds `compile --file`):
+python3 migrate.py extract-nrql \
+    --input ./inventory \
+    --output ./inventory/all-nrql.txt
+
+# Or CSV with an `nrql` column (feeds `batch --file`):
+python3 migrate.py extract-nrql \
+    --input ./inventory \
+    --output ./inventory/all-nrql.csv
+```
+
+The subcommand walks dashboards, alert conditions, and SLO indicators; dedupes; writes either format depending on the output extension (override with `--format txt|csv`). Capture the query count from the success line — that's the denominator for Step 4's confidence distribution.
+
+<details><summary><b>Fallback for older tool versions</b> (without <code>extract-nrql</code>)</summary>
+
+If your `Dynatrace-NewRelic` checkout predates 2026-04-20, the `extract-nrql` subcommand isn't available. Run this `jq` one-liner instead (same logic, manual):
+
+```bash
+jq -r '
+  (.dashboards[]?.pages[]?.widgets[]?.rawConfiguration?.nrqlQueries[]?.query // empty),
+  (.alert_policies[]?.conditions[]? | .. | .query? // empty | select(type=="string")),
+  (.slos[]? | (.indicator?.from // empty), (.indicator?.where // empty))
+' inventory/exports/newrelic_export.json \
+  | sed '/^$/d' \
+  | sort -u > inventory/all-nrql.txt
+```
+
+Upgrade to a current tool version (`git pull origin main` in your `Dynatrace-NewRelic` clone) when convenient; then switch to the subcommand.
+</details>
+
 <a id="translate"></a>
 ## 4. Translate the NRQL Surface
 
 Every dashboard widget, alert condition, and SLO indicator contains a NRQL query that must compile to DQL. Run the compiler now to size the translation effort.
 
-**Command:**
+**Command** (uses the `inventory/all-nrql.txt` or `inventory/all-nrql.csv` produced by `extract-nrql` in §3):
 
 ```bash
-python3 migrate.py compile --file inventory/all-nrql.txt --report
+# (a) compile — writes translated DQL, one per input query
+python3 migrate.py compile --file inventory/all-nrql.txt --output nrql-translated.dql
+
+# (b) batch — writes a CSV with nrql / dql / confidence / warnings columns.
+#     Feed the .csv you created in §3 directly (or convert a .txt with awk):
+python3 migrate.py batch --file inventory/all-nrql.csv --output nrql-conversion-report.csv
 ```
 
-**Output:** `nrql-conversion-report.csv` with one row per query: source query, translated DQL, confidence (HIGH/MEDIUM/LOW), confidence score (0–100), notes, warnings.
+(If you extracted to `.txt` in §3 instead of `.csv`, convert with: `awk 'BEGIN{print "nrql"} {print "\"" $0 "\""}' inventory/all-nrql.txt > inventory/all-nrql.csv`)
+
+**Which artifact matters for the G1 gate?** The CSV from `batch` — it has the confidence distribution you need to compare against the table below.
+
+**Output:**
+
+- `compile --output <file>` writes a plain DQL file (one translated query per input).
+- `batch --output <file.csv>` writes a CSV with one row per query: source NRQL, translated DQL, confidence (HIGH/MEDIUM/LOW), confidence score (0–100), notes, warnings. **This is the artifact to review for the Step 1 gate.**
 
 **Expected confidence distribution** for a typical NR account:
 
@@ -143,11 +209,43 @@ If LOW is > 15%, surface this to stakeholders early — it's the dominant cost d
 <a id="estimate"></a>
 ## 5. Generate the Effort Estimate
 
-Run the report generator to produce a defensible effort estimate:
+### 5a. Run the report generator (connects to DT)
 
 ```bash
-python3 migrate.py --report --input inventory --output report.md
+python3 migrate.py migrate --report --input inventory --output effort-estimate.md
 ```
+
+> **Requires DT credentials** — `DYNATRACE_API_TOKEN` and `DYNATRACE_ENVIRONMENT_URL` from §2. If they aren't configured yet, the command exits with "Failed to connect to Dynatrace" and doesn't write the file.
+
+### 5b. Offline fallback (no DT connection required)
+
+If your Step 1 run happens before DT access is provisioned — typical for the first discovery sprint — derive the estimate offline from the inventory + conversion CSV:
+
+```bash
+python3 - << 'PY' > effort-estimate.md
+import json, csv, pathlib
+
+inv = json.loads(pathlib.Path('inventory/exports/newrelic_export.json').read_text())
+rows = list(csv.DictReader(open('nrql-conversion-report.csv')))
+
+print('# NR→DT Migration — Discovery Artifact (Step 1)\n')
+print('## Inventory counts\n')
+for k in ('dashboards', 'alert_policies', 'synthetic_monitors', 'slos', 'workloads'):
+    print(f'- **{k}**: {len(inv.get(k, []))}')
+print('\n## Translation confidence distribution\n')
+conf = {}
+for r in rows: conf[r["confidence"]] = conf.get(r["confidence"], 0) + 1
+total = sum(conf.values())
+for k, v in sorted(conf.items()):
+    pct = 100 * v / total if total else 0
+    print(f'- **{k}**: {v} ({pct:.0f}%)')
+print(f'\n## Totals\n\n- NRQL queries: {total}')
+PY
+
+cat effort-estimate.md
+```
+
+Both paths (5a and 5b) produce an `effort-estimate.md` that satisfies the G1 exit criterion. Use 5a when DT access is ready; use 5b during early discovery.
 
 Estimating heuristic per component class:
 
@@ -166,7 +264,7 @@ Estimating heuristic per component class:
 
 Pass criteria — all five must be true:
 
-- [ ] `inventory.json` complete (no enumeration errors in log)
+- [ ] `inventory/exports/newrelic_export.json` complete; every entity class has a non-empty array; no enumeration errors in log
 - [ ] Per-component counts captured and documented
 - [ ] `nrql-conversion-report.csv` generated; LOW count <= 15% of total
 - [ ] `effort-estimate.md` reviewed by lead

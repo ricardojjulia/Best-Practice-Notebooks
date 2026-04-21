@@ -121,7 +121,7 @@ Cloud integrations are tenant-specific. Credentials, IAM trust policies, and mon
 After configuring cloud integrations in the target tenant, verify data is flowing:
 
 ```dql
-// Target tenant: check for Davis problems indicating integration issues
+// Target tenant: check for detected problems indicating integration issues
 fetch dt.davis.problems, from:-2h
 | filter contains(event.name, "cloud") or contains(event.name, "integration") or contains(event.name, "AWS") or contains(event.name, "Azure") or contains(event.name, "GCP")
 | fields display_id, event.name, event.status, event.category
@@ -210,7 +210,7 @@ Workflows (Dynatrace Workflows, formerly AutomationEngine) require special handl
 | Component | Portable? | Migration Notes |
 |-----------|----------|------------------|
 | **Workflow definition** | Yes | Export via Monaco (`automation`) or Terraform |
-| **Trigger configuration** | Partial | Davis triggers reference entity IDs — update selectors |
+| **Trigger configuration** | Partial | Dynatrace Intelligence triggers reference entity IDs — update selectors |
 | **Actor permissions** | No | Reassign actor (the identity that executes the workflow) in target tenant |
 | **External connections** | No | Webhook URLs, API keys, OAuth tokens must be recreated |
 | **JavaScript/Python actions** | Yes | Code is portable; external URLs may need updating |
@@ -234,7 +234,7 @@ terraform apply -var-file="target-tenant.tfvars"
 
 | Trigger Type | Migration Action |
 |-------------|------------------|
-| **Davis problem** | Update entity selectors (replace hardcoded IDs with tags) |
+| **detected problem** | Update entity selectors (replace hardcoded IDs with tags) |
 | **Event** | Update event type filters if namespace/service names changed |
 | **Schedule (cron)** | Port as-is — cron expressions are tenant-independent |
 | **Manual** | Port as-is |
@@ -368,7 +368,7 @@ Before proceeding to Step 7 (Expand), verify all integration tasks are complete:
 | **Notification integrations tested** | ☐ | Platform | Test alert sent to each channel |
 | **Synthetic monitors executing** | ☐ | Platform | All monitors running from correct locations |
 | **Extensions installed and collecting** | ☐ | Platform | Extension metrics visible in target tenant |
-| **No critical Davis problems** | ☐ | Platform | All migration-related problems resolved or documented |
+| **No critical detected problems** | ☐ | Platform | All migration-related problems resolved or documented |
 
 > **Phase transition:** Completing this checklist ends the **Upgrade** phase. The target tenant is now fully operational. The **Run** phase (Steps 7–9) focuses on expanding agent coverage, enabling teams, and optimizing the target tenant.
 

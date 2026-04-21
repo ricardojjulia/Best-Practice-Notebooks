@@ -103,7 +103,7 @@ This notebook consolidates every actionable best practice from the ORGNZ series 
 | 44 | Use Primary Grail Fields in segment filters | Filter on `dt.host_group.id`, `k8s.namespace.name`, `k8s.cluster.name`, `aws.account.id`, `azure.subscription`, `gcp.project.id` — these are indexed and propagate across all signal types | Critical | Performance |
 | 45 | Use prefix-based naming for cross-signal filtering | Name host groups, namespaces, etc. with prefixes (e.g., `prod-web-tier` not `web-tier-prod`) so `starts-with` works on both entity and signal includes | Recommended | Naming |
 | 46 | Create one segment per dimension | Separate segments for platform, application, environment, and region — users combine them as needed | Recommended | Architecture |
-| 47 | Add event includes for Davis problem filtering | Define events include with `event.kind = "DAVIS_PROBLEM"` — entity includes alone do not filter problems | Critical | Troubleshooting |
+| 47 | Add event includes for detected problem filtering | Define events include with `event.kind = "DAVIS_PROBLEM"` — entity includes alone do not filter problems | Critical | Troubleshooting |
 | 48 | Set official segments to Public visibility | Platform team-owned segments: set to Public; application team segments: share with their group | Recommended | Governance |
 | 49 | Use consistent segment naming prefixes | Prefixes: `team-`, `env-`, `app-`, `region-` (e.g., `team-platform-infra`, `env-production`) | Recommended | Naming |
 | 50 | Test segment filter conditions with DQL before creating the segment | Run the equivalent `filter` clause as a DQL query; verify record counts match expectations | Critical | Operations |

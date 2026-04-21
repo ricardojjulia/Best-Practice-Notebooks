@@ -45,11 +45,11 @@ This notebook consolidates every actionable best practice from the WFLOW series 
 
 | # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---------------|-----------------|----------|--------|
-| 1 | Use Davis Problem trigger for incident alerts | `type: davis-problem` | Critical | WFLOW-02 |
-| 2 | Use Davis Event trigger for proactive metric thresholds | `type: davis-event` with DQL query and `evaluationFrequency: "5m"` | Critical | WFLOW-02 |
+| 1 | Use Detected Problem trigger for incident alerts | `type: davis-problem` | Critical | WFLOW-02 |
+| 2 | Use Detected Event trigger for proactive metric thresholds | `type: davis-event` with DQL query and `evaluationFrequency: "5m"` | Critical | WFLOW-02 |
 | 3 | Use Schedule trigger for reports and health checks | `type: schedule` with cron expression and explicit `timezone` | Critical | WFLOW-02 |
 | 4 | Use On-Demand trigger for testing | `type: on-demand` before deploying any production workflow | Critical | WFLOW-02 |
-| 5 | Scope Davis Problem triggers with entity tags | `entityTagsMatch: all` with `entityTags: [{key: env, value: prod}]` | Critical | WFLOW-02 |
+| 5 | Scope Detected Problem triggers with entity tags | `entityTagsMatch: all` with `entityTags: [{key: env, value: prod}]` | Critical | WFLOW-02 |
 | 6 | Filter by problem categories | Set `categories: [AVAILABILITY, PERFORMANCE]` to reduce noise | Recommended | WFLOW-02 |
 | 7 | Handle all problem lifecycle events | Trigger on OPEN, UPDATED, and CLOSED statuses in a single workflow | Recommended | WFLOW-05 |
 | 8 | Offset scheduled workflows from minute :00 | Use `:05`, `:15`, `:30` instead of `:00` to spread load | Recommended | WFLOW-02 |

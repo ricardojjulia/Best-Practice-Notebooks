@@ -1,10 +1,10 @@
 # NRLC-04: Alert & Workflow Migration
 
-> **Series:** NRLC | **Notebook:** 4 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC | **Notebook:** 4 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
-Alerts are the highest-stakes migration artifact — they wake people up. This deep dive covers the structural mismatch between NR alert policies and Gen3 Dynatrace, where alert routing lives in **Workflows** (not the Gen2 Alerting Profile object). It covers how NRQL conditions become Davis anomaly detectors, why APM conditions still merit review even though Phase 17 now auto-converts them, the notification mapping (Workflow tasks instead of standalone Notification Channels), and the dual-alert window pattern that protects on-call during cutover.
+Alerts are the highest-stakes migration artifact — they wake people up. This deep dive covers the structural mismatch between NR alert policies and Gen3 Dynatrace, where alert routing lives in **Workflows** (not the Gen2 Alerting Profile object). It covers how NRQL conditions become anomaly detectors, why APM conditions still merit review even though Phase 17 now auto-converts them, the notification mapping (Workflow tasks instead of standalone Notification Channels), and the dual-alert window pattern that protects on-call during cutover.
 
 **Phase 17 alert coverage (post-2026-04-15):** the engine now auto-converts **NRQL conditions**, **NRQL baseline / outlier conditions** (`baseline_alert_transformer`), **Infrastructure / Synthetic / Browser / Mobile / External-service / Multi-location-synthetic conditions** (`non_nrql_alert_transformer`), **mute rules + scheduled + recurring maintenance windows** (`maintenance_window_transformer`), **lookup-table WHERE-IN subqueries** (`lookup_table_transformer` → Resource Store JSONL + DQL `lookup` subquery), and **deployment markers / change events** (`change_tracking_transformer` → DT events API `CUSTOM_DEPLOYMENT` / `CUSTOM_CONFIGURATION`). **Phase 18** adds `aiops_transformer` for NR AI Workflows / destinations / enrichments (with the NR↔DT "Workflow" name-collision callout). See [COVERAGE-MATRIX.md §7](../docs/COVERAGE-MATRIX.md) for the full alert-family row-set.
 
@@ -16,7 +16,7 @@ Alerts are the highest-stakes migration artifact — they wake people up. This d
 2. [DT Alert Model](#dt-alerts)
 3. [Policy → Workflow](#policies)
 4. [NRQL Condition → Metric Event](#nrql-conditions)
-5. [APM Condition → Davis Adaptive Baseline](#apm-conditions)
+5. [APM Condition → Dynatrace Intelligence Adaptive Baseline](#apm-conditions)
 6. [Notification Channel Mapping](#channels)
 7. [Dual-Alert Window Pattern](#dual-alert)
 8. [Mute Rules & Maintenance Windows](#muting)
@@ -85,8 +85,8 @@ fetch spans, from:-5m
 | Static threshold on count/avg/sum | HIGH | Direct |
 | Percentile threshold | HIGH | `percentile(field, N)` syntax |
 | Percentage threshold | HIGH | `100.0 * countIf(x) / count()` |
-| Baseline (NR adaptive) | MEDIUM → LOW | Prefer Davis adaptive baselines instead of porting |
-| APM condition (built-in error rate, etc.) | LOW | Manual: configure Davis baseline |
+| Baseline (NR adaptive) | MEDIUM → LOW | Prefer Dynatrace Intelligence adaptive baselines instead of porting |
+| APM condition (built-in error rate, etc.) | LOW | Manual: configure baseline |
 
 <a id="nr-alerts"></a>
 ## 1. NR Alert Model
@@ -121,10 +121,10 @@ Metric Event (the detection)
   │ query (DQL or metric expression)
   │ threshold + operator
   │ duration (n out of m samples)
-  └───── raises a Davis Problem (event)
+  └───── raises a Detected Problem (event)
               │
               └── Workflow (the routing + action layer)
-                    │ trigger: Davis problem event
+                    │ trigger: detected problem event
                     │ filter: severity, entity attributes, tags, bucket
                     └── Tasks (run in sequence or parallel):
                           │ send_slack / send_email / send_pagerduty
@@ -132,7 +132,7 @@ Metric Event (the detection)
                           └── trigger downstream automation
 ```
 
-The decoupling is intentional: a single Davis problem can match multiple Workflows (different teams react differently). Notification *delivery* lives inside Workflow tasks rather than as a separate object — this is the Gen3 model. The legacy Alerting Profile + Notification Channel pattern still exists for backward compatibility but is **not** the recommended Gen3 path.
+The decoupling is intentional: a single detected problem can match multiple Workflows (different teams react differently). Notification *delivery* lives inside Workflow tasks rather than as a separate object — this is the Gen3 model. The legacy Alerting Profile + Notification Channel pattern still exists for backward compatibility but is **not** the recommended Gen3 path.
 
 <a id="policies"></a>
 ## 3. Policy → Workflow
@@ -144,11 +144,11 @@ An NR Alert Policy + its Notification Channels maps to a Gen3 **Workflow** in Dy
 | `name` | Workflow name |
 | `incidentPreference` (PER_POLICY / PER_CONDITION / PER_CONDITION_AND_TARGET) | Workflow trigger filters + grouping settings |
 | Channel binding (channel.id list) | Workflow tasks (one task per delivery target) |
-| Channel-level filters | Filter step on the Davis problem trigger |
+| Channel-level filters | Filter step on the detected problem trigger |
 
 The `AlertTransformer` creates one Workflow per NR policy:
 
-- **Trigger:** Davis problem event with filter conditions matching the policy's intended scope (severity, affected entities by attribute, bucket scope)
+- **Trigger:** detected problem event with filter conditions matching the policy's intended scope (severity, affected entities by attribute, bucket scope)
 - **Tasks:** one per original notification channel (e.g., a policy with Email + Slack + PagerDuty becomes one Workflow with three tasks)
 - **Conditional branches:** for `PER_CONDITION` policies, separate trigger filters per condition; for `PER_POLICY` grouping, a single trigger covers all conditions
 
@@ -176,7 +176,7 @@ NR NRQL Condition
 | NR | DT |
 |----|----|
 | `thresholdType: STATIC` + `operator: ABOVE` | `monitoringStrategy: STATIC_THRESHOLD` + `alertCondition: ABOVE` |
-| `thresholdType: BASELINE` | DT auto-adaptive baseline (recommended; configures Davis) |
+| `thresholdType: BASELINE` | DT auto-adaptive baseline (recommended; configures Dynatrace Intelligence) |
 | `terms.priority: CRITICAL` | `eventType: ERROR` |
 | `terms.priority: WARNING` | `eventType: INFO` (with severity tag) |
 
@@ -191,9 +191,9 @@ NR NRQL Condition
 **Confidence consideration:** the NRQL must compile to HIGH-confidence DQL. MEDIUM/LOW translations should be hand-validated before becoming production alerts.
 
 <a id="apm-conditions"></a>
-## 5. APM / Non-NRQL Condition → Davis Adaptive Baseline
+## 5. APM / Non-NRQL Condition → Dynatrace Intelligence Adaptive Baseline
 
-NR's APM conditions ("alert when error rate above 5% for 10 minutes") use a built-in detection model. DT solves the same problem with **Davis adaptive baselines** — but the configuration is fundamentally different:
+NR's APM conditions ("alert when error rate above 5% for 10 minutes") use a built-in detection model. DT solves the same problem with **Dynatrace Intelligence adaptive baselines** — but the configuration is fundamentally different:
 
 - NR sets a **fixed threshold** with a sensitivity dial.
 - DT learns the **expected baseline** for each entity and alerts on statistically significant deviation.
@@ -202,15 +202,15 @@ NR's APM conditions ("alert when error rate above 5% for 10 minutes") use a buil
 
 | NR Condition | Engine Output | Recommended DT Refinement |
 |-----------|---------------|---------------------------|
-| Error rate above N% (APM) | Davis error-rate anomaly detector | Raise/lower sensitivity based on baseline width |
-| Response time above N ms | Davis response-time adaptive detector | Consider pairing with SLO for burn-rate alerts |
-| Throughput drop | Davis throughput adaptive baseline | — |
+| Error rate above N% (APM) | Dynatrace Intelligence error-rate anomaly detector | Raise/lower sensitivity based on baseline width |
+| Response time above N ms | Dynatrace Intelligence response-time adaptive detector | Consider pairing with SLO for burn-rate alerts |
+| Throughput drop | Dynatrace Intelligence throughput adaptive baseline | — |
 | Apdex below N | Custom DT Apdex calculation + DQL anomaly detector (DT has no native Apdex) | Phase 19 apdex-bucket uplift raises compiler confidence to HIGH for bucketed queries |
-| NR baseline condition | Davis adaptive baseline (direct) | — |
-| NR outlier condition | Davis outlier detector | — |
-| Multi-location synthetic | Davis detector with location-count expression | Adjust minimum-failed-locations threshold |
+| NR baseline condition | Dynatrace Intelligence adaptive baseline (direct) | — |
+| NR outlier condition | Dynatrace Intelligence outlier detector | — |
+| Multi-location synthetic | Dynatrace Intelligence detector with location-count expression | Adjust minimum-failed-locations threshold |
 
-**Review pattern:** the engine imports the signal shape (which metric, which entity scope, which direction), but Davis's adaptive nature means DT will fire on different events than NR did. The dual-alert window (§7) catches this — expect DT volume to deviate from NR volume in both directions, and tune from there.
+**Review pattern:** the engine imports the signal shape (which metric, which entity scope, which direction), but Dynatrace Intelligence's adaptive nature means DT will fire on different events than NR did. The dual-alert window (§7) catches this — expect DT volume to deviate from NR volume in both directions, and tune from there.
 
 <a id="channels"></a>
 ## 6. Notification → Workflow Task Mapping
@@ -274,7 +274,7 @@ Mute rules that filter on metric values (e.g., "mute when load < 10") translate 
 Alert migration is the highest-risk phase: errors here wake people up. Post-Phase-17, the pattern is:
 
 1. Auto-convert NRQL + APM + non-NRQL + baseline + outlier conditions (engine handles all via Phase 17 transformers)
-2. Review imported detectors — Davis adaptive behavior differs from NR fixed thresholds
+2. Review imported detectors — Dynatrace Intelligence adaptive behavior differs from NR fixed thresholds
 3. Recreate notification channel secrets manually (never auto-migrated)
 4. Auto-convert mute rules + maintenance windows (Phase 17)
 5. Run dual-alert for 1–2 weeks before silencing NR — use `--canary <pct>` for production tenants
@@ -289,19 +289,19 @@ End-to-end commands for migrating only alerts (Metric Events + Workflows). Notif
 
 ```bash
 # 1. Inventory NR alert policies + conditions + notification channels
-python3 migrate.py --export-only --components alerts,notifications --output ./alerts-export
+python3 migrate.py migrate --export-only --components alerts,notifications --output ./alerts-export
 
 # 2. Translate condition queries; emit Metric Events + Workflows
-python3 migrate.py --transform-only --components alerts,notifications --report
+python3 migrate.py migrate --transform-only --components alerts,notifications --report
 
 # 3. Diff (avoid recreating alerts that were partially migrated previously)
-python3 migrate.py --diff --components alerts,notifications
+python3 migrate.py migrate --diff --components alerts,notifications
 
 # 4. Import to silent test channel first (route to staging Workflow target)
-python3 migrate.py --import-only --components alerts,notifications
+python3 migrate.py migrate --import-only --components alerts,notifications
 
-# 5. Run dual-alert comparison for 1–2 weeks
-python3 migrate.py compare-alerts --window 7d
+# 5. Run dual-alert drift audit for 1–2 weeks
+python3 migrate.py audit
 
 # 6. Promote to production channels (re-enter secrets in Workflow tasks)
 # 7. Silence NR alerts for the migrated policies
@@ -310,7 +310,7 @@ python3 migrate.py compare-alerts --window 7d
 **Workflow validation:**
 ```bash
 # Confirm each migrated Workflow triggers correctly
-python3 migrate.py validate-workflows --components alerts
+python3 migrate.py migrate --diff --components alerts,notifications
 ```
 
 ---

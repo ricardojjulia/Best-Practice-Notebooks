@@ -513,7 +513,7 @@ When you select a segment in one Dynatrace app (e.g., Logs), the selection **per
 
 | Limitation | Detail | Workaround |
 |------------|--------|------------|
-| **Davis problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
+| **detected problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
 | **Single relationship traversal** | Entity relationships can only traverse one hop | Target specific entity types directly in includes |
 | **Inclusions only, no exclusions** | Cannot say "everything EXCEPT team-X" | Explicitly include what you want (MZ supported exclusions; segments do not) |
 | **Entity includes: no contains/ends-with** | Classic entity includes only support `=` and prefix wildcards; `contains` and `ends-with` are not available | Use prefix-based naming conventions; signal includes support broader operators |
@@ -663,7 +663,7 @@ When you select a segment in one Dynatrace app (e.g., Logs), the selection **per
 
 | Limitation | Detail | Workaround |
 |------------|--------|------------|
-| **Davis problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
+| **detected problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
 | **Single relationship traversal** | Entity relationships can only traverse one hop | Target specific entity types directly in includes |
 | **Inclusions only, no exclusions** | Cannot say "everything EXCEPT team-X" | Explicitly include what you want (MZ supported exclusions; segments do not) |
 | **Entity includes: no contains/ends-with** | Classic entity includes only support `=` and prefix wildcards; `contains` and `ends-with` are not available | Use prefix-based naming conventions; signal includes support broader operators |

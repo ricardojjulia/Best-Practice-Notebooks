@@ -1,12 +1,12 @@
 # NRLC-09: Toolchain Reference & End-to-End Runbook
 
-> **Series:** NRLC | **Notebook:** 9 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC | **Notebook:** 9 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
 The master reference for the open-source toolchain that powers every preceding notebook in this series. This deep dive covers how `Dynatrace-NewRelic`, `nrql-engine`, and `nrql-translator` fit together, how to operate the orchestrating CLI, the configuration surface, the export formats (Monaco v2 YAML, Terraform HCL), and a complete end-to-end runbook.
 
-**As of 2026-04-15** the Python orchestrator ships **42 transformers** across 9 phase batches (Phase 11 foundation + Phases 16–24 expansion), **1,209 unit tests**, and **292 NRQL translation patterns** pinned to the TypeScript `nrql-engine` via the Phase 19b regression suite. It emits **Gen3 Dynatrace by default** (Workflows, Davis anomaly detectors, Segments, OpenPipeline, Document API); use `--legacy` only for the 8 Gen2-only capabilities or for tenants without Gen3 features.
+**As of 2026-04-15** the Python orchestrator ships **40+ transformers** across 9 phase batches (Phase 11 foundation + Phases 16–24 expansion), **1,200+ unit tests**, and **292 NRQL translation patterns** pinned to the TypeScript `nrql-engine` via the Phase 19b regression suite. It emits **Gen3 Dynatrace by default** (Workflows, anomaly detectors, Segments, OpenPipeline, Document API); use `--legacy` only for the 8 Gen2-only capabilities or for tenants without Gen3 features.
 
 ---
 
@@ -36,8 +36,8 @@ The master reference for the open-source toolchain that powers every preceding n
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │        Dynatrace-NewRelic (Python orchestrator)        │
-│  - migrate.py CLI (14 subcommands)                      │
-│  - 42 entity transformers (Phases 11 + 16–24)           │
+│  - migrate.py CLI (13 subcommands)                      │
+│  - 40+ entity transformers (Phases 11 + 16–24)          │
 │  - migration/state, canary, audit, diff, retry, rollback│
 │  - exporters/monaco (v2), exporters/terraform           │
 └───────────────┬────────────────┴────────────────────────┐
@@ -74,7 +74,7 @@ The master reference for the open-source toolchain that powers every preceding n
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tool | Form | Use Case |
 |------|------|----------|
-| Dynatrace-NewRelic | Python orchestrator | End-to-end migration via migrate.py (42 transformers, 14 subcommands) |
+| Dynatrace-NewRelic | Python orchestrator | End-to-end migration via migrate.py (40+ transformers, 13 subcommands) |
 | nrql-engine | TS library | Embed translation (292 patterns; TS↔Python parity pinned via Phase 19b CI) |
 | nrql-translator | TS CLI | Single query, batch Excel, notebook gen |
 
@@ -124,6 +124,8 @@ cp .env.example .env
 - `notifications.write`
 - `iam-policies.read` (for IAM policy + OpenPipeline configuration validation)
 
+> **Note:** These are Classic API token scopes (the `<area>.<action>` style). **Platform Tokens use policy-based permissions** instead and are the recommended default on Gen3 tenants — see Dynatrace IAM docs for the equivalent policy statements. OAuth clients follow the Classic scope style for programmatic access.
+
 ### Configuration File (`.env`)
 
 ```bash
@@ -147,6 +149,10 @@ Settings are loaded via Pydantic; missing required values fail fast with descrip
 
 ### Subcommand inventory (post-Phase-24)
 
+The `migrate.py` entry point registers **13 subcommands**:
+
+`agents, archive, audit, audit-slos, batch, compile, convert, export-monaco, export-terraform, migrate, preflight, reference, scan-instrumentation`
+
 | Subcommand | Purpose |
 |---|---|
 | `migrate` | Full pipeline (export → transform → import). Accepts `--full`, `--export-only`, `--import-only`, `--dry-run`, `--components`, `--rollback <file>`, `--retry <file>`, `--resume`, `--incremental`, `--report`, `--diff`, `--legacy`, `--canary <pct>`, `--canary-auto-proceed` |
@@ -158,11 +164,12 @@ Settings are loaded via Pydantic; missing required values fail fast with descrip
 | **`agents`** | **Phase 16.** Per-language APM agent migration action plans (Java / .NET / Node.js / Python / Ruby / PHP / Go). Flags: `--language <lang>`, `--phase`, `--dry-run`. |
 | **`scan-instrumentation`** | **Phase 16.** Scan source tree for `newrelic.*()` SDK calls; emit DT/OTel replacement suggestions (side-effect-free; manual apply). |
 | **`archive`** | **Phase 17.** Pre-decommission NRDB snapshot (resumable JSONL per event type). |
-| **`audit`** | **Phase 20.** Drift detection vs live tenant. Reports RENAMED / DELETED / MODIFIED / EXTRA. Exits 1 on drift. |
+| **`audit`** | **Phase 20.** Drift detection vs live tenant (also the drift-audit command for baseline-vs-current comparison). Reports RENAMED / DELETED / MODIFIED / EXTRA. Exits 1 on drift. |
 | `audit-slos` | Validate DT SLOs against live metrics for missing/invalid keys (Phase 11 + Phase 20 enrichment). |
 | `export-monaco` | Emit Monaco v2 project YAML (Gen3 default; `--legacy` for Gen2 shapes). |
 | `export-terraform` | Emit Terraform HCL with `dynatrace-oss/dynatrace` provider (Gen3 default; `--legacy` for Gen2 shapes). |
-| `compare` | Behavioral validation — run NRQL on NR + DQL on DT, diff results with tolerance. |
+
+> **Note:** Behavioral validation (running NRQL on NR and DQL on DT and diffing results) is handled via the `audit` subcommand using a captured baseline, not a separate `compare` subcommand.
 
 ### Common flags
 
@@ -180,7 +187,7 @@ Settings are loaded via Pydantic; missing required values fail fast with descrip
 
 ### Transformer coverage
 
-`migrate.py` orchestrates 42 entity transformers across 9 phase batches. See [COVERAGE-MATRIX.md](../docs/COVERAGE-MATRIX.md) for the complete NR-surface → transformer mapping. High-level summary:
+`migrate.py` orchestrates 40+ entity transformers across 9 phase batches. See [COVERAGE-MATRIX.md](../docs/COVERAGE-MATRIX.md) for the complete NR-surface → transformer mapping. High-level summary:
 
 | Phase | Transformers added |
 |---|---|
@@ -203,7 +210,7 @@ Migrating one entity type at a time is the safe pattern. The `--components` flag
 |-----------|----------|-------------|
 | `dashboards` | NR Dashboards → DT Documents (one per page), including funnel / honeycomb / event-feed / cascading variables / saved views | `dashboard_transformer` (Phase 11 + Phase 19 widget parity) |
 | `alerts` | NR NRQL conditions → `builtin:davis.anomaly-detectors` + Workflow | `alert_transformer` (Phase 11 + Phase 17 extensions) |
-| `baseline_alerts` | NR baseline / outlier NRQL conditions → Davis adaptive detectors | `baseline_alert_transformer` (Phase 17) |
+| `baseline_alerts` | NR baseline / outlier NRQL conditions → Dynatrace Intelligence adaptive detectors | `baseline_alert_transformer` (Phase 17) |
 | `non_nrql_alerts` | Infrastructure / Synthetic / Browser / Mobile / External-service / Multi-location-synthetic conditions | `non_nrql_alert_transformer` (Phase 17) |
 | `lookup_tables` | NR `WHERE IN` lookups → Resource Store JSONL + DQL `lookup` subquery | `lookup_table_transformer` (Phase 17) |
 | `maintenance_windows` | NR scheduled + recurring maintenance + mute rules → DT Maintenance Windows + detector filters | `maintenance_window_transformer` (Phase 17) |
@@ -224,7 +231,7 @@ Migrating one entity type at a time is the safe pattern. The `--components` flag
 | `identity` | NR Users / Teams / Roles / SAML → `builtin:iam.*` + SCIM runbook | `identity_transformer` (Phase 17) |
 | `cloud_integrations` | AWS (16 services) / Azure (8 resources) / GCP (8 services) | `cloud_integration_transformer` (Phase 18) |
 | `kubernetes` | NR K8s → DynaKube (full-stack / host-only) + Helm values | `kubernetes_transformer` (Phase 18) |
-| `aiops` | NR AI Workflows + enrichments + decisions → DT automation + Davis detectors | `aiops_transformer` (Phase 18) |
+| `aiops` | NR AI Workflows + enrichments + decisions → DT automation + Dynatrace Intelligence detectors | `aiops_transformer` (Phase 18) |
 | `vulnerability` | NR Vuln Mgmt → RVA alerting + per-CVE muting | `vulnerability_transformer` (Phase 18) |
 | `npm` | SNMP devices + NetFlow collector (secrets redacted) | `npm_transformer` (Phase 18) |
 | `ai_monitoring` | Model registry + inference NRQL→DQL mapping | `ai_monitoring_transformer` (Phase 18) |
@@ -294,11 +301,11 @@ Probes the target tenant for Settings 2.0 / Document API / Automation API availa
 ### Phase 1 — Discover (pair with NR2DT-01)
 
 ```bash
-python3 migrate.py --export-only --output ./inventory
-python3 migrate.py --report --input ./inventory
+python3 migrate.py migrate --export-only --output ./inventory
+python3 migrate.py migrate --report --input ./inventory
 ```
 
-Review `inventory.json`, enriched conversion-quality report (`confidence_score`, `warning_codes`, `runbook_url` per entry), and gap analysis. Stakeholder sign-off on wave plan.
+Review `inventory/exports/newrelic_export.json`, enriched conversion-quality report (`confidence_score`, `warning_codes`, `runbook_url` per entry), and gap analysis. Stakeholder sign-off on wave plan.
 
 **Pre-decommission archive (Phase 17):**
 
@@ -312,7 +319,13 @@ Historical NRDB data is **not migratable to Grail** — archive as JSONL before 
 
 ```bash
 # Translate NRQL inventory
-python3 migrate.py compile --file inventory/all-nrql.txt --report
+# Extract NRQL from the export (produces inventory/all-nrql.txt + .csv)
+python3 migrate.py extract-nrql --input ./inventory --output ./inventory/all-nrql.txt
+python3 migrate.py extract-nrql --input ./inventory --output ./inventory/all-nrql.csv
+
+# Translate — compile for plain DQL; batch for a CSV with confidence scores
+python3 migrate.py compile --file inventory/all-nrql.txt --output translated.dql
+python3 migrate.py batch   --file inventory/all-nrql.csv --output translated.csv
 
 # Instrumentation scan for newrelic.*() SDK calls (Phase 16)
 python3 migrate.py scan-instrumentation --src-root ./app-source --output ./instrumentation-todos.json
@@ -322,40 +335,40 @@ python3 migrate.py agents --language java --dry-run
 python3 migrate.py agents --language nodejs --dry-run
 
 # Transform each component (dry-run)
-python3 migrate.py --transform-only --components workloads,tags --dry-run
+python3 migrate.py migrate --transform-only --components workloads,tags --dry-run
 ```
 
 ### Phase 3 — Wave-by-Wave Import (Gen3 default)
 
-**Use `--diff` dry-run and `--canary` for production tenants.**
+**Use `migrate --diff` dry-run and `--canary` for production tenants.**
 
 ```bash
 # Wave 0 (foundations)
-python3 migrate.py --import-only --components workloads,tags --diff
-python3 migrate.py --import-only --components workloads,tags --canary 10 --canary-auto-proceed
+python3 migrate.py migrate --import-only --components workloads,tags --diff
+python3 migrate.py migrate --import-only --components workloads,tags --canary 10 --canary-auto-proceed
 
 # Wave 1 (dashboards — read-only impact)
-python3 migrate.py --import-only --components dashboards --diff
-python3 migrate.py --import-only --components dashboards
+python3 migrate.py migrate --import-only --components dashboards --diff
+python3 migrate.py migrate --import-only --components dashboards
 
 # Wave 2 (synthetics, including cert-check + broken-links — Phase 24)
-python3 migrate.py --import-only --components synthetics
+python3 migrate.py migrate --import-only --components synthetics
 
 # Wave 3 (alerts — dual-alert window!)
-python3 migrate.py --import-only --components alerts,notifications
+python3 migrate.py migrate --import-only --components alerts,notifications
 # ... wait 1–2 weeks dual-alert ...
 
 # Wave 4 (SLOs + key transactions — Phase 23)
-python3 migrate.py --import-only --components slos,key_transactions
-python3 migrate.py audit-slos --window 7d
+python3 migrate.py migrate --import-only --components slos,key_transactions
+python3 migrate.py audit-slos
 
 # Wave 5 (logs/drops/obfuscation/archive — Phase 17 + 24)
-python3 migrate.py --import-only --components logs,drops,parsing,log_obfuscation,log_archive
+python3 migrate.py migrate --import-only --components logs,drops,parsing,log_obfuscation,log_archive
 
 # Wave 6 (specialized — Phase 18 + 24)
-python3 migrate.py --import-only --components cloud_integrations,kubernetes,prometheus
-python3 migrate.py --import-only --components database_monitoring,on_host_integrations
-python3 migrate.py --import-only --components vulnerability,security_signals,ai_monitoring
+python3 migrate.py migrate --import-only --components cloud_integrations,kubernetes,prometheus
+python3 migrate.py migrate --import-only --components database_monitoring,on_host_integrations
+python3 migrate.py migrate --import-only --components vulnerability,security_signals,ai_monitoring
 ```
 
 ### Phase 4 — Validate & Cutover (NRLC-08)
@@ -363,14 +376,14 @@ python3 migrate.py --import-only --components vulnerability,security_signals,ai_
 Per-wave validation gates:
 
 ```bash
-# Drift audit against baseline (Phase 20)
-python3 migrate.py audit --baseline ./output --live-tenant
+# Drift audit against captured baseline (Phase 20)
+python3 migrate.py audit --baseline ./output
 
-# SLO 7-day delta
-python3 migrate.py audit-slos --window 7d
+# SLO math-equivalence audit
+python3 migrate.py audit-slos
 
-# Behavioral sample validation
-python3 migrate.py compare --nrql "SELECT count(*) FROM Transaction" --window 1h --tolerance 0.05
+# Behavioral sample validation (drift audit drives the NR-vs-DT comparison via baseline)
+python3 migrate.py audit --baseline ./output
 ```
 
 Sign-off per wave.
@@ -418,10 +431,10 @@ Run the compiler in CI to validate any committed DQL:
 
 ### Drift Detection
 
-Schedule a daily diff run to detect manual DT changes that drifted from the GitOps source of truth — Phase 20 `migrate.py audit`:
+Schedule a daily drift audit to detect manual DT changes that drifted from the GitOps source of truth — Phase 20 `migrate.py audit`:
 
 ```bash
-python3 migrate.py audit --baseline ./output --live-tenant --output drift.json
+python3 migrate.py audit --baseline ./output --output drift.json
 if [[ $(jq '.driftCount' drift.json) -gt 0 ]]; then
   alert_team "DT config drift detected"
 fi
