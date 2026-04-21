@@ -101,11 +101,11 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
-| 38 | Correlate Davis problems with business event volume | Overlay `fetch dt.davis.problems` timelines with `fetch bizevents` volume to visualize impact | Critical | Incident Impact |
+| 38 | Correlate detected problems with business event volume | Overlay `fetch dt.davis.problems` timelines with `fetch bizevents` volume to visualize impact | Critical | Incident Impact |
 | 39 | Use `spread:` for concurrent problem timelines | `makeTimeseries count = count(), spread: timeframe(from: event.start, to: coalesce(event.end, now()))` | Recommended | DQL Pattern |
 | 40 | Compare incident periods against baselines | Compare same hour yesterday or same day last week using `bin(now(), 24h)` offsets | Critical | Incident Impact |
 | 41 | Filter to business hours for impact assessment | `getDayOfWeek(timestamp) >= 1 AND getDayOfWeek(timestamp) <= 5 AND getHour(timestamp) >= 9 AND getHour(timestamp) < 17` | Recommended | Context |
-| 42 | Convert Davis `resolved_problem_duration` from nanoseconds to hours | `toLong(resolved_problem_duration) / 3600000000000.0` — the field is in nanoseconds, not milliseconds | Critical | Data Conversion |
+| 42 | Convert Dynatrace Intelligence `resolved_problem_duration` from nanoseconds to hours | `toLong(resolved_problem_duration) / 3600000000000.0` — the field is in nanoseconds, not milliseconds | Critical | Data Conversion |
 | 43 | Exclude duplicate and frequent problems from impact analysis | `filter dt.davis.is_duplicate == false AND dt.davis.is_frequent_event == false` | Critical | Data Quality |
 | 44 | Exclude maintenance windows from SLA calculations | `filter maintenance.is_under_maintenance == false` | Recommended | Data Quality |
 | 45 | Use `sum(toDouble(amount))` for revenue calculations | Always cast `amount` to double before aggregation | Critical | DQL Pattern |
@@ -123,7 +123,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 | 50 | Require minimum sample size before calculating error rates | `filter total > 10` before computing error percentages to avoid misleading rates | Recommended | Data Quality |
 | 51 | Extract critical KPIs as Dynatrace metrics via OpenPipeline | Use `metric_extraction` processing rules for order counts and revenue gauges | Critical | Metric Extraction |
 | 52 | Set metric dimensions to low-cardinality fields only | Dimensions: `event.provider`, `product_category` — never `order_id` or `user_id` | Critical | Metric Extraction |
-| 53 | Use extracted metrics for alerting and SLOs | Extracted metrics enable native Davis alerting and SLO definitions — DQL on bizevents does not | Critical | Alerting |
+| 53 | Use extracted metrics for alerting and SLOs | Extracted metrics enable native Dynatrace Intelligence alerting and SLO definitions — DQL on bizevents does not | Critical | Alerting |
 | 54 | Build a composite business health score | Weight: Transaction Volume 30%, Error Rate 30%, AOV 20%, Conversion Rate 20% — thresholds: Green/Yellow/Red | Recommended | Health Scoring |
 | 55 | Health score thresholds: Error Rate | Green: < 1%, Yellow: 1–5%, Red: > 5% | Recommended | Health Scoring |
 | 56 | Health score thresholds: Volume vs Baseline | Green: > 90%, Yellow: 70–90%, Red: < 70% | Recommended | Health Scoring |

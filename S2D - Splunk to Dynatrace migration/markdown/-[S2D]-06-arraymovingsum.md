@@ -4,9 +4,9 @@
 
 ## Overview
 
-Davis Anomaly Detectors have a maximum sliding window of 60 minutes. For alerts that need to evaluate longer timeframes while still using continuous monitoring, the `arrayMovingSum` function provides a solution.
+Anomaly Detectors have a maximum sliding window of 60 minutes. For alerts that need to evaluate longer timeframes while still using continuous monitoring, the `arrayMovingSum` function provides a solution.
 
-This notebook explains how to use `arrayMovingSum` to create rolling aggregations that can be used with Davis Anomaly Detectors.
+This notebook explains how to use `arrayMovingSum` to create rolling aggregations that can be used with Anomaly Detectors.
 
 ---
 
@@ -16,7 +16,7 @@ This notebook explains how to use `arrayMovingSum` to create rolling aggregation
 2. [How ArrayMovingSum Works](#how-arraymovingsum-works)
 3. [Basic Example](#basic-example)
 4. [Limitations](#limitations)
-5. [Using with Davis Anomaly Detectors](#using-with-davis-anomaly-detectors)
+5. [Using with Anomaly Detectors](#using-with-davis-anomaly-detectors)
 6. [Dashboard/Report Example (Longer Timeframes)](#dashboardreport-example-longer-timeframes)
 7. [Other Array Functions](#other-array-functions)
 8. [When ArrayMovingSum Isn't Enough](#when-arraymovingsum-isnt-enough)
@@ -37,7 +37,7 @@ By the end of this notebook, you will be able to:
 
 1. Understand the `arrayMovingSum` function
 2. Create rolling sum queries for extended timeframes
-3. Apply this pattern to Davis Anomaly Detectors
+3. Apply this pattern to Anomaly Detectors
 4. Recognize limitations and alternatives
 
 <a id="the-problem"></a>
@@ -47,7 +47,7 @@ Many Splunk alerts evaluate over timeframes longer than 1 hour:
 - "Alert if more than 500 errors in the last 4 hours"
 - "Alert if average response time exceeds 2s over the past 2 hours"
 
-Davis Anomaly Detectors have a **maximum sliding window of 60 minutes**.
+Anomaly Detectors have a **maximum sliding window of 60 minutes**.
 
 ### The Solution: ArrayMovingSum
 
@@ -118,14 +118,14 @@ You could increase the interval to extend the timeframe:
 | 5m | 60 | 300 minutes (5 hours) |
 | 10m | 60 | 600 minutes (10 hours) |
 
-**However:** Davis Anomaly Detectors require a **1-minute interval**, so this workaround only applies to dashboards and reports, not continuous alerting.
+**However:** Anomaly Detectors require a **1-minute interval**, so this workaround only applies to dashboards and reports, not continuous alerting.
 
 <a id="using-with-davis-anomaly-detectors"></a>
-## Using with Davis Anomaly Detectors
-For Davis Anomaly Detectors, you must use `interval:1m` and `window:60`:
+## Using with Anomaly Detectors
+For Anomaly Detectors, you must use `interval:1m` and `window:60`:
 
 ```dql
-// Query for Davis Anomaly Detector with 60-minute rolling sum
+// Query for Anomaly Detector with 60-minute rolling sum
 fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.deployment.name, "checkout-service")
@@ -136,7 +136,7 @@ fetch logs, from:-24h
 
 ### Configuring the Detector
 
-When creating the Davis Anomaly Detector:
+When creating the Anomaly Detector:
 
 | Setting | Value | Rationale |
 |---------|-------|-----------|
@@ -148,7 +148,7 @@ When creating the Davis Anomaly Detector:
 
 <a id="dashboardreport-example-longer-timeframes"></a>
 ## Dashboard/Report Example (Longer Timeframes)
-For dashboards and reports (not Davis Anomaly Detectors), you can use longer intervals:
+For dashboards and reports (not Anomaly Detectors), you can use longer intervals:
 
 ```dql
 // 4-hour rolling sum for dashboard visualization
@@ -182,11 +182,11 @@ fetch logs, from:-24h
 
 <a id="when-arraymovingsum-isnt-enough"></a>
 ## When ArrayMovingSum Isn't Enough
-If you need timeframes exceeding 60 minutes with Davis Anomaly Detectors, you have these options:
+If you need timeframes exceeding 60 minutes with Anomaly Detectors, you have these options:
 
 | Approach | Use Case | Trade-offs |
 |----------|----------|------------|
-| **Workflow-based alerting** | Any timeframe | No Davis AI, consumes workflow hours |
+| **Workflow-based alerting** | Any timeframe | No Dynatrace Intelligence, consumes workflow hours |
 | **Metric extraction** | High-volume queries | Requires OpenPipeline config |
 | **Reduce threshold** | Proportional reduction | May increase false positives |
 
@@ -196,7 +196,7 @@ If Splunk alert is: 500 errors in 4 hours
 
 Convert to 1-hour equivalent:
 - 500 ÷ 4 = 125 errors per hour
-- Set Davis threshold to 125 with arrayMovingSum over 60 minutes
+- Set Dynatrace Intelligence threshold to 125 with arrayMovingSum over 60 minutes
 
 **Caveat:** This assumes errors are evenly distributed, which may not match actual patterns.
 
@@ -204,7 +204,7 @@ Convert to 1-hour equivalent:
 
 | Scenario | Solution |
 |----------|----------|
-| Alert over ≤60 minutes | Standard Davis Anomaly Detector |
+| Alert over ≤60 minutes | Standard Anomaly Detector |
 | Alert over exactly 60 minutes | ArrayMovingSum with window:60 |
 | Alert over >60 minutes | Use Workflows (see S2D-05) |
 | Dashboard visualization >60 minutes | ArrayMovingSum with larger interval |
@@ -218,7 +218,7 @@ Convert to 1-hour equivalent:
 
 - [ArrayMovingSum Documentation](https://docs.dynatrace.com/docs/shortlink/array-functions#array-moving-sum)
 - [DQL Array Functions](https://docs.dynatrace.com/docs/shortlink/dql-array-functions)
-- [Davis Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
+- [Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
 
 ---
 

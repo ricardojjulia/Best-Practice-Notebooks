@@ -128,7 +128,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 | 54 | Enable frustration-triggered replay capture | Configure conditional capture for sessions with rage clicks or exit intent | Recommended | WEBRUM-07 |
 | 55 | Err on over-masking, not under-masking | It is better to mask non-sensitive content than to accidentally capture PII | Critical | WEBRUM-07 |
 | 56 | Conduct a privacy review before enabling Session Replay in production | Review all captured content against GDPR, CCPA, and HIPAA requirements before go-live | Critical | WEBRUM-07 |
-| 57 | Use Dynatrace native replay over third-party tools | Native replay integrates with performance waterfall, backend traces, and Davis AI; third-party tools lack this correlation | Recommended | WEBRUM-07 |
+| 57 | Use Dynatrace native replay over third-party tools | Native replay integrates with performance waterfall, backend traces, and Dynatrace Intelligence; third-party tools lack this correlation | Recommended | WEBRUM-07 |
 | 58 | Follow the replay investigation workflow | 1) Identify via DQL, 2) Watch replay, 3) Correlate with waterfall, 4) Note pattern, 5) Quantify with DQL | Recommended | WEBRUM-07 |
 
 <a id="session-analysis"></a>
@@ -162,7 +162,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 | 74 | Alert on traffic anomaly | Threshold: **session count < 50% of previous day's hourly average** | Recommended | WEBRUM-08 |
 | 75 | Alert on CWV regression | Threshold: **LCP p75 > 4 seconds** sustained for **30 minutes** | Recommended | WEBRUM-08 |
 | 76 | Use metric event evaluation window of 15 minutes | **Settings > Anomaly detection > Metric events**: evaluation window **15m**, sliding window **5m** | Recommended | WEBRUM-08 |
-| 77 | Prefer Davis AI anomaly detection over static thresholds in production | Davis automatically baselines normal behavior, reducing false positives from seasonal patterns | Recommended | WEBRUM-08 |
+| 77 | Prefer Dynatrace Intelligence anomaly detection over static thresholds in production | Dynatrace Intelligence automatically baselines normal behavior, reducing false positives from seasonal patterns | Recommended | WEBRUM-08 |
 | 78 | Combine RUM and synthetic in a single dashboard | Use `append` to show side-by-side comparison: RUM real-user metrics vs synthetic clean-room metrics | Recommended | WEBRUM-08 |
 | 79 | Track CWV pass rate as executive KPI | Target: **> 75% of page loads meeting all three CWV thresholds** | Recommended | WEBRUM-08 |
 

@@ -4,7 +4,7 @@
 
 ## Overview
 
-Effective mobile monitoring requires more than raw telemetry -- you need dashboards that surface the right KPIs at a glance and alerts that notify the right people when something goes wrong. This notebook covers designing mobile KPI dashboards with tiles for crash-free rate, session volume, and performance trends; setting up crash rate monitoring with timeseries visualizations; tracking app performance metrics across user actions; and configuring alerts using Davis AI anomaly detection and metric events. The goal is to move from reactive troubleshooting to proactive mobile observability.
+Effective mobile monitoring requires more than raw telemetry -- you need dashboards that surface the right KPIs at a glance and alerts that notify the right people when something goes wrong. This notebook covers designing mobile KPI dashboards with tiles for crash-free rate, session volume, and performance trends; setting up crash rate monitoring with timeseries visualizations; tracking app performance metrics across user actions; and configuring alerts using Dynatrace Intelligence anomaly detection and metric events. The goal is to move from reactive troubleshooting to proactive mobile observability.
 
 ---
 
@@ -15,7 +15,7 @@ Effective mobile monitoring requires more than raw telemetry -- you need dashboa
 3. [App Performance Metrics](#app-performance-metrics)
 4. [Session Volume Trends](#session-volume-trends)
 5. [Metric Alerts for Mobile](#metric-alerts)
-6. [Davis Problem Correlation](#davis-problem-correlation)
+6. [Detected Problem Correlation](#davis-problem-correlation)
 7. [Executive Summary Tiles](#executive-summary)
 
 ---
@@ -114,8 +114,8 @@ The alerting flow for mobile performance follows a standard pattern from metric 
 | Step | Stage | Description |
 |------|-------|-------------|
 | 1 | Metric Threshold Breached | A mobile KPI (crash rate, action duration, error count) crosses a configured threshold |
-| 2 | Davis Detects Anomaly | Davis AI identifies the anomaly as a significant deviation from baseline behavior |
-| 3 | Workflow Triggered | A Dynatrace workflow fires in response to the Davis problem event |
+| 2 | Dynatrace Intelligence Detects Anomaly | Dynatrace Intelligence identifies the anomaly as a significant deviation from baseline behavior |
+| 3 | Workflow Triggered | A Dynatrace workflow fires in response to the detected problem event |
 | 4 | Notification Sent | The workflow delivers a notification via Slack, Email, PagerDuty, or other configured channel |
 For environments where SVG doesn't render
 -->
@@ -169,7 +169,7 @@ The timeseries above breaks down average action duration by type (e.g., `Load`, 
 
 Dashboards are for humans looking at screens. Alerts are for ensuring problems are noticed even when nobody is watching. Dynatrace supports two complementary alerting mechanisms for mobile KPIs:
 
-1. **Davis AI Anomaly Detection** -- Automatically detects deviations from baseline behavior without manual threshold configuration. Best for metrics with natural variance (session volume, action duration).
+1. **Dynatrace Intelligence Anomaly Detection** -- Automatically detects deviations from baseline behavior without manual threshold configuration. Best for metrics with natural variance (session volume, action duration).
 2. **Metric Events (Custom Alerts)** -- Manually defined thresholds that fire when a metric crosses a specific boundary. Best for hard limits (crash rate > X, error rate > Y).
 
 ### Recommended Alert Configuration
@@ -204,24 +204,24 @@ Dealerting samples: 3
 Severity: Critical
 ```
 
-### Davis AI vs Static Thresholds
+### Dynatrace Intelligence vs Static Thresholds
 
 | Approach | Best For | Limitations |
 |----------|----------|-------------|
-| **Davis AI** | Metrics with seasonal patterns, automatically adapts to baselines | May miss gradual degradation; requires learning period |
+| **Dynatrace Intelligence** | Metrics with seasonal patterns, automatically adapts to baselines | May miss gradual degradation; requires learning period |
 | **Static Threshold** | Hard business limits (SLAs, crash budgets) | Must be manually tuned; doesn't adapt to growth |
-| **Both Combined** | Maximum coverage -- Davis catches anomalies, static thresholds enforce SLAs | More alerts to manage |
+| **Both Combined** | Maximum coverage -- Dynatrace Intelligence catches anomalies, static thresholds enforce SLAs | More alerts to manage |
 
-> **Tip:** Start with Davis AI for performance metrics (it adapts to your app's normal patterns) and add static thresholds only for KPIs with hard business requirements like crash-free rate SLAs.
+> **Tip:** Start with Dynatrace Intelligence for performance metrics (it adapts to your app's normal patterns) and add static thresholds only for KPIs with hard business requirements like crash-free rate SLAs.
 
 <a id="davis-problem-correlation"></a>
 
-## 6. Davis Problem Correlation
+## 6. Detected Problem Correlation
 
-When Davis AI detects an anomaly affecting a mobile application, it creates a problem that can be correlated with the mobile telemetry you see on dashboards. The following query retrieves recent Davis problems that impact mobile device applications, helping you bridge the gap between infrastructure-level detection and user-facing impact.
+When Dynatrace Intelligence detects an anomaly affecting a mobile application, it creates a problem that can be correlated with the mobile telemetry you see on dashboards. The following query retrieves recent detected problems that impact mobile device applications, helping you bridge the gap between infrastructure-level detection and user-facing impact.
 
 ```dql
-// Davis problems affecting mobile applications
+// detected problems affecting mobile applications
 fetch dt.davis.problems, from:-7d
 | expand affected_entity_ids
 | filter contains(toString(affected_entity_ids), "DEVICE_APPLICATION")
@@ -232,15 +232,15 @@ fetch dt.davis.problems, from:-7d
 
 ### Correlating Problems with Mobile Metrics
 
-When you identify a Davis problem affecting a mobile application, overlay the problem time range on your dashboard timeseries to see:
+When you identify a detected problem affecting a mobile application, overlay the problem time range on your dashboard timeseries to see:
 
 - **Did crash rate spike during the problem window?** -- If yes, the root cause likely caused crashes, not just slowdowns
 - **Did session volume drop?** -- A sudden drop in sessions during a problem may indicate users are unable to launch the app
-- **Did action duration increase?** -- Performance degradation detected by Davis should correlate with user-facing slowness
+- **Did action duration increase?** -- Performance degradation detected by Dynatrace Intelligence should correlate with user-facing slowness
 
 ### Problem Workflow Integration
 
-Connect Davis problems to your notification channels so the mobile team is alerted immediately:
+Connect detected problems to your notification channels so the mobile team is alerted immediately:
 
 ```yaml
 # Workflow trigger for mobile-specific problems
@@ -310,8 +310,8 @@ In this notebook, you learned:
 - **Crash rate monitoring** -- Build a timeseries comparing total events to crash events, and interpret crash-free rate thresholds
 - **App performance metrics** -- Track session volume and user action duration to detect regressions and correlate with backend changes
 - **Session volume trends** -- Identify usage patterns, peak hours, and sudden drops that may indicate outages
-- **Metric alerts** -- Configure Davis AI anomaly detection for adaptive baselines and static thresholds for hard SLA limits
-- **Davis problem correlation** -- Query problems affecting mobile applications and overlay them with dashboard timeseries
+- **Metric alerts** -- Configure Dynatrace Intelligence anomaly detection for adaptive baselines and static thresholds for hard SLA limits
+- **detected problem correlation** -- Query problems affecting mobile applications and overlay them with dashboard timeseries
 - **Executive summary tiles** -- Build single-table summaries with total actions, unique sessions, crash count, and engagement metrics
 
 ---
@@ -330,7 +330,7 @@ Continue to **MOBL-12** to explore:
 - [Dynatrace Dashboards](https://docs.dynatrace.com/docs/observe-and-explore/dashboards-and-notebooks/dashboards)
 - [Metric Events for Alerting](https://docs.dynatrace.com/docs/observe-and-explore/davis-ai/anomaly-detection/metric-events-for-alerting)
 - [Mobile App Monitoring](https://docs.dynatrace.com/docs/platform-modules/digital-experience/mobile-applications)
-- [Davis AI Problems](https://docs.dynatrace.com/docs/observe-and-explore/davis-ai/davis-ai-problems)
+- [Dynatrace Intelligence Problems](https://docs.dynatrace.com/docs/observe-and-explore/davis-ai/davis-ai-problems)
 - [Workflows for Alerting](https://docs.dynatrace.com/docs/platform/workflows)
 
 ---

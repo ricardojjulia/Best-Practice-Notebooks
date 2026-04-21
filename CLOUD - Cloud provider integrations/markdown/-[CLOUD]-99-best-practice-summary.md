@@ -165,12 +165,12 @@ This notebook distills every actionable best practice from the CLOUD series (CLO
 
 | # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
-| 74 | Use Davis AI for automatic cross-cloud anomaly detection | Enable Davis anomaly detection on all monitored entities; do not rely solely on static thresholds | Critical | CLOUD-08 |
+| 74 | Use Dynatrace Intelligence for automatic cross-cloud anomaly detection | Enable Anomaly Detection on all monitored entities; do not rely solely on static thresholds | Critical | CLOUD-08 |
 | 75 | Set alert evaluation windows ≥ 15 min for cloud metrics | Cloud metric delay: 5–15 min. A 1-min evaluation window on 5-min metrics produces false negatives | Critical | CLOUD-02 |
 | 76 | Use OneAgent metrics for sub-minute alerting | For alerts requiring < 5 min evaluation, use `dt.host.*` or `dt.process.*` metrics from OneAgent, not cloud metrics | Critical | CLOUD-02 |
 | 77 | Combine cloud integration with OneAgent on all compute | Cloud integration: infrastructure context. OneAgent: processes, traces, code-level diagnostics. Both required for full-stack visibility | Critical | CLOUD-01 |
-| 78 | Build unified health dashboards showing all providers | Components: host CPU (all providers), active Davis problems, service error rates, log error trends, K8s container metrics | Recommended | CLOUD-08 |
-| 79 | Deduplicate alerts using Davis correlation | Davis automatically correlates related issues across providers; do not create redundant static alerts | Recommended | CLOUD-08 |
+| 78 | Build unified health dashboards showing all providers | Components: host CPU (all providers), active detected problems, service error rates, log error trends, K8s container metrics | Recommended | CLOUD-08 |
+| 79 | Deduplicate alerts using Dynatrace Intelligence correlation | Dynatrace Intelligence automatically correlates related issues across providers; do not create redundant static alerts | Recommended | CLOUD-08 |
 | 80 | Forward control plane logs to Dynatrace for unified analysis | EKS: Container Insights logs. AKS: Azure Monitor logs. GKE: Cloud Logging. Forward all to Grail for cross-platform analysis | Recommended | CLOUD-03, CLOUD-06 |
 
 ---

@@ -1,10 +1,10 @@
-# S2D-04: Alert Migration - Davis Anomaly Detectors
+# S2D-04: Alert Migration - Anomaly Detectors
 
 > **Series:** S2D | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 ## Overview
 
-This notebook explains how to translate Splunk alert conditions into Dynatrace Davis Anomaly Detectors. Understanding the fundamental differences between scheduled queries and continuous monitoring is essential for successful alert migration.
+This notebook explains how to translate Splunk alert conditions into Dynatrace Anomaly Detectors. Understanding the fundamental differences between scheduled queries and continuous monitoring is essential for successful alert migration.
 
 ![Splunk vs Dynatrace Alerting](images/splunk-vs-dynatrace-alerting.png)
 
@@ -26,7 +26,7 @@ For environments where SVG doesn't render
 3. [Threshold Translation Formula](#threshold-translation-formula)
 4. [Migration Strategies](#migration-strategies)
 5. [Concept Mapping](#concept-mapping)
-6. [Creating a Davis Anomaly Detector](#creating-a-davis-anomaly-detector)
+6. [Creating a Anomaly Detector](#creating-a-davis-anomaly-detector)
 7. [Migration Decision Tree](#migration-decision-tree)
 8. [Validation Query](#validation-query)
 
@@ -44,10 +44,10 @@ For environments where SVG doesn't render
 
 By the end of this notebook, you will be able to:
 
-1. Explain the difference between Splunk scheduled alerts and Davis Anomaly Detectors
+1. Explain the difference between Splunk scheduled alerts and Anomaly Detectors
 2. Apply the threshold translation formula
 3. Choose the appropriate migration strategy for different alert types
-4. Configure Davis Anomaly Detector parameters correctly
+4. Configure Anomaly Detector parameters correctly
 
 <a id="splunk-vs-dynatrace-alerting"></a>
 ## Splunk vs Dynatrace Alerting
@@ -61,7 +61,7 @@ In Splunk, alerts are **scheduled queries** that:
 
 ### Dynatrace Alerting Model
 
-Davis Anomaly Detectors provide **continuous monitoring** that:
+Anomaly Detectors provide **continuous monitoring** that:
 - Evaluate every minute (1-minute granularity)
 - Use a sliding window approach
 - Require multiple violating samples to trigger
@@ -78,7 +78,7 @@ Davis Anomaly Detectors provide **continuous monitoring** that:
 
 <a id="the-sliding-window-concept"></a>
 ## The Sliding Window Concept
-Davis Anomaly Detectors continuously evaluate metrics using a sliding window.
+Anomaly Detectors continuously evaluate metrics using a sliding window.
 
 **Example Configuration:**
 - Metric: Error Log Count
@@ -138,7 +138,7 @@ The key insight for translation is that both platforms should require roughly th
 - Mindset shift for teams used to Splunk
 
 ```dql
-// Option 1: Alert Reimagined - DQL for Davis Anomaly Detector
+// Option 1: Alert Reimagined - DQL for Anomaly Detector
 // Threshold: 3, Violating Samples: 2, Sliding Window: 15
 fetch logs, from:-24h
 | filter loglevel == "ERROR"
@@ -233,13 +233,13 @@ fetch logs, from:now()-7d
 | Schedule Frequency | Always 1 minute | Cannot be changed |
 
 <a id="creating-a-davis-anomaly-detector"></a>
-## Creating a Davis Anomaly Detector
+## Creating a Anomaly Detector
 ### Step 1: Create the DQL Query
 
 Your query must return timeseries data with a 1-minute interval:
 
 ```dql
-// Template for Davis Anomaly Detector DQL
+// Template for Anomaly Detector DQL
 fetch logs, from:-24h
 | filter loglevel == "ERROR"
 | filter matchesPhrase(k8s.cluster.name, "your-cluster")
@@ -287,7 +287,7 @@ Use this decision tree to choose your migration approach:
 
 <a id="validation-query"></a>
 ## Validation Query
-Before creating a Davis Anomaly Detector, validate your query returns expected results:
+Before creating a Anomaly Detector, validate your query returns expected results:
 
 ```dql
 // Validate alert query returns timeseries data
@@ -300,12 +300,12 @@ fetch logs, from:now()-24h
 
 ## Next Steps
 
-- **S2D-05: Alert Migration - Workflows** - For alerts that don't fit the Davis model
+- **S2D-05: Alert Migration - Workflows** - For alerts that don't fit the Dynatrace Intelligence model
 - **S2D-06: ArrayMovingSum** - For timeframes exceeding 1 hour
 
 ## References
 
-- [Davis Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
+- [Anomaly Detectors](https://docs.dynatrace.com/docs/shortlink/davis-anomaly-detectors)
 - [Custom Events for Alerting](https://docs.dynatrace.com/docs/shortlink/custom-events-alerting)
 - [Alerting Profiles](https://docs.dynatrace.com/docs/shortlink/alerting-profiles)
 

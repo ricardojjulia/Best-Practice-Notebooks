@@ -68,9 +68,9 @@ Executive dashboards answer: **"Is the business healthy?"**
 
 | KPI | Query Approach | Tile Type |
 |-----|---------------|------------|
-| Overall availability % | Davis problem downtime vs total time | Single value |
+| Overall availability % | detected problem downtime vs total time | Single value |
 | Mean time to resolve | Closed problem duration average | Single value |
-| Active problem count | Count of open Davis problems | Single value |
+| Active problem count | Count of open detected problems | Single value |
 | Problem trend (7 day) | Problem count timeseries | Line chart |
 
 ### Example: Weekly Problem Trend
@@ -112,7 +112,7 @@ Operations dashboards answer: **"What needs attention right now?"**
 | Service response time | Span duration by service | Line chart |
 | Error rate by service | Error count / total count | Bar chart |
 | Log volume by level | Log count timeseries | Stacked area |
-| Top 5 problem types | Davis problem aggregation | Table |
+| Top 5 problem types | detected problem aggregation | Table |
 | Infrastructure CPU | Host CPU timeseries | Line chart |
 
 ### Example: Service Error Rate

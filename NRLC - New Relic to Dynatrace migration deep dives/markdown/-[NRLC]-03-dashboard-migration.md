@@ -214,7 +214,7 @@ Visualization-specific settings (axis labels, color overrides, sort order) are c
 |----|----|-------|
 | Dashboard (multi-page) | Document × N | one per page |
 | Alert Policy + Condition | Workflow + Metric Event (Gen3) | decoupled |
-| APM Condition | Davis Adaptive Baseline | manual review |
+| APM Condition | Dynatrace Intelligence Adaptive Baseline | manual review |
 | Synthetic (4 types) | HTTP/Browser/Multi-step (3 types) | scripted browser is manual |
 | SLO | SLO v2 | metric expression must match |
 | Workload | OpenPipeline enrichment + IAM policy condition on enriched attribute | rules-based |
@@ -308,22 +308,22 @@ End-to-end commands for migrating only dashboards — no other components touche
 
 ```bash
 # 1. Inventory NR dashboards
-python3 migrate.py --export-only --components dashboards --output ./dashboards-export
+python3 migrate.py migrate --export-only --components dashboards --output ./dashboards-export
 
 # 2. Translate widget queries with confidence report
-python3 migrate.py --transform-only --components dashboards --report
+python3 migrate.py migrate --transform-only --components dashboards --report
 
 # 3. Diff against existing DT documents (avoid duplicate creation)
-python3 migrate.py --diff --components dashboards
+python3 migrate.py migrate --diff --components dashboards
 
 # 4a. Direct API import
-python3 migrate.py --import-only --components dashboards
+python3 migrate.py migrate --import-only --components dashboards
 
 # 4b. Or export as Terraform for GitOps management
 python3 migrate.py export-terraform --components dashboards --output ./tf-dashboards
 
 # 5. Rollback if needed (within the rollback retention window)
-python3 migrate.py --rollback --manifest ./output/run-<timestamp>.json
+python3 migrate.py migrate --rollback --manifest ./output/run-<timestamp>.json
 ```
 
 **Single-query translation** for an ad-hoc widget:

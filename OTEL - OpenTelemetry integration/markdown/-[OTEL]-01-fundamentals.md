@@ -62,7 +62,7 @@ OpenTelemetry is a Cloud Native Computing Foundation (CNCF) project, formed from
 | **Coverage** | Code-level | Full-stack |
 | **Flexibility** | High (any backend) | Dynatrace-specific |
 | **Maintenance** | Higher | Lower |
-| **Features** | Standard signals | AI, RCA, Davis |
+| **Features** | Standard signals | AI, RCA, Dynatrace Intelligence |
 
 ### When to Choose OTel
 
@@ -87,7 +87,7 @@ Dynatrace supports using both OneAgent and OTel together:
 | Application | Runs your code |
 | OneAgent (auto) | Automatic instrumentation |
 | OTel SDK (custom) | Manual custom spans |
-| Dynatrace Backend | Unified view, correlation, Davis AI |
+| Dynatrace Backend | Unified view, correlation, Dynatrace Intelligence |
 
 Both agents send to Dynatrace for unified analysis.
 For environments where SVG doesn't render
@@ -108,7 +108,7 @@ For environments where SVG doesn't render
 | Receivers | OTLP, Jaeger, Prometheus |
 | Processors | Batch, Filter, Attributes |
 | Exporters | OTLP/HTTP, Debug |
-| Dynatrace | Unified view, correlation, Davis AI |
+| Dynatrace | Unified view, correlation, Dynatrace Intelligence |
 For environments where SVG doesn't render
 -->
 
@@ -293,7 +293,7 @@ fetch spans, from:-1h
 |----------|---------------|
 | **Full-stack** | Infrastructure + code in one |
 | **Zero-effort** | Auto-instrumentation |
-| **Davis AI** | Full AI capabilities |
+| **Dynatrace Intelligence** | Full AI capabilities |
 | **PurePath** | Complete transaction tracing |
 | **Real User Monitoring** | RUM integration |
 

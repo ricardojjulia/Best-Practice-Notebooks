@@ -33,7 +33,7 @@ Before starting this notebook, ensure you have:
 
 <a id="understanding-query-costs"></a>
 ## 1. Understanding Query Costs
-DQL queries consume resources measured in DPS (Davis Processing Seconds) on current licensing, or DDUs (Davis Data Units) on classic contracts based on several factors:
+DQL queries consume resources measured in DPS (Dynatrace Intelligence Processing Seconds) on current licensing, or DDUs (Dynatrace Intelligence Data Units) on classic contracts based on several factors:
 
 ![Query Cost Optimization](images/query-cost-optimization.png)
 
@@ -476,7 +476,7 @@ You have completed the **Spans & Distributed Tracing** notebook series!
 - Build dashboards using the optimized query patterns
 - Configure alerts based on span analytics
 - Set up OpenPipeline for data optimization
-- Explore Davis AI integration for intelligent analysis
+- Explore Dynatrace Intelligence integration for intelligent analysis
 
 ---
 

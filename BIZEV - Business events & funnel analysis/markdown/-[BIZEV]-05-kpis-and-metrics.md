@@ -167,7 +167,7 @@ fetch bizevents, from:-24h
 While DQL queries compute KPIs on demand, **OpenPipeline metric extraction** creates persistent Dynatrace metrics from business events. This enables:
 
 - Long-term retention (metrics have longer default retention than events)
-- Alerting via Davis or custom metric events
+- Alerting via Dynatrace Intelligence or custom metric events
 - Dashboard widgets with instant load times
 - SLO definitions based on business metrics
 
@@ -196,7 +196,7 @@ pipelines:
 | Approach | Latency | Retention | Alerting | Cost |
 |----------|---------|-----------|----------|------|
 | DQL on bizevents | Seconds | Event retention (default 35 days) | Manual threshold | Scans event data |
-| Extracted metrics | Sub-second | Metric retention (default 5 years) | Native Davis/SLO | Pre-aggregated |
+| Extracted metrics | Sub-second | Metric retention (default 5 years) | Native Dynatrace Intelligence/SLO | Pre-aggregated |
 
 ```dql
 // If you have extracted business metrics, query them with timeseries

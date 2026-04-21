@@ -98,7 +98,7 @@ Quick wins require minimal effort but deliver visible results. They establish cr
 **Actions:**
 - Identify the top 5 noisiest alert sources
 - Configure maintenance windows for known noisy periods
-- Adjust Davis AI sensitivity for over-alerting entity types
+- Adjust Dynatrace Intelligence sensitivity for over-alerting entity types
 - Document alerting ownership per service
 
 Use this query to identify the noisiest problem sources:
@@ -326,7 +326,7 @@ Automation reduces toil and improves consistency. Prioritize automating tasks th
 | Configuration drift detection | Weekly | 1 hour/week | Monaco CI/CD | Medium |
 | Report generation for leadership | Weekly | 2 hours/week | Scheduled DQL notebooks | Medium |
 | Incident postmortem data collection | Per incident | 1 hour/incident | Workflow + DQL | Low (high value) |
-| Capacity forecasting | Monthly | 4 hours/month | Davis AI forecasting | Low (high value) |
+| Capacity forecasting | Monthly | 4 hours/month | Dynatrace Intelligence forecasting | Low (high value) |
 
 ### Quick-Start Automation: Noisy Alert Suppression
 

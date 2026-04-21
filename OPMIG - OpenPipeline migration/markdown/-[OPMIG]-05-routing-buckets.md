@@ -242,9 +242,9 @@ Understanding the financial impact of bucket strategies is critical for migratio
 
 ### Pricing Model (DPS / DDU)
 
-> **Note:** Dynatrace has transitioned to **DPS (Davis Processing Seconds)** licensing. The DDU model below applies to classic licensing contracts. Check your license model to determine which applies.
+> **Note:** Dynatrace has transitioned to **DPS (Dynatrace Intelligence Processing Seconds)** licensing. The DDU model below applies to classic licensing contracts. Check your license model to determine which applies.
 
-On classic licensing, OpenPipeline storage is measured in **Davis Data Units (DDUs)**:
+On classic licensing, OpenPipeline storage is measured in **Dynatrace Intelligence Data Units (DDUs)**:
 
 | Component | DDU Calculation |
 |-----------|----------------|

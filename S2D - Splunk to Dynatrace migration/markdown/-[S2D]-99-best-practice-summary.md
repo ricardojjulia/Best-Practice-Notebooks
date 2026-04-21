@@ -13,7 +13,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 1. [Migration Planning](#migration-planning)
 2. [Log Discovery and Validation](#log-discovery-and-validation)
 3. [Query Translation (SPL to DQL)](#query-translation-spl-to-dql)
-4. [Alert Migration - Davis Anomaly Detectors](#alert-migration-davis-anomaly-detectors)
+4. [Alert Migration - Anomaly Detectors](#alert-migration-davis-anomaly-detectors)
 5. [Alert Migration - Workflows](#alert-migration-workflows)
 6. [Extended Timeframes (ArrayMovingSum)](#extended-timeframes-arraymovingsum)
 7. [Metric Creation from Logs](#metric-creation-from-logs)
@@ -81,18 +81,18 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 | 30 | Always alias aggregation results | `summarize count = count()` not `summarize count()` | Critical | Syntax |
 
 <a id="alert-migration-davis-anomaly-detectors"></a>
-## 4. Alert Migration - Davis Anomaly Detectors
+## 4. Alert Migration - Anomaly Detectors
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
 | 31 | Apply the threshold translation formula | `Splunk Threshold = DT Threshold x DT Violating Samples` | Critical | Alerting |
 | 32 | Use the "Alert Reimagined" strategy as default | Threshold: calculated, Sliding Window: match Splunk timeframe, Violating Samples: 2-3, Dealerting Samples: match Splunk suppress duration | Recommended | Alerting |
-| 33 | Set Davis Anomaly Detector query interval to 1 minute | `interval:1m` in `makeTimeseries` | Critical | Alerting |
+| 33 | Set Anomaly Detector query interval to 1 minute | `interval:1m` in `makeTimeseries` | Critical | Alerting |
 | 34 | Set the sliding window to match Splunk query timeframe | Max: 60 minutes. If Splunk timeframe is 15m, set sliding window to 15 | Critical | Alerting |
 | 35 | Set dealerting samples to match Splunk suppression | If Splunk suppress = 15 min, set dealerting samples = 15 | Recommended | Alerting |
 | 36 | Use `by:{dt.entity.cloud_application}` for entity association | Ensures alerts are tied to the correct monitored entity | Critical | Alerting |
-| 37 | Prefer Davis Anomaly Detectors over Workflows when timeframe is 60 min or less | Davis provides continuous monitoring, AI correlation, and no license overhead | Critical | Alerting |
-| 38 | If alert timeframe exceeds 60 minutes, use Workflows or ArrayMovingSum | Davis Anomaly Detectors max sliding window = 60 minutes | Critical | Alerting |
+| 37 | Prefer Anomaly Detectors over Workflows when timeframe is 60 min or less | Dynatrace Intelligence provides continuous monitoring, AI correlation, and no license overhead | Critical | Alerting |
+| 38 | If alert timeframe exceeds 60 minutes, use Workflows or ArrayMovingSum | Anomaly Detectors max sliding window = 60 minutes | Critical | Alerting |
 | 39 | Use the data-driven strategy when historical data is available | Analyze 7 days of data to set thresholds based on actual patterns | Recommended | Alerting |
 | 40 | Validate the alert query returns timeseries data before configuring | Run the query in a notebook first; confirm `makeTimeseries` output | Critical | Validation |
 
@@ -101,14 +101,14 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|----------------|----------|----------|
-| 41 | Use Workflows only when: timeframe > 60 min, alert runs few times/day, business-hours only, or is actually a report | Otherwise use Davis Anomaly Detectors | Critical | Alerting |
+| 41 | Use Workflows only when: timeframe > 60 min, alert runs few times/day, business-hours only, or is actually a report | Otherwise use Anomaly Detectors | Critical | Alerting |
 | 42 | Specify timeframe explicitly in the DQL query, not from dashboard | `fetch logs, from:now()-7d` in the workflow query itself | Critical | Alerting |
 | 43 | Workflow queries do NOT require `makeTimeseries` output | Use `summarize` to return a single aggregated value | Recommended | Alerting |
 | 44 | Set event timeout in the JavaScript event creation step | `timeout: 15` (minutes) to auto-expire events | Recommended | Alerting |
 | 45 | Workflow events do NOT auto-close or auto-update | Design event lifecycle accordingly; events expire by timeout only | Critical | Alerting |
-| 46 | Workflow events are NOT correlated by Davis AI | No root-cause analysis or problem grouping | Recommended | Alerting |
+| 46 | Workflow events are NOT correlated by Dynatrace Intelligence | No root-cause analysis or problem grouping | Recommended | Alerting |
 | 47 | Account for workflow license consumption | Workflows consume workflow hours; frequent schedules cost more | Recommended | Licensing |
-| 48 | For business-hours-only alerting, filter by hour in the Davis query instead of using a Workflow | `fieldsAdd hour = toLong(formatTimestamp(timestamp, format:"HH"))` then `filter hour >= 8 AND hour < 18` | Recommended | Alerting |
+| 48 | For business-hours-only alerting, filter by hour in the Dynatrace Intelligence query instead of using a Workflow | `fieldsAdd hour = toLong(formatTimestamp(timestamp, format:"HH"))` then `filter hour >= 8 AND hour < 18` | Recommended | Alerting |
 
 <a id="extended-timeframes-arraymovingsum"></a>
 ## 6. Extended Timeframes (ArrayMovingSum)
@@ -117,7 +117,7 @@ This notebook consolidates every actionable best practice from the S2D (Splunk t
 |---|---------------|----------------|----------|----------|
 | 49 | Use `arrayMovingSum(array, 60)` with `interval:1m` for 60-minute rolling sum | Each data point = sum of preceding 60 minutes | Critical | DQL |
 | 50 | Max `arrayMovingSum` window = 60 | Cannot exceed 60 data points regardless of interval | Critical | DQL |
-| 51 | With Davis Anomaly Detectors + ArrayMovingSum, set sliding window = 1 and violating samples = 1 | Each data point already contains the full rolling aggregation | Critical | Alerting |
+| 51 | With Anomaly Detectors + ArrayMovingSum, set sliding window = 1 and violating samples = 1 | Each data point already contains the full rolling aggregation | Critical | Alerting |
 | 52 | Set threshold to total count expected in the rolling window | If Splunk threshold = 500 errors in 60 min, set DT threshold = 500 | Critical | Alerting |
 | 53 | Remove the original timeseries field after adding the rolling sum | `fieldsRemove error_count` after `fieldsAdd error_count_1h = arrayMovingSum(error_count, 60)` | Recommended | DQL |
 | 54 | For dashboard visualizations > 60 min, increase the interval | `interval:4m` with `window:60` = 4-hour rolling sum | Recommended | DQL |
@@ -191,7 +191,7 @@ This notebook contains **90 best practices** across 10 categories for Splunk to 
 | Migration Planning | 6 | 4 Critical, 2 Recommended |
 | Log Discovery and Validation | 7 | 3 Critical, 4 Recommended |
 | Query Translation (SPL to DQL) | 17 | 10 Critical, 7 Recommended |
-| Alert Migration - Davis Anomaly Detectors | 10 | 7 Critical, 3 Recommended |
+| Alert Migration - Anomaly Detectors | 10 | 7 Critical, 3 Recommended |
 | Alert Migration - Workflows | 8 | 3 Critical, 5 Recommended |
 | Extended Timeframes (ArrayMovingSum) | 7 | 4 Critical, 3 Recommended |
 | Metric Creation from Logs | 7 | 3 Critical, 4 Recommended |
@@ -205,7 +205,7 @@ This notebook contains **90 best practices** across 10 categories for Splunk to 
 - **S2D-01** - Getting Started: Migration overview and planning
 - **S2D-02** - Locating Logs: Data validation and ingest configuration
 - **S2D-03** - SPL to DQL: Query translation fundamentals
-- **S2D-04** - Davis Anomaly Detectors: Continuous alert migration
+- **S2D-04** - Anomaly Detectors: Continuous alert migration
 - **S2D-05** - Workflow Alerts: Scheduled and extended alerting
 - **S2D-06** - ArrayMovingSum: Extended timeframe handling
 - **S2D-07** - Metric Creation: OpenPipeline log-based metrics

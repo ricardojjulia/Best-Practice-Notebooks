@@ -145,7 +145,7 @@ Alerting is the most critical integration to validate. A missed alert during mig
 SaaS provides the AutomationEngine for advanced alerting workflows. Consider converting Managed problem notifications to Workflow triggers for:
 
 - **Conditional routing** — Route alerts based on management zone, severity, or tags
-- **Enrichment** — Add entity details, runbook links, or Davis AI context to notifications
+- **Enrichment** — Add entity details, runbook links, or Dynatrace Intelligence context to notifications
 - **Multi-channel delivery** — Send to Slack AND PagerDuty from a single workflow
 - **Auto-remediation** — Trigger runbooks or API calls in response to problems
 
@@ -161,9 +161,9 @@ For each notification channel:
 
 > **Warning:** Do not skip testing resolution notifications. Many integrations (PagerDuty, ServiceNow) auto-resolve incidents when the Dynatrace problem closes. If resolution notifications are broken, incidents pile up in your ITSM system.
 
-### Verify Alert Delivery Using Davis Problems
+### Verify Alert Delivery Using Detected Problems
 
-After configuring notifications, monitor Davis problems to confirm alerts are flowing:
+After configuring notifications, monitor detected problems to confirm alerts are flowing:
 
 ```dql
 // Recent problems — verify these triggered notifications in your external systems
@@ -174,7 +174,7 @@ fetch dt.davis.problems, from:-24h
 ```
 
 ```dql
-// Problem trend over last 7 days — confirms Davis AI baseline is building
+// Problem trend over last 7 days — confirms Dynatrace Intelligence baseline is building
 fetch dt.davis.problems, from:-7d
 | makeTimeseries count = count(default: 0), interval: 1d
 ```

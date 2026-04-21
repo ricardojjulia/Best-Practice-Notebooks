@@ -73,7 +73,7 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 
 - OneAgent deployment on critical hosts
 - Basic infrastructure monitoring
-- Default Davis AI alerting (often not yet configured)
+- Default Dynatrace Intelligence alerting (often not yet configured)
 
 <a id="level-2-proactive"></a>
 
@@ -93,14 +93,14 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 |-----------|-------------------|
 | Agent coverage | 50-80% of hosts instrumented |
 | Data sources | Infrastructure + application metrics |
-| Alerting | Threshold-based, some Davis AI |
+| Alerting | Threshold-based, some Dynatrace Intelligence |
 | Dashboards | Standardized templates for key services |
 | Incident process | Defined runbooks for top 10 issues |
 
 ### Dynatrace Features at This Level
 
 - Full-stack OneAgent deployment
-- Davis AI problem detection enabled
+- Dynatrace Intelligence problem detection enabled
 - Custom metric alerting profiles
 - Basic synthetic monitoring for key URLs
 
@@ -157,7 +157,7 @@ Most organizations operate between Level 1 and Level 3. The goal is not necessar
 
 ### Dynatrace Features at This Level
 
-- Davis AI with custom anomaly detection
+- Dynatrace Intelligence with custom anomaly detection
 - Metric forecasting and trend analysis
 - Business event correlation
 - Ownership and team assignment for entities
@@ -232,12 +232,12 @@ fetch spans, from:-24h
 | summarize span_count = count(), distinct_services = countDistinct(dt.entity.service)
 ```
 
-### 7.3 Davis AI Problem Detection Activity
+### 7.3 Dynatrace Intelligence Problem Detection Activity
 
-Active Davis AI problem detection is a key indicator of Level 2+ maturity. If few or no problems are being detected, it may indicate insufficient instrumentation or misconfigured alerting.
+Active Dynatrace Intelligence problem detection is a key indicator of Level 2+ maturity. If few or no problems are being detected, it may indicate insufficient instrumentation or misconfigured alerting.
 
 ```dql
-// Count Davis problems in the last 7 days by status
+// Count detected problems in the last 7 days by status
 fetch dt.davis.problems, from:-7d
 | summarize problem_count = count(), by:{event.status}
 | sort problem_count desc
@@ -273,7 +273,7 @@ Use this table to identify which Dynatrace capabilities to adopt next based on y
 |---------|----|----|----|----|----|
 | OneAgent (Infrastructure) | X | X | X | X | X |
 | OneAgent (Full-Stack APM) | | X | X | X | X |
-| Davis AI Problem Detection | | X | X | X | X |
+| Dynatrace Intelligence Problem Detection | | X | X | X | X |
 | Synthetic Monitoring | | X | X | X | X |
 | Log Management (Grail) | | | X | X | X |
 | Distributed Tracing (Spans) | | | X | X | X |
@@ -282,7 +282,7 @@ Use this table to identify which Dynatrace capabilities to adopt next based on y
 | DQL / Notebooks | | | X | X | X |
 | Real User Monitoring | | | X | X | X |
 | Business Events | | | | X | X |
-| Davis AI Forecasting | | | | X | X |
+| Dynatrace Intelligence Forecasting | | | | X | X |
 | Ownership & Teams | | | | X | X |
 | Workflows (Automation) | | | | | X |
 | Configuration-as-Code (Monaco) | | | | | X |

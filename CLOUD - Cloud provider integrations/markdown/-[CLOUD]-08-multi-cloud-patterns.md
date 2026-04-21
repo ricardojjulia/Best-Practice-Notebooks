@@ -155,7 +155,7 @@ fetch dt.entity.kubernetes_cluster
 ### Cross-Cloud Problem Analysis
 
 ```dql
-// Davis problems from the last 7 days across all infrastructure
+// detected problems from the last 7 days across all infrastructure
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | summarize problem_count = count(), avg_duration_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0), by:{event.category}
@@ -250,7 +250,7 @@ fetch spans, from:-1h
 
 | Level | Scope | Alert Type | Example |
 |---|---|---|---|
-| **Platform** | All providers | Davis AI anomaly | Unexpected CPU spike on any host |
+| **Platform** | All providers | Dynatrace Intelligence anomaly | Unexpected CPU spike on any host |
 | **Provider** | Single cloud | Metric threshold | AWS Lambda error rate > 5% |
 | **Application** | Cross-cloud | Custom metric | Checkout service p95 > 2s |
 | **Compliance** | All providers | Configuration | Untagged resources detected |
@@ -259,10 +259,10 @@ fetch spans, from:-1h
 
 | Practice | Description |
 |---|---|
-| **Use Davis AI** | Let Dynatrace auto-detect anomalies across all infrastructure |
+| **Use Dynatrace Intelligence** | Let Dynatrace auto-detect anomalies across all infrastructure |
 | **Normalize severity** | Map provider-specific severities to a unified scale |
 | **Route by team, not provider** | Alert the application team regardless of which cloud has the issue |
-| **Deduplicate** | Davis automatically correlates related issues across providers |
+| **Deduplicate** | Dynatrace Intelligence automatically correlates related issues across providers |
 | **Define SLOs at the service level** | SLOs should be cloud-agnostic |
 
 <a id="cost-comparison"></a>
@@ -312,7 +312,7 @@ timeseries nsCpu = avg(dt.kubernetes.container.cpu_usage), from:-24h, by:{k8s.na
 | **Tagging compliance** | Monitor for untagged entities; alert on non-compliance |
 | **Cost allocation** | Tag-based DPS/DDU cost attribution per team/application |
 | **Security posture** | Runtime vulnerability analysis across all monitored hosts |
-| **Change tracking** | Davis events for configuration changes across providers |
+| **Change tracking** | detected events for configuration changes across providers |
 
 ### Tagging Compliance Check
 
@@ -336,7 +336,7 @@ fetch dt.entity.host
 ### Vulnerability Overview
 
 ```dql
-// Davis security problems in the last 7 days
+// Dynatrace Intelligence security problems in the last 7 days
 fetch dt.davis.problems, from:-7d
 | filter event.category == "SECURITY"
 | summarize security_count = countDistinct(event.id), by:{event.status}

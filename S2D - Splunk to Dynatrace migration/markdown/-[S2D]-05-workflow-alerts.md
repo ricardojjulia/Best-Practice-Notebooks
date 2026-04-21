@@ -56,7 +56,7 @@ By the end of this notebook, you will be able to:
 ### Use Workflows When:
 
 1. **Query timeframe exceeds 1 hour**
-   - Davis Anomaly Detectors have a maximum sliding window of 60 minutes
+   - Anomaly Detectors have a maximum sliding window of 60 minutes
    - Example: Alert on 7-day log volume trends
 
 2. **Alert runs on a schedule (few times per day)**
@@ -79,7 +79,7 @@ By the end of this notebook, you will be able to:
 - Continuous, real-time monitoring is needed
 - Timeframe is ≤ 60 minutes
 - Alert should run every minute
-- Davis AI problem correlation is beneficial
+- Dynatrace Intelligence problem correlation is beneficial
 
 <a id="drawbacks-of-workflow-based-alerts"></a>
 ## Drawbacks of Workflow-Based Alerts
@@ -91,7 +91,7 @@ Before choosing workflows, consider these limitations:
 | **Setup effort** | More complex than anomaly detectors |
 | **Event handling** | Manual event creation required |
 | **No auto-update** | Events won't update or auto-close |
-| **No Davis correlation** | Won't be correlated with other problems |
+| **No Dynatrace Intelligence correlation** | Won't be correlated with other problems |
 
 <a id="basic-alerting-workflow-structure"></a>
 ## Basic Alerting Workflow Structure
@@ -123,7 +123,7 @@ Evaluates results and creates events if threshold exceeded:
 
 <a id="example-workflow-query"></a>
 ## Example Workflow Query
-Unlike Davis Anomaly Detectors, workflow queries often return a single aggregated value:
+Unlike Anomaly Detectors, workflow queries often return a single aggregated value:
 
 ```dql
 // Workflow alert query - returns single count
@@ -245,7 +245,7 @@ Create a workflow that enables/disables the anomaly detector on schedule:
 1. Morning workflow (8 AM): Enable detector
 2. Evening workflow (6 PM): Disable detector
 
-This preserves the benefits of Davis AI while limiting alert times.
+This preserves the benefits of Dynatrace Intelligence while limiting alert times.
 
 <a id="important-disclaimers"></a>
 ## Important Disclaimers

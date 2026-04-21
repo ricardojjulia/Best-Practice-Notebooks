@@ -1,6 +1,6 @@
 # NR2DT-08: Step 8 — Validate
 
-> **Series:** NR2DT | **Notebook:** 8 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 8 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -31,20 +31,22 @@ Procedural — see **NRLC-08** (Validation, Diff & Rollback) for the validation 
 <a id="tiers"></a>
 ## 1. Three-Tier Validation Pass
 
+The three validation tiers map onto three real `migrate.py` subcommands (there is no single `validate` subcommand — each tier uses the purpose-built command).
+
 ### Tier 1 — Syntax
 
-Already done in Step 4 for queries; re-run for any changed artifacts:
+Re-run for any changed translated queries (the `compile --validate` path runs parser-level validation with auto-fix):
 
 ```bash
-python3 migrate.py validate --tier syntax --components all
+python3 migrate.py compile --validate --file translated-queries.csv
 ```
 
 ### Tier 2 — Tenant
 
-Confirm referenced metrics, entities, buckets, and OpenPipeline enrichment attributes exist:
+Confirm referenced metrics, entities, buckets, and OpenPipeline enrichment attributes exist in the target tenant:
 
 ```bash
-python3 migrate.py validate --tier tenant --components all
+python3 migrate.py preflight
 ```
 
 Common Tier 2 failures:
@@ -53,13 +55,15 @@ Common Tier 2 failures:
 - DQL filter on `environment` attribute that no enrichment rule produces
 - Synthetic location `AWS_US_EAST_1` not enabled in this tenant
 
-### Tier 3 — Behavioral
+### Tier 3 — Output Parity (Behavioral)
 
-Compare NR vs. DT outputs across the dual-run window:
+Compare NR vs. DT outputs across the dual-run window using the drift-audit command against a captured baseline:
 
 ```bash
-python3 migrate.py compare --components dashboards,alerts,slos --window 7d
+python3 migrate.py audit --baseline baseline-counts.json
 ```
+
+> The baseline file is produced by exporting NR + DT counts across the dual-run window; the audit command compares live DT output against those values. See NRLC-08 §4 for the capture pattern.
 
 Tolerance per artifact:
 
@@ -89,7 +93,7 @@ For environments where SVG doesn't render
 Confirm no drift since import:
 
 ```bash
-python3 migrate.py --diff --components all
+python3 migrate.py migrate --diff --components all
 ```
 
 Investigate any `EXISTING_DRIFT` entries — someone manually changed a migrated artifact in DT. Decide whether the change should be incorporated into the migration source-of-truth (Terraform), reverted, or accepted.
@@ -98,7 +102,7 @@ Investigate any `EXISTING_DRIFT` entries — someone manually changed a migrated
 ## 3. Generate the Quality Report
 
 ```bash
-python3 migrate.py --report --output validation-report.html
+python3 migrate.py migrate --report --output validation-report.html
 ```
 
 Report sections:
@@ -114,11 +118,11 @@ Attach this report to the cutover change-management ticket.
 <a id="gate"></a>
 ## 4. Step Exit Criteria
 
-**G6 — Cutover Ready**
+**G8 — Cutover Ready**
 
 - [ ] Tier 1 (syntax) — all components pass
 - [ ] Tier 2 (tenant) — all references resolve
-- [ ] Tier 3 (behavioral) — all artifacts within tolerance
+- [ ] Tier 3 (behavioral / output parity) — all artifacts within tolerance
 - [ ] Diff report shows no unexpected drift
 - [ ] Quality report attached to cutover ticket
 - [ ] Stakeholders briefed on remaining manual-review items

@@ -88,7 +88,7 @@ This notebook consolidates every actionable best practice from the DASH series (
 | 26 | Track error budget for SLA targets | 99.9% SLA = 43.2 min/month budget. 99.5% = 3.6 hours. 99.0% = 7.2 hours | Recommended | DASH-03 |
 | 27 | Use 7d-30d time ranges | Executive dashboards show weekly or monthly trends, not minute-by-minute data | Critical | DASH-02 |
 | 28 | No technical jargon | "Availability" not "HTTP 200 ratio". "Resolution Time" not "MTTR" if audience is non-technical | Recommended | DASH-02 |
-| 29 | Exclude duplicate and frequent Davis problems | Always filter: `dt.davis.is_duplicate == false` and `dt.davis.is_frequent_event == false` | Critical | DASH-03 |
+| 29 | Exclude duplicate and frequent detected problems | Always filter: `dt.davis.is_duplicate == false` and `dt.davis.is_frequent_event == false` | Critical | DASH-03 |
 | 30 | Dashboard must be understandable in <30 seconds | If it takes longer, push detail down to operations tier | Critical | DASH-02 |
 
 <a id="operations-tier"></a>
@@ -136,11 +136,11 @@ This notebook consolidates every actionable best practice from the DASH series (
 | 53 | Filter before aggregating | Place `filter` immediately after `fetch`, never after `sort` or `summarize` | Critical | DASH-01 |
 | 54 | Alias all aggregation results | `summarize c = count()` not `summarize count()`. Required for sort/fieldsAdd references | Critical | All |
 | 55 | Convert span duration to milliseconds | `duration / 1000000` for display. Duration is stored in nanoseconds | Critical | DASH-04, DASH-05 |
-| 56 | Convert Davis problem duration to hours | `toLong(resolved_problem_duration) / 3600000000000.0`. Duration is in nanoseconds | Critical | DASH-03 |
+| 56 | Convert detected problem duration to hours | `toLong(resolved_problem_duration) / 3600000000000.0`. Duration is in nanoseconds | Critical | DASH-03 |
 | 57 | Use `arrayAvg()` on timeseries results before filter/sort | Timeseries returns arrays, not scalars. Use `fieldsAdd val = arrayAvg(ts)` then `filter val > X` | Critical | DASH-04 |
 | 58 | Use `countIf()` for conditional counts | `errors = countIf(otel.status_code == "ERROR")` instead of separate filter + count | Recommended | DASH-03 |
 | 59 | Calculate error rate as percentage | `100.0 * errors / total`. Always multiply by 100.0 (float), not 100 (int) | Recommended | DASH-04 |
-| 60 | Filter out duplicate Davis problems | Always include `filter dt.davis.is_duplicate == false` in problem queries | Critical | DASH-03 |
+| 60 | Filter out duplicate detected problems | Always include `filter dt.davis.is_duplicate == false` in problem queries | Critical | DASH-03 |
 | 61 | Use `round()` with named `decimals:` parameter | `round(value, decimals: 2)` not `round(value, 2)` | Critical | All |
 | 62 | Prototype all queries in a notebook first | Validate DQL in a notebook before transferring to dashboard tiles | Recommended | DASH-01 |
 

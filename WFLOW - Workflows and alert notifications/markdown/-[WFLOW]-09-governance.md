@@ -412,7 +412,7 @@ Level 4: Contact Dynatrace support
 | Notebook | Key Topics |
 |----------|------------|
 | **WFLOW-01** | Workflow fundamentals, components, first workflow |
-| **WFLOW-02** | Trigger types: Davis problem, metric, schedule, event |
+| **WFLOW-02** | Trigger types: detected problem, metric, schedule, event |
 | **WFLOW-03** | Slack, Teams, email notification basics |
 | **WFLOW-04** | Conditional routing, escalation patterns |
 | **WFLOW-05** | PagerDuty and ServiceNow integration |

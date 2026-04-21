@@ -167,7 +167,7 @@ OpenPipeline supports multiple **configuration scopes** - each handling a differ
 | **Logs** | Log records | Application logs, system logs, audit logs |
 | **Spans** | Distributed traces | Span processing, trace enrichment |
 | **Metrics** | Time-series data | Metric ingestion and transformation |
-| **Events** | Platform events | Generic events, Davis events, SDLC events |
+| **Events** | Platform events | Generic events, detected events, SDLC events |
 | **Business Events** | Business analytics | User journeys, transactions, conversions |
 | **Security Events** | Security data | Vulnerability findings, compliance events |
 | **System Events** | Infrastructure | System-level events and alerts |

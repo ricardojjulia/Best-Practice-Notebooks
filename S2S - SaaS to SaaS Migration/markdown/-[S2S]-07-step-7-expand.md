@@ -347,7 +347,7 @@ Before proceeding to **Step 8 — Enable**, confirm that you have completed each
 
 ## Next Step
 
-> **S2S-08: Step 8 — Enable** — Manage parallel operation, communicate to stakeholders, establish Davis AI baselines, and prepare for cutover.
+> **S2S-08: Step 8 — Enable** — Manage parallel operation, communicate to stakeholders, establish Dynatrace Intelligence baselines, and prepare for cutover.
 
 | Completed | Next | Remaining |
 |-----------|------|-----------|

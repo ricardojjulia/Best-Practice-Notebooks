@@ -4,7 +4,7 @@
 
 ## Overview
 
-When a Dynatrace Davis problem fires, the immediate question from stakeholders is: "What is the business impact?" This notebook demonstrates how to correlate Davis AI problems with business event data to quantify revenue loss during incidents, measure SLA impact, compare incident periods against baselines, and filter analysis to business hours. The goal is to translate technical incidents into business language that executives and product owners understand.
+When a Dynatrace detected problem fires, the immediate question from stakeholders is: "What is the business impact?" This notebook demonstrates how to correlate Dynatrace Intelligence problems with business event data to quantify revenue loss during incidents, measure SLA impact, compare incident periods against baselines, and filter analysis to business hours. The goal is to translate technical incidents into business language that executives and product owners understand.
 
 ---
 
@@ -27,18 +27,18 @@ When a Dynatrace Davis problem fires, the immediate question from stakeholders i
 |-------------|----------|
 | **Dynatrace Environment** | SaaS with Grail enabled |
 | **Permissions** | `storage:bizevents:read`, `storage:events:read` |
-| **Data** | Business events with revenue/amount fields; Davis problems data |
-| **Knowledge** | BIZEV-01 through BIZEV-03, Davis problems concepts |
+| **Data** | Business events with revenue/amount fields; detected problems data |
+| **Knowledge** | BIZEV-01 through BIZEV-03, detected problems concepts |
 
 <a id="connecting-problems-to-business-impact"></a>
 
 ## 1. Connecting Problems to Business Impact
 
-Davis AI detects infrastructure and application problems. Business events capture transactions. By correlating the two, you can answer: "During the 2-hour outage on Tuesday, how many transactions were lost?"
+Dynatrace Intelligence detects infrastructure and application problems. Business events capture transactions. By correlating the two, you can answer: "During the 2-hour outage on Tuesday, how many transactions were lost?"
 
 ### Approach
 
-1. Fetch Davis problems with their time windows (`event.start` to `event.end`)
+1. Fetch detected problems with their time windows (`event.start` to `event.end`)
 2. Fetch business events during the same time windows
 3. Compare business event volume during the problem vs a baseline period
 4. Calculate the delta as "lost" transactions or revenue
@@ -46,7 +46,7 @@ Davis AI detects infrastructure and application problems. Business events captur
 Let's start by examining recent closed problems.
 
 ```dql
-// Recent closed Davis problems with duration
+// Recent closed detected problems with duration
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | fieldsAdd duration_min = toLong(resolved_problem_duration) / 60000000000.0
@@ -226,7 +226,7 @@ fetch dt.davis.problems, from:-7d
 
 ## 7. Building an Impact Timeline
 
-An impact timeline overlays business event volume with Davis problems to visualize how incidents affect business operations.
+An impact timeline overlays business event volume with detected problems to visualize how incidents affect business operations.
 
 ```dql
 // Business event volume over the past 7 days
@@ -249,7 +249,7 @@ fetch dt.davis.problems, from:-7d
 
 In this notebook, you learned:
 
-- **Problem-to-business correlation** — Connecting Davis problems to business event data
+- **Problem-to-business correlation** — Connecting detected problems to business event data
 - **Revenue during incidents** — Comparing incident periods against baselines
 - **Revenue loss estimation** — Using transaction amounts to quantify financial impact
 - **Business hours filtering** — Scoping analysis to when it matters most
@@ -264,7 +264,7 @@ In this notebook, you learned:
 
 ### References
 
-- [Davis AI Problems](https://docs.dynatrace.com/docs/platform/davis-ai/basics/davis-ai-problems)
+- [Dynatrace Intelligence Problems](https://docs.dynatrace.com/docs/platform/davis-ai/basics/davis-ai-problems)
 - [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/platform-modules/business-analytics)
 
 ---

@@ -1,6 +1,6 @@
 # NRLC-02: NRQL → DQL Translation
 
-> **Series:** NRLC | **Notebook:** 2 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC | **Notebook:** 2 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -62,7 +62,7 @@ Early translation tools used regular expressions: find `SELECT count(*)`, replac
 | Time expressions | `SINCE 1 day ago UNTIL 1 hour ago` vs. `SINCE bin(now(), 24h)` need semantic awareness |
 | Compound `WHERE` with mixed operators | Operator precedence requires a parser |
 
-[`nrql-engine`](https://github.com/timstewart-dynatrace/nrql-engine) replaced an early 2,197-line regex translator with a proper compiler. The result: 292 tested translation patterns, **1,209 unit tests in the Python orchestrator (post-Phase-24)**, and the ability to translate complex queries that the regex tool silently produced wrong DQL for. Phase 19b added a CI parity job (`test_phase19b_engine_parity.py`) that pins the Python compiler to the TS `nrql-engine` — drift on either side trips the test.
+[`nrql-engine`](https://github.com/timstewart-dynatrace/nrql-engine) replaced an early 2,197-line regex translator with a proper compiler. The result: 292 tested translation patterns, **1,200+ unit tests in the Python orchestrator (post-Phase-24)**, and the ability to translate complex queries that the regex tool silently produced wrong DQL for. Phase 19b added a CI parity job (`test_phase19b_engine_parity.py`) that pins the Python compiler to the TS `nrql-engine` — drift on either side trips the test.
 
 <a id="pipeline"></a>
 ## 2. Compiler Pipeline
@@ -135,7 +135,7 @@ For environments where SVG doesn't render
 - `funnel()` — multi-stage; emitted as nested append/join with manual review note
 
 **Not supported:**
-- `cohort()` — retention analysis is a different DT capability (Davis or custom DQL)
+- `cohort()` — retention analysis is a different DT capability (Dynatrace Intelligence or custom DQL)
 - Custom event types not present in DT (manual mapping required)
 - Some metric streaming integrations — routed through OneAgent or OTLP instead
 
@@ -197,7 +197,7 @@ SELECT percentage(count(*), WHERE status = 200) FROM Transaction
 
 **DQL:**
 ```
-fetch spans
+fetch spans, from:-1h
 | summarize success_pct = 100.0 * countIf(status == 200) / count()
 ```
 
@@ -212,7 +212,7 @@ SELECT rate(count(*), 1 minute) FROM Transaction
 
 **DQL:**
 ```
-timeseries count = count(), interval:1m
+timeseries count = count(), interval:1m, from:-1h
 ```
 
 Confidence: **HIGH (90)** — NRQL `rate(count, N)` is structurally a per-interval count, which DQL expresses as a `timeseries`.
@@ -245,9 +245,9 @@ SELECT count(*) FROM PageView WHERE userAgent IN (SELECT name FROM BotList)
 
 **DQL:**
 ```
-fetch logs
+fetch logs, from:-1h
 | filter dt.entity.application_method == "PageView"
-| lookup [fetch logs | filter dt.entity.application_method == "BotList" | fields name],
+| lookup [fetch logs, from:-1h | filter dt.entity.application_method == "BotList" | fields name],
     sourceField: userAgent, lookupField: name
 | filter isNotNull(name)
 | summarize count()
@@ -299,9 +299,9 @@ The compiler picks the right `fetch` source based on a built-in lookup; you can 
 | `percentage(count(*), WHERE x)` | `100.0 * countIf(x) / count()` | |
 | `filter(count(*), WHERE x)` | `countIf(x)` | |
 | `histogram(field, ...)` | `summarize ..., by:{bin(field, width:N)}` | bucket-based |
-| `apdex(field, t:N)` | flagged TODO; manual config | DT uses Apdex via Davis or custom DQL |
+| `apdex(field, t:N)` | flagged TODO; manual config | DT uses Apdex via Dynatrace Intelligence or custom DQL |
 | `funnel(...)` | flagged; nested append/join skeleton | manual review |
-| `cohort(...)` | unsupported | use Davis or custom DQL |
+| `cohort(...)` | unsupported | use Dynatrace Intelligence or custom DQL |
 
 <a id="time-mapping"></a>
 ## 8. Time Expression Mapping
@@ -325,7 +325,7 @@ When the compiler emits LOW confidence or a TODO marker:
 
 | Symptom | Cause | Action |
 |---------|-------|--------|
-| Translation contains `// TODO: APDEX_THRESHOLD` | NRQL `apdex(field, t:0.5)` — threshold doesn't translate | Configure DT Apdex calculation separately or use Davis SLO with target value |
+| Translation contains `// TODO: APDEX_THRESHOLD` | NRQL `apdex(field, t:0.5)` — threshold doesn't translate | Configure DT Apdex calculation separately or use Dynatrace Intelligence SLO with target value |
 | Translation contains `// TODO: FUNNEL_STAGES` | Multi-stage funnel | Emit per-stage metrics + custom DQL with `lookup` chain |
 | Compiler returns `success: false` | Unparseable NRQL (likely malformed or uses a private NR feature) | Hand-translate; capture in gap-analysis |
 | LOW confidence on subquery | `lookup` target not validated against Grail | Check that the looked-up data exists as queryable Grail content |

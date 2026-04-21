@@ -67,7 +67,7 @@ Workflows are event-driven automations that can:
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|
-| Trigger | Davis Event (problem opened/updated/closed) |
+| Trigger | Detected Event (problem opened/updated/closed) |
 | Conditions | Filtering logic |
 | Actions | Slack, Email, PagerDuty, Jira, Webhook, etc. |
 -->
@@ -76,7 +76,7 @@ Workflows are event-driven automations that can:
 
 | Feature | Workflows | Alerting Profiles (Legacy) |
 |---------|-----------|---------------------------|
-| **Trigger types** | Events, schedules, manual | Davis problems only |
+| **Trigger types** | Events, schedules, manual | detected problems only |
 | **Filtering** | JavaScript expressions | Rule-based |
 | **Actions** | 20+ built-in actions | Fixed notifications |
 | **Automation** | Full automation capability | Notification only |
@@ -91,7 +91,7 @@ Workflows are event-driven automations that can:
 ### Step 2: Configure the Trigger
 
 1. Click "Add trigger"
-2. Select "Davis problem" trigger
+2. Select "detected problem" trigger
 3. Configure trigger options:
    - **Problem opens** - When a new problem is detected
    - **Problem updates** - When problem details change
@@ -116,7 +116,7 @@ event["event.category"] == "AVAILABILITY"
 ### Basic Workflow Example
 
 ```
-Trigger: Davis problem opens
+Trigger: detected problem opens
 Condition: event["event.category"] == "ERROR"
 Action: Send Slack message to #alerts channel
 ```
@@ -235,7 +235,7 @@ event["event.category"] == "SLOWDOWN"
 
 <a id="custom-metric-alerts"></a>
 ## 6. Custom Metric Alerts
-Create alerts based on specific metric thresholds using the Davis analyzer in Workflows.
+Create alerts based on specific metric thresholds using the Analyzer in Workflows.
 
 ### When to Use Custom Metric Alerts
 
@@ -250,13 +250,13 @@ Create alerts based on specific metric thresholds using the Davis analyzer in Wo
 
 1. Go to Automate → Workflows
 2. Create new workflow
-3. Add trigger: "Davis problem" 
+3. Add trigger: "detected problem" 
 4. Add condition to filter for metric events
 5. Add notification action
 
-### Using Davis Analyzers
+### Using Analyzers
 
-Davis analyzers can detect anomalies in metrics:
+Analyzers can detect anomalies in metrics:
 
 - **Static threshold** - Alert when value exceeds X
 - **Auto-adaptive baseline** - Alert on deviations from normal
@@ -264,7 +264,7 @@ Davis analyzers can detect anomalies in metrics:
 
 ### Example: High CPU Alert
 
-1. Create workflow with Davis problem trigger
+1. Create workflow with detected problem trigger
 2. Add condition:
    ```javascript
    event["title"].includes("CPU") && 

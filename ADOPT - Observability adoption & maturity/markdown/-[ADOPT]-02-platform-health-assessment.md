@@ -235,7 +235,7 @@ Combine the results from the queries above into a regular health scorecard. Revi
 | **Log Ingestion Stability** | < 10% daily variance | 7-day ingestion trend |
 | **Span Ingestion Active** | > 0 spans per hour | Span count query |
 | **ActiveGate Health** | All AGs reporting metrics | AG connection metrics |
-| **Davis AI Active** | Problems detected in last 7 days | Problem count query |
+| **Dynatrace Intelligence Active** | Problems detected in last 7 days | Problem count query |
 | **Alert Noise Ratio** | < 20% duplicate/frequent | Noise ratio query from ADOPT-01 |
 
 ### Scoring Guide

@@ -187,7 +187,7 @@ These are the non-obvious factors that derail migrations when overlooked.
 | Consideration | Detail |
 |---------------|--------|
 | **Dual licensing** | You will run both Managed and SaaS in parallel during migration — coordinate with your Dynatrace account team early |
-| **Contract alignment** | SaaS licensing model differs from Managed — DPS (Davis Processing Units) vs. host-based |
+| **Contract alignment** | SaaS licensing model differs from Managed — DPS (Dynatrace Intelligence Processing Units) vs. host-based |
 | **Timing** | Begin licensing discussions at least 4 weeks before migration start |
 
 ### Data Continuity
@@ -327,7 +327,7 @@ Define measurable success criteria before migration starts. These criteria deter
 | **Dashboard availability** | 100% of migrated dashboards rendering | Spot-check each dashboard in SaaS |
 | **Integration success** | 100% of external integrations operational | Test each webhook, API, and ITSM connection |
 | **User access** | All users can authenticate via SSO | Verify SSO login for each role/group |
-| **Baseline established** | Davis AI baseline period complete (2-4 weeks) | Confirm Davis is generating problems correctly |
+| **Baseline established** | Dynatrace Intelligence baseline period complete (2-4 weeks) | Confirm Dynatrace Intelligence is generating problems correctly |
 
 ```dql
 // Post-migration validation — compare host count to your discovery inventory
@@ -342,7 +342,7 @@ fetch dt.entity.host
 ```
 
 ```dql
-// Post-migration validation — check for recent Davis problems (confirms AI baseline is building)
+// Post-migration validation — check for recent detected problems (confirms AI baseline is building)
 fetch dt.davis.problems, from:-24h
 | summarize problemCount = count(), by:{event.status}
 | sort problemCount desc
@@ -362,7 +362,7 @@ Build your timeline working backward from the desired Managed decommission date.
 | **Prepare** (Step 4) | 1-2 weeks | SaaS provisioning, ActiveGate deployment, network validation |
 | **Execute** (Step 5, per wave) | 1-2 weeks | Config migration + OneAgent redirect per wave |
 | **Integrate** (Step 6) | 1-2 weeks | Webhook, API, and ITSM reconnection |
-| **Parallel operation** | 2-4 weeks | Both environments running — critical for Davis AI baseline |
+| **Parallel operation** | 2-4 weeks | Both environments running — critical for Dynatrace Intelligence baseline |
 | **Expand + Enable + Optimize** (Steps 7-9) | 2-4 weeks | New capabilities, tuning, adoption |
 | **Decommission** | 1 week | Shutdown Managed after final validation |
 | **Total typical** | **4-12 weeks** | Depends on environment size and approach |
@@ -375,7 +375,7 @@ Build your timeline working backward from the desired Managed decommission date.
 | **Phased by Env** | Plan + Prepare | Dev wave | Staging wave | Prod wave | Parallel + Decommission |
 | **Phased by Region** | Plan + Prepare | Region 1 | Region 2 | Region 3 | Parallel + Decommission |
 
-> **Important:** The parallel operation period is non-negotiable. Davis AI needs 2-4 weeks to build baselines in SaaS before you can trust its problem detection. Do not decommission Managed until baselines are established.
+> **Important:** The parallel operation period is non-negotiable. Dynatrace Intelligence needs 2-4 weeks to build baselines in SaaS before you can trust its problem detection. Do not decommission Managed until baselines are established.
 
 ### Migration Plan Checklist
 

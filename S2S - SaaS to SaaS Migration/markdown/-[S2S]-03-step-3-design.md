@@ -342,7 +342,7 @@ Entity IDs (e.g., `HOST-1A2B3C4D`, `SERVICE-5E6F7A8B`) are **not portable** betw
 | SLO metric expressions | `type(SERVICE),entityId(SERVICE-5E6F7A8B)` | SLO evaluates to 0% |
 | Notification rule filters | Entity-specific tag filters | Alerts never fire |
 | Management zone rules | Entity-specific rules | Zone contains no entities |
-| Workflow triggers | Entity ID in Davis problem filter | Workflow never triggers |
+| Workflow triggers | Entity ID in detected problem filter | Workflow never triggers |
 
 ### Remapping Strategy: Replace with Tags
 
@@ -395,7 +395,7 @@ fetch logs, from:-30d
 | SLO metric expressions | Replace entity selectors with tag-based selectors | High — affects SLO evaluation |
 | Management zone rules | Replace entity-specific rules with property/tag rules | Medium |
 | Notification rule scope | Replace entity filters with tag filters | Medium |
-| Workflow triggers | Update Davis problem entity filters | Medium |
+| Workflow triggers | Update detected problem entity filters | Medium |
 | Synthetic monitor entity scope | Update location and entity references | Low — locations are global |
 
 <a id="step-completion-checklist"></a>

@@ -318,7 +318,7 @@ In DQL, aggregations MUST be aliased if you want to reference them later:
 
 ## Next Steps
 
-With your queries translated, proceed to **S2D-04: Alert Migration - Davis Anomaly Detectors** to learn how to convert Splunk alerts to continuous Dynatrace monitoring.
+With your queries translated, proceed to **S2D-04: Alert Migration - Anomaly Detectors** to learn how to convert Splunk alerts to continuous Dynatrace monitoring.
 
 ## References
 

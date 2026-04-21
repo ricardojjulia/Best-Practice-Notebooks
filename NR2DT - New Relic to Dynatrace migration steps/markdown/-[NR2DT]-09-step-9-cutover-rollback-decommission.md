@@ -1,6 +1,6 @@
 # NR2DT-09: Step 9 — Cutover, Rollback & Decommission
 
-> **Series:** NR2DT | **Notebook:** 9 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT | **Notebook:** 9 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 
@@ -67,7 +67,7 @@ Every migration run produced a rollback manifest. Retain for **at least 30 days*
 ### Rollback command
 
 ```bash
-python3 migrate.py --rollback --manifest run-2026-04-14.json
+python3 migrate.py migrate --rollback run-2026-04-14.json
 ```
 
 The rollback:
@@ -80,7 +80,7 @@ The rollback:
 **Partial rollback:** roll back one component only by filtering the manifest:
 
 ```bash
-python3 migrate.py --rollback --manifest run-2026-04-14.json --components dashboards
+python3 migrate.py migrate --rollback run-2026-04-14.json --components dashboards
 ```
 
 **What rollback DOES NOT undo:**
@@ -104,12 +104,12 @@ Final-stage cleanup. Sequenced for safety.
 | 4 | Export NR account snapshot for archive | One-way |
 | 5 | Cancel NR contract / reduce seat count | Per contract terms |
 
-**Decommission gate G7:** all stakeholders sign off that DT is operational and NR is no longer needed.
+**Decommission gate G9:** all stakeholders sign off that DT is operational and NR is no longer needed.
 
 <a id="gate"></a>
 ## 4. Step Exit Criteria
 
-**G7 — Migration Complete**
+**G9 — Migration Complete**
 
 - [ ] All components cut over to DT
 - [ ] Rollback manifests retained per retention policy (≥ 30 days)

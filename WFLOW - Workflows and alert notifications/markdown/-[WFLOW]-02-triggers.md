@@ -3,14 +3,14 @@
 > **Series:** WFLOW | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Event-Driven Workflow Triggers
-Triggers determine when workflows execute. This notebook covers all trigger types, Davis problem events, metric events, schedules, and custom event triggers.
+Triggers determine when workflows execute. This notebook covers all trigger types, detected problem events, metric events, schedules, and custom event triggers.
 
 ---
 
 ## Table of Contents
 
-1. [Davis Problem Trigger](#davis-problem-trigger)
-2. [Davis Event Trigger (Metrics)](#davis-event-trigger-metrics)
+1. [Detected Problem Trigger](#davis-problem-trigger)
+2. [Detected Event Trigger (Metrics)](#davis-event-trigger-metrics)
 3. [Schedule Trigger](#schedule-trigger)
 4. [On-Demand Trigger](#on-demand-trigger)
 5. [Event Trigger (Custom/Business Events)](#event-trigger-custombusiness-events)
@@ -30,8 +30,8 @@ Triggers determine when workflows execute. This notebook covers all trigger type
 
 | Trigger Type | Fires When | Primary Use Case |
 |--------------|------------|------------------|
-| **Davis Problem** | Davis AI detects/updates/closes a problem | Alert notifications, incident management |
-| **Davis Event** | Metric threshold breached | Capacity alerts, proactive notifications |
+| **Detected Problem** | Dynatrace Intelligence detects/updates/closes a problem | Alert notifications, incident management |
+| **Detected Event** | Metric threshold breached | Capacity alerts, proactive notifications |
 | **Schedule** | Cron expression matches | Reports, health checks, cleanup jobs |
 | **On-Demand** | Manual execution or API call | Testing, ad-hoc automation |
 | **Event** | Business/custom event ingested | Business process automation |
@@ -41,8 +41,8 @@ Triggers determine when workflows execute. This notebook covers all trigger type
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Trigger | Source | Use Case |
 |---------|--------|----------|
-| Davis Problem | AI detects incident | Alert notifications |
-| Davis Event | Metric threshold | Capacity alerts |
+| Detected Problem | AI detects incident | Alert notifications |
+| Detected Event | Metric threshold | Capacity alerts |
 | Schedule | Cron expression | Reports, health checks |
 | On-Demand | Manual/API | Testing, ad-hoc |
 | Event | Business event | Business automation |
@@ -53,15 +53,15 @@ For environments where SVG doesn't render
 
 | Scenario | Recommended Trigger |
 |----------|---------------------|
-| "Notify when a service is slow" | Davis Problem |
-| "Alert when CPU > 90% for 5 mins" | Davis Event |
+| "Notify when a service is slow" | Detected Problem |
+| "Alert when CPU > 90% for 5 mins" | Detected Event |
 | "Send weekly status report" | Schedule |
 | "Process order completion events" | Event (bizevents) |
 | "Test my workflow" | On-Demand |
 
 <a id="davis-problem-trigger"></a>
-## 2. Davis Problem Trigger
-The most common trigger for alert notifications. Fires when Davis AI detects problems.
+## 2. Detected Problem Trigger
+The most common trigger for alert notifications. Fires when Dynatrace Intelligence detects problems.
 
 ### Trigger Configuration
 
@@ -74,7 +74,7 @@ The most common trigger for alert notifications. Fires when Davis AI detects pro
 
 ### Problem Event Data
 
-When a Davis problem triggers, you get access to:
+When a detected problem triggers, you get access to:
 
 ```json
 {
@@ -99,7 +99,7 @@ When a Davis problem triggers, you get access to:
 | Problem updated | Root cause/impact changed | Update incident notes |
 | Problem closed | Problem resolved | Close incident, send summary |
 
-![Davis Problem Lifecycle](images/davis-problem-lifecycle.png)
+![Detected Problem Lifecycle](images/davis-problem-lifecycle.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | State | Description | Typical Workflow Actions |
@@ -126,15 +126,15 @@ trigger:
 ```
 
 <a id="davis-event-trigger-metrics"></a>
-## 3. Davis Event Trigger (Metrics)
-Trigger based on metric thresholds without creating a Davis problem.
+## 3. Detected Event Trigger (Metrics)
+Trigger based on metric thresholds without creating a detected problem.
 
 ### When to Use
 
-- **Proactive alerts** before Davis detects a problem
+- **Proactive alerts** before Dynatrace Intelligence detects a problem
 - **Capacity warnings** (disk 80%, memory usage)
 - **Business KPIs** (orders/minute, cart abandonment)
-- **Custom thresholds** different from Davis baselines
+- **Custom thresholds** different from baselines
 
 ### Configuration
 
@@ -320,7 +320,7 @@ Access event fields in tasks:
 
 ### Common Event Fields by Trigger Type
 
-**Davis Problem:**
+**Detected Problem:**
 ```
 {{ event()["display_id"] }}           # P-12345
 {{ event()["title"] }}                # Problem title
@@ -332,7 +332,7 @@ Access event fields in tasks:
 {{ event()["problem_url"] }}          # Link to problem
 ```
 
-**Davis Event (Metric):**
+**Detected Event (Metric):**
 ```
 {{ event()["metric_key"] }}    # Metric identifier
 {{ event()["value"] }}         # Current value
@@ -346,10 +346,10 @@ Access event fields in tasks:
 {{ trigger()["actual_time"] }}     # When actually started
 ```
 
-### Query Davis Problems
+### Query Detected Problems
 
 ```dql
-// Recent Davis problems that could trigger workflows
+// Recent detected problems that could trigger workflows
 fetch events, from: now() - 24h
 | filter event.kind == "DAVIS_PROBLEM"
 | fields timestamp, 
@@ -392,8 +392,8 @@ Now that you understand triggers, learn to send notifications:
 
 ### Key Takeaways
 
-- **Davis Problem** triggers for AI-detected incidents
-- **Davis Event** triggers for metric thresholds
+- **Detected Problem** triggers for AI-detected incidents
+- **Detected Event** triggers for metric thresholds
 - **Schedule** triggers for recurring tasks
 - **On-Demand** triggers for testing and API integration
 - **Event** triggers for business events
@@ -406,8 +406,8 @@ Now that you understand triggers, learn to send notifications:
 In this notebook, you learned:
 
 - All five trigger types and when to use each
-- How to configure Davis Problem triggers with filters
-- How to set metric thresholds with Davis Event triggers
+- How to configure Detected Problem triggers with filters
+- How to set metric thresholds with Detected Event triggers
 - Cron expressions for schedule triggers
 - On-demand execution via UI and API
 - Business event triggers for custom automation
@@ -418,7 +418,7 @@ In this notebook, you learned:
 ## References
 
 - [Workflow Triggers](https://docs.dynatrace.com/docs/platform/workflows/triggers)
-- [Davis Problem Events](https://docs.dynatrace.com/docs/platform/davis-ai/detect/problems)
+- [Detected Problem Events](https://docs.dynatrace.com/docs/platform/davis-ai/detect/problems)
 - [Business Events](https://docs.dynatrace.com/docs/platform/grail/business-events)
 - [Cron Expression Guide](https://crontab.guru/)
 

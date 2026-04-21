@@ -1209,7 +1209,7 @@ Final validation before declaring migration complete.
 - [ ] Metrics generating
 - [ ] Events appearing
 - [ ] Business events available
-- [ ] Davis AI integration working
+- [ ] Dynatrace Intelligence integration working
 
 ### Documentation ✅
 

@@ -180,10 +180,10 @@ fetch logs, from:-1h
 
 ### Active Problem Count
 
-A single-value tile showing how many Davis problems are currently active — the most common executive KPI.
+A single-value tile showing how many detected problems are currently active — the most common executive KPI.
 
 ```dql
-// Count of currently active Davis problems
+// Count of currently active detected problems
 fetch dt.davis.problems, from:-24h
 | filter event.status == "ACTIVE"
 | summarize active_problems = countDistinct(event.id)

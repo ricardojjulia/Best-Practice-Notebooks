@@ -191,7 +191,7 @@ input:
     - type: context
       elements:
         - type: mrkdwn
-          text: "Detected by Dynatrace Davis AI | {{ now() }}"
+          text: "Detected by Dynatrace Dynatrace Intelligence | {{ now() }}"
 ```
 
 <a id="teams-adaptive-card-templates"></a>

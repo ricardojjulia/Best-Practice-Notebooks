@@ -83,7 +83,7 @@ Discovery surfaces things that don't fit the standard pattern. Decide explicitly
 | Category | Decision Required |
 |----------|-------------------|
 | LOW-confidence NRQL queries | Translate manually, reformulate, or drop the artifact |
-| APM conditions | Replace with Davis adaptive baselines (recommended) or hand-port |
+| APM conditions | Replace with Dynatrace Intelligence adaptive baselines (recommended) or hand-port |
 | Scripted browser monitors | Rebuild as DT clickpaths or drop |
 | Custom NR Nerdpacks | Out of scope (no DT equivalent) |
 | Historical NRDB data | Not migrated (configuration only) |

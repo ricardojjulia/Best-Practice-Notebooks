@@ -46,7 +46,7 @@ Integrate Dynatrace workflows with enterprise incident management platforms. Thi
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
 |------|-----------|--------|
-| 1 | Davis AI | Detects problem |
+| 1 | Dynatrace Intelligence | Detects problem |
 | 2 | Workflow | Processes event |
 | 3 | ITSM | Creates incident |
 | 4 | Team | Investigates & fixes |
@@ -166,7 +166,7 @@ input:
   connection: servicenow-production
   short_description: "[Dynatrace] {{ event()['title'] }}"
   description: |
-    A problem has been detected by Dynatrace Davis AI.
+    A problem has been detected by Dynatrace Dynatrace Intelligence.
     
     Problem Details:
     ================

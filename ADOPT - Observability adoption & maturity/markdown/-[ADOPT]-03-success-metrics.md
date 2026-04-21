@@ -27,7 +27,7 @@ What gets measured gets improved. This notebook defines the key success metrics 
 |-------------|----------|
 | **Dynatrace Environment** | SaaS or Managed with Grail enabled |
 | **Permissions** | `storage:events:read`, `storage:logs:read`, `storage:metrics:read` |
-| **Data** | At least 7 days of Davis problem data for meaningful baselines |
+| **Data** | At least 7 days of detected problem data for meaningful baselines |
 | **Audience** | SREs, engineering managers, VP of Engineering, CTO |
 
 <a id="why-metrics-matter"></a>
@@ -50,20 +50,20 @@ The DORA (DevOps Research and Assessment) metrics framework provides industry-st
 
 ## 2. Mean Time to Detect (MTTD)
 
-MTTD measures how long it takes from when a problem begins to when it is detected. In Dynatrace, Davis AI continuously analyzes telemetry and opens problems automatically. MTTD is the difference between problem start time and the timestamp when Davis created the problem event.
+MTTD measures how long it takes from when a problem begins to when it is detected. In Dynatrace, Dynatrace Intelligence continuously analyzes telemetry and opens problems automatically. MTTD is the difference between problem start time and the timestamp when Dynatrace Intelligence created the problem event.
 
 ### Why It Matters
 
 - Lower MTTD means faster awareness of issues
-- Davis AI typically detects anomalies within minutes — human detection often takes hours
+- Dynatrace Intelligence typically detects anomalies within minutes — human detection often takes hours
 - Tracking MTTD validates that your instrumentation and alerting are working
 
 ### 2.1 MTTD Over the Last 7 Days
 
-Davis AI problems have an `event.start` timestamp (when the underlying condition began). By comparing this against the record timestamp, we can estimate detection lag.
+Dynatrace Intelligence problems have an `event.start` timestamp (when the underlying condition began). By comparing this against the record timestamp, we can estimate detection lag.
 
 ```dql
-// Estimate MTTD: gap between problem start and Davis detection
+// Estimate MTTD: gap between problem start and Dynatrace Intelligence detection
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
@@ -76,7 +76,7 @@ fetch dt.davis.problems, from:-7d
 ```
 
 > **Interpreting MTTD Results:**
-> - **< 5 minutes** — Excellent. Davis AI is detecting issues rapidly.
+> - **< 5 minutes** — Excellent. Dynatrace Intelligence is detecting issues rapidly.
 > - **5-15 minutes** — Good. Typical for most environments.
 > - **> 15 minutes** — Review alert configurations and instrumentation coverage.
 
@@ -216,7 +216,7 @@ fetch dt.davis.problems, from:-7d
 ```
 
 > **Target:** Keep the noise ratio below 20%. If it exceeds 50%, consider:
-> - Adjusting Davis AI sensitivity settings
+> - Adjusting Dynatrace Intelligence sensitivity settings
 > - Configuring maintenance windows for known noisy periods
 > - Reviewing alerting profiles and notification filters
 
@@ -228,7 +228,7 @@ Change failure rate (CFR) measures the percentage of deployments that cause prob
 
 ### Measuring CFR with Dynatrace
 
-Dynatrace tracks deployment events and can correlate them with Davis problems. The basic approach:
+Dynatrace tracks deployment events and can correlate them with detected problems. The basic approach:
 
 1. Count deployment events in a time window
 2. Count problems that started within a defined window after a deployment
@@ -245,7 +245,7 @@ fetch events, from:-7d
 
 ### 6.2 Problems Correlated with Deployments
 
-When Davis detects a problem, it often identifies a recent deployment as the root cause. Problems tagged with deployment correlation indicate change-related failures.
+When Dynatrace Intelligence detects a problem, it often identifies a recent deployment as the root cause. Problems tagged with deployment correlation indicate change-related failures.
 
 ```dql
 // Problems in the last 7 days that may correlate with changes

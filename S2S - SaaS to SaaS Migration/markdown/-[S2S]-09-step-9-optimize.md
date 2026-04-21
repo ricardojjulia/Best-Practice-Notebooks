@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is the final step of the SaaS-to-SaaS migration. With parallel operation validated (Step 8), Davis AI baselines established, and stakeholders trained, you are ready to execute the cutover. This notebook covers the go/no-go decision, cutover execution steps, post-cutover validation, rollback procedures, source tenant decommission, and a lessons learned framework.
+This is the final step of the SaaS-to-SaaS migration. With parallel operation validated (Step 8), Dynatrace Intelligence baselines established, and stakeholders trained, you are ready to execute the cutover. This notebook covers the go/no-go decision, cutover execution steps, post-cutover validation, rollback procedures, source tenant decommission, and a lessons learned framework.
 
 > **S2S Migration Journey — 3 Phases / 9 Steps**
 >
@@ -44,7 +44,7 @@ Within the 9-step framework, Step 9 maps to three operational actions:
 
 | Requirement | Details |
 |-------------|----------|
-| **Step 8 Complete** | Parallel operation validated, stakeholders trained, Davis baselines established |
+| **Step 8 Complete** | Parallel operation validated, stakeholders trained, baselines established |
 | **Go/No-Go Authority** | Decision-maker identified and available for cutover approval |
 | **Maintenance Window** | Scheduled and communicated to all stakeholders |
 | **Rollback Plan** | Documented and tested — source tenant still active and receiving data |
@@ -91,7 +91,7 @@ The go/no-go decision should be made in a structured meeting with all stakeholde
 |-----------|--------|-------------|
 | Log volumes match between source and target (±10%) | [ ] | Platform team |
 | Span volumes match between source and target (±10%) | [ ] | Platform team |
-| Davis AI baselines stable (2+ weeks of data) | [ ] | SRE team |
+| Dynatrace Intelligence baselines stable (2+ weeks of data) | [ ] | SRE team |
 | SLOs evaluating within expected range | [ ] | SRE team |
 
 <a id="cutover-execution-steps"></a>
@@ -194,10 +194,10 @@ fetch logs, from:-1h
 | fieldsAdd status = if(enrichment_pct > 50.0, then: "Enrichment healthy", else: "Check OpenPipeline config")
 ```
 
-### Davis Problem Validation
+### Detected Problem Validation
 
 ```dql
-// Post-cutover: Active Davis problems (should be normal operational level)
+// Post-cutover: Active detected problems (should be normal operational level)
 fetch dt.davis.problems, from:-24h
 | filter event.status == "ACTIVE"
 | summarize active_problems = count()
@@ -313,14 +313,14 @@ Capture lessons learned while the migration is still fresh. Organize by category
 | **Stakeholder Communication** | ___ | ___ | ___ |
 | **Cutover Execution** | ___ | ___ | ___ |
 | **Tooling (Monaco/Terraform)** | ___ | ___ | ___ |
-| **Davis AI / Baselines** | ___ | ___ | ___ |
+| **Dynatrace Intelligence / Baselines** | ___ | ___ | ___ |
 
 ### Common Lessons from S2S Migrations
 
 | Lesson | Detail |
 |--------|--------|
 | Entity ID remapping takes longer than expected | Audit dashboards and SLOs **before** migration, not during |
-| Davis baselines need at least 2 full weeks | Plan parallel operation accordingly |
+| baselines need at least 2 full weeks | Plan parallel operation accordingly |
 | Credential recreation is a bottleneck | Involve cloud and security teams early |
 | Stakeholder fatigue is real | Keep communication concise and predictable |
 | Extensions 2.0 must be reinstalled from Hub | Neither Monaco nor Terraform can export them |
@@ -354,7 +354,7 @@ This completes the 9-step SaaS-to-SaaS migration framework.
 | **Tags over entity IDs** | Tag-based selectors survive migration; hardcoded entity IDs do not |
 | **Monaco for config, Terraform for IAM** | Use each tool where it excels |
 | **Parallel operation is mandatory** | Historical data does not migrate — plan for dual-tenant operation |
-| **Davis AI needs time** | Baselines require 2–4 weeks; communicate this to stakeholders |
+| **Dynatrace Intelligence needs time** | Baselines require 2–4 weeks; communicate this to stakeholders |
 | **Communicate early and often** | Migration success is as much about people as technology |
 
 <a id="step-completion-checklist"></a>
@@ -366,7 +366,7 @@ This completes the 9-step SaaS-to-SaaS migration framework.
 | Go/no-go meeting completed — all four categories green | [ ] |
 | Cutover executed during scheduled maintenance window | [ ] |
 | Post-cutover validation queries all pass (hosts, services, logs, spans, enrichment) | [ ] |
-| Davis problem volume within normal range | [ ] |
+| detected problem volume within normal range | [ ] |
 | MTTR baseline established in target tenant | [ ] |
 | Rollback plan confirmed not needed (or rollback executed and re-cutover scheduled) | [ ] |
 | Source tenant set to read-only | [ ] |
@@ -384,7 +384,7 @@ In Step 9 — the final step — you:
 - Conducted a structured go/no-go assessment across infrastructure, configuration, security, and data readiness
 - Executed the cutover following a 9-step sequence with defined rollback procedures for each step
 - Validated the target tenant with DQL queries confirming host counts, service counts, log flow, span flow, and enrichment
-- Established MTTR and Davis problem baselines in the target tenant
+- Established MTTR and detected problem baselines in the target tenant
 - Planned source tenant decommission on an 8-week timeline
 - Captured lessons learned for future migrations
 
@@ -393,7 +393,7 @@ In Step 9 — the final step — you:
 ### Additional Resources
 
 - [Dynatrace Grail Data Lakehouse](https://docs.dynatrace.com/docs/platform/grail)
-- [Davis AI Anomaly Detection](https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection)
+- [Dynatrace Intelligence Anomaly Detection](https://docs.dynatrace.com/docs/platform/davis-ai/anomaly-detection)
 - [Monaco Configuration as Code](https://docs.dynatrace.com/docs/deliver/configuration-as-code/monaco)
 - [Dynatrace Terraform Provider](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest)
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)

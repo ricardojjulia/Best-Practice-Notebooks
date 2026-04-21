@@ -2,7 +2,7 @@
 
 > **Series:** M2S | **Notebook:** 7 of 9 | **Phase:** Run | **Step:** Expand | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
-With the migration complete and integrations reconnected, the real value of moving to SaaS begins. Dynatrace SaaS includes an entire generation of capabilities that were never available in Managed — Grail, Notebooks, OpenPipeline, Davis Copilot, AppEngine, and AutomationEngine. This notebook provides a structured approach to adopting each capability, with a recommended timeline that avoids overwhelming teams while ensuring steady progress.
+With the migration complete and integrations reconnected, the real value of moving to SaaS begins. Dynatrace SaaS includes an entire generation of capabilities that were never available in Managed — Grail, Notebooks, OpenPipeline, Dynatrace Assist, AppEngine, and AutomationEngine. This notebook provides a structured approach to adopting each capability, with a recommended timeline that avoids overwhelming teams while ensuring steady progress.
 
 > **M2S Migration Journey — 3 Phases / 9 Steps**
 >
@@ -21,7 +21,7 @@ With the migration complete and integrations reconnected, the real value of movi
 3. [Notebooks Adoption](#notebooks-adoption)
 4. [OpenPipeline Configuration](#openpipeline-configuration)
 5. [Workflow Automation](#workflow-automation)
-6. [Davis Copilot](#davis-copilot)
+6. [Dynatrace Assist](#davis-copilot)
 7. [Platform Apps](#platform-apps)
 8. [Privacy and Data Protection in SaaS](#privacy-and-data-protection-in-saas)
 9. [Feature Adoption Timeline](#feature-adoption-timeline)
@@ -49,7 +49,7 @@ These capabilities are available only in Dynatrace SaaS. They represent the prim
 |-----------|-------------|----------|
 | **Grail** | Unified data lakehouse — query logs, spans, events, metrics, and entities with DQL | High |
 | **Notebooks** | Interactive analysis combining DQL queries, markdown documentation, and visualizations | High |
-| **Davis Copilot** | AI-assisted natural language querying and root cause analysis | High |
+| **Dynatrace Assist** | AI-assisted natural language querying and root cause analysis | High |
 | **AppEngine** | Build and deploy custom Dynatrace apps with the Dynatrace Developer toolkit | Medium |
 | **AutomationEngine** | Advanced workflow automation with event-driven triggers and multi-step actions | Medium |
 | **OpenPipeline** | Real-time data processing, enrichment, routing, and masking at ingest | High |
@@ -83,8 +83,8 @@ Grail is the single most impactful new capability. It replaces USQL (User Sessio
 | `events` | Generic events (deployments, configuration changes) | `fetch events, from:-1h` |
 | `bizevents` | Business events (transactions, conversions) | `fetch bizevents, from:-24h` |
 | `dt.entity.*` | Entity data (hosts, services, processes) | `fetch dt.entity.host` |
-| `dt.davis.problems` | Davis AI root cause problems | `fetch dt.davis.problems, from:-24h` |
-| `dt.davis.events` | Davis AI raw events | `fetch dt.davis.events, from:-24h` |
+| `dt.davis.problems` | Dynatrace Intelligence root cause problems | `fetch dt.davis.problems, from:-24h` |
+| `dt.davis.events` | Dynatrace Intelligence raw events | `fetch dt.davis.events, from:-24h` |
 
 > **Important:** Metrics do NOT use `fetch`. Use the `timeseries` command: `timeseries avg(dt.host.cpu.usage), from:-1h`.
 
@@ -111,7 +111,7 @@ fetch logs, from:-24h
 ```
 
 ```dql
-// Correlate Davis problems with affected entities — unified in Grail
+// Correlate detected problems with affected entities — unified in Grail
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | expand affected_entity_ids
@@ -271,7 +271,7 @@ The AutomationEngine replaces Managed problem notifications with event-driven wo
 
 | Managed Feature | SaaS Replacement |
 |----------------|------------------|
-| Problem notification rules | Workflow triggers on Davis problems |
+| Problem notification rules | Workflow triggers on detected problems |
 | Custom webhooks | HTTP Request action in Workflows |
 | Maintenance windows | Workflow-aware maintenance windows |
 | Manual escalation | Automated escalation with conditional logic |
@@ -281,7 +281,7 @@ The AutomationEngine replaces Managed problem notifications with event-driven wo
 
 | Component | Purpose | Example |
 |----------|---------|--------|
-| **Trigger** | What starts the workflow | Davis problem opened, schedule (cron), event ingest |
+| **Trigger** | What starts the workflow | detected problem opened, schedule (cron), event ingest |
 | **Action** | What the workflow does | Send Slack message, call API, run DQL, create Jira ticket |
 | **Condition** | Control flow between actions | If severity is CRITICAL, escalate; otherwise, log |
 | **Loop** | Repeat actions | Retry an API call up to 3 times |
@@ -290,9 +290,9 @@ The AutomationEngine replaces Managed problem notifications with event-driven wo
 
 | Workflow | Trigger | Actions |
 |---------|---------|--------|
-| **Problem alerting** | Davis problem opened | Run DQL for context > Send to Slack with enriched details |
+| **Problem alerting** | detected problem opened | Run DQL for context > Send to Slack with enriched details |
 | **Daily health report** | Scheduled (daily at 8 AM) | Run DQL queries > Generate summary > Send email |
-| **Auto-remediation** | Specific Davis event type | Verify condition > Execute remediation script > Validate fix |
+| **Auto-remediation** | Specific detected event type | Verify condition > Execute remediation script > Validate fix |
 | **Deployment tracking** | Custom deployment event | Record deployment > Compare error rates before/after |
 
 > **Tip:** Start by converting your most critical Managed notification rules to Workflows. Test each workflow end-to-end before retiring the Managed equivalent.
@@ -302,7 +302,7 @@ The AutomationEngine replaces Managed problem notifications with event-driven wo
 After creating workflows, verify they are triggering correctly:
 
 ```dql
-// Check recent Davis problems — these should be triggering your workflows
+// Check recent detected problems — these should be triggering your workflows
 fetch dt.davis.problems, from:-24h
 | fieldsKeep display_id, event.name, event.status, event.category, timestamp
 | sort timestamp desc
@@ -317,11 +317,11 @@ fetch dt.davis.problems, from:-7d
 
 <a id="davis-copilot"></a>
 
-## 6. Davis Copilot
+## 6. Dynatrace Assist
 
-Davis Copilot brings AI-assisted querying and analysis to Dynatrace. Users can ask questions in natural language and Copilot generates DQL queries, explains results, and assists with root cause analysis.
+Dynatrace Assist brings AI-assisted querying and analysis to Dynatrace. Users can ask questions in natural language and Copilot generates DQL queries, explains results, and assists with root cause analysis.
 
-### What Davis Copilot Can Do
+### What Dynatrace Assist Can Do
 
 | Capability | Description |
 |-----------|-------------|
@@ -331,16 +331,16 @@ Davis Copilot brings AI-assisted querying and analysis to Dynatrace. Users can a
 | **Notebook integration** | Use Copilot directly within Notebooks for guided analysis |
 | **Dashboard interpretation** | Ask Copilot to explain what a dashboard is showing |
 
-### Enabling Davis Copilot
+### Enabling Dynatrace Assist
 
-1. Navigate to **Settings > Davis AI > Davis Copilot**
+1. Navigate to **Settings > Dynatrace Intelligence > Dynatrace Assist**
 2. Enable Copilot for the environment
 3. Configure user permissions — decide which groups can use Copilot
 4. Copilot appears in Notebooks, Dashboards, and the Dynatrace search bar
 
 ### Adoption Strategy
 
-Davis Copilot is most valuable for:
+Dynatrace Assist is most valuable for:
 
 - **New DQL users** — Copilot generates queries from natural language, accelerating the learning curve
 - **Incident responders** — Natural language investigation during high-pressure incidents
@@ -453,7 +453,7 @@ This timeline begins after Step 6 (Integrate) is complete and the migration is s
 | **1–2** | Stabilize | Core monitoring | Tune alerts, validate data parity, fix integration issues |
 | **3–4** | Query and Analyze | Notebooks, Grail, DQL | Create team notebooks, train on DQL basics, build starter queries |
 | **5–6** | Process and Protect | OpenPipeline, Grail Buckets | Configure log processing, create custom buckets, set up PII masking |
-| **7–8** | Automate | AutomationEngine, Davis Copilot | Convert notification rules to Workflows, enable Copilot |
+| **7–8** | Automate | AutomationEngine, Dynatrace Assist | Convert notification rules to Workflows, enable Copilot |
 | **9–10** | Extend | Platform Apps, AppEngine | Explore Hub apps, evaluate custom app needs, deploy first apps |
 
 ### Success Metrics for Each Phase
@@ -481,7 +481,7 @@ Do not proceed to Step 8 (Enable) until the high-priority items are confirmed.
 | PII masking rules configured in OpenPipeline | High | [ ] |
 | Session replay masking configured (if DEM is active) | Medium | [ ] |
 | First workflow automation implemented | Medium | [ ] |
-| Davis Copilot enabled and accessible to teams | High | [ ] |
+| Dynatrace Assist enabled and accessible to teams | High | [ ] |
 | Platform apps explored in Hub | Medium | [ ] |
 | Feature adoption timeline shared with stakeholders | High | [ ] |
 | Data residency and GDPR requirements verified | High | [ ] |
@@ -499,7 +499,7 @@ Do not proceed to Step 8 (Enable) until the high-priority items are confirmed.
 - [Notebooks Documentation](https://docs.dynatrace.com/docs/observe-and-explore/notebooks)
 - [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [AutomationEngine (Workflows) Documentation](https://docs.dynatrace.com/docs/platform-modules/automations)
-- [Davis Copilot Documentation](https://docs.dynatrace.com/docs/platform/davis-ai/davis-copilot)
+- [Dynatrace Assist Documentation](https://docs.dynatrace.com/docs/platform/davis-ai/davis-copilot)
 - [AppEngine Documentation](https://docs.dynatrace.com/docs/platform/appengine)
 - [Dynatrace Hub](https://docs.dynatrace.com/docs/manage/hub)
 
@@ -514,7 +514,7 @@ In Step 7, you:
 - Created team Notebooks for collaboration, investigation, and reporting
 - Configured OpenPipeline for log processing, data routing, and PII masking
 - Implemented workflow automation to replace Managed notification rules
-- Enabled Davis Copilot for AI-assisted querying and root cause analysis
+- Enabled Dynatrace Assist for AI-assisted querying and root cause analysis
 - Explored platform apps in the Dynatrace Hub
 - Addressed privacy and data protection requirements specific to SaaS
 - Established a phased feature adoption timeline for the broader organization

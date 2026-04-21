@@ -431,7 +431,7 @@ When you select a segment in one Dynatrace app (e.g., Logs), the selection **per
 
 | Limitation | Detail | Workaround |
 |------------|--------|------------|
-| **Davis problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
+| **detected problems require event includes** | To filter problems with segments, define an events include with `event.kind = "DAVIS_PROBLEM"`; entity includes alone do not filter problem records | Add event-type includes alongside entity includes |
 | **Single relationship traversal** | Entity relationships can only traverse one hop | Target specific entity types directly in includes |
 | **Inclusions only, no exclusions** | Cannot say "everything EXCEPT team-X" | Explicitly include what you want (MZ supported exclusions; segments do not) |
 | **Entity includes: no contains/ends-with** | Classic entity includes only support `=` and prefix wildcards; `contains` and `ends-with` are not available | Use prefix-based naming conventions; signal includes support broader operators |
@@ -500,7 +500,7 @@ In this notebook you learned:
 6. **Host group-based segments** — Parsing naming conventions, one segment per dimension
 7. **Visibility and sharing** — Public vs unlisted, governance model
 8. **Cross-app integration** — Persistence, dashboard vs tile-level segments
-9. **Limitations and troubleshooting** — Davis problem event includes, entity operator restrictions, performance tips
+9. **Limitations and troubleshooting** — detected problem event includes, entity operator restrictions, performance tips
 
 ## Series Summary
 

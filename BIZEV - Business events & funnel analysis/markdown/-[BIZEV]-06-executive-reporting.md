@@ -26,7 +26,7 @@ Executive stakeholders need a clear, business-focused view of platform health �
 |-------------|----------|
 | **Dynatrace Environment** | SaaS with Grail enabled |
 | **Permissions** | `storage:bizevents:read`, `storage:events:read`, `storage:metrics:read` |
-| **Data** | Business events with transaction and revenue data; Davis problems |
+| **Data** | Business events with transaction and revenue data; detected problems |
 | **Knowledge** | BIZEV-01 through BIZEV-05 |
 
 <a id="executive-dashboard-queries"></a>
@@ -67,10 +67,10 @@ fetch bizevents, from:-24h
 
 ## 2. Combined Technical and Business View
 
-Executives want to understand the business impact of technical issues. These queries combine Davis problem data with business event metrics.
+Executives want to understand the business impact of technical issues. These queries combine detected problem data with business event metrics.
 
 ```dql
-// Active Davis problems — what technical issues are happening right now?
+// Active detected problems — what technical issues are happening right now?
 fetch dt.davis.problems, from:-24h
 | filter event.status == "ACTIVE"
 | fieldsKeep display_id, event.name, event.category, event.start

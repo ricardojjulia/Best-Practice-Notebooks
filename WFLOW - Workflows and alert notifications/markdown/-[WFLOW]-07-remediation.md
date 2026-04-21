@@ -57,7 +57,7 @@ Level 4: Self-healing with learning
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Description |
 |------|--------|-------------|
-| 1. Detect | Davis Problem | Triggers workflow |
+| 1. Detect | Detected Problem | Triggers workflow |
 | 2. Analyze | DQL queries | Determine root cause |
 | 3. Remediate | Execute action | HTTP/Script/K8s API |
 | 4. Validate | Check metrics | Verify resolution |

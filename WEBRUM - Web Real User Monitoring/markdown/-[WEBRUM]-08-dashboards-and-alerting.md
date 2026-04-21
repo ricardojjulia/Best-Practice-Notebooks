@@ -270,7 +270,7 @@ fetch user.events, from:-6h
 | makeTimeseries avg_apdex = avg(apdex_score), interval:15m, by:{application}
 ```
 
-> **Tip:** For production alerting, use Davis AI anomaly detection rather than static thresholds. Davis automatically baselines normal behavior and detects deviations, reducing false positives from seasonal traffic patterns.
+> **Tip:** For production alerting, use Dynatrace Intelligence anomaly detection rather than static thresholds. Dynatrace Intelligence automatically baselines normal behavior and detects deviations, reducing false positives from seasonal traffic patterns.
 
 <a id="rum-synthetic"></a>
 

@@ -181,8 +181,8 @@ Best practices for operationalizing mobile monitoring with dashboards and alerts
 | 6 | Alert on session volume drop | < 50% of rolling 7-day baseline, severity Warning | **Recommended** | MOBL-11 |
 | 7 | Alert on slow app launch | Average app start > 5 seconds over a 15-minute window, severity Warning | **Recommended** | MOBL-11 |
 | 8 | Alert on high HTTP error rate | > 5% of mobile requests returning 5xx, severity Critical | **Critical** | MOBL-11 |
-| 9 | Use Davis AI for adaptive baselines on performance metrics | Davis automatically learns patterns; add static thresholds only for hard SLA limits | **Recommended** | MOBL-11 |
-| 10 | Tag mobile app entities with `app-type: mobile` | Enables Davis problem workflow triggers filtered to mobile-specific problems | **Recommended** | MOBL-11 |
+| 9 | Use Dynatrace Intelligence for adaptive baselines on performance metrics | Dynatrace Intelligence automatically learns patterns; add static thresholds only for hard SLA limits | **Recommended** | MOBL-11 |
+| 10 | Tag mobile app entities with `app-type: mobile` | Enables detected problem workflow triggers filtered to mobile-specific problems | **Recommended** | MOBL-11 |
 | 11 | Create audience-specific dashboards | Developers: 5-min refresh, crash detail; QA: 15-min, crash-free rate by version; Executives: daily KPI snapshot | **Recommended** | MOBL-11 |
 | 12 | Break down crash rate by `app.version` after every release | Identifies if a specific release introduced a regression | **Critical** | MOBL-10, MOBL-11 |
 

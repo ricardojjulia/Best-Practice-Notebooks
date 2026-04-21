@@ -52,7 +52,7 @@ Move from a model where knowledge is concentrated to one where every team has at
 - Write basic DQL queries
 - Navigate the Dynatrace UI independently
 - Create dashboards for their service
-- Respond to Davis AI problems without escalation
+- Respond to Dynatrace Intelligence problems without escalation
 
 <a id="role-based-paths"></a>
 
@@ -64,7 +64,7 @@ Different roles need different depths of Dynatrace knowledge. The following lear
 
 | Skill Level | Capabilities |
 |-------------|-------------|
-| **Beginner** | Navigate the Dynatrace UI, understand Davis problems, view dashboards |
+| **Beginner** | Navigate the Dynatrace UI, understand detected problems, view dashboards |
 | **Intermediate** | Write DQL queries, investigate incidents with logs/traces, create alerting rules |
 | **Advanced** | Build custom dashboards, configure SLOs, optimize OpenPipeline routing |
 | **Expert** | Design automation workflows, implement self-healing, manage IAM policies |
@@ -147,7 +147,7 @@ Use practical DQL exercises to assess current skill levels. The following catego
 
 ### Level 1: Navigation (Beginner)
 
-- Can the person find and explain a Davis problem?
+- Can the person find and explain a detected problem?
 - Can they navigate to a specific host or service in the UI?
 - Can they read a dashboard and explain what each tile shows?
 
@@ -160,7 +160,7 @@ Use practical DQL exercises to assess current skill levels. The following catego
 ### Level 3: Applied DQL (Advanced)
 
 - Can they join data from two sources (e.g., logs + entities)?
-- Can they calculate MTTR from Davis problems?
+- Can they calculate MTTR from detected problems?
 - Can they build a multi-tile dashboard from DQL queries?
 
 ### Level 4: Platform Operations (Expert)
@@ -245,7 +245,7 @@ timeseries cpuUsage = avg(dt.host.cpu.usage), from:-1h, by:{dt.entity.host}
 ### Exercise 4: "Are there any active problems?"
 
 ```dql
-// List currently active Davis problems
+// List currently active detected problems
 fetch dt.davis.problems, from:-24h
 | filter event.status == "ACTIVE"
 | fieldsKeep display_id, event.name, event.category, event.status, event.start
@@ -270,11 +270,11 @@ Use this template to plan a 12-week enablement program for your organization.
 
 | Week | Focus Area | Activities | Deliverable |
 |------|-----------|-----------|-------------|
-| 1-2 | Platform Orientation | UI walkthrough, basic navigation, Davis AI overview | All team leads can navigate Dynatrace |
+| 1-2 | Platform Orientation | UI walkthrough, basic navigation, Dynatrace Intelligence overview | All team leads can navigate Dynatrace |
 | 3-4 | DQL Fundamentals | Exercises 1-5 above, basic fetch/filter/summarize | All participants can write a basic query |
 | 5-6 | Role-Specific Deep Dives | SRE: logs + alerting. Dev: traces + spans. Platform: IAM + config | Role-specific skills demonstrated |
 | 7-8 | Dashboard Building | Create team dashboards from DQL queries | Each team has a service dashboard |
-| 9-10 | Incident Response Practice | Simulated incident using real Davis problems | Teams can triage without escalation |
+| 9-10 | Incident Response Practice | Simulated incident using real detected problems | Teams can triage without escalation |
 | 11-12 | Champion Certification | Champions lead a knowledge-sharing session | Champion program officially launched |
 
 ### Success Criteria

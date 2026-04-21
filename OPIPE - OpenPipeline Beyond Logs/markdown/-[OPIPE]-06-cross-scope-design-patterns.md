@@ -4,7 +4,7 @@
 
 ## Correlating Logs, Spans, Metrics, and Events Across Scopes
 
-OpenPipeline's six scopes process data independently — but observability value comes from **correlating** across them. A slow API response (span) may be caused by a database timeout (log) that triggers a Davis problem (event) and degrades an SLO metric. This notebook covers design patterns that connect the dots across scopes, cascade processing for derived data, and a production readiness checklist.
+OpenPipeline's six scopes process data independently — but observability value comes from **correlating** across them. A slow API response (span) may be caused by a database timeout (log) that triggers a detected problem (event) and degrades an SLO metric. This notebook covers design patterns that connect the dots across scopes, cascade processing for derived data, and a production readiness checklist.
 
 For individual scope deep-dives, see **OPIPE-02** (spans), **OPIPE-03** (metrics), **OPIPE-05** (events). For log processing, see **OPLOGS-01**. For trace analysis, see **SPANS-04: Service Dependencies & Flow Analysis**.
 
@@ -151,7 +151,7 @@ When related data across scopes should share the same lifecycle and access contr
 |------------|-------|----------|-----------|
 | `checkout_logs` | Logs | Checkout service application logs | 35 days |
 | `checkout_spans` | Spans | Checkout service trace data | 14 days |
-| `checkout_events` | Events | Checkout-related Davis events | 35 days |
+| `checkout_events` | Events | Checkout-related detected events | 35 days |
 | `checkout_bizevents` | Bizevents | Purchase and cart business events | 90 days |
 
 ### Benefits

@@ -153,7 +153,7 @@ fetch spans, from:-1h
 
 OpenPipeline can generate **log records** or **events** from span data at ingestion. This is useful for:
 
-- **Error alerting**: Generate an event when a span has `http.response.status_code >= 500`, enabling Davis to detect error spikes without querying spans directly
+- **Error alerting**: Generate an event when a span has `http.response.status_code >= 500`, enabling Dynatrace Intelligence to detect error spikes without querying spans directly
 - **Audit logging**: Create a log record for every span that touches a sensitive service, providing an audit trail in the logs scope
 - **SLO tracking**: Generate business events from spans that represent key user transactions
 

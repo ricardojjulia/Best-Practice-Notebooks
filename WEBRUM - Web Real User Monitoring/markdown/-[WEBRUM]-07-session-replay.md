@@ -270,7 +270,7 @@ LogRocket.getSessionURL(function(sessionURL) {
 2. Configure a custom string session property in Dynatrace for `logrocket_url`
 3. Query sessions with the third-party URL for cross-referencing
 
-> **Note:** Dynatrace's native Session Replay has the advantage of being fully integrated with the performance waterfall, backend traces, and Davis AI — third-party tools typically lack this correlation.
+> **Note:** Dynatrace's native Session Replay has the advantage of being fully integrated with the performance waterfall, backend traces, and Dynatrace Intelligence — third-party tools typically lack this correlation.
 
 <a id="summary"></a>
 

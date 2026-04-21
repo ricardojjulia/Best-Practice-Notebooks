@@ -60,7 +60,7 @@ A complete discovery must cover ALL of these categories — missing any one will
 | Updates | Manual cluster patching | Automatic bi-weekly updates |
 | Availability | Customer-managed HA | 99.5%+ SLA |
 | Data Platform | Time-series DB + Elasticsearch | Grail data lakehouse |
-| Capabilities | Core monitoring | AppEngine, AutomationEngine, Davis Copilot |
+| Capabilities | Core monitoring | AppEngine, AutomationEngine, Dynatrace Assist |
 For environments where SVG doesn't render
 -->
 
@@ -91,7 +91,7 @@ SaaS provides capabilities that are not available on Managed:
 | **Notebooks** | Interactive, collaborative analysis documents (you are reading one now) |
 | **AppEngine** | Build and deploy custom Dynatrace apps |
 | **AutomationEngine** | Advanced workflow engine for alerting, remediation, and orchestration |
-| **Davis Copilot** | AI-powered assistant for natural-language queries and analysis |
+| **Dynatrace Assist** | AI-powered assistant for natural-language queries and analysis |
 | **OpenPipeline** | Custom data processing, routing, and enrichment at ingest |
 | **Business Analytics** | Full business event tracking and conversion funnel analysis |
 
@@ -268,7 +268,7 @@ Every migration needs clearly documented motivations and success criteria. Use t
 | Motivation | SaaS Benefit | Success Metric |
 |-----------|-------------|----------------|
 | Eliminate cluster maintenance | Fully managed infrastructure | Zero hours spent on cluster patching |
-| Access new capabilities | Grail, Notebooks, AppEngine, Davis Copilot | Teams actively using SaaS-exclusive features |
+| Access new capabilities | Grail, Notebooks, AppEngine, Dynatrace Assist | Teams actively using SaaS-exclusive features |
 | Improve availability | 99.5%+ SLA | Reduced monitoring downtime incidents |
 | Reduce operational cost | No hardware, patching, capacity planning | Measured reduction in Managed infrastructure spend |
 | Enhance security posture | Managed infrastructure, automatic security patches | Faster time-to-patch for vulnerabilities |
@@ -359,7 +359,7 @@ Understanding portability constraints upfront prevents surprises during executio
 
 ### Non-Portable (Data)
 
-> **Important:** Historic data does **not** migrate. This includes metrics, logs, traces, user sessions, problems, and Davis events. Plan for a baseline period where both Managed and SaaS run in parallel so SaaS accumulates its own history.
+> **Important:** Historic data does **not** migrate. This includes metrics, logs, traces, user sessions, problems, and detected events. Plan for a baseline period where both Managed and SaaS run in parallel so SaaS accumulates its own history.
 
 | Data Type | Retention Impact |
 |-----------|------------------|
@@ -367,7 +367,7 @@ Understanding portability constraints upfront prevents surprises during executio
 | Logs | No historic log data in SaaS |
 | Traces/spans | Distributed traces start fresh |
 | User sessions | RUM session data not transferred |
-| Problems | Davis problem history stays in Managed |
+| Problems | detected problem history stays in Managed |
 | Deployment events | Release tracking starts fresh |
 
 <a id="step-completion-checklist"></a>

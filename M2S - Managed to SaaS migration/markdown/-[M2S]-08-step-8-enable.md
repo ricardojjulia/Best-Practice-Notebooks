@@ -189,7 +189,7 @@ fetch logs, from:-1h
 ```
 
 ```dql
-// Training query 2: View active Davis problems
+// Training query 2: View active detected problems
 fetch dt.davis.problems, from:-24h
 | filter event.status == "ACTIVE"
 | fieldsKeep display_id, event.name, event.category, timestamp
@@ -265,7 +265,7 @@ A one-page guide covering the first five minutes on the new platform:
    fetch logs, from:-1h | summarize count = count(), by:{loglevel} | sort count desc
    ```
 4. **Find your dashboard** — Go to Dashboards and search by name
-5. **Check alerts** — Go to Problems to see active Davis-detected issues
+5. **Check alerts** — Go to Problems to see active Dynatrace-detected issues
 
 ### DQL Cheat Sheet
 
@@ -290,7 +290,7 @@ Publish answers to the questions you know users will ask:
 | What happened to my dashboards? | Migrated via SaaS Upgrade Assistant — find them in Dashboards (use search) |
 | How do I query data now? | DQL in Notebooks replaces USQL. See the DQL Cheat Sheet above |
 | Where are my management zones? | Migrated — find them in Settings > Ownership and Permissions > Management Zones |
-| Why do I see fewer problems? | Davis AI is re-establishing baselines on the new SaaS environment. This takes 7–14 days. Problem detection will normalize |
+| Why do I see fewer problems? | Dynatrace Intelligence is re-establishing baselines on the new SaaS environment. This takes 7–14 days. Problem detection will normalize |
 | Can I still use the old Managed URL? | During the transition period, yes (read-only). After decommission, no |
 | Where did USQL go? | USQL is not available in SaaS. Use DQL in Notebooks — it is more powerful and covers all data sources |
 | How do I create a new API token? | Go to Account Management > Identity & Access Management > OAuth clients, or use Settings > Access Tokens for environment tokens |
@@ -432,7 +432,7 @@ Build a migration adoption dashboard that tracks these metrics over time. Share 
 | Monitored hosts | Single value | Entity count |
 | Monitored services | Single value | Entity count |
 | Log ingestion volume | Line chart | Log count timeseries |
-| Problems detected | Line chart | Davis problems timeseries |
+| Problems detected | Line chart | detected problems timeseries |
 | Managed logins remaining | Line chart (target: zero) | Managed access logs |
 
 <a id="step-completion-checklist"></a>

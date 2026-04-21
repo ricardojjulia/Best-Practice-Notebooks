@@ -20,7 +20,7 @@ The first step in any SaaS-to-SaaS migration is understanding *why* you are migr
 2. [What Migrates and What Does Not](#what-migrates-and-what-does-not)
 3. [Entity Inventory](#entity-inventory)
 4. [Configuration Inventory](#configuration-inventory)
-5. [Davis Problem Triage and Configuration Debt](#davis-problem-triage)
+5. [Detected Problem Triage and Configuration Debt](#davis-problem-triage)
 6. [Migration Tools Comparison](#migration-tools-comparison)
 7. [The 90/10 Rule](#the-90-10-rule)
 8. [Step Completion Checklist](#step-completion-checklist)
@@ -115,7 +115,7 @@ Understanding portability constraints upfront prevents surprises during executio
 |------|--------|--------|
 | **Historical metrics, logs, traces** | Stored in source tenant's Grail | Run parallel tenants during transition |
 | **Entity IDs** | Unique per tenant, auto-generated | Remap references in dashboards/SLOs |
-| **Davis AI baselines** | Learned from source data | Requires 2–4 weeks to retrain |
+| **Dynatrace Intelligence baselines** | Learned from source data | Requires 2–4 weeks to retrain |
 | **Session replay recordings** | Bound to source tenant | Accept gap or extend parallel period |
 | **Problem history** | Stored in source tenant | Export key problems as documentation |
 | **Credential Vault secrets** | Security — secrets cannot be exported | Recreate in target Credentials Vault |
@@ -272,7 +272,7 @@ Beyond entities, you need a count of configuration objects to estimate migration
 | K8s enrichment rules | Settings API: `builtin:kubernetes.metadata.enrichment` | ___ | 1–20 |
 
 ```python
-// Davis problem inventory — run on source tenant before migration
+// detected problem inventory — run on source tenant before migration
 // High active problem counts indicate noise that will carry to the target
 fetch dt.davis.problems, from:-30d
 | summarize
@@ -287,11 +287,11 @@ fetch dt.davis.problems, from:-30d
 
 <a id="davis-problem-triage"></a>
 
-## 5. Davis Problem Triage and Configuration Debt
+## 5. Detected Problem Triage and Configuration Debt
 
-Discovery is not just about counting what you have — it is also about identifying what you should **not** migrate. Active Davis problems and stale configuration carry over to the target tenant if not triaged, creating noise that obscures real issues during the critical parallel operation period.
+Discovery is not just about counting what you have — it is also about identifying what you should **not** migrate. Active detected problems and stale configuration carry over to the target tenant if not triaged, creating noise that obscures real issues during the critical parallel operation period.
 
-### Davis Problem Inventory
+### Detected Problem Inventory
 
 Run these queries against the source tenant to understand the current problem landscape. Large numbers of active problems (especially frequent/duplicate events) indicate configuration debt that should be resolved *before* migration — not after.
 
@@ -371,7 +371,7 @@ The 90/10 rule is the defining reality of SaaS-to-SaaS migration:
 - **Entity IDs change** between tenants — every dashboard filter, SLO metric expression, and notification rule that references an entity ID must be updated
 - **Integrations are tenant-specific** — webhook URLs, cloud provider connections, and SSO configurations must be reconfigured
 - **Historical data cannot move** — parallel operation is required to maintain continuity
-- **Davis AI must relearn** — baselines take 2–4 weeks to stabilize in the target tenant
+- **Dynatrace Intelligence must relearn** — baselines take 2–4 weeks to stabilize in the target tenant
 
 ### Items That Require Manual Attention
 
@@ -396,7 +396,7 @@ Before proceeding to **Step 2 — Strategize**, confirm that you have completed 
 | Migration scenario identified (consolidation, split, regional relocation, cloud transformation) | [ ] |
 | Entity inventory complete (hosts, services, K8s clusters, applications, synthetics, ActiveGates) | [ ] |
 | Configuration inventory complete (Gen2 counts + Gen3 counts) | [ ] |
-| Davis problem triage complete — frequent/duplicate events suppressed or tuned | [ ] |
+| detected problem triage complete — frequent/duplicate events suppressed or tuned | [ ] |
 | Configuration debt identified — stale maintenance windows, disabled rules, inactive monitors cataloged | [ ] |
 | Non-portable items identified (credentials, tokens, entity IDs, historical data) | [ ] |
 | Migration tools selected (Monaco for bulk config + Terraform for IAM) | [ ] |

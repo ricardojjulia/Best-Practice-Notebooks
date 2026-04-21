@@ -18,7 +18,7 @@ The migration is functionally complete. Agents are reporting, configurations are
 
 1. [Migration Validation](#migration-validation)
 2. [Performance Optimization](#performance-optimization)
-3. [Davis AI Baseline Establishment](#davis-ai-baseline-establishment)
+3. [Dynatrace Intelligence Baseline Establishment](#davis-ai-baseline-establishment)
 4. [Data Retention Optimization](#data-retention-optimization)
 5. [Migration Success Metrics](#migration-success-metrics)
 6. [Stakeholder Sign-Off](#stakeholder-sign-off)
@@ -49,7 +49,7 @@ Review and update operational procedures now that you're on SaaS:
 | Procedure | Update Required |
 |-----------|----------------|
 | **Release schedules** | Dynatrace SaaS updates bi-weekly automatically — no action needed |
-| **Notifications and alerting** | Review thresholds now that Davis AI baselines are established |
+| **Notifications and alerting** | Review thresholds now that Dynatrace Intelligence baselines are established |
 | **High availability** | SaaS provides 99.5%+ SLA — document this in your HA plans |
 | **Capacity planning** | No more cluster capacity planning — SaaS scales with licensing |
 | **Decommission old infrastructure** | Remove Managed cluster servers, old ActiveGates, old network rules |
@@ -249,7 +249,7 @@ Slow dashboards are the most visible symptom of unoptimized queries. Prioritize 
 
 ### 2.3 Alert Tuning
 
-Alert quality is critical in the first weeks after migration. Expect initial noise as Davis AI establishes baselines:
+Alert quality is critical in the first weeks after migration. Expect initial noise as Dynatrace Intelligence establishes baselines:
 
 | Symptom | Likely Cause | Action |
 |---------|-------------|--------|
@@ -264,13 +264,13 @@ Alert quality is critical in the first weeks after migration. Expect initial noi
 
 <a id="davis-ai-baseline-establishment"></a>
 
-## 3. Davis AI Baseline Establishment
+## 3. Dynatrace Intelligence Baseline Establishment
 
-Davis AI uses machine learning to establish behavioral baselines for every entity in the environment. In a new SaaS environment, Davis starts with no historical data and must learn normal behavior from scratch.
+Dynatrace Intelligence uses machine learning to establish behavioral baselines for every entity in the environment. In a new SaaS environment, Dynatrace Intelligence starts with no historical data and must learn normal behavior from scratch.
 
 ### Baseline Timeline
 
-| Baseline Type | Time Required | What Davis Learns |
+| Baseline Type | Time Required | What Dynatrace Intelligence Learns |
 |-------------|--------------|-------------------|
 | Response time | 2-7 days | Normal service response patterns |
 | Error rates | 2-7 days | Expected error levels per service |
@@ -282,14 +282,14 @@ Davis AI uses machine learning to establish behavioral baselines for every entit
 
 | Week | Behavior |
 |------|----------|
-| **Week 1** | Higher alert volume — Davis flags many deviations as it lacks history |
+| **Week 1** | Higher alert volume — Dynatrace Intelligence flags many deviations as it lacks history |
 | **Week 2** | Alert volume decreases — short-term baselines established |
 | **Weeks 3-4** | Near-normal alert volume — weekly patterns learned |
-| **Weeks 5-6** | Stable — Davis has sufficient history for accurate anomaly detection |
+| **Weeks 5-6** | Stable — Dynatrace Intelligence has sufficient history for accurate anomaly detection |
 
-> **Warning:** Expect more alerts in the first 1-2 weeks. This is normal and expected. Do NOT disable Davis AI or suppress problem detection. Instead, review each alert to confirm Davis is detecting real issues versus baseline noise. The learning period is essential for long-term accuracy.
+> **Warning:** Expect more alerts in the first 1-2 weeks. This is normal and expected. Do NOT disable Dynatrace Intelligence or suppress problem detection. Instead, review each alert to confirm Dynatrace Intelligence is detecting real issues versus baseline noise. The learning period is essential for long-term accuracy.
 
-### Monitor Davis Problem Trends
+### Monitor Detected Problem Trends
 
 Track the problem trend over the first weeks post-migration. A healthy baseline establishment shows declining problem counts over time:
 
@@ -331,7 +331,7 @@ Grail provides flexible data retention through bucket configuration. Optimize re
 | **Metrics** | 5 years (aggregated) | Built-in aggregated retention; no action needed |
 | **Spans/traces** | 35 days | Sufficient for root cause analysis |
 | **Business events** | 90-365 days | Business intelligence and trend analysis |
-| **Davis problems** | 365 days | Year-over-year reliability comparison |
+| **detected problems** | 365 days | Year-over-year reliability comparison |
 
 ### Bucket Targeting for Query Performance
 
@@ -398,7 +398,7 @@ Before scheduling sign-off meetings, prepare the following:
 
 1. **Migration summary report** — Entity counts, data flow validation results, success metrics
 2. **Issue log** — Any open issues with resolution timeline
-3. **Risk register** — Remaining risks (e.g., Davis baselines still establishing)
+3. **Risk register** — Remaining risks (e.g., baselines still establishing)
 4. **Decommission plan** — Timeline and steps for Managed shutdown
 5. **Training completion report** — From Step 8 (Enable)
 
@@ -491,7 +491,7 @@ Congratulations on completing the M2S: Managed-to-SaaS Migration series. Here is
 | **4. Prepare** | Upgrade | Provisioned SaaS tenant, deployed ActiveGates, configured SSO |
 | **5. Execute** | Upgrade | Migrated configurations via SaaS Upgrade Assistant, migrated OneAgents |
 | **6. Integrate** | Upgrade | Reconnected dashboards, alerting, CI/CD, ITSM, extensions, and API scripts |
-| **7. Expand** | Run | Adopted SaaS-exclusive capabilities — Grail, Notebooks, Workflows, Davis Copilot |
+| **7. Expand** | Run | Adopted SaaS-exclusive capabilities — Grail, Notebooks, Workflows, Dynatrace Assist |
 | **8. Enable** | Run | Trained users, updated documentation, established support processes |
 | **9. Optimize** | Run | Validated migration, optimized performance, obtained sign-off, decommissioned Managed |
 
@@ -501,7 +501,7 @@ The migration is complete, but the journey continues. Here are the key activitie
 
 | Timeframe | Focus |
 |-----------|-------|
-| **Weeks 1-2** | Monitor Davis AI baseline establishment; review and tune alerts |
+| **Weeks 1-2** | Monitor Dynatrace Intelligence baseline establishment; review and tune alerts |
 | **Weeks 3-4** | Optimize dashboards and queries; resolve any remaining integration issues |
 | **Weeks 5-8** | Deepen adoption of SaaS-exclusive features; expand automation workflows |
 | **Weeks 9-12** | Conduct first quarterly review; measure ROI against pre-migration baseline |
@@ -529,7 +529,7 @@ The migration is complete when every item below is confirmed.
 | No data gaps > 15 minutes in metrics, logs, or traces | [ ] |
 | All alerts delivering correctly to all channels | [ ] |
 | All dashboards showing data with acceptable performance | [ ] |
-| Davis AI baselines establishing (2+ weeks of data) | [ ] |
+| Dynatrace Intelligence baselines establishing (2+ weeks of data) | [ ] |
 | Query and dashboard performance optimized | [ ] |
 | Data retention configured per compliance requirements | [ ] |
 | Stakeholder sign-off obtained from all parties | [ ] |
@@ -546,7 +546,7 @@ In Step 9, you:
 - Validated migration completeness by comparing SaaS entity counts against the Step 1 inventory
 - Verified continuous data flow across metrics, logs, and traces with no gaps
 - Optimized query performance, dashboards, and alert configuration for SaaS
-- Understood the Davis AI baseline establishment timeline and what to expect
+- Understood the Dynatrace Intelligence baseline establishment timeline and what to expect
 - Configured data retention to balance compliance, operational needs, and cost
 - Measured migration success against quantitative targets
 - Obtained formal stakeholder sign-off

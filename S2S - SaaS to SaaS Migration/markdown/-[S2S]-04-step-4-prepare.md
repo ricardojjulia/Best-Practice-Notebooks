@@ -396,7 +396,7 @@ A configuration freeze prevents drift between the exported configuration and the
 | **SLO changes** | Yes | No new SLOs or metric expression changes |
 | **OneAgent deployments** | No | New agent deployments continue (they auto-register) |
 | **Application deployments** | No | Normal CI/CD continues |
-| **Davis event generation** | No | Monitoring remains fully active |
+| **detected event generation** | No | Monitoring remains fully active |
 
 ### Freeze Communication Template
 
@@ -447,7 +447,7 @@ Every migration must have a documented rollback procedure. Rollback is possible 
 |--------|----------|----------|
 | Entity count < 80% of baseline | Critical | Yes — agents not connecting |
 | No log data in target after 1 hour | Critical | Investigate first, rollback if unresolved in 2 hours |
-| Davis problems in target tenant unrelated to migration | Low | No — expected during transition |
+| detected problems in target tenant unrelated to migration | Low | No — expected during transition |
 | Dashboard shows no data | Medium | No — likely entity ID remapping issue (fixable) |
 | IAM users cannot log in | Critical | Yes — SSO misconfiguration |
 

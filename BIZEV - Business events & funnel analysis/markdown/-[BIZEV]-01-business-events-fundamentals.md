@@ -70,8 +70,8 @@ Dynatrace has two distinct event data objects. Understanding the difference is c
 | Aspect | Business Events (`bizevents`) | Generic Events (`events`) |
 |--------|-------------------------------|---------------------------|
 | **Purpose** | Business transactions and user actions | Infrastructure and operational signals |
-| **Schema** | `event.type`, `event.provider`, custom payload | `event.kind`, `event.type`, Davis-enriched |
-| **Sources** | OneAgent auto-capture, API, OpenPipeline | OneAgent, Extensions, Davis AI |
+| **Schema** | `event.type`, `event.provider`, custom payload | `event.kind`, `event.type`, DT-enriched |
+| **Sources** | OneAgent auto-capture, API, OpenPipeline | OneAgent, Extensions, Dynatrace Intelligence |
 | **Typical use** | Funnel analysis, revenue tracking, KPIs | Alerting, incident management |
 | **Retention** | Configurable via Grail buckets | Configurable via Grail buckets |
 | **DQL table** | `fetch bizevents` | `fetch events` |
