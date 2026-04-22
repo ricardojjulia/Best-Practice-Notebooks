@@ -158,6 +158,8 @@ ALLOW *;
 
 After applying, verify a test user in the group can (and cannot) do what the policy says:
 
+> **For teams spanning multiple source categories by component type** (e.g., a database team needing access to `_sourceCategory=*/db/*` regardless of application), a structured `comp:<component>/bu:<business-unit>/app:<application>` security context format enables a single `MATCH('comp:db*')` boundary to work across all applications. See **IAM-04: Policy Authoring** and **ORGNZ-06: Security Context** for the design pattern.
+
 ```dql
 // Verify group members' effective policies
 fetch dt.iam.policies, from:-5m

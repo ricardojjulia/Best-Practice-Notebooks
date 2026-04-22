@@ -177,6 +177,7 @@ Policies and boundaries share the same condition syntax.
 | `startsWith` | Prefix match | `field startsWith "prefix"` |
 | `in` | Value in list | `field in ("a", "b", "c")` |
 | `IN` | Value in list (alternative) | `field IN ("a", "b")` |
+| `MATCH` | Wildcard pattern match (storage domain only) | `field MATCH ('team-*')` |
 
 ### Supported Fields
 
@@ -515,6 +516,8 @@ Security context can be set via:
 | `region-{code}` | `region-us-east` | Geographic isolation |
 | `app-{name}` | `app-checkout` | Application scoping |
 | `{env}-{team}` | `prod-frontend` | Combined scoping |
+
+> **For transversal access patterns** (teams spanning multiple applications by component type — database, networking, OS), consider a structured multi-dimensional format: `comp:<component>/bu:<business-unit>/app:<application>`. This enables `MATCH('comp:db*')` to reach all database layers across all applications, while `MATCH('*/app:easytrade')` scopes to all components of one app. The dimension you need for transversal slicing must come *first* for Classic entity access. See **IAM-04: Policy Authoring** for the complete design pattern.
 
 ### Query Entities by Security Context
 

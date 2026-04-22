@@ -187,6 +187,26 @@ Multiple teams share a bucket with security context isolation:
 }
 ```
 
+### Pattern 4: Multi-Dimensional MATCH() for Transversal Teams
+
+When teams need access by component type (database, networking, OS) across multiple applications, encode multiple dimensions into the security context and use MATCH() to slice across application boundaries:
+
+```json
+// Database team: all DB-layer components across all applications (Grail)
+{
+  "name": "db-team-grail-access",
+  "statementQuery": "ALLOW storage:buckets:read WHERE storage:bucket-name STARTSWITH 'default_'; ALLOW storage:logs:read WHERE storage:dt.security_context MATCH ('comp:db*');"
+}
+
+// Application team: all component layers for one application (Grail)
+{
+  "name": "easytrade-team-access",
+  "statementQuery": "ALLOW storage:buckets:read WHERE storage:bucket-name STARTSWITH 'default_'; ALLOW storage:logs:read WHERE storage:dt.security_context MATCH ('*/app:easytrade');"
+}
+```
+
+> MATCH() supports `*` wildcards at any position and is **storage domain only**. For Classic entity access (hosts, services), use `startsWith` per component type. The context format is `comp:<component>/bu:<business-unit>/app:<application>` — place the transversal dimension first so `startsWith` cuts correctly. See **IAM-05: Boundary Design** for the full two-domain pattern.
+
 <a id="policy-boundaries"></a>
 ## Policy Boundaries
 

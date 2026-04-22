@@ -146,6 +146,8 @@ Boundaries restrict **WHERE** policies apply - they limit the scope of permissio
 - `storage:dt.security_context` - Security context filtering
 - `storage:bucket.name` - Bucket-based restrictions
 
+> **Note:** `MATCH` is also available for wildcard pattern matching on the storage domain — `storage:dt.security_context MATCH('team-*')`. It supports `*` at any position and is required when `dt.security_context` holds an array value. For boundary design using structured multi-dimensional context values (`comp/bu/app` for transversal team access), see **MZ2POL-04: Policies and Boundaries** and **IAM-05: Boundary Design**.
+
 ### Boundary Examples
 
 **Restrict to specific Management Zone (transitional):**

@@ -115,6 +115,8 @@ settings:dt.security_context IN ("LOB5");
 | Vertical (environment) | Environment-scoped | `environment` | Yes — restrict to environment |
 | Horizontal (team) | Team-scoped | `team` | Yes — restrict to security context |
 | LOB | Full three-domain | `lob` | Yes — three-domain boundary |
+
+> **Transversal access tip:** For organisations where some teams need cross-application access by component type (database, networking, OS), consider a structured `comp:<component>/bu:<business-unit>/app:<application>` context format. A single template with `MATCH('comp:db*')` then covers all database-layer data across every application — no per-app policy per team needed. See **IAM-04: Policy Authoring** for the full pattern.
 | Bucket-based | Bucket-scoped | `log-bucket`, `span-bucket` | Optional |
 
 <a id="template-patterns"></a>
