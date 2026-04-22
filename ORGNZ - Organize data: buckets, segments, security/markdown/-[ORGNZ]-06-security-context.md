@@ -224,6 +224,17 @@ Policy: ALLOW ... WHERE storage:dt.security_context MATCH ("aws/*")
 
 Encode multiple dimensions into a single string for transversal team access — teams that need cross-application visibility (database, networking, OS) without being tied to a specific application.
 
+![Structured Security Context — comp/bu/app dimensions with MATCH() access patterns](images/06-structured-security-context.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Team Type | MATCH() Expression | Gets Access To |
+|-----------|-------------------|----------------|
+| App team (easytrade) | MATCH('*/app:easytrade') | All component layers for easytrade |
+| Transversal DB team | MATCH('comp:db*') | Database layer across all applications |
+| Digital BU team | MATCH('*/bu:digital/*') | All components and apps within digital BU |
+For environments where SVG doesn't render
+-->
+
 ```
 Context format: "comp:<component>/bu:<business-unit>/app:<application>"
 Examples:
