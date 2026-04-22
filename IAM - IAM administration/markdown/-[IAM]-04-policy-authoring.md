@@ -178,13 +178,16 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 | `IN` | In list | `storage:dt.security_context IN ("team-a", "team-b")` |
 | `startsWith` | Prefix match | `settings:schemaId startsWith "builtin:alerting"` |
 | `contains` | Contains substring | `settings:schemaId contains "custom"` |
+| `MATCH` | Wildcard pattern match | `storage:dt.security_context MATCH('*/app:easytrade')` |
+
+> **`MATCH()` vs `startsWith`:** Use `MATCH()` for flexible wildcard patterns anywhere in the value (e.g. middle segment). Use `startsWith` when matching a fixed leading prefix.
 
 ### Common Condition Fields
 
 | Domain | Field | Description |
 |--------|-------|-------------|
 | Storage | `storage:dt.security_context` | Security context on data |
-| Storage | `storage:bucket-name` | **Bucket name (for team isolation)** |
+| Storage | `storage:bucket-name` | Bucket name (for team isolation) |
 | Settings | `settings:schemaId` | Settings schema |
 | Settings | `settings:dt.security_context` | Security context on settings |
 
@@ -198,7 +201,7 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 
 ### Condition Examples
 
-**Scope to security context:**
+**Scope to security context (exact):**
 ```
 ALLOW storage:logs:read WHERE storage:dt.security_context = "checkout"
 ```
@@ -228,6 +231,46 @@ ALLOW storage:logs:read WHERE storage:dt.security_context IN ("team-a", "team-b"
 ALLOW storage:logs:read WHERE storage:bucket-name IN ("checkout_logs", "shared_logs")
 ALLOW storage:spans:read WHERE storage:bucket-name IN ("checkout_spans", "shared_spans")
 ```
+
+### Structured Security Context Design
+
+For organisations with multiple teams and cross-cutting access requirements, a flat single-value context (e.g. `"checkout"`) scales poorly. Instead, encode multiple dimensions into a structured key-value string:
+
+```
+comp:<component>/bu:<business-unit>/app:<application>
+```
+
+**Examples:**
+
+| Entity | Security Context |
+|--------|-----------------|
+| Easytrade application | `comp:app/bu:digital/app:easytrade` |
+| Easytrade database | `comp:db/bu:digital/app:easytrade` |
+| Easytrade load balancer | `comp:lb/bu:digital/app:easytrade` |
+
+> **⚠️ Dimension order matters for Classic entities.** Dynatrace Classic IAM uses prefix-based matching (`startsWith`). Place the dimension you need transversal access on **first** — typically `comp` for infrastructure teams.
+
+**Using `MATCH()` for flexible policy conditions:**
+
+App team — access all components within their application:
+```
+// 3rd Gen signals
+ALLOW storage:metrics:read WHERE storage:dt.security_context MATCH('*/app:easytrade');
+ALLOW storage:logs:read    WHERE storage:dt.security_context MATCH('*/app:easytrade');
+ALLOW storage:spans:read   WHERE storage:dt.security_context MATCH('*/app:easytrade');
+```
+
+Transversal database team — access all database components across all applications:
+```
+// 3rd Gen signals
+ALLOW storage:metrics:read WHERE storage:dt.security_context MATCH('comp:db*');
+ALLOW storage:logs:read    WHERE storage:dt.security_context MATCH('comp:db*');
+ALLOW storage:spans:read   WHERE storage:dt.security_context MATCH('comp:db*');
+// Classic entities (prefix-based)
+ALLOW storage:entities:read WHERE storage:dt.security_context startsWith('comp:db');
+```
+
+> **Note:** `MATCH()` applies to 3rd Gen (Grail) data. Classic entity access (`storage:entities:read`) must use `startsWith` with explicit component prefixes. See **IAM-05** for the corresponding boundary patterns.
 
 <a id="common-policy-patterns"></a>
 ## 5. Common Policy Patterns

@@ -220,6 +220,39 @@ Examples: "aws/123456789012", "gcp/my-project-id"
 Policy: ALLOW ... WHERE storage:dt.security_context MATCH ("aws/*")
 ```
 
+### Pattern 5: Multi-Dimensional Structured Context
+
+Encode multiple dimensions into a single string for transversal team access — teams that need cross-application visibility (database, networking, OS) without being tied to a specific application.
+
+```
+Context format: "comp:<component>/bu:<business-unit>/app:<application>"
+Examples:
+  "comp:app/bu:digital/app:easytrade"  — application layer, digital BU
+  "comp:db/bu:digital/app:easytrade"   — database layer, digital BU
+  "comp:lb/bu:digital/app:easytrade"   — load balancer layer, digital BU
+```
+
+**MATCH() access patterns (Grail / 3rd Gen storage domain):**
+
+| Team Type | MATCH() Expression | Grants Access To |
+|-----------|-------------------|------------------|
+| App team | `MATCH('*/app:easytrade')` | All components for one application |
+| Transversal DB team | `MATCH('comp:db*')` | Database layer across all applications |
+| Business unit team | `MATCH('*/bu:digital/*')` | All components and apps within digital BU |
+
+**startsWith patterns (Classic entity access):**
+
+```
+// App team — enumerate each component explicitly
+ALLOW storage:logs:read WHERE storage:dt.security_context startsWith "comp:app/bu:digital/app:easytrade"
+ALLOW storage:logs:read WHERE storage:dt.security_context startsWith "comp:db/bu:digital/app:easytrade"
+
+// Transversal DB team — one prefix covers all apps
+ALLOW storage:logs:read WHERE storage:dt.security_context startsWith "comp:db"
+```
+
+> **Dimension order matters for Classic entities.** Place the dimension used for transversal access *first* (typically `comp`). For the full two-domain comparison and multi-value context roadmap, see **IAM-04: Policy Authoring** and **IAM-05: Boundary Design**.
+
 <a id="security-context-best-practices"></a>
 ## Security Context Best Practices
 | Practice | Rationale |
@@ -230,6 +263,7 @@ Policy: ALLOW ... WHERE storage:dt.security_context MATCH ("aws/*")
 | Document context values | Governance and audit requirements |
 | Test with sample data | Verify context is assigned correctly |
 | Use MATCH for array fields | Required for correct policy evaluation |
+| Encode multiple dimensions for transversal access | `comp/bu/app` format scales to cross-application teams without per-app policies |
 
 <a id="entity-security-context"></a>
 ## Entity Security Context

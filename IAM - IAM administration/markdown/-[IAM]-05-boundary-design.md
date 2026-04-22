@@ -131,6 +131,9 @@ settings:dt.security_context IN ("checkout");
 | `!=` | Not equal | `!= "restricted"` |
 | `startsWith` | Prefix match | `startsWith "team-"` |
 | `contains` | Substring | `contains "prod"` |
+| `MATCH` | Wildcard pattern match | `storage:dt.security_context MATCH('*/app:easytrade')` |
+
+> **`MATCH()` is available for `storage` domain only.** It supports `*` as a wildcard at any position. Classic entity access (`environment:` domain) does not support `MATCH()` — use `startsWith` or `IN` there instead.
 
 ### Common Fields
 
@@ -168,7 +171,7 @@ settings:dt.security_context IN ("*");
 |------------|-------------|------------|
 | **Max 10 conditions** | Only 10 lines per boundary | Create multiple boundaries |
 | **No AND between lines** | Each line is OR-combined | Use multiple boundaries for AND logic |
-| **Limited operators** | Basic operators only | Simplify condition expressions |
+| **MATCH storage-only** | `MATCH()` not supported in `environment:` domain | Use `startsWith` / `IN` for Classic entities |
 
 <a id="security-context-and-data-partitioning-strategy"></a>
 ## 4. Security Context and Data Partitioning Strategy
@@ -424,6 +427,64 @@ Boundary: environment:management-zone IN ("*");
 Policy: checkout-write-policy
 Boundary: environment:management-zone IN ("checkout");
 ```
+
+### Pattern 6: Application Team — Structured Security Context
+
+When `dt.security_context` follows the `comp:<component>/bu:<bu>/app:<app>` format (see **Structured Security Context Design** in **IAM-04**), app teams can access all component types for their application using a single wildcard boundary:
+
+```
+// 3rd Gen signals and entities — wildcard on app dimension
+storage:dt.security_context MATCH('*/app:easytrade');
+
+// Classic entities — explicit per-component prefix (startsWith not supported in environment: domain)
+storage:dt.security_context startsWith('comp:app/bu:digital/app:easytrade');
+storage:dt.security_context startsWith('comp:db/bu:digital/app:easytrade');
+storage:dt.security_context startsWith('comp:lb/bu:digital/app:easytrade');
+```
+
+This grants access to all data tagged with any component prefix for that application:
+- `comp:app/bu:digital/app:easytrade`
+- `comp:db/bu:digital/app:easytrade`
+- `comp:lb/bu:digital/app:easytrade`
+
+### Pattern 7: Transversal Team — Component-Based Access
+
+Infrastructure teams (database, network, OS) that need cross-application access to their component type use a leading `comp:` prefix to enable a single rule:
+
+```
+// 3rd Gen signals and entities — all database components, all applications
+storage:dt.security_context MATCH('comp:db*');
+
+// Classic entities
+storage:dt.security_context startsWith('comp:db');
+```
+
+This grants access to all data matching:
+- `comp:db/bu:digital/app:easytrade`
+- `comp:db/bu:digital/app:easytravel`
+- `comp:db/bu:corp/app:hipstershop`
+
+> **Dimension order is the key design decision.** Placing `comp` first in the string means component-based transversal access is always a simple prefix match. Access by `bu` or other mid-string dimensions requires `MATCH('*/bu:digital/*')` for Grail and explicit per-component rules for Classic entities.
+
+### Multi-Value Security Context (Upcoming)
+
+> **Planned: CQ3** — `PRODUCT-14849`
+
+The current single-string model requires choosing one leading dimension. A future **multi-value `dt.security_context`** will store each dimension independently:
+
+```
+dt.security_context = ["bu:digital", "app:easytrade", "comp:db"]
+```
+
+This removes the dimension-ordering trade-off and simplifies all three team types to a single boundary condition per signal type:
+
+| Team | Boundary (future) |
+|------|-------------------|
+| App team (easytrade) | `storage:dt.security_context MATCH('app:easytrade')` |
+| Database team (transversal) | `storage:dt.security_context MATCH('comp:db')` |
+| Business unit (digital) | `storage:dt.security_context MATCH('bu:digital')` |
+
+Until multi-value is available, the structured single-string pattern above is the recommended approach.
 
 <a id="multi-tenant-isolation"></a>
 ## 6. Multi-Tenant Isolation

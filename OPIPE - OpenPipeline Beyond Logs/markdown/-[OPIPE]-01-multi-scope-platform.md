@@ -441,6 +441,8 @@ Configure the **Metrics** scope in OpenPipeline to add `dt.security_context` bas
 
 Set `dt.security_context` on the **entities** that the extension monitors (hosts, process groups). Metrics associated with those entities inherit the context through entity relationships. This is less granular but simpler to manage.
 
+> **Structured context design:** For organisations with transversal teams (database, networking, OS) that need cross-application access, a flat context value (e.g., `"checkout"`) does not scale. Encoding `comp:<component>/bu:<business-unit>/app:<application>` into the context string, then using `MATCH('comp:db*')` in the IAM policy, enables precise transversal access without a per-application context per team. The dimension needed for transversal slicing should come first in the string for compatibility with Classic entity `startsWith` matching. See **IAM-04: Policy Authoring** for the complete design pattern and **IAM-05: Boundary Design** for boundary examples.
+
 > **Critical:** When `dt.security_context` holds an array value, IAM policies must use the `MATCH` operator — not `=`, `STARTSWITH`, or `IN`. Array comparison with equality operators always returns false. See **ORGNZ-06** for the full rules.
 
 ```dql
