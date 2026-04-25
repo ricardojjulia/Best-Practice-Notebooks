@@ -1,6 +1,6 @@
-# CI/CD Integration
+# AUTOM-07: CI/CD Integration
 
-> **Series:** AUTOM | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 

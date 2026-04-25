@@ -1,6 +1,6 @@
-# Audit Logging and Compliance
+# IAM-07: Audit Logging and Compliance
 
-> **Series:** IAM | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Meeting Regulatory and Security Requirements
 Audit logging is essential for compliance (SOC2, SOX, HIPAA, PCI-DSS) and security operations. This notebook covers querying audit logs, building compliance reports, and conducting access reviews.

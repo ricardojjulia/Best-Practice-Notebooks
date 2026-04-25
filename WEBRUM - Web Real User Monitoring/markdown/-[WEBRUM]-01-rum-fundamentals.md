@@ -1,6 +1,6 @@
 # WEBRUM-01: Web RUM Fundamentals
 
-> **Series:** WEBRUM | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

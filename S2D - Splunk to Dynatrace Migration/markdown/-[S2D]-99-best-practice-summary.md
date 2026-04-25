@@ -1,6 +1,6 @@
 # S2D-99: Best Practice Summary
 
-> **Series:** S2D | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
+> **Series:** S2D — Splunk to Dynatrace Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 

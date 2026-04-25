@@ -1,6 +1,6 @@
 # ORGNZ-07 LAB: Advanced Permission Patterns - Hands-on Exercises
 
-> **Series:** ORGNZ | **Notebook:** 7 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-07: Advan
 
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 
 This notebook covers advanced permission patterns including record-level permissions, field-based access, and combining multiple access control mechanisms for enterprise-scale data governance.

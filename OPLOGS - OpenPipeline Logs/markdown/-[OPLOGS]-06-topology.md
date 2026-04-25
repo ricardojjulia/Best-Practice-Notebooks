@@ -1,6 +1,6 @@
-# 🗺️ Topology & Entity Context
+# OPLOGS-06: Topology & Entity Context
 
-> **Series:** OPLOGS | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Leveraging Entity Relationships in Log Analysis
 This notebook explores how Dynatrace enriches logs with entity context (hosts, processes, services, Kubernetes) for topology-aware analysis.

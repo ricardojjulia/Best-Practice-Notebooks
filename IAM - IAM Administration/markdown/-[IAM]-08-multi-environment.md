@@ -1,6 +1,6 @@
-# Multi-Environment IAM
+# IAM-08: Multi-Environment IAM
 
-> **Series:** IAM | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
 
 ## Scaling IAM Across Multiple Environments
 Enterprise organizations typically have multiple Dynatrace environments (development, staging, production). This notebook covers strategies for managing IAM consistently across environments while maintaining security boundaries.

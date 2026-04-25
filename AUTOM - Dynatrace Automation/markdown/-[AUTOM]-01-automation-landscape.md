@@ -1,6 +1,6 @@
-# Automation Landscape
+# AUTOM-01: Automation Landscape
 
-> **Series:** AUTOM | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 Dynatrace provides multiple ways to automate configuration management and operational tasks. This series covers all major automation options, helping you choose the right approach for your needs.
 
@@ -9,10 +9,12 @@ Dynatrace provides multiple ways to automate configuration management and operat
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Choosing the Right Tool](#choosing-the-right-tool)
-3. [Decision Framework](#decision-framework)
-4. [Authentication & Token Reference](#api-token-scopes-reference)
-5. [Emerging Capabilities](#emerging-capabilities)
+2. [Automation Options Overview](#overview)
+3. [Choosing the Right Tool](#choosing-the-right-tool)
+4. [Decision Framework](#decision-framework)
+5. [Authentication & Token Reference](#api-token-scopes-reference)
+6. [Emerging Capabilities](#emerging-capabilities)
+7. [Next Steps](#next-steps)
 
 ---
 
@@ -74,6 +76,8 @@ By the end of this notebook, you will:
 
 Dynatrace automation tools form a hierarchy from low-level APIs to high-level abstractions:
 
+![Automation Pyramid](images/01-automation-pyramid.png)
+
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Tool | Abstraction |
 |-------|------|-------------|
@@ -83,8 +87,6 @@ Dynatrace automation tools form a hierarchy from low-level APIs to high-level ab
 | Medium | SDKs | Programmatic access |
 | Low | Settings API | Direct REST calls |
 -->
-
-![Automation Pyramid](images/autom-pyramid_930x500.png)
 
 ---
 
@@ -98,7 +100,7 @@ Dynatrace automation tools form a hierarchy from low-level APIs to high-level ab
 | **Workflows** | Event-driven, auto-remediation | Low | N/A | No |
 | **SDKs** | Custom apps, complex logic | Medium | Yes | Yes |
 
-![Automation Tool Comparison](images/autom-tool-comparison_930x500.png)
+![Automation Tool Comparison](images/01-tool-comparison.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tool | Best For | Learning Curve | CI/CD Ready | Multi-Tenant |
@@ -224,6 +226,8 @@ Not all tools support all Dynatrace features equally:
 ## 4. Decision Framework
 Use this flowchart to choose the right automation approach:
 
+![Decision Framework](images/01-decision-tree.png)
+
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | If Yes | If No |
 |----------|--------|-------|
@@ -232,8 +236,6 @@ Use this flowchart to choose the right automation approach:
 | Is it event-driven? | Workflows | Continue... |
 | Building a custom app? | SDK | Monaco |
 -->
-
-![Decision Framework](images/autom-decision-tree_930x500.png)
 
 ---
 
@@ -260,7 +262,7 @@ These tools aren't mutually exclusive. Common combinations:
 ---
 
 <a id="api-token-scopes-reference"></a>
-## Authentication & Token Reference
+## 5. Authentication & Token Reference
 
 Dynatrace supports three types of credentials for automation tools. Which you need depends on the tool and the resources you manage.
 
@@ -300,7 +302,7 @@ Dynatrace supports three types of credentials for automation tools. Which you ne
 ---
 
 <a id="emerging-capabilities"></a>
-## 5. Emerging Capabilities
+## 6. Emerging Capabilities
 
 ### Dynatrace Intelligence Agents
 
@@ -340,7 +342,7 @@ The [Dynatrace MCP Server](https://docs.dynatrace.com/docs/dynatrace-intelligenc
 ---
 
 <a id="next-steps"></a>
-## 5. Next Steps
+## 7. Next Steps
 
 ### Learning Path by Goal
 

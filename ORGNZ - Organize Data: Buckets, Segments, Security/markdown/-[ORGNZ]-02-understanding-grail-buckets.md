@@ -1,6 +1,6 @@
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 

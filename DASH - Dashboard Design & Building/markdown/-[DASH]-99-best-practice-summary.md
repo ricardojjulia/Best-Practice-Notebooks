@@ -1,6 +1,6 @@
 # DASH-99: Best Practice Summary
 
-> **Series:** DASH | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

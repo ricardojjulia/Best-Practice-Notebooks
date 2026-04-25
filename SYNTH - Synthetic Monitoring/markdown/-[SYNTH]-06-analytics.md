@@ -1,6 +1,6 @@
-# 📊 Synthetic Analytics & Alerting
+# SYNTH-06: Synthetic Analytics & Alerting
 
-> **Series:** SYNTH | **Notebook:** 6 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 6 of 6 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Dashboards, SLOs, and Alerting Strategies
 This notebook covers advanced analytics for synthetic monitoring, including building dashboards, configuring SLOs, and implementing effective alerting strategies using the latest Dynatrace platform.

@@ -1,6 +1,6 @@
 # ADOPT-99: Best Practice Summary
 
-> **Series:** ADOPT | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** ADOPT — Observability Adoption & Maturity | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

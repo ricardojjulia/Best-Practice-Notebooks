@@ -1,6 +1,6 @@
 # DASH-01: Dashboard Fundamentals
 
-> **Series:** DASH | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

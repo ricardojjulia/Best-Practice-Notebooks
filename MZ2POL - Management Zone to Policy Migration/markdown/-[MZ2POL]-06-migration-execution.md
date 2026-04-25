@@ -1,6 +1,6 @@
 # MZ2POL-06: Migration Execution
 
-> **Series:** MZ2POL | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 

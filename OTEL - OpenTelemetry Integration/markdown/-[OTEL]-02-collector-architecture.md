@@ -1,6 +1,6 @@
-# OpenTelemetry Collector Architecture
+# OTEL-02: OpenTelemetry Collector Architecture
 
-> **Series:** OTEL | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Understanding the OTel Collector Pipeline
 The OpenTelemetry Collector is the backbone of OTel deployments—a vendor-agnostic service for receiving, processing, and exporting telemetry data. This notebook covers its architecture, components, and configuration.

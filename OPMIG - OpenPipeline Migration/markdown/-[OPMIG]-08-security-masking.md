@@ -1,6 +1,6 @@
 # OPMIG-08: Security, Masking & Compliance
 
-> **Series:** OPMIG | **Notebook:** 8 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 > **OpenPipeline Migration Series** | Notebook 8 of 9  
 > **Level:** Advanced  

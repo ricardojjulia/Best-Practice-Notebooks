@@ -1,6 +1,6 @@
-# IAM and Authentication
+# ONBRD-02: IAM and Authentication
 
-> **Series:** ONBRD | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Setting Up Secure Access
 Before inviting your team, configure authentication and permissions properly. This notebook covers SAML/SSO setup, API tokens, and the modern permission model.

@@ -1,6 +1,6 @@
-# 🌐 Browser Monitors
+# SYNTH-02: Browser Monitors
 
-> **Series:** SYNTH | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Creating and Optimizing Browser-Based Synthetic Tests
 This notebook covers browser monitors in Dynatrace, including single-URL monitors, browser clickpaths, and performance analysis using the latest Dynatrace platform capabilities.

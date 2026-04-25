@@ -1,6 +1,6 @@
 # CLOUD-07: CloudWatch Log Ingestion
 
-> **Series:** CLOUD | **Notebook:** 7 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** CLOUD — Cloud Provider Integrations | **Notebook:** 7 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

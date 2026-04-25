@@ -1,6 +1,6 @@
-# 🔍 Querying & Parsing Logs
+# OPLOGS-05: Querying & Parsing Logs
 
-> **Series:** OPLOGS | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## DQL Fundamentals and DPL Pattern Matching
 This notebook covers DQL query syntax, filtering, string matching, and DPL (Dynatrace Pattern Language) for extracting structured data from logs.

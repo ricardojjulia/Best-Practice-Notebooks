@@ -1,6 +1,6 @@
 # DBMON-01: Database Monitoring Fundamentals
 
-> **Series:** DBMON | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

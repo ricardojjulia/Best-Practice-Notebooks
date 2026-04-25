@@ -1,6 +1,6 @@
 # SL2DT-05: Monitor & Alert Conversion
 
-> **Series:** SL2DT | **Notebook:** 5 of 10 | **Created:** April 2026 | **Last Updated:** 04/21/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 5 of 10 | **Created:** April 2026 | **Last Updated:** 04/21/2026
 
 ## Overview
 

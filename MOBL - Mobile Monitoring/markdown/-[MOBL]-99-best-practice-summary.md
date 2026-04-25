@@ -1,6 +1,6 @@
 # MOBL-99: Best Practice Summary
 
-> **Series:** MOBL | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

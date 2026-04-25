@@ -1,6 +1,6 @@
-# 🔗 HTTP Monitors
+# SYNTH-03: HTTP Monitors
 
-> **Series:** SYNTH | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Lightweight API and Endpoint Monitoring
 This notebook covers HTTP monitors for API health checks, endpoint validation, and multi-step API workflows using the latest Dynatrace platform.

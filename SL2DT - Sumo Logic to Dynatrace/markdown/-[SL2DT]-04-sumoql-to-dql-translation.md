@@ -1,6 +1,6 @@
 # SL2DT-04: SumoQL → DQL Translation
 
-> **Series:** SL2DT | **Notebook:** 4 of 10 | **Created:** April 2026 | **Last Updated:** 04/21/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 4 of 10 | **Created:** April 2026 | **Last Updated:** 04/21/2026
 
 ## Overview
 

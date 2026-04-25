@@ -1,6 +1,6 @@
 # WEBRUM-08: Dashboards and Alerting
 
-> **Series:** WEBRUM | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

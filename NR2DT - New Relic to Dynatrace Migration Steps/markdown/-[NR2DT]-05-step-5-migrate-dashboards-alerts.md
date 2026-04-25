@@ -1,6 +1,6 @@
 # NR2DT-05: Step 5 — Migrate Dashboards & Alerts
 
-> **Series:** NR2DT | **Notebook:** 5 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 5 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

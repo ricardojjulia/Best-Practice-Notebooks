@@ -1,6 +1,6 @@
 # NRLC-05: Synthetic Monitor Migration
 
-> **Series:** NRLC | **Notebook:** 5 of 9 | **Created:** April 2026 | **Last Updated:** 04/20/2026
+> **Series:** NRLC — New Relic to Dynatrace Migration Deep Dives | **Notebook:** 5 of 9 | **Created:** April 2026 | **Last Updated:** 04/20/2026
 
 ## Overview
 

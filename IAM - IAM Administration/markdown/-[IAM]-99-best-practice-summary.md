@@ -1,6 +1,6 @@
 # IAM-99: Best Practice Summary
 
-> **Series:** IAM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 

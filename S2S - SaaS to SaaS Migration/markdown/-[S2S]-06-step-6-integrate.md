@@ -1,6 +1,6 @@
 # S2S-06: Step 6 — Integrate: Cloud, Dashboards, and Workflows
 
-> **Series:** S2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** S2S — SaaS to SaaS Migration | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

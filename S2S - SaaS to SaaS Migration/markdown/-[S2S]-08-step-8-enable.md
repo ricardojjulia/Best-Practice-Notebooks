@@ -1,6 +1,6 @@
 # S2S-08: Step 8 — Enable: Parallel Operation and Stakeholder Handover
 
-> **Series:** S2S | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** S2S — SaaS to SaaS Migration | **Notebook:** 8 of 9 | **Phase:** Run | **Step:** Enable | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

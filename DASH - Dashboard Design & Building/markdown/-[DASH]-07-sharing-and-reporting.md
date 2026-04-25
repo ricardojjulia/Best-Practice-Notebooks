@@ -1,6 +1,6 @@
 # DASH-07: Sharing and Reporting
 
-> **Series:** DASH | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

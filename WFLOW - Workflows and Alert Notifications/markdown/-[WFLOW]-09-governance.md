@@ -1,6 +1,6 @@
-# Security, Governance & Monitoring
+# WFLOW-09: Security, Governance & Monitoring
 
-> **Series:** WFLOW | **Notebook:** 9 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 9 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Production Best Practices
 This final notebook covers workflow security, governance, observability, and operational best practices for running workflows in production.

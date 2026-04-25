@@ -1,6 +1,6 @@
-# OpenPipeline Migration Guide: Part 1
+# OPMIG-01: OpenPipeline Migration Guide: Part 1
 
-> **Series:** OPMIG | **Notebook:** 1 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 1 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Introduction & Why Migrate from Classic to OpenPipeline v2.0
 

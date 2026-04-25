@@ -1,6 +1,6 @@
 # ORGNZ-10 LAB: Advanced Segment Definitions - Hands-on Exercises
 
-> **Series:** ORGNZ | **Notebook:** 10 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 10 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -38,7 +38,7 @@ This lab notebook contains 11 hands-on exercises extracted from **ORGNZ-10: Adva
 
 # ORGNZ-10: Advanced Segment Definitions
 
-> **Series:** ORGNZ | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/12/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/12/2026
 
 
 This notebook is a deep-dive into the mechanics of creating effective segment definitions in Dynatrace Grail. While **ORGNZ-08** introduced segments, their structure, and design patterns, this notebook focuses on the practical details: filter condition syntax, data type include rules, metadata enrichment for segments, advanced variable patterns, and troubleshooting techniques.

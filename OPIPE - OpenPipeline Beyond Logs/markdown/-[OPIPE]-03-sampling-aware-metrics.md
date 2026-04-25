@@ -1,6 +1,6 @@
 # OPIPE-03: Sampling-Aware Metrics
 
-> **Series:** OPIPE | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
 
 ## Extracting Accurate Metrics from Sampled Trace Data
 

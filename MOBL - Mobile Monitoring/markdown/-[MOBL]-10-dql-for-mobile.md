@@ -1,6 +1,6 @@
 # MOBL-10: DQL for Mobile Analytics
 
-> **Series:** MOBL | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

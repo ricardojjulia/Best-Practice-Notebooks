@@ -1,6 +1,6 @@
 # MOBL-11: Dashboards & Alerting
 
-> **Series:** MOBL | **Notebook:** 11 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 11 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
 
 ## Overview
 

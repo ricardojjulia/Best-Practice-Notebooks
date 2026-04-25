@@ -1,6 +1,6 @@
-# Settings API
+# AUTOM-02: Settings API
 
-> **Series:** AUTOM | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 The Settings API (also called Settings 2.0) is Dynatrace's modern REST API for configuration management. It provides a unified way to manage all Dynatrace settings through JSON objects with schema validation.
 

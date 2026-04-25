@@ -1,6 +1,6 @@
-# Dynatrace Workflows
+# AUTOM-05: Dynatrace Workflows
 
-> **Series:** AUTOM | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
 
 Dynatrace Workflows is a built-in automation engine that enables event-driven actions directly within the platform. Unlike external tools, workflows run inside Dynatrace with full access to observability data.
 

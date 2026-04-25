@@ -1,6 +1,6 @@
 # ONBRD-99: Best Practice Summary
 
-> **Series:** ONBRD | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

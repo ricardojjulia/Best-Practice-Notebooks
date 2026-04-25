@@ -1,6 +1,6 @@
 # IAM-12: API Provisioning & Validation Scripts
 
-> **Series:** IAM | **Notebook:** 12 of 12 | **Created:** March 2026 | **Last Updated:** 04/03/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 12 of 12 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 

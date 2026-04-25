@@ -1,6 +1,6 @@
 # NRLC-09: Toolchain Reference & End-to-End Runbook
 
-> **Series:** NRLC | **Notebook:** 9 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NRLC — New Relic to Dynatrace Migration Deep Dives | **Notebook:** 9 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

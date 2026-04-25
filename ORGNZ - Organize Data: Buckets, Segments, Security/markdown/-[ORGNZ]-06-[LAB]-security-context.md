@@ -1,6 +1,6 @@
 # ORGNZ-06 LAB: Security Context - Hands-on Exercises
 
-> **Series:** ORGNZ | **Notebook:** 6 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -31,7 +31,7 @@ This lab notebook contains 4 hands-on exercises extracted from **ORGNZ-06: Secur
 
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/05/2026
 
 
 If permissions on deployment-level attributes or bucket level are insufficient, Dynatrace allows you to set up **fine-grained permissions** by adding a `dt.security_context` attribute to your data. This enables record-level access control that scales beyond bucket limits.

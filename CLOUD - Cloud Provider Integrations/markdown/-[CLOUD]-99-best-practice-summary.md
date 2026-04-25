@@ -1,6 +1,6 @@
 # CLOUD-99: Best Practice Summary
 
-> **Series:** CLOUD | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** CLOUD — Cloud Provider Integrations | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

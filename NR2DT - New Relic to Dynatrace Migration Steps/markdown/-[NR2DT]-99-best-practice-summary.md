@@ -1,6 +1,6 @@
 # NR2DT-99: Best Practice Summary
 
-> **Series:** NR2DT | **Notebook:** 10 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 10 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
 
 ## Overview
 

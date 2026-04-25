@@ -1,6 +1,6 @@
 # OPIPE-99: Best Practice Summary
 
-> **Series:** OPIPE | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/25/2026
 
 Definitive best practice settings for OpenPipeline beyond logs — spans, metrics, events, and cross-scope patterns. Each entry specifies the exact configuration.
 

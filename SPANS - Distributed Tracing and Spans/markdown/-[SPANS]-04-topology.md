@@ -1,6 +1,6 @@
-# 🗺️ Service Dependencies & Flow Analysis
+# SPANS-04: Service Dependencies & Flow Analysis
 
-> **Series:** SPANS | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Mapping Your Distributed System
 This notebook teaches you how to use span data to understand service relationships, analyze request flows, and identify critical dependencies in your system.

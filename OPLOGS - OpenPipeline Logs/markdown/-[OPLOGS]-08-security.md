@@ -1,6 +1,6 @@
-# 🔒 Security & Data Protection
+# OPLOGS-08: Security & Data Protection
 
-> **Series:** OPLOGS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Sensitive Data Discovery, Masking, and Compliance
 This notebook covers sensitive data discovery, OpenPipeline masking configuration, security event monitoring, and compliance reporting.

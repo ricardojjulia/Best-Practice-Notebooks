@@ -1,6 +1,6 @@
-# 🌐 Synthetic Network Monitoring
+# SYNTH-05: Synthetic Network Monitoring
 
-> **Series:** SYNTH | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Network Availability, DNS, and ICMP Monitoring
 This notebook covers Dynatrace Synthetic Network Availability Monitors, including ICMP (ping), DNS, and TCP port monitoring capabilities introduced in recent Dynatrace releases.

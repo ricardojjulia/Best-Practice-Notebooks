@@ -1,6 +1,6 @@
 # OPIPE-01: OpenPipeline as a Multi-Scope Platform
 
-> **Series:** OPIPE | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
 
 ## Beyond Logs: Processing Spans, Metrics, and Events at Ingestion
 

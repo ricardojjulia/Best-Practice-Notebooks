@@ -1,6 +1,6 @@
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 

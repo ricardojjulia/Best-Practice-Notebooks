@@ -1,6 +1,6 @@
 # S2S-99: Best Practice Summary
 
-> **Series:** S2S | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/16/2026
+> **Series:** S2S — SaaS to SaaS Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/16/2026
 
 ## Overview
 

@@ -1,6 +1,6 @@
-# OpenPipeline Migration Guide: Part 2
+# OPMIG-02: OpenPipeline Migration Guide: Part 2
 
-> **Series:** OPMIG | **Notebook:** 2 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Architecture & Key Concepts
 ---

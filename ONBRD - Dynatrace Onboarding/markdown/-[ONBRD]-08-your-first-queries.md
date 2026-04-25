@@ -1,6 +1,6 @@
-# Your First Queries
+# ONBRD-08: Your First Queries
 
-> **Series:** ONBRD | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Learning DQL Fundamentals
 Dynatrace Query Language (DQL) is how you access data in Grail. This notebook introduces the core concepts and patterns you'll use daily.

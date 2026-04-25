@@ -1,6 +1,6 @@
-# Advanced Notification Routing
+# WFLOW-04: Advanced Notification Routing
 
-> **Series:** WFLOW | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Intelligent Alert Routing
 Not all alerts should go to everyone. This notebook covers conditional routing based on severity, team ownership, time of day, and escalation patterns.

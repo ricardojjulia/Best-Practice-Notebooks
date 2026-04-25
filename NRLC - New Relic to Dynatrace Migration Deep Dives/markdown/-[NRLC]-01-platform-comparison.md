@@ -1,6 +1,6 @@
 # NRLC-01: New Relic vs. Dynatrace — Platform Comparison
 
-> **Series:** NRLC | **Notebook:** 1 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC — New Relic to Dynatrace Migration Deep Dives | **Notebook:** 1 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
 
 ## Overview
 

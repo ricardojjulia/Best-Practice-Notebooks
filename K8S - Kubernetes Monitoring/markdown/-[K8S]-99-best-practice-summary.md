@@ -1,6 +1,6 @@
 # K8S-99: Best Practice Summary
 
-> **Series:** K8S | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 

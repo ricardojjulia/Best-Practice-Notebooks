@@ -1,6 +1,6 @@
-# Trace Instrumentation
+# OTEL-04: Trace Instrumentation
 
-> **Series:** OTEL | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Instrumenting Applications for Distributed Tracing
 Traces provide visibility into request flows across services. This notebook covers automatic and manual instrumentation techniques for popular languages with OpenTelemetry.

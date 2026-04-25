@@ -1,6 +1,6 @@
-# Building Dashboards
+# ONBRD-10: Building Dashboards
 
-> **Series:** ONBRD | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Visualizing Your Data
 Dashboards provide at-a-glance visibility into your environment's health and performance. This notebook covers dashboard creation, common visualization patterns, and sharing with your team.

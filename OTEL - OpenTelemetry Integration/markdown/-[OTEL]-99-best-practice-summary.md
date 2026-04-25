@@ -1,6 +1,6 @@
 # OTEL-99: Best Practice Summary
 
-> **Series:** OTEL | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Introduction
 

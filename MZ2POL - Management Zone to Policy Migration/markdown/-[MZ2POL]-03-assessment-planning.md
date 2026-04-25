@@ -1,6 +1,6 @@
 # MZ2POL-03: Assessment and Migration Planning
 
-> **Series:** MZ2POL | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 

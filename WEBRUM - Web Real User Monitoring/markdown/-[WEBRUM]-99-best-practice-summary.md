@@ -1,6 +1,6 @@
 # WEBRUM-99: Best Practice Summary
 
-> **Series:** WEBRUM | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

@@ -1,6 +1,6 @@
-# 📋 OpenPipeline Fundamentals
+# OPLOGS-01: OpenPipeline Fundamentals
 
-> **Series:** OPLOGS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Understanding the Unified Data Ingestion Framework
 This notebook introduces OpenPipeline, Dynatrace's unified data processing framework for logs, traces, metrics, and events.
