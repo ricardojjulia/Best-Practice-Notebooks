@@ -1,6 +1,6 @@
-# 🔍 Spans & Distributed Tracing Fundamentals
+# SPANS-01: Spans & Distributed Tracing Fundamentals
 
-> **Series:** SPANS | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
 
 ## Understanding the Building Blocks of Observability
 

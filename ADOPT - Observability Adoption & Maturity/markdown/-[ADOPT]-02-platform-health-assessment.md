@@ -1,6 +1,6 @@
 # ADOPT-02: Platform Health Assessment
 
-> **Series:** ADOPT | **Notebook:** 2 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** ADOPT — Observability Adoption & Maturity | **Notebook:** 2 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

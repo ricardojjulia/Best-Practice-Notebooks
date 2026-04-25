@@ -1,6 +1,6 @@
 # SL2DT-07: User Governance & Access
 
-> **Series:** SL2DT | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 04/21/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 04/21/2026
 
 ## Overview
 

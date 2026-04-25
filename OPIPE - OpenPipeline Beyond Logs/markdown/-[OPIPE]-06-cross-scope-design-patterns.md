@@ -1,6 +1,6 @@
 # OPIPE-06: Cross-Scope Design Patterns
 
-> **Series:** OPIPE | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Correlating Logs, Spans, Metrics, and Events Across Scopes
 

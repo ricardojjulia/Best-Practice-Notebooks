@@ -1,6 +1,6 @@
-# IAM Governance Foundations
+# IAM-01: IAM Governance Foundations
 
-> **Series:** IAM | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Building a Strong Foundation for Identity Management
 Effective IAM governance is the cornerstone of enterprise security. This notebook establishes the framework for managing identities, groups, policies, and access controls in Dynatrace's Gen3 IAM system.

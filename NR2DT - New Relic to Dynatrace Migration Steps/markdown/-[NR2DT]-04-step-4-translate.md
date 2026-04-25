@@ -1,6 +1,6 @@
 # NR2DT-04: Step 4 — Translate
 
-> **Series:** NR2DT | **Notebook:** 4 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 4 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

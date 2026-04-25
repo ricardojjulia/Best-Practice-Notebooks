@@ -1,6 +1,6 @@
 # BIZEV-01: Business Events Fundamentals
 
-> **Series:** BIZEV | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

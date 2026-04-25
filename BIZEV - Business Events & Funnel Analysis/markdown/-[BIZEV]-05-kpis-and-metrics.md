@@ -1,6 +1,6 @@
 # BIZEV-05: KPIs and Metrics
 
-> **Series:** BIZEV | **Notebook:** 5 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 5 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

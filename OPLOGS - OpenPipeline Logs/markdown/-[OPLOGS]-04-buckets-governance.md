@@ -1,6 +1,6 @@
-# 🗄️ Buckets & Data Governance
+# OPLOGS-04: Buckets & Data Governance
 
-> **Series:** OPLOGS | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Strategic Storage Management for OpenPipeline Logs
 This notebook covers Grail bucket architecture, retention policies, routing configuration, access control, and cost optimization strategies.

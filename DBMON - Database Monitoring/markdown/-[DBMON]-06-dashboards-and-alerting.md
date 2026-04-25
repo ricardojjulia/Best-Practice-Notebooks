@@ -1,6 +1,6 @@
 # DBMON-06: Dashboards and Alerting
 
-> **Series:** DBMON | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

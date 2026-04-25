@@ -1,6 +1,6 @@
-# 🔎 Querying Spans with DQL
+# SPANS-02: Querying Spans with DQL
 
-> **Series:** SPANS | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Mastering Span Queries in Dynatrace
 This notebook covers essential techniques for querying and filtering span data to find exactly what you need. You'll learn to filter by service, operation, and attributes to quickly locate relevant traces.

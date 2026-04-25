@@ -1,6 +1,6 @@
-# Metrics Instrumentation
+# OTEL-05: Metrics Instrumentation
 
-> **Series:** OTEL | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Creating Custom Metrics with OpenTelemetry
 OpenTelemetry metrics provide quantitative measurements of your application's behavior over time. This notebook covers metric types, instrumentation patterns, and integration with Dynatrace.

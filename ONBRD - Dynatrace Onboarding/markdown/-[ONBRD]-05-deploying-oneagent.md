@@ -1,6 +1,6 @@
-# Deploying OneAgent
+# ONBRD-05: Deploying OneAgent
 
-> **Series:** ONBRD | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Getting Data Into Dynatrace
 OneAgent is the foundation of Dynatrace monitoring. This notebook covers deployment strategies, installation methods, and verification steps to ensure your infrastructure is reporting data.

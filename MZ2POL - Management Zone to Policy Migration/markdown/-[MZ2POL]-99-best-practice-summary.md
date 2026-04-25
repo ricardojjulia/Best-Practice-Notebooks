@@ -1,6 +1,6 @@
 # MZ2POL-99: Best Practice Summary
 
-> **Series:** MZ2POL | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

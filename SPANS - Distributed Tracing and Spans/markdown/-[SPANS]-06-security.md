@@ -1,6 +1,6 @@
-# 🔐 Security Analysis with Spans
+# SPANS-06: Security Analysis with Spans
 
-> **Series:** SPANS | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Protecting Distributed Traces and Ensuring Compliance
 This notebook demonstrates how to use span data for security analysis, audit for sensitive data exposure, and ensure compliance with regulations.

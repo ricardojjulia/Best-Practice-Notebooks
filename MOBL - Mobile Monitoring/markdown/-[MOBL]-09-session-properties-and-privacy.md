@@ -1,6 +1,6 @@
 # MOBL-09: Session Properties & Data Privacy
 
-> **Series:** MOBL | **Notebook:** 9 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 9 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
 
 ## Overview
 

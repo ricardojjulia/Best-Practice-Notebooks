@@ -1,6 +1,6 @@
-# 📊 Advanced Span Analytics
+# SPANS-05: Advanced Span Analytics
 
-> **Series:** SPANS | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Time-Series Analysis and Complex Aggregations
 This notebook covers advanced analytical techniques for span data, including time-series analysis, trend detection, and complex aggregations for building dashboards and reports.

@@ -1,6 +1,6 @@
 # M2S-04: Step 4 — Prepare: Readiness and Pre-Migration
 
-> **Series:** M2S | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 04/06/2026
+> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 4 of 9 | **Phase:** Upgrade | **Step:** Prepare | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 With the target architecture designed, it is time to prepare everything needed for migration execution. This step ensures your SaaS tenant is provisioned, identity is configured, ActiveGates are deployed in parallel, and rollback procedures are tested—so that when you flip the switch in Step 5, there are no surprises.
 

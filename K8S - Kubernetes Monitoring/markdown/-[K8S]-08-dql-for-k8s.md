@@ -1,6 +1,6 @@
-# DQL Queries for Kubernetes
+# K8S-08: DQL Queries for Kubernetes
 
-> **Series:** K8S | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Advanced Query Patterns for Kubernetes Data
 This notebook provides a comprehensive reference of DQL queries for Kubernetes monitoring. From basic entity queries to complex performance analysis, these patterns help you extract insights from your Kubernetes data.

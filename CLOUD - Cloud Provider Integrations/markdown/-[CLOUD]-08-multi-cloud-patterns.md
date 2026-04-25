@@ -1,6 +1,6 @@
 # CLOUD-08: Multi-Cloud Observability Patterns
 
-> **Series:** CLOUD | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** CLOUD — Cloud Provider Integrations | **Notebook:** 8 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

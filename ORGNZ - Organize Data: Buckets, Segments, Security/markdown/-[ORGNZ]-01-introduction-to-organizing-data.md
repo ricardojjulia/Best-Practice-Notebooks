@@ -1,6 +1,6 @@
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 

@@ -1,6 +1,6 @@
-# PagerDuty & ServiceNow Integration
+# WFLOW-05: PagerDuty & ServiceNow Integration
 
-> **Series:** WFLOW | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Incident Management Automation
 Integrate Dynatrace workflows with enterprise incident management platforms. This notebook covers PagerDuty and ServiceNow integration patterns, bi-directional sync, and incident lifecycle management.

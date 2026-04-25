@@ -1,6 +1,6 @@
 # BIZEV-03: Funnel Analysis
 
-> **Series:** BIZEV | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

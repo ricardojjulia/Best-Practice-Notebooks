@@ -1,6 +1,6 @@
 # MOBL-01: Mobile Monitoring Fundamentals
 
-> **Series:** MOBL | **Notebook:** 1 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 1 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

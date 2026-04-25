@@ -1,6 +1,6 @@
-# Namespace Organization and Boundaries
+# K8S-06: Namespace Organization and Boundaries
 
-> **Series:** K8S | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Organizing Kubernetes Monitoring with Namespaces
 Namespaces provide logical boundaries in Kubernetes for resource isolation, access control, and organizational structure. This notebook covers namespace strategies and how to leverage them in Dynatrace for filtered views, access control, and cost allocation.

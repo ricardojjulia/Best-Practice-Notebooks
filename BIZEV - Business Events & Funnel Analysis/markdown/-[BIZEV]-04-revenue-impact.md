@@ -1,6 +1,6 @@
 # BIZEV-04: Revenue Impact Analysis
 
-> **Series:** BIZEV | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

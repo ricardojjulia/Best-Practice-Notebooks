@@ -1,6 +1,6 @@
-# OpenTelemetry Fundamentals
+# OTEL-01: OpenTelemetry Fundamentals
 
-> **Series:** OTEL | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 1 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Introduction to OpenTelemetry and Dynatrace
 OpenTelemetry (OTel) is the industry-standard framework for collecting telemetry data. Dynatrace fully supports OpenTelemetry through native OTLP ingestion, allowing you to leverage OTel instrumentation while benefiting from Dynatrace's AI-powered analytics.

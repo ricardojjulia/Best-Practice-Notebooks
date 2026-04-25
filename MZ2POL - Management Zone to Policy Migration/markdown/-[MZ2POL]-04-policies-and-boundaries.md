@@ -1,6 +1,6 @@
 # MZ2POL-04: Policies and Boundaries
 
-> **Series:** MZ2POL | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Overview
 

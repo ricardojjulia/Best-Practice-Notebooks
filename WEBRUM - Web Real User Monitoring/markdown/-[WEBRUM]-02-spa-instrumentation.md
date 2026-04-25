@@ -1,6 +1,6 @@
 # WEBRUM-02: SPA Instrumentation
 
-> **Series:** WEBRUM | **Notebook:** 2 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 2 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

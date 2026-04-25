@@ -1,6 +1,6 @@
 # S2D-05: Alert Migration - Workflow-Based Alerts
 
-> **Series:** S2D | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** S2D — Splunk to Dynatrace Migration | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 ## Overview
 

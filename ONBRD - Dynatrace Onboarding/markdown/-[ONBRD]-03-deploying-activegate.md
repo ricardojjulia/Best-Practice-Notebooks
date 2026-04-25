@@ -1,6 +1,6 @@
-# Deploying ActiveGate
+# ONBRD-03: Deploying ActiveGate
 
-> **Series:** ONBRD | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 04/03/2026
 
 ## Your Network Gateway to Dynatrace
 ActiveGate is a lightweight component that routes traffic between your infrastructure and Dynatrace. This notebook covers when you need ActiveGate, how many to deploy, where to place them, and installation steps - including comprehensive Kubernetes deployment options.

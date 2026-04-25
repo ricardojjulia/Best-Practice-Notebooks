@@ -1,6 +1,6 @@
-# Policy Authoring and Management
+# IAM-04: Policy Authoring and Management
 
-> **Series:** IAM | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Mastering Dynatrace Policy Syntax
 Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can perform. This notebook provides a comprehensive guide to policy authoring, from basic syntax to advanced patterns.

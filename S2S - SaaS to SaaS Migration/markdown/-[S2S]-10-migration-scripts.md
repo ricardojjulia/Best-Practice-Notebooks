@@ -1,6 +1,6 @@
 # S2S-10: Migration Scripts
 
-> **Series:** S2S | **Notebook:** 10 | **Created:** April 2026 | **Last Updated:** 04/16/2026
+> **Series:** S2S — SaaS to SaaS Migration | **Notebook:** 10 | **Created:** April 2026 | **Last Updated:** 04/16/2026
 
 ## Overview
 

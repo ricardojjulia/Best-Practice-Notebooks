@@ -1,6 +1,6 @@
 # MOBL-02: iOS SDK Setup (Swift & SwiftUI)
 
-> **Series:** MOBL | **Notebook:** 2 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 2 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

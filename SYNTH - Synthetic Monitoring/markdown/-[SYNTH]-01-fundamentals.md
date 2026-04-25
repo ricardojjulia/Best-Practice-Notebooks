@@ -1,6 +1,6 @@
-# 🔬 Synthetic Monitoring Fundamentals
+# SYNTH-01: Synthetic Monitoring Fundamentals
 
-> **Series:** SYNTH | **Notebook:** 1 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 1 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Understanding Proactive Availability and Performance Testing
 This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive testing of application availability, functionality, and performance from locations around the world.

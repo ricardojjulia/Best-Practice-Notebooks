@@ -1,6 +1,6 @@
-# 💰 Cost-Efficient DQL Queries
+# SPANS-08: Cost-Efficient DQL Queries
 
-> **Series:** SPANS | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Optimizing Span Queries for Performance and Cost Efficiency
 This notebook covers best practices for writing cost-efficient DQL queries, minimizing DDU consumption while maintaining effective observability.

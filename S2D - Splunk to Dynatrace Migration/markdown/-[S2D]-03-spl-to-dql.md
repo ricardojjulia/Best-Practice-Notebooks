@@ -1,6 +1,6 @@
 # S2D-03: SPL to DQL Translation
 
-> **Series:** S2D | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** S2D — Splunk to Dynatrace Migration | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 ## Overview
 

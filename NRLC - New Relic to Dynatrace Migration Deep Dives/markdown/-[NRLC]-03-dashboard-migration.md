@@ -1,6 +1,6 @@
 # NRLC-03: Dashboard Migration
 
-> **Series:** NRLC | **Notebook:** 3 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
+> **Series:** NRLC — New Relic to Dynatrace Migration Deep Dives | **Notebook:** 3 of 9 | **Created:** April 2026 | **Last Updated:** 04/15/2026
 
 ## Overview
 

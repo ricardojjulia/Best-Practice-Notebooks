@@ -1,6 +1,6 @@
-# Troubleshooting OTel Pipelines
+# OTEL-08: Troubleshooting OTel Pipelines
 
-> **Series:** OTEL | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Debugging OpenTelemetry Data Flows
 When telemetry data doesn't arrive as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic techniques, and resolution steps for OpenTelemetry pipelines.

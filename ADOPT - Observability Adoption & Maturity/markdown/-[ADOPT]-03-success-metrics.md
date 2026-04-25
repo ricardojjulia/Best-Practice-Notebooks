@@ -1,6 +1,6 @@
 # ADOPT-03: Success Metrics
 
-> **Series:** ADOPT | **Notebook:** 3 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** ADOPT — Observability Adoption & Maturity | **Notebook:** 3 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
 
 ## Overview
 

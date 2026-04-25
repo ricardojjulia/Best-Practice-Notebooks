@@ -1,6 +1,6 @@
 # NR2DT-06: Step 6 — Migrate Synthetics, SLOs & Workloads
 
-> **Series:** NR2DT | **Notebook:** 6 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 6 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

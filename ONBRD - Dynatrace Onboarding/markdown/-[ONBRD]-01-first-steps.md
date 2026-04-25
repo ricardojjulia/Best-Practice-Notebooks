@@ -1,6 +1,6 @@
-# Getting Started: Your First Steps in Dynatrace
+# ONBRD-01: Getting Started: Your First Steps in Dynatrace
 
-> **Series:** ONBRD | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Finding Your Way Around
 Welcome to Dynatrace. This notebook helps you get oriented in your new environment—where to find things, how to navigate, and what to do first.

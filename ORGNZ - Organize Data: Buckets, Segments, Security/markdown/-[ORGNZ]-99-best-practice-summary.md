@@ -1,6 +1,6 @@
 # ORGNZ-99: Best Practice Summary
 
-> **Series:** ORGNZ | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

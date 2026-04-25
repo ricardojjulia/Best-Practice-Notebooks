@@ -1,6 +1,6 @@
 # NR2DT-07: Step 7 — Migrate Logs, Tags & Drop Rules
 
-> **Series:** NR2DT | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

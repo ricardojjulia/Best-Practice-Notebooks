@@ -1,6 +1,6 @@
 # ORGNZ-01 LAB: Introduction to Organizing Data in Grail - Hands-on Exercises
 
-> **Series:** ORGNZ | **Notebook:** 1 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-01: Intro
 
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 
 Dynatrace Grail organizes data in **buckets**, **tables**, and **views** to ensure efficient storage, flexible access, and scalable querying. Understanding how to organize your data is fundamental to achieving optimal query performance, compliance requirements, and access control.

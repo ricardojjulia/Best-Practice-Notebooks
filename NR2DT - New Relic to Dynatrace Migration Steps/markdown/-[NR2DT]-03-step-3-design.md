@@ -1,6 +1,6 @@
 # NR2DT-03: Step 3 — Design
 
-> **Series:** NR2DT | **Notebook:** 3 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 3 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
 
 ## Overview
 

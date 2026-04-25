@@ -1,6 +1,6 @@
 # M2S-06: Step 6 — Integrate: Reconnect Integrations
 
-> **Series:** M2S | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/06/2026
+> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 6 of 9 | **Phase:** Upgrade | **Step:** Integrate | **Created:** March 2026 | **Last Updated:** 04/06/2026
 
 With OneAgents reporting to SaaS and configurations migrated, the next challenge is ensuring every external system that depends on Dynatrace is reconnected. Dashboards need updated links, alerting channels need validation, CI/CD pipelines need new API endpoints, and ITSM integrations need reconfiguration. This notebook provides a systematic approach to reconnecting every integration point.
 

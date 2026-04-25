@@ -1,6 +1,6 @@
 # DBMON-04: Cache and Messaging Monitoring
 
-> **Series:** DBMON | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

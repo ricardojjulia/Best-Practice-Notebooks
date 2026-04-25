@@ -1,6 +1,6 @@
 # MOBL-07: Network Request Monitoring
 
-> **Series:** MOBL | **Notebook:** 7 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 7 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
 
 ## Overview
 

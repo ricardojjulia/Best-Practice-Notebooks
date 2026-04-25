@@ -1,6 +1,6 @@
 # BIZEV-99: Best Practice Summary
 
-> **Series:** BIZEV | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
 
 ## Overview
 

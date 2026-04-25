@@ -1,6 +1,6 @@
-# Migration Automation
+# AUTOM-08: Migration Automation
 
-> **Series:** AUTOM | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 8 of 8 | **Created:** January 2026 | **Last Updated:** 04/03/2026
 
 Configuration migration is the process of transferring Dynatrace settings from one environment to another. This is common in tenant consolidation, Managed-to-SaaS migration, and disaster recovery scenarios.
 

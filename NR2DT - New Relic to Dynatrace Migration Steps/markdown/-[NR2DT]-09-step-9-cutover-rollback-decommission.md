@@ -1,6 +1,6 @@
 # NR2DT-09: Step 9 — Cutover, Rollback & Decommission
 
-> **Series:** NR2DT | **Notebook:** 9 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 9 of 10 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

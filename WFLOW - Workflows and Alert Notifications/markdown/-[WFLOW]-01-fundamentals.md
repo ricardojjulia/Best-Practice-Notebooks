@@ -1,6 +1,6 @@
-# Workflow Fundamentals
+# WFLOW-01: Workflow Fundamentals
 
-> **Series:** WFLOW | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Introduction to Dynatrace Workflows
 Dynatrace Workflows is the automation engine that enables event-driven automation, scheduled tasks, and integration orchestration. This notebook introduces core concepts, components, and your first workflow.

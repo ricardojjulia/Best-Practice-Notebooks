@@ -1,6 +1,6 @@
 # NRLC-06: SLO & Workload Migration
 
-> **Series:** NRLC | **Notebook:** 6 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
+> **Series:** NRLC — New Relic to Dynatrace Migration Deep Dives | **Notebook:** 6 of 9 | **Created:** April 2026 | **Last Updated:** 04/17/2026
 
 ## Overview
 

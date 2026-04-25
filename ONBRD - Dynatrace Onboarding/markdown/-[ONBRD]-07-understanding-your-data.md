@@ -1,6 +1,6 @@
-# Understanding Your Data
+# ONBRD-07: Understanding Your Data
 
-> **Series:** ONBRD | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Exploring What Dynatrace Discovered
 With OneAgent deployed, Dynatrace has automatically discovered your infrastructure, processes, and services. This notebook helps you understand what's been found and how to explore your data.

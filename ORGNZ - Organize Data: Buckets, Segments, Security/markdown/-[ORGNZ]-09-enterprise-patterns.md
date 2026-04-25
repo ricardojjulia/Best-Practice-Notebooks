@@ -1,6 +1,6 @@
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
 
 ## Overview
 

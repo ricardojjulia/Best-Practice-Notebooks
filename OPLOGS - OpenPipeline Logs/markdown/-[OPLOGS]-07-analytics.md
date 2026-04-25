@@ -1,6 +1,6 @@
-# 📊 Analytics & Dashboards
+# OPLOGS-07: Analytics & Dashboards
 
-> **Series:** OPLOGS | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Aggregation, Time Series, and Visualization Queries
 This notebook covers aggregation functions, time series analysis, statistical patterns, and dashboard-ready queries for log analytics.

@@ -1,6 +1,6 @@
-# User Lifecycle and Provisioning
+# IAM-06: User Lifecycle and Provisioning
 
-> **Series:** IAM | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 03/23/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 03/23/2026
 
 ## Automating User Management at Scale
 Manual user management doesn't scale. This notebook covers user lifecycle automation including SCIM provisioning, JIT access, service accounts, token management, and inviting external users from other domains.

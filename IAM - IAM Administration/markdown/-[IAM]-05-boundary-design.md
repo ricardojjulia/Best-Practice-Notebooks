@@ -1,6 +1,6 @@
-# Boundary Design Patterns
+# IAM-05: Boundary Design Patterns
 
-> **Series:** IAM | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
 
 ## Controlling Data Visibility with Boundaries
 Boundaries determine **what data** users can see. While policies control actions, boundaries filter visibility. This notebook covers boundary syntax, patterns, and implementation strategies.

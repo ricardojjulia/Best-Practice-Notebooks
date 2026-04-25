@@ -1,6 +1,6 @@
 # WEBRUM-06: Performance Analysis
 
-> **Series:** WEBRUM | **Notebook:** 6 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 6 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
 
 ## Overview
 

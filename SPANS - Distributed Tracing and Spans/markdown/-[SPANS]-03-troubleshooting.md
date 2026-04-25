@@ -1,6 +1,6 @@
-# 🔧 Trace Analysis & Troubleshooting
+# SPANS-03: Trace Analysis & Troubleshooting
 
-> **Series:** SPANS | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Root Cause Analysis with Distributed Traces
 This notebook teaches systematic approaches to troubleshoot issues using span data. You'll learn to identify error patterns, analyze latency, and trace problems to their root cause.

@@ -1,6 +1,6 @@
-# 🔧 OpenPipeline Processing
+# OPLOGS-03: OpenPipeline Processing
 
-> **Series:** OPLOGS | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
 
 ## Configuring Pipeline Stages for Log Transformation
 This notebook covers OpenPipeline processing stages: parsing, enrichment, metric extraction, event generation, bucket routing, and filtering.

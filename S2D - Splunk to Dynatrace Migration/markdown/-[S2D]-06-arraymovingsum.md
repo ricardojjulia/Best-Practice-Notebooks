@@ -1,6 +1,6 @@
 # S2D-06: ArrayMovingSum for Extended Timeframes
 
-> **Series:** S2D | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** S2D — Splunk to Dynatrace Migration | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/30/2026
 
 ## Overview
 

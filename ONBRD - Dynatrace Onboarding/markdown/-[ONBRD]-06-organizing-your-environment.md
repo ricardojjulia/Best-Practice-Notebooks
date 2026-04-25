@@ -1,6 +1,6 @@
-# Organizing Your Environment
+# ONBRD-06: Organizing Your Environment
 
-> **Series:** ONBRD | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
 
 ## Tags, Segments, and Naming Conventions
 As your Dynatrace environment grows, organization becomes critical. This notebook covers how to structure your environment with tags, segments, and naming conventions for maintainability and access control.

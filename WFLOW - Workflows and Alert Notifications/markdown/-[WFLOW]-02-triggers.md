@@ -1,6 +1,6 @@
-# Triggers & Event Types
+# WFLOW-02: Triggers & Event Types
 
-> **Series:** WFLOW | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Event-Driven Workflow Triggers
 Triggers determine when workflows execute. This notebook covers all trigger types, detected problem events, metric events, schedules, and custom event triggers.

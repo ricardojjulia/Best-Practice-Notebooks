@@ -1,6 +1,6 @@
-# Problem-Triggered Remediation
+# WFLOW-07: Problem-Triggered Remediation
 
-> **Series:** WFLOW | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
 
 ## Auto-Remediation with Workflows
 Move beyond notifications to automated problem resolution. This notebook covers remediation patterns, safety guardrails, runbook automation, and common remediation scenarios.

@@ -1,6 +1,6 @@
-# Logs and Events
+# OTEL-06: Logs and Events
 
-> **Series:** OTEL | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
 
 ## Integrating Logs with OpenTelemetry
 OpenTelemetry logs bridge traditional logging with distributed tracing, enabling correlation between log events and traces. This notebook covers log instrumentation, correlation, and best practices.

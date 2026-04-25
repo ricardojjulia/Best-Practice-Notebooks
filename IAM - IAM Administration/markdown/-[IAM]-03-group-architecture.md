@@ -1,6 +1,6 @@
-# Group Architecture and Design
+# IAM-03: Group Architecture and Design
 
-> **Series:** IAM | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
 
 ## Designing Scalable Group Structures
 Groups are the foundation of access management. A well-designed group architecture simplifies administration, improves security, and scales with your organization.

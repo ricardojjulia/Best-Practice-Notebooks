@@ -1,6 +1,6 @@
 # IAM-11: Policy Persona Workshop
 
-> **Series:** IAM | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 03/05/2026
+> **Series:** IAM — IAM Administration | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 03/05/2026
 
 ## Overview
 
