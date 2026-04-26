@@ -1,6 +1,6 @@
 # IAM-11: Policy Persona Workshop
 
-> **Series:** IAM — IAM Administration | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 03/05/2026
+> **Series:** IAM — IAM Administration | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -403,7 +403,7 @@ Every persona needs at least one policy in each domain:
 
 **Data Policy** — Controls which data (metrics, logs, traces, events) is returned when the persona queries the platform. Scoped by boundaries, buckets, or security context.
 
-![Data Policy Domain — shows the relationship between data policies, boundaries, and bucket scoping](images/policy-data-domain.png)
+![Data Policy Domain — shows the relationship between data policies, boundaries, and bucket scoping](images/11-policy-data-domain.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Domain | Description |
@@ -416,7 +416,7 @@ For environments where images don't render
 
 **Config Policy** — Controls which settings and configurations the persona can read or modify. Scoped by schema ID or schema group.
 
-![Config Policy Domain — maps schema IDs and schema groups to read/write permissions per persona](images/policy-config-domain.png)
+![Config Policy Domain — maps schema IDs and schema groups to read/write permissions per persona](images/11-policy-config-domain.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Domain | Description |
@@ -527,7 +527,7 @@ bnd-<ISOLATION-TYPE>-<SCOPE>
 
 The following diagram shows the end-to-end flow from persona identification through policy assignment, including automation with Monaco:
 
-![Policy Flow — six steps from role identification through policy-as-code automation](images/policy-flow-automation.png)
+![Policy Flow — six steps from role identification through policy-as-code automation](images/11-policy-flow-automation.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Tool |

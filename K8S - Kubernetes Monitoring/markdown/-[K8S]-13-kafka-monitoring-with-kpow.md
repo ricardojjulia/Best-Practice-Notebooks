@@ -1,6 +1,6 @@
 # K8S-13: Kafka Monitoring with Kpow
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 13 of 13 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 13 of 13 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 

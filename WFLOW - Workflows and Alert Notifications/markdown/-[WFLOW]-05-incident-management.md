@@ -1,6 +1,6 @@
 # WFLOW-05: PagerDuty & ServiceNow Integration
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 5 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Incident Management Automation
 Integrate Dynatrace workflows with enterprise incident management platforms. This notebook covers PagerDuty and ServiceNow integration patterns, bi-directional sync, and incident lifecycle management.
@@ -364,7 +364,7 @@ fetch events, from: now() - 30d
 | filter event.type == "automation.task.execution"
 | filter contains(task.type, "pagerduty:create") or contains(task.type, "servicenow:create")
 | filter task.status == "SUCCEEDED"
-| summarize incidents_created = count(), by:{time_bucket = bin(timestamp, 1d)}
+| summarize incidents_created = count(), by:{time_bucket = bin(timestamp, 24h)}
 | sort time_bucket asc
 ```
 

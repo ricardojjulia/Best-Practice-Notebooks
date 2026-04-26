@@ -1,6 +1,6 @@
 # DBMON-06: Dashboards and Alerting
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -137,7 +137,7 @@ Database errors (connection timeouts, deadlocks, constraint violations) should t
 fetch spans, from:-1h
 | filter isNotNull(db.system)
 | makeTimeseries total = count(),
-                 errors = countIf(otel.status_code == "ERROR"),
+                 errors = countIf(otel.status_code == "ERROR", default:0),
                  by:{db.system},
                  interval:5m
 ```
@@ -157,7 +157,7 @@ fetch spans, from:-1h
 fetch spans, from:-24h
 | filter isNotNull(db.system)
 | makeTimeseries total = count(),
-                 errors = countIf(otel.status_code == "ERROR"),
+                 errors = countIf(otel.status_code == "ERROR", default:0),
                  interval:30m
 ```
 
@@ -293,7 +293,7 @@ fetch spans, from:-24h
 fetch spans, from:-24h
 | filter isNotNull(db.system)
 | makeTimeseries total = count(),
-                 errors = countIf(otel.status_code == "ERROR"),
+                 errors = countIf(otel.status_code == "ERROR", default:0),
                  by:{db.system},
                  interval:1h
 ```

@@ -1,6 +1,6 @@
 # DBMON-05: Query Analysis
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 5 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 5 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -233,7 +233,7 @@ fetch spans, from:-6h
 fetch spans, from:-6h
 | filter isNotNull(db.system)
 | makeTimeseries total = count(),
-                 errors = countIf(otel.status_code == "ERROR"),
+                 errors = countIf(otel.status_code == "ERROR", default:0),
                  interval:5m
 ```
 

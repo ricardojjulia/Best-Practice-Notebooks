@@ -1,6 +1,6 @@
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -58,7 +58,7 @@ Effective data organization in Grail enables:
 ## The Grail Data Model
 Grail organizes data hierarchically with tables (data types), buckets (storage containers), and segments (logical views):
 
-![Grail Data Model](images/grail-data-model.png)
+![Grail Data Model](images/01-grail-data-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Examples |
@@ -140,7 +140,7 @@ Grail supports permissions at multiple levels:
 ## Organization Decision Framework
 Use this framework to decide how to organize your data:
 
-![Organization Decision Framework](images/organization-decision-framework.png)
+![Organization Decision Framework](images/01-organization-decision-framework.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | YES Answer |

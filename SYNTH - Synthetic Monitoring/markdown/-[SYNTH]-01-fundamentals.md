@@ -1,6 +1,6 @@
 # SYNTH-01: Synthetic Monitoring Fundamentals
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 1 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 1 of 6 | **Created:** December 2025 | **Last Updated:** 04/26/2026
 
 ## Understanding Proactive Availability and Performance Testing
 This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive testing of application availability, functionality, and performance from locations around the world.
@@ -24,6 +24,15 @@ This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive
 - ✅ DQL query permissions (viewer role minimum)
 - ✅ Basic understanding of web applications and APIs
 
+### Sprint 1.337 (April 2026) Updates
+
+Two sprint-1.337 changes touch synthetic monitoring:
+
+- **OneAgent primary fields/tags at the source** (Latest Dynatrace) — when synthetic monitors are paired with private-location ActiveGates running on monitored hosts (SYNTH-04), the host's primary tags ride on synthetic execution metadata. Useful for cost-attribution dashboards that want to bill synthetic execution by team or product line.
+- **Configuration API → Settings v2 + Platform tokens** for new automation. Synthetic monitor management via Terraform/Monaco should target Settings v2 (`builtin:synthetic_test`) — note the v1.88.0 Terraform provider boundary still requires API tokens for synthetic monitors specifically (see AUTOM-04 § Authentication Boundary).
+
+---
+
 <a id="what-is-synthetic-monitoring"></a>
 ## 1. What is Synthetic Monitoring?
 **Synthetic Monitoring** simulates user interactions with your applications from external locations, providing:
@@ -34,7 +43,7 @@ This notebook introduces Dynatrace Synthetic Monitoring, which enables proactive
 - **SLA Validation**: Verify service level agreements are being met
 - **Third-Party Dependency Monitoring**: Test external APIs and services
 
-![Synthetic Monitoring Flow](images/synthetic-monitoring-flow.png)
+![Synthetic Monitoring Flow](images/01-synthetic-monitoring-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Component | Description |
 |-------|-----------|-------------|
@@ -167,6 +176,7 @@ fetch dt.entity.synthetic_test
 | sort entity.name asc
 | limit 50
 
+
 ```
 
 ```dql
@@ -185,6 +195,7 @@ fetch dt.entity.synthetic_location
 | fields id, entity.name
 | sort entity.name asc
 | limit 50
+
 
 ```
 

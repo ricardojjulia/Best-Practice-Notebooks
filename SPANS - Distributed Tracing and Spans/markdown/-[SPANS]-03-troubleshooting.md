@@ -1,6 +1,6 @@
 # SPANS-03: Trace Analysis & Troubleshooting
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Root Cause Analysis with Distributed Traces
 This notebook teaches systematic approaches to troubleshoot issues using span data. You'll learn to identify error patterns, analyze latency, and trace problems to their root cause.
@@ -29,11 +29,11 @@ Before starting this notebook, ensure you have:
 - ✅ Access to a Dynatrace environment with span data
 - ✅ Understanding of DQL filtering and aggregation
 
-## 1. RCA Workflow Overview <a name="rca-workflow"></a>
+## 1. RCA Workflow Overview <a id="rca-workflow"></a>
 
 Follow this systematic approach for root cause analysis:
 
-![RCA Workflow](images/rca-workflow.png)
+![RCA Workflow](images/03-rca-workflow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Purpose |
@@ -151,7 +151,7 @@ fetch spans, from:-24h
 ## 4. Latency Analysis
 Analyze latency patterns to find performance issues:
 
-![Latency Percentile Guide](images/latency-percentile-guide.png)
+![Latency Percentile Guide](images/03-latency-percentile-guide.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Percentile | Description | Impact |
@@ -305,7 +305,7 @@ fetch spans, from:-1h
 ## 7. Identifying Root Cause
 Use these patterns to find the origin of problems:
 
-![Root Cause Identification Checklist](images/root-cause-checklist.png)
+![Root Cause Identification Checklist](images/03-root-cause-checklist.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Check | What to Look For | DQL Pattern |

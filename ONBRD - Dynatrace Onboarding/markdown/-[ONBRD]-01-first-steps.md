@@ -1,6 +1,6 @@
 # ONBRD-01: Getting Started: Your First Steps in Dynatrace
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/26/2026
 
 ## Finding Your Way Around
 Welcome to Dynatrace. This notebook helps you get oriented in your new environment—where to find things, how to navigate, and what to do first.
@@ -21,6 +21,18 @@ Welcome to Dynatrace. This notebook helps you get oriented in your new environme
 
 - Access credentials for your Dynatrace tenant
 - A modern web browser (Chrome, Firefox, Edge, Safari)
+
+### Sprint 1.337 (April 2026): Defaults for New Customers
+
+Three sprint-1.337 changes establish what "new customer onboarding" should default to in 2026:
+
+1. **Platform tokens (`dt0s16` / `dt0s01`) with `Authorization: Bearer …`** — recommended default for all new automation. Classic `dt0c01` (`Authorization: Api-Token …`) still works for legacy paths but should not be the default for new pipelines. Wrong scheme returns `401 Unsupported authorization scheme` even when scopes are correct (covered in ONBRD-02 IAM and Authentication).
+2. **Settings v2 (Environment API v2)** — new automation should target Settings v2 paths. Sprint 1.337 SaaS announced that many remaining Configuration API endpoints now have Settings v2 equivalents. Plan onboarding tooling around Settings v2 (Terraform `dynatrace_settings`, Monaco v2). See ONBRD-06 (Organizing Your Environment) and ONBRD-09 (Setting Up Alerts) for the schema-id patterns to use.
+3. **Extensions 3rd-gen API** (managed via Dynatrace API Application → Extensions) — **the only recommended path for new customers adopting custom Extensions.** Existing customers may continue with 2nd-gen, but advocate 3rd-gen as the default in any onboarding conversation.
+
+Also: **OneAgent primary fields/tags at the source** (Latest Dynatrace) means new customers should be told to design their tag taxonomy with primary tags first-class — set during OneAgent install via `oneagentctl --set-host-tag=<key>=<value>`. Covered in ONBRD-05 (Deploying OneAgent) and ONBRD-06 (Organizing Your Environment).
+
+---
 
 <a id="accessing-your-environment"></a>
 ## 1. Accessing Your Environment

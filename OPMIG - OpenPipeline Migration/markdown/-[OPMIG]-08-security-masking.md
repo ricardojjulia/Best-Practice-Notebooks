@@ -1,6 +1,6 @@
 # OPMIG-08: Security, Masking & Compliance
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 > **OpenPipeline Migration Series** | Notebook 8 of 9  
 > **Level:** Advanced  
@@ -543,7 +543,7 @@ Now that security is configured, complete your migration:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

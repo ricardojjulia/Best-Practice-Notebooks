@@ -1,6 +1,6 @@
 # M2S-01: Step 1 — Discover: Understand SaaS Differences
 
-> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/06/2026
+> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 1 of 9 | **Phase:** Plan | **Step:** Discover | **Created:** March 2026 | **Last Updated:** 04/26/2026
 
 The first step in any Managed-to-SaaS migration is understanding what you are moving to and why. This notebook helps you document the benefits of Dynatrace SaaS for your organization, take inventory of your current Managed environment, and confirm your use cases and goals for the upgrade.
 
@@ -11,6 +11,18 @@ The first step in any Managed-to-SaaS migration is understanding what you are mo
 > **Upgrade:** 4. Prepare | 5. Execute | 6. Integrate
 >
 > **Run:** 7. Expand | 8. Enable | 9. Optimize
+
+### Sprint 1.337 (April 2026) Updates Affecting M2S
+
+Three sprint-1.337 changes affect a Managed → SaaS migration:
+
+1. **OneAgent primary fields/tags at source** — Latest Dynatrace SaaS tenants gain primary fields (`dt.security_context`, `dt.cost.costcenter`, `dt.cost.product`) and customer-defined primary tags as top-level attributes. Consider this in the M2S-03 (Design) step when deciding what tag/security-context model to recreate post-migration.
+2. **Configuration API → Settings v2 acceleration** — Dynatrace Managed exposes the older Configuration API for many resources; the SaaS target's Settings v2 surface now covers more of those endpoints. Migration tooling (M2S-04/05) should target Settings v2 wherever possible. Plan for the legacy/v2 split where Managed has a unique Configuration API endpoint.
+3. **Platform tokens** for new automation. Classic `dt0c01` still works for legacy paths, but new SaaS pipelines should default to `dt0s16`/`dt0s01` Platform tokens with `Authorization: Bearer …`.
+
+**Extensions 3rd-gen API** (ToDo #1) — if Managed has custom 2nd-gen Extensions, migration to SaaS is also the natural moment to graduate to 3rd-gen via the Dynatrace API Application → Extensions surface.
+
+---
 
 ---
 

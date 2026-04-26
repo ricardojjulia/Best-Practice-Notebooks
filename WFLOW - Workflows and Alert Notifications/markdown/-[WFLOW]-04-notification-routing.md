@@ -1,6 +1,6 @@
 # WFLOW-04: Advanced Notification Routing
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Intelligent Alert Routing
 Not all alerts should go to everyone. This notebook covers conditional routing based on severity, team ownership, time of day, and escalation patterns.
@@ -27,6 +27,29 @@ Not all alerts should go to everyone. This notebook covers conditional routing b
 | **Permissions** | `automation:workflows:write` |
 | **Prior Knowledge** | **WFLOW-01** through **WFLOW-03** |
 | **Connections** | Slack and/or Teams connections configured |
+
+### Sprint 1.337 (April 2026): Smartscape Ownership for Routing
+
+Sprint 1.337 added **ownership information** as a first-class attribute on Smartscape entities (HOST, SERVICE, PROCESS_GROUP, K8S_CLUSTER, etc.). Workflows can now read this directly to route notifications to the team that owns the producing entity — no longer requiring a side-table or manual maintenance of team→entity mappings.
+
+**Sample workflow trigger condition** using ownership for routing:
+
+```dql
+fetch events, from:-15m
+| filter event.kind == "DAVIS_PROBLEM"
+| filter event.status == "OPEN"
+| fieldsAdd owning_team = getNodeField(affected_entity_ids[0], "ownership.team")
+| fieldsAdd oncall_user = getNodeField(affected_entity_ids[0], "ownership.oncall")
+| fields display_id, event.name, owning_team, oncall_user
+```
+
+Wire `owning_team` / `oncall_user` into the workflow's notification action (Slack channel mapping, ServiceNow assignment group, PagerDuty service) instead of hard-coding team names in the workflow.
+
+### Sprint 1.337 (Dynatrace API): `metadata` removed from `GET /events`
+
+The Events API endpoint `GET /events` no longer returns the `metadata` property in event query results or individual event responses. Workflows that triggered off `dt.davis.events` and parsed event-level `metadata` for additional context need to reach into `event.*` semantic fields directly. Update any HTTP-action JSON parsing to drop the `metadata` field reference.
+
+---
 
 <a id="routing-strategies"></a>
 ## 1. Routing Strategies

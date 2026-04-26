@@ -1,10 +1,28 @@
 # DASH-01: Dashboard Fundamentals
 
-> **Series:** DASH — Dashboard Design & Building | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
 Dashboards are the primary visualization layer in Dynatrace, turning raw observability data into actionable insights. This notebook covers the distinction between dashboards and notebooks, when to use each, the architecture of Dynatrace dashboards (tiles, sections, variables), and core design principles that make dashboards effective. Whether you are building your first dashboard or refining an existing library, these fundamentals provide the foundation for every notebook in this series.
+
+### Sprint 1.337 (April 2026): New Dashboard Building Blocks
+
+Sprint 1.337 introduced data shapes that make several dashboard patterns simpler:
+
+1. **OneAgent primary fields/tags as top-level fields** on all signals (Latest Dynatrace). Filters and `by:` groupings can dispatch on `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product`, and customer-defined `primary_tags.<key>` directly — no more `parse(content, ...)` in dashboard tile queries. Particularly impactful for executive dashboards (DASH-03) that need cost-by-business-unit views.
+2. **Smartscape Ownership integration** — entities now carry ownership (`ownership.team`, `ownership.oncall`) as queryable attributes. Dashboards can split metrics or surface alerts by owning team without maintaining side-tables. See:
+
+   ```dql
+   smartscapeNodes "SERVICE"
+   | fieldsAdd team = getNodeField(smartscape.id, "ownership.team")
+   | summarize service_count = count(), by:{team}
+   | sort service_count desc
+   ```
+
+3. **OTel `service.name` enrichment** + new **`dt.service.name`** field — splitting service-level dashboards by OTel-canonical name now works without joining through entity enrichment.
+
+---
 
 ---
 

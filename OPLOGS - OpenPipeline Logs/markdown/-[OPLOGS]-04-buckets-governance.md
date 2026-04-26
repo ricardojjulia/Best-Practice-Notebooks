@@ -1,6 +1,6 @@
 # OPLOGS-04: Buckets & Data Governance
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Strategic Storage Management for OpenPipeline Logs
 This notebook covers Grail bucket architecture, retention policies, routing configuration, access control, and cost optimization strategies.
@@ -54,7 +54,7 @@ fetch logs, from: now() - 24h
 ## 2. Strategic Bucket Design
 Design buckets based on **access patterns**, **retention requirements**, and **cost optimization**.
 
-![Bucket Governance Strategy](images/bucket-governance.png)
+![Bucket Governance Strategy](images/04-bucket-governance.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Bucket Governance Strategy:

@@ -1,6 +1,6 @@
 # IAM-09: Troubleshooting Access Issues
 
-> **Series:** IAM — IAM Administration | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 9 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Systematic Diagnosis of IAM Problems
 Access issues are among the most common support requests. This notebook provides a systematic methodology for diagnosing and resolving IAM-related problems including permission denials, policy conflicts, and boundary issues.
@@ -35,7 +35,7 @@ Access issues are among the most common support requests. This notebook provides
 ## 1. Troubleshooting Methodology
 Follow a systematic approach to diagnose access issues.
 
-![Troubleshooting Decision Tree](images/troubleshooting-decision-tree.png)
+![Troubleshooting Decision Tree](images/09-troubleshooting-decision-tree.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Question | If Yes | If No |
 |------|----------|--------|-------|

@@ -1,6 +1,6 @@
 # ORGNZ-08 LAB: Grail Segments - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-08: Grail
 
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 
 **Grail segments** are logical groupings of data that enable real-time filtering across massive datasets without creating thousands of individual rules. Segments bring business context to observability data and are consistently available across the Dynatrace platform.
@@ -206,7 +206,7 @@ includes:
     filter: "dt.host_group.id == 'prod-web-tier'"
   
   - type: dt.entity.host
-    filter: "host_group == 'prod-web-tier'"
+    filter: "hostGroup == 'prod-web-tier'"
 ```
 
 
@@ -241,16 +241,18 @@ includes:
 
 ```dql
 // Test host group filtering (simulating segment rule)
-fetch dt.entity.host
-| filter startsWith(host_group, "prod-")
-| fields entity.name, host_group, tags
+// Note: dt.entity.host does not expose a 'host_group' field in DQL
+// Use smartscapeNodes "HOST" which provides the 'hostGroup' field
+smartscapeNodes "HOST"
+| filter startsWith(hostGroup, "prod-")
+| fields name, hostGroup, tags
 | limit 20
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes HOST
-// | filter startsWith(host_group, "prod-")
-// | fields name, host_group, tags
-// | limit 20
+// Alternative: filter logs directly using the dt.host_group.id signal field
+// fetch logs, from:-1h
+// | filter startsWith(dt.host_group.id, "prod-")
+// | summarize count = count(), by:{dt.host_group.id}
+// | sort count desc
 
 ```
 

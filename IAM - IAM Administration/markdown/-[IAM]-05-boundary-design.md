@@ -1,6 +1,6 @@
 # IAM-05: Boundary Design Patterns
 
-> **Series:** IAM — IAM Administration | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Controlling Data Visibility with Boundaries
 Boundaries determine **what data** users can see. While policies control actions, boundaries filter visibility. This notebook covers boundary syntax, patterns, and implementation strategies.
@@ -63,7 +63,7 @@ Group: dt-checkout-editors
 ## 2. The Three-Domain Model
 Boundaries filter across three domains. A complete boundary typically includes all three.
 
-![Boundary Three Domains](images/boundary-three-domains.png)
+![Boundary Three Domains](images/05-boundary-three-domains.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Domain | Controls | Key Field |
 |--------|----------|------------|
@@ -490,7 +490,7 @@ Until multi-value is available, the structured single-string pattern above is th
 ## 6. Multi-Tenant Isolation
 For organizations serving multiple customers or business units that require strict isolation.
 
-![Multi-Tenant Isolation](images/multi-tenant-isolation.png)
+![Multi-Tenant Isolation](images/05-multi-tenant-isolation.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tenant | Security Context | Isolated Data |
 |--------|------------------|---------------|

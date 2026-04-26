@@ -1,6 +1,6 @@
 # OPMIG-03: OpenPipeline Migration Guide: Part 3
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 3 of 9 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Migration Assessment & Planning
 ---
@@ -169,7 +169,7 @@ Understanding volume patterns helps you prioritize migration and plan for cost o
 // Daily log volume trend
 // Identify growth patterns and peak days
 fetch logs, from: now() - 30d
-| makeTimeseries {daily_count = count()}, interval: 1d
+| makeTimeseries {daily_count = count()}, interval: 24h
 ```
 
 ```python
@@ -824,7 +824,7 @@ With your assessment complete, continue with:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

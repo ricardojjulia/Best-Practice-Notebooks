@@ -1,6 +1,6 @@
 # SPANS-05: Advanced Span Analytics
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Time-Series Analysis and Complex Aggregations
 This notebook covers advanced analytical techniques for span data, including time-series analysis, trend detection, and complex aggregations for building dashboards and reports.
@@ -30,7 +30,7 @@ Before starting this notebook, ensure you have:
 ## 1. Time-Series with makeTimeseries
 Use `makeTimeseries` to create time-series data for visualization and trend analysis.
 
-![Timeseries Analytics](images/timeseries-analytics.png)
+![Timeseries Analytics](images/05-timeseries-analytics.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Function | Purpose | makeTimeseries Support |

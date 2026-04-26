@@ -1,10 +1,22 @@
 # BIZEV-01: Business Events Fundamentals
 
-> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
 Business events are purpose-built telemetry that captures meaningful business transactions — purchases, logins, form submissions, API calls — as first-class observability data in Dynatrace Grail. Unlike generic events or logs that focus on infrastructure health, business events (`bizevents`) tie technical signals directly to business outcomes. This notebook introduces the business events data model, explains how they differ from generic events, and demonstrates the core DQL patterns for exploring business event data.
+
+### Sprint 1.337 (April 2026): Primary Fields on Business Events
+
+Sprint 1.337 added **OneAgent primary fields and primary tags as top-level attributes on business events** (in addition to metrics, spans, logs, and Smartscape entities). For BIZEV authors this means:
+
+- **`dt.security_context`** rides on every business event from OneAgent-instrumented sources — useful when business events carry data subject to regulatory boundaries (PCI, GDPR, SOX). IAM policies can ABAC on this field directly without OpenPipeline parsing.
+- **`dt.cost.costcenter` / `dt.cost.product`** + customer-defined primary tags ride along too — enable funnel and conversion dashboards that automatically segment by cost center or product line without per-event tagging in application code.
+- For business events emitted via SDK or HTTP API (not OneAgent-instrumented), use OpenPipeline `enrichment` processors to add equivalent fields at ingest.
+
+Available on Latest Dynatrace tenants only.
+
+---
 
 ---
 

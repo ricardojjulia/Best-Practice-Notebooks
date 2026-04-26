@@ -1,6 +1,6 @@
 # OPMIG-04: OpenPipeline Migration Guide: Part 4
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 4 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 4 of 10 | **Created:** December 2025 | **Last Updated:** 04/26/2026
 
 ## Pipeline Configuration Fundamentals
 ---
@@ -33,6 +33,23 @@ By the end of this notebook, you will:
 - ✅ **Build complete end-to-end pipeline examples**
 - ✅ **Configure pipelines via API/code**
 - ✅ Verify pipeline processing with DQL
+
+---
+
+### Sprint 1.337 (April 2026): Configuration API → Settings v2 Acceleration
+
+Sprint 1.337 SaaS announced that **many remaining Configuration API endpoints** are now covered by Settings endpoints in Environment API v2. The legacy Configuration API paths remain active, but **new automation should target Settings v2 paths exclusively**.
+
+**Migration impact for OpenPipeline / log-monitoring config:**
+
+| Legacy area | Settings v2 schema |
+|---|---|
+| Log custom attributes | `builtin:logmonitoring.log-custom-attributes` |
+| Log storage configuration | `builtin:logmonitoring.log-storage-settings` |
+| Log dpp rules | `builtin:logmonitoring.log-dpp-rules` |
+| Log timestamp configuration | `builtin:logmonitoring.timestamp-configuration` |
+
+If your migration tooling reaches into the Configuration API for any of these, switch to the Settings v2 endpoints in Environment API v2 (see **AUTOM-02 § Sprint 1.337** for general patterns and **AUTOM-04 (Terraform)** for `dynatrace_settings` resource usage).
 
 ---
 
@@ -799,7 +816,7 @@ Now that you can create and configure pipelines, continue with:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

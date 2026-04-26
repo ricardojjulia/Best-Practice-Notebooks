@@ -1,6 +1,6 @@
 # AUTOM-03: Monaco Configuration-as-Code
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 Monaco (Monitoring as Code) is Dynatrace's official CLI tool for configuration management. It uses YAML files to define configurations and supports version control, CI/CD integration, and multi-environment deployments.
 
@@ -354,7 +354,7 @@ delete:
 | 6 | monaco deploy | Apply changes |
 -->
 
-![Monaco Workflow](images/autom-monaco-workflow_930x500.png)
+![Monaco Workflow](images/03-monaco-workflow_930x500.png)
 
 ---
 

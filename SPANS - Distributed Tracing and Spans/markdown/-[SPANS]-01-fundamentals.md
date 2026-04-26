@@ -1,6 +1,6 @@
 # SPANS-01: Spans & Distributed Tracing Fundamentals
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Understanding the Building Blocks of Observability
 
@@ -44,7 +44,7 @@ In modern microservices architectures, a single user request often travels throu
 - **Dependencies** between services
 - Where **errors** and **latency** occur
 
-![Distributed Tracing Flow](images/distributed-tracing-flow.png)
+![Distributed Tracing Flow](images/01-distributed-tracing-flow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
@@ -82,7 +82,7 @@ A **span** represents a single unit of work in a distributed system. Think of it
 ## 3. Span Anatomy
 Every span contains these essential fields:
 
-![Span Anatomy](images/span-anatomy.png)
+![Span Anatomy](images/01-span-anatomy.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Field | Description |
@@ -130,7 +130,7 @@ Every span contains these essential fields:
 ## 4. Span Kinds
 The `span.kind` attribute indicates the span's role in the distributed transaction:
 
-![Span Kinds](images/span-kinds.png)
+![Span Kinds](images/01-span-kinds.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Kind | Description | Example |
@@ -148,7 +148,7 @@ The `span.kind` attribute indicates the span's role in the distributed transacti
 ## 5. Trace Structure
 A **trace** is a tree of spans connected by parent-child relationships:
 
-![Trace Tree](images/trace-tree.png)
+![Trace Tree](images/01-trace-tree.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Service | Operation | Duration | Parent |

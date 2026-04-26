@@ -1,6 +1,6 @@
 # OPMIG-07: Metric & Event Extraction
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 7 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 > **OpenPipeline Migration Series** | Notebook 7 of 9  
 > **Level:** Intermediate to Advanced  
@@ -691,7 +691,7 @@ Now that you can extract metrics and events, continue with:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

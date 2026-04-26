@@ -1,6 +1,6 @@
 # WEBRUM-03: Core Web Vitals
 
-> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 3 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 3 of 9 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 

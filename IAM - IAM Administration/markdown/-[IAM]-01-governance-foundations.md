@@ -1,6 +1,6 @@
 # IAM-01: IAM Governance Foundations
 
-> **Series:** IAM — IAM Administration | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 1 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Building a Strong Foundation for Identity Management
 Effective IAM governance is the cornerstone of enterprise security. This notebook establishes the framework for managing identities, groups, policies, and access controls in Dynatrace's Gen3 IAM system.
@@ -71,7 +71,7 @@ The Gen3 model provides several advantages over legacy Management Zones:
 ## 2. The ABAC Model
 Attribute-Based Access Control (ABAC) evaluates access requests based on attributes rather than static role assignments.
 
-![IAM Governance Framework](images/iam-governance-framework.png)
+![IAM Governance Framework](images/01-iam-governance-framework.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Component | Function |
 |-------|-----------|----------|

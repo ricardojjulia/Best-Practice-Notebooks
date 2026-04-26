@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 

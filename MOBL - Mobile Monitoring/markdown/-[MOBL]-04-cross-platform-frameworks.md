@@ -1,6 +1,6 @@
 # MOBL-04: Cross-Platform Frameworks
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 4 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 4 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -208,7 +208,7 @@ Query all configured mobile applications to confirm both Android and iOS entries
 
 ```dql
 // Full mobile app inventory
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | fields entity.name, id, tags
 | sort entity.name asc
 | limit 50

@@ -1,6 +1,6 @@
 # MOBL-08: Session Replay for Mobile
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 8 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 8 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 

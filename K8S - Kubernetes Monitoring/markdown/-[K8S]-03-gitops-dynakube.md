@@ -1,6 +1,6 @@
 # K8S-03: GitOps for DynaKube
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 3 of 13 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 3 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Managing DynaKube with ArgoCD and Flux
 GitOps enables declarative, version-controlled management of your Dynatrace monitoring configuration. This notebook covers integrating DynaKube with popular GitOps tools: ArgoCD and Flux.
@@ -42,7 +42,7 @@ GitOps enables declarative, version-controlled management of your Dynatrace moni
 
 ### GitOps Workflow for DynaKube
 
-![GitOps Workflow](images/gitops-workflow.png)
+![GitOps Workflow](images/03-gitops-workflow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Component |

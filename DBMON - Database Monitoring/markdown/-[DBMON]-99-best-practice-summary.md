@@ -1,6 +1,6 @@
 # DBMON-99: Best Practice Summary
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 

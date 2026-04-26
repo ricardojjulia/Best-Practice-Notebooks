@@ -1,6 +1,6 @@
 # WEBRUM-02: SPA Instrumentation
 
-> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 2 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 2 of 9 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -286,7 +286,7 @@ fetch user.events, from:-24h
 
 A common pattern is a web application served to both desktop browsers and mobile app WebViews — the same `app.example.com` pages, but consumed in two very different contexts. Dynatrace can monitor both as separate RUM applications with full session correlation.
 
-![Hybrid App Monitoring Architecture](images/hybrid-app-architecture.png)
+![Hybrid App Monitoring Architecture](images/02-hybrid-app-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Description |

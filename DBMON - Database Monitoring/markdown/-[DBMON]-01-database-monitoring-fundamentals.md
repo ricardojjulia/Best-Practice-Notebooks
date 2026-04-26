@@ -1,6 +1,6 @@
 # DBMON-01: Database Monitoring Fundamentals
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -206,6 +206,19 @@ While OneAgent captures database calls from the application side (client spans),
 
 > **Note:** Extensions 2.0 require a **host-based ActiveGate**, not a Kubernetes-based deployment. See the Dynatrace documentation for extension installation procedures.
 
+### Where Extension Logs Land in Grail
+
+Logs emitted by official Dynatrace database extensions are routed to a dedicated Grail bucket: **`default_database_monitoring`** (introduced in Dynatrace SaaS 1.337). Querying this bucket directly improves filter performance vs. scanning `default_logs`, and lets you scope IAM policies tightly to database-monitoring data.
+
+```dql
+fetch logs, from:-1h
+| filter dt.system.bucket == "default_database_monitoring"
+| filter dt.extension.name == "com.dynatrace.extension.postgresql"
+| limit 50
+```
+
+Grant `storage:bucket.default_database_monitoring:read` to roles that need to query this bucket.
+
 <a id="baseline-database-metrics"></a>
 
 ## 7. Baseline Database Metrics
@@ -227,9 +240,9 @@ fetch spans, from:-24h
 fetch spans, from:-24h
 | filter isNotNull(db.system)
 | makeTimeseries total = count(),
-                 errors = countIf(otel.status_code == "ERROR"),
+                 errors = countIf(otel.status_code == "ERROR", default:0),
                  interval:1h
-| fieldsAdd error_rate_pct = arrayAvg(errors) / arrayAvg(total) * 100
+| fieldsAdd error_rate_pct = round(arraySum(errors) / arraySum(total) * 100, decimals:2)
 ```
 
 <a id="summary"></a>

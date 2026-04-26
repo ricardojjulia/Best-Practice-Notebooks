@@ -1,6 +1,6 @@
 # OPMIG-06: Processing, Parsing & Transformation
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 6 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 > **OpenPipeline Migration Series** | Notebook 6 of 9  
 > **Level:** Intermediate to Advanced  
@@ -855,7 +855,7 @@ Now that you can transform data, continue with:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

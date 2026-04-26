@@ -1,12 +1,24 @@
 # WEBRUM-01: Web RUM Fundamentals
 
-> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 1 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 1 of 9 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
 Real User Monitoring (RUM) captures the actual experience of users interacting with your web applications. Unlike synthetic monitoring, which simulates user interactions from controlled locations, RUM measures real browser performance, user behavior, and errors as they happen. Dynatrace RUM uses a lightweight JavaScript agent (OneAgent RUM injection) to automatically capture page loads, user actions, XHR/fetch calls, JavaScript errors, and Core Web Vitals — all flowing into Grail for DQL analysis.
 
 This notebook introduces the fundamentals of Dynatrace Web RUM: how the JavaScript agent works, what data it captures, how that data flows from browser to Grail, and how to write your first DQL queries against RUM data.
+
+### Sprint 1.337 (April 2026): `frontend.name` Now Permission-Relevant
+
+Sprint 1.337 added `frontend.name` as a **permission-relevant field** on RUM metrics, sessions, and Smartscape entities in Grail. This means IAM policies can now scope record-level and field-level access by frontend application, eliminating the need to split RUM data into separate buckets purely for access control.
+
+Practical impact for WEBRUM authors:
+
+- When you instrument a new application, choose `frontend.name` deliberately — it now drives **both observability** (queries, dashboards, segments) **and access control** (which teams can see the data).
+- Stable, hyphenated identifiers work best: `checkout-web`, `account-web`, `public-marketing`. Avoid spaces, version numbers in the name, or environment suffixes (those belong on `dt.security_context` or environment fields).
+- Existing tenants automatically gain the field — no re-instrumentation required. Update IAM policies (see **IAM-04 § Sprint 1.337**) to take advantage.
+
+---
 
 ---
 
@@ -77,7 +89,7 @@ RUM and synthetic monitoring are complementary approaches — each answers diffe
 
 Dynatrace RUM data is organized into a hierarchical model:
 
-![RUM Data Model Hierarchy](images/rum-data-model.png)
+![RUM Data Model Hierarchy](images/01-rum-data-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Data Object | Description |

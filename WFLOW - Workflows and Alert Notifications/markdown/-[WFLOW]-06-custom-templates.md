@@ -1,6 +1,6 @@
 # WFLOW-06: Custom Notification Templates
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 6 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Rich Message Formatting
 Create professional, informative notifications with dynamic content, formatting, and data enrichment. This notebook covers Jinja templating, Slack Block Kit, Teams Adaptive Cards, and data enrichment patterns.

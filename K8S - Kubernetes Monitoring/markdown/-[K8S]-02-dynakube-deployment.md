@@ -1,6 +1,6 @@
 # K8S-02: DynaKube Operator Deployment
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Installing and Configuring the Dynatrace Operator
 The DynaKube operator is the recommended way to deploy Dynatrace monitoring in Kubernetes. This notebook covers installation via Helm, configuration options, and deployment modes for different use cases.
@@ -46,7 +46,7 @@ The Dynatrace Operator manages the complete lifecycle of Dynatrace monitoring co
 
 ### Operator Architecture
 
-![DynaKube Operator Architecture](images/dynakube-operator-architecture.png)
+![DynaKube Operator Architecture](images/02-dynakube-operator-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Type | Function |

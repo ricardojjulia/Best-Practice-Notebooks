@@ -1,6 +1,6 @@
 # WEBRUM-06: Performance Analysis
 
-> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 6 of 8 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 6 of 9 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -38,7 +38,7 @@ This notebook covers page load waterfall analysis, time-to-first-byte (TTFB), DO
 
 Every page load follows a sequence of phases captured by the browser's Navigation Timing API. Dynatrace records these milestones for each load action:
 
-![Page Load Waterfall](images/page-load-waterfall.png)
+![Page Load Waterfall](images/06-page-load-waterfall.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Phase | DQL Field | Category |

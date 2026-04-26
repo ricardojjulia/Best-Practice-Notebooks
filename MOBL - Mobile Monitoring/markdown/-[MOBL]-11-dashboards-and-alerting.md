@@ -1,6 +1,6 @@
 # MOBL-11: Dashboards & Alerting
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 11 of 12 | **Created:** February 2026 | **Last Updated:** 02/24/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 11 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -84,7 +84,7 @@ The following query builds a daily timeseries showing both total event volume an
 fetch bizevents, from:-7d
 | filter event.provider == "www.dynatrace.com/mobile"
 | fieldsAdd is_crash = if(event.type == "com.dynatrace.crash", then:1, else:0)
-| makeTimeseries total_events = count(), crash_events = sum(is_crash), interval:1d
+| makeTimeseries {total_events = count(), crash_events = sum(is_crash)}, interval:1d
 ```
 
 ### Interpreting the Results
@@ -224,7 +224,7 @@ When Dynatrace Intelligence detects an anomaly affecting a mobile application, i
 // detected problems affecting mobile applications
 fetch dt.davis.problems, from:-7d
 | expand affected_entity_ids
-| filter contains(toString(affected_entity_ids), "DEVICE_APPLICATION")
+| filter contains(toString(affected_entity_ids), "MOBILE_APPLICATION")
 | fields timestamp, display_id, event.name, event.status, affected_entity_ids
 | sort timestamp desc
 | limit 20
@@ -275,7 +275,7 @@ Executive stakeholders need a single table that answers: "How are our mobile app
 // Executive summary -- key metrics per mobile app
 fetch bizevents, from:-24h
 | filter event.provider == "www.dynatrace.com/mobile"
-| summarize total_actions = count(), unique_sessions = countDistinct(dt.rum.session.id), crash_count = countIf(event.type == "com.dynatrace.crash"), by:{useraction.application}
+| summarize {total_actions = count(), unique_sessions = countDistinct(dt.rum.session.id), crash_count = countIf(event.type == "com.dynatrace.crash")}, by:{useraction.application}
 | fieldsAdd actions_per_session = toDouble(total_actions) / toDouble(unique_sessions)
 | sort total_actions desc
 | limit 10

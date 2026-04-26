@@ -1,6 +1,6 @@
 # OPLOGS-08: Security & Data Protection
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Sensitive Data Discovery, Masking, and Compliance
 This notebook covers sensitive data discovery, OpenPipeline masking configuration, security event monitoring, and compliance reporting.
@@ -33,7 +33,7 @@ This notebook covers sensitive data discovery, OpenPipeline masking configuratio
 ## 1. Sensitive Data Discovery
 Before implementing masking, discover what sensitive data exists in your logs.
 
-![Sensitive Data Classification](images/sensitive-data-classification.png)
+![Sensitive Data Classification](images/08-sensitive-data-classification.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Sensitive Data Classification:
@@ -134,7 +134,7 @@ fetch logs, from: now() - 1h
 ## 2. OpenPipeline Masking Configuration
 OpenPipeline provides built-in masking processors to protect sensitive data at ingestion time.
 
-![Masking Pipeline Flow](images/masking-pipeline.png)
+![Masking Pipeline Flow](images/08-masking-pipeline.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 OpenPipeline Masking Flow:

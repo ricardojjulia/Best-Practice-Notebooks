@@ -1,6 +1,6 @@
 # IAM-10: Templated Policy-Group Assignments
 
-> **Series:** IAM — IAM Administration | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 03/05/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 

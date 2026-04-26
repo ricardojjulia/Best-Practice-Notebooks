@@ -1,6 +1,6 @@
 # MOBL-10: DQL for Mobile Analytics
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 10 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -43,7 +43,7 @@ Understanding where mobile data lives in Grail is the foundation for writing eff
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Data Source | Description |
 |-------------|-------------|
-| dt.entity.device_application | Mobile app entities registered in Dynatrace |
+| dt.entity.mobile_application | Mobile app entities registered in Dynatrace |
 | bizevents (user actions) | Taps, swipes, app starts, and custom actions |
 | bizevents (sessions) | Session lifecycle events with session IDs |
 | bizevents (crashes) | Application crashes with stack traces |
@@ -56,7 +56,7 @@ The following table maps each mobile data type to its Grail location and the DQL
 
 | Data Type | Grail Location | DQL Command |
 |-----------|---------------|-------------|
-| App entities | `dt.entity.device_application` | `fetch dt.entity.device_application` |
+| App entities | `dt.entity.mobile_application` | `fetch dt.entity.mobile_application` |
 | User actions | Business events | `fetch bizevents` with filter on `useraction.type` |
 | Sessions | Business events | `fetch bizevents` with `dt.rum.session.id` |
 | Crashes | Business events | `fetch bizevents` with `event.type == "com.dynatrace.crash"` |
@@ -69,13 +69,13 @@ The following table maps each mobile data type to its Grail location and the DQL
 
 ## 2. Querying Mobile Entities
 
-The `dt.entity.device_application` entity type represents each mobile application registered in Dynatrace. Querying entities gives you an inventory of your monitored mobile apps along with their metadata.
+The `dt.entity.mobile_application` entity type represents each mobile application registered in Dynatrace. Querying entities gives you an inventory of your monitored mobile apps along with their metadata.
 
 This is typically the first query to run when onboarding a new environment — it confirms which mobile apps are being monitored and how they are tagged.
 
 ```dql
 // Mobile application inventory with details
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | fields entity.name, id, lifetime, tags
 | sort entity.name asc
 | limit 50
@@ -234,7 +234,7 @@ This query calculates the **crash rate percentage** for each app version and OS 
 // Crash rate by app version — useful for release monitoring
 fetch bizevents, from:-7d
 | filter event.provider == "www.dynatrace.com/mobile"
-| summarize total_sessions = countDistinct(dt.rum.session.id), crash_sessions = countDistinct(if(event.type == "com.dynatrace.crash", then:dt.rum.session.id, else:null)), by:{app.version, os.type}
+| summarize {total_sessions = countDistinct(dt.rum.session.id), crash_sessions = countDistinct(if(event.type == "com.dynatrace.crash", then:dt.rum.session.id, else:null))}, by:{app.version, os.type}
 | fieldsAdd crash_rate_pct = toDouble(crash_sessions) / toDouble(total_sessions) * 100.0
 | sort crash_rate_pct desc
 | limit 20
@@ -260,7 +260,7 @@ This notebook provided 8 production-ready DQL queries covering the full spectrum
 | Section | Query Focus | Key Insight |
 |---------|-------------|-------------|
 | Mobile Data Model | Data architecture | Mobile data lives primarily in `bizevents` |
-| Entity Queries | App inventory | `dt.entity.device_application` for app metadata |
+| Entity Queries | App inventory | `dt.entity.mobile_application` for app metadata |
 | User Action Analytics | Engagement | Actions per session measures user engagement |
 | Crash Analytics | Stability | Daily crash trends reveal regression patterns |
 | Performance Metrics | Launch time | App start duration is the key mobile KPI |

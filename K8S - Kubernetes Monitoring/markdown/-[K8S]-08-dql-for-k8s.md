@@ -1,6 +1,6 @@
 # K8S-08: DQL Queries for Kubernetes
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Advanced Query Patterns for Kubernetes Data
 This notebook provides a comprehensive reference of DQL queries for Kubernetes monitoring. From basic entity queries to complex performance analysis, these patterns help you extract insights from your Kubernetes data.
@@ -268,7 +268,8 @@ fetch spans, from:-1h
 timeseries avgCpuMillicores = avg(dt.kubernetes.container.cpu_usage), from:-1h, by:{dt.entity.cloud_application}
 | fieldsAdd avgCpuMillicoresValue = arrayAvg(avgCpuMillicores)
 | lookup [fetch dt.entity.cloud_application | fields id, entity.name], sourceField:dt.entity.cloud_application, lookupField:id
-| fields entity.name, avgCpuMillicoresValue
+| fieldsRename workloadName = lookup.entity.name
+| fields workloadName, avgCpuMillicoresValue
 | sort avgCpuMillicoresValue desc
 ```
 
@@ -278,7 +279,8 @@ timeseries avgNodeCpu = avg(dt.kubernetes.node.cpu_usage), from:-1h, by:{dt.enti
 | fieldsAdd avgNodeCpuValue = arrayAvg(avgNodeCpu)
 | filter avgNodeCpuValue > 70
 | lookup [fetch dt.entity.kubernetes_node | fields id, entity.name], sourceField:dt.entity.kubernetes_node, lookupField:id
-| fields entity.name, avgNodeCpuValue
+| fieldsRename nodeName = lookup.entity.name
+| fields nodeName, avgNodeCpuValue
 | sort avgNodeCpuValue desc
 ```
 

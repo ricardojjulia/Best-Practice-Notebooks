@@ -1,6 +1,6 @@
 # IAM-04: Policy Authoring and Management
 
-> **Series:** IAM — IAM Administration | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Mastering Dynatrace Policy Syntax
 Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can perform. This notebook provides a comprehensive guide to policy authoring, from basic syntax to advanced patterns.
@@ -28,6 +28,25 @@ Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can
 | **Dynatrace Environment** | SaaS with Gen3 IAM enabled |
 | **Permissions** | `account-iam-admin` to create/modify policies |
 | **Prior Knowledge** | **IAM-01** through **IAM-03** |
+
+### Sprint 1.337 (April 2026): Permission Updates
+
+**New `frontend.name` permission field for Grail RUM data.** Sprint 1.337 introduced `frontend.name` as a permission-relevant field on `metric` and `dt.entity.*` Smartscape data. You can now scope IAM policies to specific frontend applications at the **record-level** and **field-level**, instead of relying on bucket-only isolation:
+
+```text
+ALLOW storage:metric:read
+  WHERE storage:metric.frontend.name == "checkout-web"
+  OR    storage:metric.frontend.name == "account-web";
+
+ALLOW storage:user.sessions:read
+  WHERE storage:user.sessions.frontend.name STARTS WITH "public-";
+```
+
+Use this when multiple teams own different frontends but share a single RUM tenant — fine-grained ABAC without splitting buckets.
+
+**`dt.security_context` is now a primary field at source.** OneAgent now enriches all telemetry with `dt.security_context` (and `dt.cost.*`) as **top-level primary fields** at ingestion on Latest Dynatrace tenants. The MATCH() ABAC patterns covered later in this notebook (and across IAM-04, IAM-05, IAM-07) work directly against the primary-field value with no need for OpenPipeline parse processors on OneAgent-instrumented data. The structured-context spread completed in PR #50 already aligns with this — the sprint-1.337 change makes the field guarantee tenant-wide rather than pipeline-dependent.
+
+---
 
 <a id="policy-fundamentals"></a>
 ## 1. Policy Fundamentals
@@ -62,7 +81,7 @@ Group: dt-checkout-editors
 ## 2. Policy Statement Syntax
 Every policy contains one or more **statements** that define allowed actions.
 
-![Policy Statement Anatomy](images/policy-statement-anatomy.png)
+![Policy Statement Anatomy](images/04-policy-statement-anatomy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Description | Example |
 |-----------|-------------|----------|
@@ -274,7 +293,7 @@ ALLOW storage:entities:read WHERE storage:dt.security_context startsWith('comp:d
 
 <a id="common-policy-patterns"></a>
 ## 5. Common Policy Patterns
-![Policy Decision Tree](images/policy-decision-tree.png)
+![Policy Decision Tree](images/04-policy-decision-tree.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Need | Policy Type | Recommendation |
 |------|-------------|----------------|

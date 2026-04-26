@@ -1,6 +1,6 @@
 # OPMIG-02: OpenPipeline Migration Guide: Part 2
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Architecture & Key Concepts
 ---
@@ -652,7 +652,7 @@ Now that you understand OpenPipeline architecture, continue with:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

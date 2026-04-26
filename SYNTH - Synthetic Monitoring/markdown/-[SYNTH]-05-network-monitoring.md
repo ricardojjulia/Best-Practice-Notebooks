@@ -1,6 +1,6 @@
 # SYNTH-05: Synthetic Network Monitoring
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Network Availability, DNS, and ICMP Monitoring
 This notebook covers Dynatrace Synthetic Network Availability Monitors, including ICMP (ping), DNS, and TCP port monitoring capabilities introduced in recent Dynatrace releases.
@@ -25,7 +25,8 @@ This notebook covers Dynatrace Synthetic Network Availability Monitors, includin
 - ✅ Completed SYNTH-01 through SYNTH-04
 - ✅ Private synthetic locations (for internal network monitoring)
 
-## 1. Network Monitoring Overview <a name="overview"></a>
+<a id="network-monitoring-overview"></a>
+## 1. Network Monitoring Overview
 
 ### Synthetic Network Availability Monitors
 
@@ -41,7 +42,7 @@ Dynatrace provides network-level synthetic monitoring to verify:
 
 Network monitors complement application-level monitoring by testing at different layers of the stack:
 
-![Network Layers](images/network-layers.png)
+![Network Layers](images/05-network-layers.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Monitor Type | What It Tests |
 |-------|--------------|---------------|
@@ -85,7 +86,7 @@ Network monitors complement application-level monitoring by testing at different
 
 ### Metrics Captured
 
-![ICMP Monitor Results](images/icmp-monitor-results.png)
+![ICMP Monitor Results](images/05-icmp-monitor-results.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Metric | Value | Status |
 |--------|-------|--------|
@@ -311,7 +312,7 @@ Step 3: TCP Port Check
 
 ### Multi-Region Connectivity
 
-![Cross-Region Monitoring](images/cross-region-monitoring.png)
+![Cross-Region Monitoring](images/05-cross-region-monitoring.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Source | Protocol | Destination | Purpose |
 |--------|----------|-------------|---------|

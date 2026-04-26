@@ -1,6 +1,6 @@
 # OPMIG-09: Troubleshooting & Validation
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 9 of 9 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 > **Level:** Intermediate  
 > **Prerequisites:** OPMIG-01 through OPMIG-08  
 > **Estimated Time:** 45 minutes  

@@ -1,6 +1,6 @@
 # ORGNZ-07 LAB: Advanced Permission Patterns - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-07: Advan
 
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 
 This notebook covers advanced permission patterns including record-level permissions, field-based access, and combining multiple access control mechanisms for enterprise-scale data governance.
@@ -68,7 +68,7 @@ By the end of this notebook, you will:
 
 Record-level permissions filter data at query time based on record attributes:
 
-![Record-Level Permissions Flow](images/record-level-permissions.png)
+![Record-Level Permissions Flow](images/07-record-level-permissions.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action |
@@ -241,7 +241,7 @@ This boundary can then be applied alongside any policy (logs access, metrics acc
 > **Tip:** Use boundaries when you have the same set of conditions (e.g., "production only" or "EU region only") that need to apply to multiple policies. This avoids duplicating conditions across every policy definition.
 
 
-![Tiered Access Model](images/tiered-access-model.png)
+![Tiered Access Model](images/07-tiered-access-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tier | Role | Access |

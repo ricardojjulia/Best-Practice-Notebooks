@@ -1,6 +1,6 @@
 # OPIPE-04: Cardinality Management
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 4 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Controlling Dimension Explosion Across All Scopes
 

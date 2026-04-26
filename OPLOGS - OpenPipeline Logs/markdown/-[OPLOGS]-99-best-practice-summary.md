@@ -1,6 +1,6 @@
 # OPLOGS-99: Best Practice Summary
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 Definitive best practice settings for OpenPipeline log processing. Each entry specifies the exact configuration — no hedging, no options.
 

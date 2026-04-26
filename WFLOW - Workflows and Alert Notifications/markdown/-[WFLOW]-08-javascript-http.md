@@ -1,6 +1,6 @@
 # WFLOW-08: JavaScript & HTTP Actions
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 8 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Custom Code and API Integration
 When built-in actions aren't enough, use JavaScript and HTTP requests for custom integrations. This notebook covers the JavaScript SDK, HTTP request patterns, and common integration scenarios.
@@ -15,9 +15,7 @@ When built-in actions aren't enough, use JavaScript and HTTP requests for custom
 4. [Error Handling](#error-handling)
 5. [Working with Data](#working-with-data)
 6. [Integration Examples](#integration-examples)
-7. [Problem Details](#problem-details)
-8. [Affected Entities](#affected-entities)
-9. [Performance Tips](#performance-tips)
+7. [Performance Tips](#performance-tips)
 
 ---
 

@@ -1,6 +1,6 @@
 # OPLOGS-02: Migration to OpenPipeline
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Planning and Executing Your Log Migration
 This notebook guides you through assessing your current log environment and planning migration to OpenPipeline v2.0.
@@ -206,7 +206,7 @@ fetch logs, from: now() - 1h
 
 <a id="common-migration-patterns"></a>
 ## 5. Common Migration Patterns
-![Migration Patterns](images/migration-patterns.png)
+![Migration Patterns](images/02-migration-patterns.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pattern | Processor | Matcher | Action |

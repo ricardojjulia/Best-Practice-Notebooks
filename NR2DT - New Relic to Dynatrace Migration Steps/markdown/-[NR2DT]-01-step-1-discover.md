@@ -8,6 +8,18 @@
 
 This is procedural. For the *why* behind each artifact and the deeper translation theory, see **NRLC-02** (NRQL→DQL Translation) and the relevant NRLC component notebook for each entity class.
 
+### Sprint 1.337 (April 2026) Updates Affecting NR2DT
+
+Sprint 1.337 introduces three changes worth surfacing during the discovery step:
+
+1. **OneAgent primary fields/tags at source** — when designing the post-migration tag taxonomy (see NR2DT-03 Design), prefer OneAgent primary tags over OpenPipeline parsing where possible. Hosts can emit `team`, `cost_center`, `env` as top-level fields via `oneagentctl --set-host-tag`.
+2. **OTel `service.name` enrichment** — if the New Relic source uses OTel auto-instrumentation, services map cleanly to Dynatrace without the historical two-services-per-process pattern (NRLC-01 § Sprint 1.337 covers the deeper detail).
+3. **Settings v2 + Platform tokens** for new automation (NR2DT-04 Translate, NR2DT-09 Cutover scripts).
+
+**Engine impact:** the Dynatrace-NewRelic conversion engine and lab-setup scripts in `topics/nr2dt/lab-setup/` were validated end-to-end on a live Gen3 sprint tenant 2026-04-20 — re-verify before each new engagement that the conversion engine handles sprint-337's API removals (Entity API `attributes`, Event API `metadata`).
+
+---
+
 ---
 
 ## Table of Contents

@@ -1,6 +1,6 @@
 # SPANS-07: Grail Buckets & OpenPipeline
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 03/25/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Data Architecture and Processing for Distributed Traces
 This notebook covers Dynatrace Grail's bucket architecture for span storage, OpenPipeline configuration patterns, and data governance strategies.
@@ -77,7 +77,7 @@ DT_TAGS="primary_tags.team=platform primary_tags.environment=production"
 ## 1. Understanding Grail Buckets
 Grail stores observability data in **buckets** - logical containers that provide data isolation, retention control, and access management.
 
-![Grail Buckets Architecture](images/grail-buckets.png)
+![Grail Buckets Architecture](images/07-grail-buckets.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Bucket | Retention | Purpose |
@@ -153,7 +153,7 @@ fetch spans, from:-1h
 ## 4. OpenPipeline Concepts
 **OpenPipeline** processes incoming telemetry **before** storage. It enables filtering, transformation, routing, and sampling of span data.
 
-![OpenPipeline Flow](images/openpipeline-flow.png)
+![OpenPipeline Flow](images/07-openpipeline-flow.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Purpose | Example |
@@ -170,7 +170,7 @@ fetch spans, from:-1h
 
 <a id="filtering-dropping-unwanted-spans"></a>
 ## 5. Filtering & Dropping Unwanted Spans
-![OpenPipeline Actions](images/openpipeline-actions.png)
+![OpenPipeline Actions](images/07-openpipeline-actions.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Action | Purpose | Example Config |
@@ -481,7 +481,7 @@ timeseries span_ingest = sum(span.ingest.size.by.app), from:-24h, by:{primary_ta
 ## 10. Access Control Patterns
 Use bucket-based queries to implement access control patterns.
 
-![Bucket Access Control](images/bucket-access-control.png)
+![Bucket Access Control](images/07-bucket-access-control.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Team/Role | Bucket Access | Retention |
