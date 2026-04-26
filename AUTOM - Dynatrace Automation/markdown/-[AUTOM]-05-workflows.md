@@ -1,6 +1,6 @@
 # AUTOM-05: Dynatrace Workflows
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 5 of 8 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 Dynatrace Workflows is a built-in automation engine that enables event-driven actions directly within the platform. Unlike external tools, workflows run inside Dynatrace with full access to observability data.
 
@@ -78,7 +78,7 @@ By the end of this notebook, you will:
 | Variables | Data passed between tasks |
 -->
 
-![Workflow Architecture](images/autom-workflow-architecture_930x500.png)
+![Workflow Architecture](images/05-workflow-architecture_930x500.png)
 
 ### Triggers
 

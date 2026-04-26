@@ -1,6 +1,6 @@
 # IAM-03: Group Architecture and Design
 
-> **Series:** IAM — IAM Administration | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 3 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Designing Scalable Group Structures
 Groups are the foundation of access management. A well-designed group architecture simplifies administration, improves security, and scales with your organization.
@@ -61,7 +61,7 @@ Groups are assigned:
 ## 2. Group Hierarchy Patterns
 Choose a structure that matches your organization and scales appropriately.
 
-![Group Hierarchy Patterns](images/group-hierarchy-patterns.png)
+![Group Hierarchy Patterns](images/03-group-hierarchy-patterns.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pattern | Structure | Best For |
 |---------|-----------|----------|
@@ -186,7 +186,7 @@ Consistent naming makes groups discoverable and self-documenting.
 ## 4. SAML Group Mapping
 Federating groups from your Identity Provider (IdP) automates user provisioning and ensures consistent access.
 
-![SAML Group Mapping](images/saml-group-mapping.png)
+![SAML Group Mapping](images/03-saml-group-mapping.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
 |------|-----------|--------|

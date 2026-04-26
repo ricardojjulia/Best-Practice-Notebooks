@@ -1,6 +1,6 @@
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -118,7 +118,7 @@ Use pattern matching for complex bucket names:
 ## Team Isolation Pattern
 ### Architecture
 
-![Team Isolation Architecture](images/team-isolation-architecture.png)
+![Team Isolation Architecture](images/05-team-isolation-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Team | Policy | Bucket |

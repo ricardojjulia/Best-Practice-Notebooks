@@ -1,6 +1,6 @@
 # ORGNZ-03: Bucket Strategy and Design
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -167,6 +167,31 @@ Cost: Chargeback to Finance cost center
 
 <a id="analyzing-bucket-usage"></a>
 ## Analyzing Bucket Usage
+
+### Sprint 1.337 (April 2026) Updates
+
+**New default bucket: `default_database_monitoring`.** Logs from official Dynatrace database extensions are now routed by default to a dedicated `default_database_monitoring` bucket — keeping them out of `default_logs` for faster queries and tighter IAM scoping. Note that the `default_*` prefix is reserved (per the Naming Rules above) — only Dynatrace-provided buckets use it; you cannot create your own.
+
+**OneAgent primary fields enable richer routing.** OneAgent now enriches all telemetry at the source with standardized **primary fields** from the Semantic Dictionary (e.g., `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product`) plus customer-defined **primary tags**. These appear as top-level fields on metrics, spans, logs, business events, and Smartscape entities (HOST, PROCESS, CONTAINER, DISK, NETWORK_INTERFACE).
+
+In bucket-routing terms, this means OpenPipeline `route` rules can dispatch on:
+
+```yaml
+processors:
+  - type: route
+    rules:
+      - condition: "dt.cost.costcenter == 'cc-1234'"
+        destination: "finance_logs"
+      - condition: "dt.security_context contains 'pci'"
+        destination: "pci_audit_logs_365d"
+      - condition: "dt.cost.product == 'checkout'"
+        destination: "checkout_logs"
+    default: "default_logs"
+```
+
+Available only on Latest Dynatrace tenants. See **ORGNZ-06: Security Context** for primary-tag schema design and **OPLOGS** / **OPIPE** for the ingest-time enrichment configuration.
+
+**Smartscape Ownership integration.** Smartscape entities now carry ownership information that Dynatrace Workflows can read directly — useful when bucket-routing decisions depend on which team owns the producing host or service. See **WFLOW** for the routing-on-ownership pattern.
 
 > **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-03 LAB** for hands-on practice with these concepts.
 

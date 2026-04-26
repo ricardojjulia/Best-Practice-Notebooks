@@ -1,6 +1,6 @@
 # MZ2POL-01: Introduction - Why Migrate from Management Zones
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -35,6 +35,20 @@ By the end of this notebook, you will:
 2. Know the key differences between MZs and the new model
 3. Recognize the benefits of Policies, Boundaries, and Segments
 4. Identify your current MZ usage patterns for migration planning
+
+### Sprint 1.337 (April 2026): Migration Urgency Confirmed by API
+
+Sprint 1.337 of the **Dynatrace API** explicitly deprecated `managementZone` and `serviceTag` properties on the calculated-metrics service-configuration endpoints. This is the strongest signal yet that the Management Zone-based access control model is on the legacy path — the calculated-metrics surface, one of the most-used Configuration API touch points, is now actively pruning MZ references.
+
+What this means for the MZ → Policies migration program:
+
+- **Argument for prioritization:** existing calculated metrics scoped by Management Zone keep working, but new calculated metrics should not be authored against `managementZone`. This forces MZ-dependent automation onto the Policies + Boundaries model sooner rather than later.
+- **Audit angle:** as part of the assessment in MZ2POL-03, query for any custom calculated metrics that reference `managementZone` or `serviceTag` — they're now flagged-for-rewrite by the API itself.
+- **Tagging story aligns:** sprint 1.337 also added OneAgent primary fields and primary tags at the source (top-level `dt.security_context`, `primary_tags.team`, etc.) on Latest Dynatrace tenants. These are the Gen3-native carriers of the same signals MZs used to encode — making the policy-and-boundary model more powerful and reducing the residual reasons to keep MZs around.
+
+The migration narrative documented below is unchanged but now has direct API-level support behind it.
+
+---
 
 ---
 

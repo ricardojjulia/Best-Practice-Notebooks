@@ -1,6 +1,6 @@
 # SPANS-06: Security Analysis with Spans
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Protecting Distributed Traces and Ensuring Compliance
 This notebook demonstrates how to use span data for security analysis, audit for sensitive data exposure, and ensure compliance with regulations.
@@ -36,7 +36,7 @@ Before starting this notebook, ensure you have:
 ## 1. Understanding Sensitive Data in Spans
 Distributed traces can inadvertently capture sensitive information:
 
-![Span Security](images/span-security.png)
+![Span Security](images/06-span-security.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Risk Area | Examples | Mitigation |
@@ -170,7 +170,7 @@ fetch spans, from:-1h
 ## 3. HTTP Status Code Security Analysis
 HTTP status codes can reveal security-relevant patterns:
 
-![HTTP Security Codes](images/http-security-codes.png)
+![HTTP Security Codes](images/06-http-security-codes.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Code | Meaning | Security Relevance |

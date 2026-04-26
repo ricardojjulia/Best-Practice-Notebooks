@@ -1,6 +1,6 @@
 # SPANS-08: Cost-Efficient DQL Queries
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Optimizing Span Queries for Performance and Cost Efficiency
 This notebook covers best practices for writing cost-efficient DQL queries, minimizing DDU consumption while maintaining effective observability.
@@ -35,7 +35,7 @@ Before starting this notebook, ensure you have:
 ## 1. Understanding Query Costs
 DQL queries consume resources measured in DPS (Dynatrace Intelligence Processing Seconds) on current licensing, or DDUs (Dynatrace Intelligence Data Units) on classic contracts based on several factors:
 
-![Query Cost Optimization](images/query-cost-optimization.png)
+![Query Cost Optimization](images/08-query-cost-optimization.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Cost Factor | Impact | Optimization |
@@ -103,7 +103,7 @@ Filter on **indexed fields** for best query performance. These fields have optim
 
 ### Commonly Indexed Span Fields
 
-![Indexed vs Non-Indexed Fields](images/indexed-fields.png)
+![Indexed vs Non-Indexed Fields](images/08-indexed-fields.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Field | Type | Notes |
@@ -190,7 +190,7 @@ fetch spans, from:-1h
 ## 5. Time Range Optimization
 Always use the smallest time range that meets your needs.
 
-![Time Range Optimization](images/time-range-optimization.png)
+![Time Range Optimization](images/08-time-range-optimization.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Time Range | Relative Cost | Use Case |

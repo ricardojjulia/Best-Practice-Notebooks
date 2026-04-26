@@ -1,6 +1,6 @@
 # WFLOW-07: Problem-Triggered Remediation
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Auto-Remediation with Workflows
 Move beyond notifications to automated problem resolution. This notebook covers remediation patterns, safety guardrails, runbook automation, and common remediation scenarios.
@@ -511,14 +511,14 @@ fetch events, from: now() - 7d
 ```
 
 ```dql
-// Problems auto-remediated vs manually resolved
+// Problems closed - track how many had associated remediation workflow executions
+// Note: Dynatrace problems don't have a native auto_remediation_id field.
+// Correlate by comparing problem close times with remediation workflow execution times.
 fetch events, from: now() - 30d
 | filter event.kind == "DAVIS_PROBLEM" and status == "CLOSED"
 | summarize 
-    total = count(),
-    auto_remediated = countIf(isNotNull(auto_remediation_id)),
-    by:{time_bucket = bin(timestamp, 1d)}
-| fieldsAdd auto_rate = round(100.0 * auto_remediated / total, decimals: 2)
+    total_closed = count(),
+    by:{time_bucket = bin(timestamp, 24h)}
 | sort time_bucket asc
 ```
 

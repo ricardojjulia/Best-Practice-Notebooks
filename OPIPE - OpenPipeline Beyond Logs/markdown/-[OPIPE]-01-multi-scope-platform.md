@@ -1,6 +1,6 @@
 # OPIPE-01: OpenPipeline as a Multi-Scope Platform
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Beyond Logs: Processing Spans, Metrics, and Events at Ingestion
 
@@ -35,6 +35,42 @@ OpenPipeline is often introduced as a log processing framework — and logs are 
 | **Dynatrace Environment** | SaaS with Grail enabled |
 | **Permissions** | `storage:logs:read`, `storage:spans:read`, `storage:metrics:read`, `storage:events:read`, `storage:bizevents:read` |
 | **Recommended** | Familiarity with **OPLOGS-01** (log pipeline basics) |
+
+### Sprint 1.337 (April 2026): OneAgent Primary Fields/Tags as Routing Keys
+
+Sprint 1.337 SaaS landed a major OpenPipeline-relevant change: OneAgent now enriches **all** telemetry (spans, metrics, logs, business events, Smartscape entities) at the source with standardized **primary fields** and customer-defined **primary tags** as top-level attributes on Latest Dynatrace tenants.
+
+**Primary fields** (Semantic Dictionary-defined):
+
+| Field | Purpose |
+|---|---|
+| `dt.security_context` | ABAC scope for IAM policies; also drives bucket-routing decisions |
+| `dt.cost.costcenter` | Cost allocation tag; routes spend to org units |
+| `dt.cost.product` | Product-line attribution for cost rollups |
+
+**Primary tags** (customer-defined): set during OneAgent install via `oneagentctl --set-host-tag=<key>=<value>` — e.g., `team`, `env`, `app`, `data_classification`. Land as `primary_tags.<key>` on every signal.
+
+**Pipeline implication for cross-scope design:**
+
+1. **Routing rules** can dispatch on primary fields directly without parse processors:
+
+   ```yaml
+   processors:
+     - type: route
+       rules:
+         - condition: "dt.cost.costcenter == 'cc-1234'"
+           destination: "finance_logs"
+         - condition: "dt.security_context contains 'pci'"
+           destination: "pci_audit_logs_365d"
+   ```
+
+2. **Cross-scope consistency:** because primary fields/tags appear on logs, spans, metrics, AND business events, queries that join across scopes (OPIPE-06 cross-scope design patterns) can correlate without scope-specific lookup tables.
+
+3. **Non-OneAgent sources** (raw syslog, third-party log shippers, OTLP-via-collector) still need OpenPipeline `enrichment` processors to surface the same fields. Document this split in your standard.
+
+**Sprint-337 also added recommended-field suggestions to extraction processors** — the UI flags permission-relevant fields and Smartscape identifiers in the field-promotion dialog, preventing accidental promotion of sensitive content. Existing extraction processors keep working unchanged.
+
+---
 
 <a id="the-six-openpipeline-scopes"></a>
 ## 1. The Six OpenPipeline Scopes

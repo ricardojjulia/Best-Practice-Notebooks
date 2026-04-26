@@ -1,6 +1,6 @@
 # IAM-99: Best Practice Summary
 
-> **Series:** IAM — IAM Administration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/03/2026
+> **Series:** IAM — IAM Administration | **Notebook:** Bonus Summary | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -21,6 +21,14 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 9. [Troubleshooting and Operations](#troubleshooting-and-operations)
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|----------|
+| **Dynatrace Environment** | SaaS with Gen3 IAM enabled |
+| **Prior Reading** | Complete **IAM-01** through **IAM-12** or use this as a reference while working through the series |
+| **Permissions** | `account-viewer` or higher to audit existing IAM configuration |
 
 ## Priority Legend
 

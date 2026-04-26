@@ -1,10 +1,24 @@
 # ADOPT-01: Observability Maturity Model
 
-> **Series:** ADOPT — Observability Adoption & Maturity | **Notebook:** 1 of 5 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** ADOPT — Observability Adoption & Maturity | **Notebook:** 1 of 5 | **Created:** March 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
 Observability maturity is not a binary state — organizations progress through distinct levels as their practices, tooling, and culture evolve. This notebook introduces a five-level maturity model for Dynatrace-powered observability, provides assessment criteria for each level, and demonstrates how to use DQL queries to gauge your current position. Understanding where you stand today is the first step toward building a roadmap for improvement.
+
+### Sprint 1.337 (April 2026): Platform-Evolution Markers for Maturity Assessment
+
+Sprint 1.337 brought three changes that map directly onto the adoption maturity model documented in this series — they each represent a platform-evolution marker that mature programs should be tracking:
+
+1. **OneAgent primary fields/tags at the source** (top-level `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product` + customer-defined primary tags) — **maturity marker:** `ADOPTING` programs surface these in 1-3 dashboards; `MATURE` programs use them to drive bucket routing, IAM ABAC, and cost allocation; `OPTIMIZED` programs have phased out OpenPipeline parse processors for OneAgent-instrumented data.
+2. **Extensions 3rd-gen API recommendation** (managed via Dynatrace API Application → Extensions, Platform tokens) — **maturity marker:** measure adoption of 3rd-gen Extensions vs lingering 2nd-gen. Track this as a target for the next quarterly health review (ADOPT-02).
+3. **OneAgent + OpenTelemetry-injector coexistence guidance** (K8S-11 § 2a) — **maturity marker:** programs running both injectors need explicit per-namespace decisions. `MATURE` programs document the canonical split (e.g., OTel-managed namespaces excluded from OneAgent injection); `OPTIMIZED` programs enforce it via OPA/Conftest gates.
+
+Add these to the platform-health-assessment checklist in ADOPT-02 and the success metrics in ADOPT-03.
+
+**Configuration API → Settings v2 acceleration** also belongs in this list as a deprecation marker — automation pipelines targeting legacy Configuration API endpoints are now on the legacy path; mature programs should be planning the migration.
+
+---
 
 ---
 

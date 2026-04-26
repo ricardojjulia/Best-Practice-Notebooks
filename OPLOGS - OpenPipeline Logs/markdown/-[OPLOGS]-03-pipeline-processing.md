@@ -1,6 +1,6 @@
 # OPLOGS-03: OpenPipeline Processing
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 04/26/2026
 
 ## Configuring Pipeline Stages for Log Transformation
 This notebook covers OpenPipeline processing stages: parsing, enrichment, metric extraction, event generation, bucket routing, and filtering.
@@ -39,7 +39,7 @@ Parsing extracts structured fields from unstructured log content **at ingestion 
 
 ### DPL (Dynatrace Pattern Language) Matchers
 
-![DPL Matchers](images/dpl-matchers.png)
+![DPL Matchers](images/03-dpl-matchers.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 DPL Matchers Reference:
@@ -80,6 +80,21 @@ processors:
                       SPACE '\"' LD:method SPACE LD:path SPACE LD '\"' 
                       SPACE INT:status SPACE INT:bytes"
 ```
+
+### Sprint 1.337 (April 2026): Recommended-Field Suggestions
+
+When configuring an extraction processor in the UI, OpenPipeline now surfaces **recommended-field suggestions** that prevent two common misconfigurations:
+
+| Recommendation category | Why it matters |
+|---|---|
+| **Permission-relevant fields** (`dt.security_context`, `loglevel`, `k8s.namespace.name`, etc.) | Promoting these to top-level positions enables bucket-scoped IAM and security-context filtering downstream. |
+| **Smartscape identifiers** (`dt.entity.host`, `dt.entity.service`, `host.name`) | Surfacing these enables entity-aware queries without parse-on-read. |
+
+The suggestions also flag **sensitive-pattern matches** before promotion, so PII or credential-like content is not silently lifted into a permission-relevant position.
+
+> Existing extraction processors keep working unchanged. The recommendations only appear in the UI when you create or edit a processor.
+
+---
 
 ```python
 // Discover log patterns for parsing design

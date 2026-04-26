@@ -1,6 +1,6 @@
 # ORGNZ-05 LAB: Bucket-Level Access Control - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-05: Bucke
 
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 01/28/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 
 Bucket-level access control provides a straightforward way to isolate data by team, application, or business unit. By granting permissions to specific buckets, you can ensure teams only access data relevant to their responsibilities.
@@ -127,7 +127,7 @@ Use pattern matching for complex bucket names:
 ```
 
 
-![Team Isolation Architecture](images/team-isolation-architecture.png)
+![Team Isolation Architecture](images/05-team-isolation-architecture.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Team | Policy | Bucket |
@@ -198,7 +198,7 @@ fetch dt.system.buckets
 
 ```dql
 // Query data from specific bucket to verify access
-fetch logs, bucket: "team_platform_logs"
+fetch logs, from:-1h, bucket: "team_platform_logs"
 | limit 10
 ```
 

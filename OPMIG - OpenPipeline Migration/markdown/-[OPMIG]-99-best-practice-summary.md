@@ -1,6 +1,6 @@
 # OPMIG-99: Best Practice Summary
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 10 of 10 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 Definitive best practice settings for migrating from classic logs to OpenPipeline. Each entry specifies the exact configuration.
 

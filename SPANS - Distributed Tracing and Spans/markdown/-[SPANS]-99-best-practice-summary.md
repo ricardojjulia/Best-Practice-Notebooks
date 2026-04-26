@@ -1,6 +1,6 @@
 # SPANS-99: Best Practice Summary
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/25/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 Definitive best practice settings for distributed tracing and span analysis. Each entry specifies the exact configuration.
 

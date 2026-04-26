@@ -1,10 +1,29 @@
 # MOBL-01: Mobile Monitoring Fundamentals
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 1 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 1 of 12 | **Created:** February 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
 This notebook introduces Dynatrace mobile Real User Monitoring (RUM) -- the architecture, supported platforms, mobile entity types, and how beacon data flows from device to Grail. Whether you're a mobile developer instrumenting an app or an SRE analyzing mobile performance, this is your starting point.
+
+### OneAgent for Mobile 8.337 (April 2026): What's New
+
+Sprint 8.337 of OneAgent for Mobile lands platform updates and developer-tooling changes that affect both new instrumentations and existing app builds.
+
+| Item | Detail | Impact |
+|---|---|---|
+| **Android 17 support** | OneAgent Mobile now supports Android 17 | Verify build/test targets; no app code changes needed |
+| **Gradle 9.5 compatibility** | Android Gradle plugin works with Gradle 9.5 | Update `gradle-wrapper.properties` if pinned to older versions |
+| **Swift Instrumentor: macOS 11.5+ required** | Build-time instrumentation tool now needs newer macOS | **Build pipeline impact** — update CI runner images for iOS builds |
+| **Session-level RUM toggle (Android)** | The New RUM Experience can be toggled at session start without app restart | Faster A/B testing of monitoring config |
+| **Touch event stability fix (Android)** | Better protection against invalid pointer states during multi-touch | Reduces crashes on gesture-heavy apps |
+| **I/O blocking ANR fix (Android)** | Resolved blocking I/O during startup that triggered ANR | Faster perceived startup; fewer ANR reports |
+| **SwiftUI button + Tab/TabSection (iOS)** | Fixed instrumentation for button labels and Tab/TabSection components | Re-run instrumentor on apps that previously failed |
+| **Modal animation performance (iOS)** | Fixed slow/stuttering modal presentation animations | UX improvement |
+
+> **Action:** if your CI runs Swift Instrumentor on a macOS image older than 11.5, plan the runner-image upgrade before adopting 8.337. iOS builds otherwise still produce instrumented binaries on the prior agent.
+
+---
 
 ---
 
@@ -126,7 +145,7 @@ The following query lists all configured mobile applications in your environment
 
 ```dql
 // List all configured mobile applications
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | fields entity.name, id, tags
 | sort entity.name asc
 
@@ -166,7 +185,7 @@ Use the following query to see a summary of your configured mobile applications:
 
 ```dql
 // Count mobile applications by operating system type
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | summarize app_count = count(), by:{entity.name}
 | sort app_count desc
 ```
@@ -228,7 +247,7 @@ Run this query to confirm your mobile applications are configured and visible in
 
 ```dql
 // Mobile app inventory overview
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | fields entity.name, id, lifetime, tags
 | sort entity.name asc
 | limit 20

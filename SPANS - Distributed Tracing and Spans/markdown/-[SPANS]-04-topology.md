@@ -1,6 +1,6 @@
 # SPANS-04: Service Dependencies & Flow Analysis
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 04/26/2026
 
 ## Mapping Your Distributed System
 This notebook teaches you how to use span data to understand service relationships, analyze request flows, and identify critical dependencies in your system.
@@ -29,11 +29,34 @@ Before starting this notebook, ensure you have:
 - ✅ Access to a Dynatrace environment with distributed trace data
 - ✅ Understanding of span kinds (server, client, producer, consumer)
 
+### Sprint 1.337 (April 2026): OpenTelemetry service.name Enrichment
+
+When OpenTelemetry-instrumented spans carry the OTel **`service.name`** resource attribute, Dynatrace Service Detection v1 now uses that value to enrich the existing service rather than creating a parallel one. Two visible effects:
+
+- **Smartscape display**: services show as `service.name (detected name)` — for example `checkout-api (com.example.checkout.OrderService)` — keeping both the OTel-canonical name and the auto-detected name visible.
+- **Span/metric field**: the value populates a new `dt.service.name` field on spans and metrics, queryable directly:
+
+```dql
+fetch spans, from:-1h
+| filter isNotNull(dt.service.name)
+| summarize span_count = count(), by:{dt.service.name, dt.smartscape.service}
+| sort span_count desc
+| limit 50
+```
+
+This eliminates the historical "two services for one process" pattern when teams add OpenTelemetry SDKs alongside OneAgent for vendor-neutral instrumentation.
+
+### Ktor service technology now recognized
+
+Sprint 1.337 also added **`KTOR_CLIENT`** and **`KTOR_SERVER`** values to the service technology enum across request attributes and extension host availability endpoints. If you have Ktor (Kotlin async HTTP framework) services in your environment, they now appear with explicit Ktor technology in Smartscape, calculated metrics, and request-naming rules — no more `KOTLIN_GENERIC` fallback.
+
+---
+
 <a id="understanding-service-topology"></a>
 ## 1. Understanding Service Topology
 Service topology shows how your services connect and communicate:
 
-![Service Topology](images/service-topology.png)
+![Service Topology](images/04-service-topology.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Services | Function |
@@ -206,7 +229,7 @@ fetch spans, from:-1h
 ## 5. Async Messaging Flows
 Analyze asynchronous messaging patterns using PRODUCER and CONSUMER spans:
 
-![Async Messaging Flow](images/async-messaging.png)
+![Async Messaging Flow](images/04-async-messaging.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Span Kind | Service | Action | Destination |
@@ -376,7 +399,7 @@ fetch spans, from:-1h
 ## 8. Critical Path Analysis
 Identify the services and operations that contribute most to end-to-end latency:
 
-![Critical Path Analysis](images/critical-path.png)
+![Critical Path Analysis](images/04-critical-path.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Service | Duration | % of Total | Priority |

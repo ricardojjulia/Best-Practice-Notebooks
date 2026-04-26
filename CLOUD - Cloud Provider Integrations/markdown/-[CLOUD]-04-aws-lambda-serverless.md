@@ -1,10 +1,34 @@
 # CLOUD-04: AWS Lambda & Serverless Monitoring
 
-> **Series:** CLOUD — Cloud Provider Integrations | **Notebook:** 4 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** CLOUD — Cloud Provider Integrations | **Notebook:** 4 of 8 | **Created:** March 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
 This notebook covers serverless monitoring with Dynatrace, focusing on AWS Lambda. You will learn how to monitor Lambda function performance (cold starts, duration, errors, throttles), integrate API Gateway tracing, analyze Step Functions workflows, assess DynamoDB performance, and build end-to-end serverless application tracing.
+
+### Sprint 1.337 (April 2026): Service Detection v2 for Lambda
+
+Sprint 1.337 SaaS introduced **Service Detection v2 (SDv2) for AWS Lambda** in Early Access — a major upgrade for serverless monitoring:
+
+1. **Unified rules for OTel and OneAgent.** SDv2 detects Lambda functions whether they emit traces via OneAgent (Lambda layer) or via the OpenTelemetry Lambda extension. The same service entity is enriched from both paths — no more parallel services for the same function.
+2. **Three FaaS-specific metrics:**
+   - **Invocation/failure counts** — `dt.faas.invocations` and `dt.faas.failures`
+   - **Duration** — `dt.faas.duration` (cold-start vs warm split)
+   - **Trigger type breakdown** — `dt.faas.trigger.type` dimension (HTTP, S3, EventBridge, SQS, etc.)
+3. **OTel `service.name` enrichment** — when Lambda functions emit OTel spans with `service.name`, Dynatrace uses that value to enrich the SDv2-detected service rather than creating a parallel one.
+
+**Sample DQL — Lambda failure rate by trigger type:**
+
+```dql
+timeseries failures = sum(dt.faas.failures), invocations = sum(dt.faas.invocations),
+  by:{dt.faas.trigger.type}, from:-1h
+| fieldsAdd failure_rate_pct = arraySum(failures) / arraySum(invocations) * 100
+| sort failure_rate_pct desc
+```
+
+**Status:** Early Access — confirm tenant availability before production rollout. Existing Lambda monitoring via OneAgent layer or OTel extension keeps working.
+
+---
 
 ---
 

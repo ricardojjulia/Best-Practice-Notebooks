@@ -1,6 +1,6 @@
 # SYNTH-99: Best Practice Summary
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -26,6 +26,12 @@ This notebook consolidates every actionable best practice from the SYNTH series 
 14. [Operational Hygiene](#operational-hygiene)
 
 ---
+
+## Prerequisites
+
+- ✅ Access to a Dynatrace environment with Synthetic Monitoring enabled
+- ✅ Completed SYNTH-01 through SYNTH-06 (or using as a standalone reference)
+- ✅ DQL query permissions (viewer role minimum)
 
 <a id="monitor-selection"></a>
 ## 1. Monitor Selection

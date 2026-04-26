@@ -12,6 +12,18 @@ The first step in any SaaS-to-SaaS migration is understanding *why* you are migr
 >
 > **Run:** 7. Expand | 8. Enable | 9. Optimize
 
+### Sprint 1.337 (April 2026) Updates Affecting S2S
+
+Three sprint-1.337 changes affect a SaaS-to-SaaS migration:
+
+1. **OneAgent primary fields/tags at source** — when redesigning the post-migration tag taxonomy in S2S-03 (Design), prefer OneAgent primary tags (`team`, `cost_center`, `env`) over OpenPipeline parsing where possible. They land as top-level fields on every signal without ingest-time processors.
+2. **Configuration API → Settings v2 acceleration** + **Platform tokens** for new automation in S2S-04/05/10 — this is the right time to retire any classic `dt0c01` token use in migration tooling. Auth-scheme rule: wrong scheme returns `401 Unsupported authorization scheme` even when scopes are correct.
+3. **Extensions 3rd-gen API recommendation** (ToDo #1) — if either the source or target tenant uses custom Extensions, this is the time to migrate to 3rd-gen via the Dynatrace API Application → Extensions surface using Platform tokens. Existing customers may continue with 2nd-gen, but advocate 3rd-gen as the only recommended path for new work.
+
+Sprint 1.337 also added the **`EXTENSION_AUTHENTICATION` credential enum** for credentials that authenticate Extensions API calls without expanding broader scope — useful when scoping CI service users for the migration window.
+
+---
+
 ---
 
 ## Table of Contents

@@ -1,6 +1,6 @@
 # OPLOGS-07: Analytics & Dashboards
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Aggregation, Time Series, and Visualization Queries
 This notebook covers aggregation functions, time series analysis, statistical patterns, and dashboard-ready queries for log analytics.
@@ -31,7 +31,7 @@ This notebook covers aggregation functions, time series analysis, statistical pa
 
 <a id="aggregation-functions"></a>
 ## 1. Aggregation Functions
-![Aggregation Functions](images/aggregation-functions.png)
+![Aggregation Functions](images/07-aggregation-functions.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 Aggregation Functions Reference:
@@ -169,8 +169,9 @@ fetch logs, from: now() - 24h
     first_seen = min(timestamp),
     last_seen = max(timestamp)
   }, by: {dt.openpipeline.source}
-| fieldsAdd duration_hours = (last_seen - first_seen) / 3600000000000
-| fieldsAdd logs_per_hour = round(total / duration_hours, decimals: 0)
+| fieldsAdd duration_ns = toLong(last_seen) - toLong(first_seen)
+| fieldsAdd duration_hours = round(duration_ns / 3600000000000.0, decimals: 1)
+| fieldsAdd logs_per_hour = round(total / (duration_ns / 3600000000000.0), decimals: 0)
 | sort total desc
 ```
 

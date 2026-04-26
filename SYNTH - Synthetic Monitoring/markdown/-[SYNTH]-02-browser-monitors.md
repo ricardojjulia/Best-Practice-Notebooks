@@ -1,6 +1,6 @@
 # SYNTH-02: Browser Monitors
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Creating and Optimizing Browser-Based Synthetic Tests
 This notebook covers browser monitors in Dynatrace, including single-URL monitors, browser clickpaths, and performance analysis using the latest Dynatrace platform capabilities.
@@ -102,18 +102,19 @@ fetch dt.entity.synthetic_test
 | sort entity.name asc
 | limit 50
 
+
 ```
 
 ```dql
 // Browser monitor execution results (last 24h)
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
+| filter matchesValue(event.type, "*browser*")
 | fields timestamp,
-         monitor = synthetic_test_id,
-         location = synthetic_location_id,
-         availability = execution_success,
-         response_time_ms = toDouble(total_duration)
+         monitor = dt.entity.synthetic_test,
+         location = dt.entity.synthetic_location,
+         availability = synthetic.availability,
+         response_time_ms = toDouble(synthetic.response_time)
 | sort timestamp desc
 | limit 100
 ```
@@ -157,12 +158,12 @@ Define steps programmatically using the script editor.
 // Clickpath step performance analysis
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter isNotNull(step_title)
+| filter isNotNull(synthetic.step_name)
 | summarize {
-    avg_duration_ms = avg(toDouble(step_duration)),
-    max_duration_ms = max(toDouble(step_duration)),
+    avg_duration_ms = avg(toDouble(synthetic.step_duration)),
+    max_duration_ms = max(toDouble(synthetic.step_duration)),
     executions = count()
-  }, by: {synthetic_test_id, step_title}
+  }, by: {dt.entity.synthetic_test, synthetic.step_name}
 | sort avg_duration_ms desc
 | limit 30
 ```
@@ -173,7 +174,7 @@ fetch bizevents, from: now() - 24h
 
 Browser monitors capture detailed timing metrics based on the W3C Navigation Timing API:
 
-![Navigation Timing](images/navigation-timing.png)
+![Navigation Timing](images/02-navigation-timing.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Phase | Metric | Description |
 |-------|--------|-------------|
@@ -202,16 +203,15 @@ Browser monitors capture detailed timing metrics based on the W3C Navigation Tim
 // Browser monitor performance breakdown
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
+| filter matchesValue(event.type, "*browser*")
 | summarize {
-    avg_dns_ms = avg(toDouble(dns_lookup_time)),
-    avg_connect_ms = avg(toDouble(tcp_connect_time)),
-    avg_ssl_ms = avg(toDouble(ssl_handshake_time)),
-    avg_ttfb_ms = avg(toDouble(time_to_first_byte)),
-    avg_dom_interactive_ms = avg(toDouble(dom_interactive_time)),
-    avg_load_ms = avg(toDouble(total_duration)),
+    avg_dns_ms = avg(toDouble(synthetic.dns_time)),
+    avg_connect_ms = avg(toDouble(synthetic.connect_time)),
+    avg_ssl_ms = avg(toDouble(synthetic.ssl_time)),
+    avg_ttfb_ms = avg(toDouble(synthetic.time_to_first_byte)),
+    avg_load_ms = avg(toDouble(synthetic.response_time)),
     executions = count()
-  }, by: {synthetic_test_id}
+  }, by: {dt.entity.synthetic_test}
 | sort avg_load_ms desc
 | limit 20
 ```
@@ -220,10 +220,10 @@ fetch bizevents, from: now() - 24h
 // Performance trend over time
 fetch bizevents, from: now() - 7d
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
+| filter matchesValue(event.type, "*browser*")
 | makeTimeseries {
-    avg_response_time = avg(toDouble(total_duration)),
-    p95_response_time = percentile(toDouble(total_duration), 95)
+    avg_response_time = avg(toDouble(synthetic.response_time)),
+    p95_response_time = percentile(toDouble(synthetic.response_time), 95)
   }, interval: 1h
 ```
 
@@ -259,12 +259,12 @@ fetch bizevents, from: now() - 7d
 // Failed browser monitor executions
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
-| filter execution_success == false
+| filter matchesValue(event.type, "*browser*")
+| filter synthetic.availability == false
 | fields timestamp,
-         monitor = synthetic_test_id,
-         location = synthetic_location_id,
-         error = error_message
+         monitor = dt.entity.synthetic_test,
+         location = dt.entity.synthetic_location,
+         error = synthetic.error_message
 | sort timestamp desc
 | limit 50
 ```
@@ -276,12 +276,12 @@ fetch bizevents, from: now() - 24h
 // Browser monitor availability by location
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
+| filter matchesValue(event.type, "*browser*")
 | summarize {
     total = count(),
-    successful = countIf(execution_success == true),
-    failed = countIf(execution_success == false)
-  }, by: {synthetic_test_id, synthetic_location_id}
+    successful = countIf(synthetic.availability == true),
+    failed = countIf(synthetic.availability == false)
+  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
 | fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
 | sort availability_pct asc
 | limit 30
@@ -291,16 +291,16 @@ fetch bizevents, from: now() - 24h
 // Response time distribution by location
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
-| filter execution_success == true
+| filter matchesValue(event.type, "*browser*")
+| filter synthetic.availability == true
 | summarize {
-    min_ms = min(toDouble(total_duration)),
-    avg_ms = avg(toDouble(total_duration)),
-    p50_ms = percentile(toDouble(total_duration), 50),
-    p95_ms = percentile(toDouble(total_duration), 95),
-    max_ms = max(toDouble(total_duration)),
+    min_ms = min(toDouble(synthetic.response_time)),
+    avg_ms = avg(toDouble(synthetic.response_time)),
+    p50_ms = percentile(toDouble(synthetic.response_time), 50),
+    p95_ms = percentile(toDouble(synthetic.response_time), 95),
+    max_ms = max(toDouble(synthetic.response_time)),
     executions = count()
-  }, by: {synthetic_location_id}
+  }, by: {dt.entity.synthetic_location}
 | sort avg_ms desc
 | limit 20
 ```
@@ -309,13 +309,13 @@ fetch bizevents, from: now() - 24h
 // Slowest page loads (outliers)
 fetch bizevents, from: now() - 24h
 | filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event_type, "*browser*")
-| filter execution_success == true
-| filter toDouble(total_duration) > 5000  // > 5 seconds
+| filter matchesValue(event.type, "*browser*")
+| filter synthetic.availability == true
+| filter toDouble(synthetic.response_time) > 5000  // > 5 seconds
 | fields timestamp,
-         monitor = synthetic_test_id,
-         location = synthetic_location_id,
-         response_time_ms = toDouble(total_duration)
+         monitor = dt.entity.synthetic_test,
+         location = dt.entity.synthetic_location,
+         response_time_ms = toDouble(synthetic.response_time)
 | sort response_time_ms desc
 | limit 20
 ```

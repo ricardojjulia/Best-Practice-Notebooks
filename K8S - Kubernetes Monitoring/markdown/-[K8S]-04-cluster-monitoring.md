@@ -1,6 +1,6 @@
 # K8S-04: Cluster Health Monitoring
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Deep-Dive into Kubernetes Cluster Metrics
 Cluster health monitoring provides visibility into the infrastructure layer of Kubernetes: nodes, control plane, and cluster-wide resources. This notebook covers key metrics, thresholds, and DQL queries for proactive cluster management.
@@ -122,7 +122,7 @@ timeseries avgDiskUsage = avg(dt.host.disk.used.percent), from:-1h, by:{dt.entit
 
 ### Utilization vs. Allocation
 
-![Node Resource Utilization Model](images/node-capacity-utilization.png)
+![Node Resource Utilization Model](images/04-node-capacity-utilization.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Description |

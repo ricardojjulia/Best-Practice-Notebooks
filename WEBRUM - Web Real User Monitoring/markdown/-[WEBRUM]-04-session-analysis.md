@@ -1,6 +1,6 @@
 # WEBRUM-04: Session Analysis
 
-> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 4 of 8 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 4 of 9 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -157,7 +157,7 @@ If your conversion page has a recognizable URL pattern, you can detect conversio
 
 ```dql
 // Conversion rate — sessions that reached a checkout/confirmation page
-// Adapt the action.name filter to match your conversion page
+// Adapt the filter to match your conversion page URL pattern
 fetch user.sessions, from:-24h
 | filter userType == "REAL_USER"
 | summarize total_sessions = count(),
@@ -165,7 +165,7 @@ fetch user.sessions, from:-24h
 | append [
     fetch user.events, from:-24h
     | filter action.type == "Load"
-    | filter action.name ~ "*confirmation*" or action.name ~ "*thank*you*" or action.name ~ "*checkout*success*"
+    | filter contains(action.name, "confirmation") or contains(action.name, "thank-you") or contains(action.name, "checkout-success")
     | summarize converted_sessions = countDistinct(sessionId), by:{application}
   ]
 ```

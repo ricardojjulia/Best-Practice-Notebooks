@@ -1,6 +1,6 @@
 # OPMIG-05: Dynamic Routing & Bucket Management
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 > **OpenPipeline Migration Series** | Notebook 5 of 9  
 > **Level:** Intermediate  
@@ -878,7 +878,7 @@ Now that you understand routing and buckets, continue with:
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: April 25, 2026*
 
 ---
 

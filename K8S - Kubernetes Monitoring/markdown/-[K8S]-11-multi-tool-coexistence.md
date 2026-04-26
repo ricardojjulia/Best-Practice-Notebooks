@@ -1,6 +1,6 @@
 # K8S-11: Multi-Tool Coexistence & Advanced Configuration
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Running Dynatrace Alongside Other Monitoring Tools
 Many organizations run multiple monitoring tools during migrations or for specialized use cases. This notebook covers patterns for running Dynatrace alongside tools like New Relic, Datadog, or Prometheus without conflicts.
@@ -142,6 +142,37 @@ spec:
 | `dt-monitoring: "true"` | Dynatrace monitors this namespace |
 | No label | Namespace ignored by Dynatrace |
 | `dt-monitoring: "false"` | Explicit opt-out (for documentation) |
+
+<a id="oneagent-otel-injector-coexistence"></a>
+## 2a. OneAgent + OpenTelemetry Auto-Instrumentation Coexistence
+
+A common multi-tool scenario in 2026 is running **OneAgent alongside OpenTelemetry auto-instrumentation** — typically when an organization uses OTel for vendor-neutral language SDK injection while keeping OneAgent for infrastructure, network-zone, and Smartscape topology coverage.
+
+The two injectors can conflict in several ways:
+
+| Conflict | Symptom | Mitigation |
+|---|---|---|
+| **Double instrumentation of the same process** | Duplicate spans, doubled metrics, increased CPU/memory overhead | Set `OTEL_INSTRUMENTATION_<lib>_ENABLED=false` for libraries OneAgent already covers, OR scope OTel injection by namespace selector |
+| **Init-container ordering** | Pod stuck in `Init:CrashLoopBackOff`; one injector overwrites the other's bytecode | Order init containers explicitly via `pod.spec.initContainers` ordering, or pick one injector per namespace |
+| **Conflicting `LD_PRELOAD` / `JAVA_TOOL_OPTIONS`** | Application starts but only one agent attaches; the other's env vars are clobbered | Use the **OpenTelemetry Operator** with the `instrumentation.opentelemetry.io/inject-*` annotation rather than mutating env vars manually; OneAgent's CSI-driver model coexists with this |
+| **Trace context conflicts** | Spans appear in both backends but parent-child links are broken | Ensure both agents emit W3C trace context (`traceparent`); newer OneAgent versions and OTel SDKs both default to W3C |
+
+### Analyzing the conflict surface
+
+The `opentelemetry-injector` project ([github.com/open-telemetry/opentelemetry-injector](https://github.com/open-telemetry/opentelemetry-injector)) is the OTel community's mutation-webhook injector. When evaluating coexistence, profile against:
+
+- Which language runtimes are dual-injected (Java + Node + .NET often differ)
+- Whether your OTel collector is the Dynatrace OTel Collector image (auto-deduplicated downstream) or a generic build (no de-duplication)
+- Whether OneAgent is in `cloudNativeFullStack` (full process injection) or `applicationMonitoring` (lighter footprint that conflicts less)
+
+### Recommended decision flow
+
+1. **Inventory:** list every namespace running OTel auto-instrumentation today.
+2. **Scope:** decide per namespace — OneAgent OR OTel auto-instrumentation, not both, for any given language runtime.
+3. **Configure DynaKube namespace selector** (Section 2 above) to exclude OTel-managed namespaces from OneAgent injection.
+4. **Keep OneAgent for infra:** even in OTel-managed namespaces, OneAgent at the host/node level still provides Smartscape topology, network-zone routing, and host-level metrics — those don't conflict with in-pod instrumentation.
+
+> See **OTEL** series for the OTel collector configuration and **CAESARS A.25** for a worked OneAgent-vs-OTel decision framework.
 
 <a id="feature-flags-reference"></a>
 ## 3. Feature Flags Reference

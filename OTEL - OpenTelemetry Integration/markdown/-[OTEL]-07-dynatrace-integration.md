@@ -29,6 +29,28 @@ This notebook provides end-to-end configuration for sending OpenTelemetry data t
 | **Permissions** | Token creation access |
 | **Knowledge** | OTEL-01 through OTEL-06 |
 
+### Sprint 1.337 (April 2026): Major OpenTelemetry Updates
+
+Sprint 1.337 brought several OpenTelemetry-relevant changes:
+
+1. **OTel `service.name` enrichment** — Dynatrace now uses the OpenTelemetry `service.name` resource attribute to **enrich** the Dynatrace service entity rather than creating a parallel one. Smartscape displays `service.name (detected name)`; spans/metrics gain a `dt.service.name` field, queryable directly:
+
+   ```dql
+   fetch spans, from:-1h
+   | filter isNotNull(dt.service.name)
+   | summarize span_count = count(), by:{dt.service.name, dt.smartscape.service}
+   ```
+
+   This eliminates the historical "two services per process" pattern when OTel SDKs run alongside OneAgent.
+
+2. **Ktor service technology recognized** — `KTOR_CLIENT` and `KTOR_SERVER` enum values added across request attributes, calculated metrics, and extension host availability. Ktor (Kotlin async HTTP framework) services now appear with explicit technology in Smartscape, no more `KOTLIN_GENERIC` fallback.
+
+3. **OneAgent + OpenTelemetry-injector coexistence matrix** — newly documented in **K8S-11 § 2a** (added in Tier 2 Wave 0). Covers double-instrumentation symptoms, init-container ordering, `LD_PRELOAD`/`JAVA_TOOL_OPTIONS` clobber, trace-context conflicts, and a per-namespace decision flow. Reference this when planning OTel auto-instrumentation in environments where OneAgent is also deployed (ToDo #3).
+
+4. **SDv2 unified rules for AWS Lambda** — Service Detection v2 now supports Lambda functions with unified rules for both OTel and OneAgent. New FaaS-specific metrics: invocation/failure counts, duration, trigger type breakdown. See **CLOUD-04 § Sprint 1.337**.
+
+---
+
 <a id="dynatrace-otlp-endpoints"></a>
 ## 1. Dynatrace OTLP Endpoints
 ### SaaS Endpoints

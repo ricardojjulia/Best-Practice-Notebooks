@@ -1,6 +1,6 @@
 # K8S-09: Troubleshooting Kubernetes Monitoring
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Debugging Dynatrace Monitoring in Kubernetes
 When monitoring doesn't work as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic procedures, and resolution steps for Dynatrace Kubernetes monitoring.
@@ -34,7 +34,7 @@ When monitoring doesn't work as expected, systematic troubleshooting is essentia
 ## 1. Troubleshooting Methodology
 ### Systematic Approach
 
-![Troubleshooting Methodology](images/troubleshooting-methodology.png)
+![Troubleshooting Methodology](images/09-troubleshooting-methodology.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Purpose |

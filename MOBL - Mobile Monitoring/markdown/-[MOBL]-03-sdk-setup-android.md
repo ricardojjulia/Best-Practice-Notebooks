@@ -1,6 +1,6 @@
 # MOBL-03: Android SDK Setup (Kotlin & Jetpack Compose)
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 3 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 3 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -306,7 +306,7 @@ After building and running your instrumented Android app, use the following DQL 
 
 ```dql
 // Find Android mobile applications
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | filter contains(toString(entity.name), "Android") or contains(toString(tags), "Android")
 | fields entity.name, id, tags
 | sort entity.name asc

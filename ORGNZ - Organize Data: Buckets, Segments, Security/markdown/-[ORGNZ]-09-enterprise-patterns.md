@@ -1,6 +1,6 @@
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -77,7 +77,7 @@ Security Context: lob:finance
 ## Enterprise Pattern 1: Line of Business Isolation
 Complete isolation by business unit:
 
-![LOB Isolation Pattern](images/lob-isolation-pattern.png)
+![LOB Isolation Pattern](images/09-lob-isolation-pattern.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | LOB | Buckets | Segment | Security Context | Policy |
@@ -212,7 +212,7 @@ includes:
 ## Decision Framework
 Use this framework to choose your organization strategy:
 
-![Organization Decision Framework](images/organization-decision-framework.png)
+![Organization Decision Framework](images/09-organization-decision-framework.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | YES → Solution |

@@ -30,6 +30,18 @@ For environments where SVG doesn't render
 
 ---
 
+### Sprint 1.337 (April 2026) Updates Affecting S2D
+
+Three sprint-1.337 changes simplify the Splunk → Dynatrace migration:
+
+1. **OneAgent primary fields/tags at the source** — hosts emit standardized fields (`dt.security_context`, `dt.cost.costcenter`, `dt.cost.product`) and customer-defined primary tags as top-level attributes. When converting Splunk indexer-level metadata routing to Grail, this lets you skip a class of OpenPipeline parse processors that would otherwise be needed for OneAgent-instrumented sources.
+2. **OpenPipeline extraction processor recommended-field suggestions** — when converting Splunk field extractions to OpenPipeline DPL processors, the UI flags permission-relevant fields (`dt.security_context`, `loglevel`) and Smartscape identifiers — preventing accidental promotion of sensitive content.
+3. **Configuration API → Settings v2 + Platform tokens** — new automation should target Settings v2 paths and use Platform tokens (`dt0s16`/`dt0s01`, `Authorization: Bearer`).
+
+These changes reinforce the Gen3-first migration baseline.
+
+---
+
 ## Prerequisites
 
 | Requirement | Details |

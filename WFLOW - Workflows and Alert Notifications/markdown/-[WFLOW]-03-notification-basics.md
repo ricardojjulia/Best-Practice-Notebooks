@@ -1,6 +1,6 @@
 # WFLOW-03: Alert Notification Basics
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Sending Notifications with Workflows
 The most common workflow use case is sending alert notifications to Slack, Microsoft Teams, and email. This notebook covers setting up connections, configuring notification tasks, and best practices for effective alerting.

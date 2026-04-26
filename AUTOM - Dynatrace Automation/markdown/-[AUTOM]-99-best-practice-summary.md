@@ -1,6 +1,6 @@
 # AUTOM-99: Best Practice Summary
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 This notebook consolidates every actionable best practice from the AUTOM series (notebooks 01-08) into a single reference. Each practice is definitive: it tells you exactly what to set, not what to consider.
 

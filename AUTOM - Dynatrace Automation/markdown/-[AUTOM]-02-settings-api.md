@@ -1,6 +1,6 @@
 # AUTOM-02: Settings API
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 01/30/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 The Settings API (also called Settings 2.0) is Dynatrace's modern REST API for configuration management. It provides a unified way to manage all Dynatrace settings through JSON objects with schema validation.
 
@@ -58,6 +58,18 @@ By the end of this notebook, you will:
 | **Object** | An instance of configuration following a schema |
 | **Scope** | Where the config applies (tenant, host, service, etc.) |
 | **Object ID** | Unique identifier for a configuration object |
+
+---
+
+### Sprint 1.337 (April 2026) Updates
+
+**Configuration API → Settings v2 migration accelerated.** As of Dynatrace SaaS sprint 1.337, many remaining Configuration API endpoints are now covered by Settings endpoints in Environment API v2. The legacy endpoints stay active for backward compatibility, but new automation should target the Settings v2 paths exclusively.
+
+**Extensions credentials gained `EXTENSION_AUTHENTICATION` enum.** The Credentials API (both Environment and Config) now supports an `EXTENSION_AUTHENTICATION` scope value. This enables extension-based authentication scenarios — for example, granting a stored credential the ability to authenticate Extensions API calls without expanding its broader scope.
+
+**Extensions Action endpoint signature change.** `PUT /extensions/{extensionName}/monitoringConfigurations/{configurationId}/actions` now returns `agIds` (plural array) and deprecates the singular `agId` and `agName` properties. Update any code parsing the response to handle the array form.
+
+> **Tokens:** For Extensions automation, prefer **Platform tokens (`dt0s16` / `dt0s01`)** with `Authorization: Bearer …` over the classic `dt0c01` (`Authorization: Api-Token …`). The Platform token model is the recommended path going forward — see [AUTOM-08: Migration Automation](#) for the migration plan.
 
 ---
 

@@ -1,6 +1,6 @@
 # DBMON-03: NoSQL Database Monitoring
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 3 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 

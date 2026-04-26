@@ -1,6 +1,6 @@
 # OPLOGS-05: Querying & Parsing Logs
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## DQL Fundamentals and DPL Pattern Matching
 This notebook covers DQL query syntax, filtering, string matching, and DPL (Dynatrace Pattern Language) for extracting structured data from logs.
@@ -34,7 +34,7 @@ This notebook covers DQL query syntax, filtering, string matching, and DPL (Dyna
 ## 1. DQL Fundamentals
 ### Query Structure
 
-![DQL Pipeline Model](images/dql-pipeline.png)
+![DQL Pipeline Model](images/05-dql-pipeline.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 DQL Pipeline Model:

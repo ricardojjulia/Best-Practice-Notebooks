@@ -1,6 +1,6 @@
 # SPANS-02: Querying Spans with DQL
 
-> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** SPANS — Distributed Tracing and Spans | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Mastering Span Queries in Dynatrace
 This notebook covers essential techniques for querying and filtering span data to find exactly what you need. You'll learn to filter by service, operation, and attributes to quickly locate relevant traces.
@@ -35,7 +35,7 @@ Before starting this notebook, ensure you have:
 ## 1. DQL is NOT SQL!
 ⚠️ **CRITICAL:** DQL has different syntax from SQL. Memorize these differences:
 
-![DQL Pipeline Model](images/dql-pipeline-spans.png)
+![DQL Pipeline Model](images/02-dql-pipeline-spans.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | DQL Stage | Purpose | Example |
@@ -356,7 +356,7 @@ fetch spans, from:-1h
 ## 9. Working with NULL Values
 ⚠️ **DQL uses tri-state boolean logic.** Comparisons with NULL don't work like SQL!
 
-![NULL Handling in DQL](images/null-handling-dql.png)
+![NULL Handling in DQL](images/02-null-handling-dql.png)
 
 <!--MARKDOWN_TABLE_ALTERNATIVE
 | Expression | Returns | Explanation |

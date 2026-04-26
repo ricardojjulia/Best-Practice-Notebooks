@@ -1,6 +1,6 @@
 # ORGNZ-10: Advanced Segment Definitions
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -252,7 +252,7 @@ The CloudFoundry query above creates three variables from process group tags:
 
 Use these variables across **multiple includes** to build a segment that filters both entity and signal data:
 
-![Multi-Include Segment Pattern](images/multi-include-segment-pattern.png)
+![Multi-Include Segment Pattern](images/10-multi-include-segment-pattern.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Include Type | Filter | Category |

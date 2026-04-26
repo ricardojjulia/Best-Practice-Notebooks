@@ -8,6 +8,18 @@ This deep dive establishes the conceptual foundation for migrating from New Reli
 
 Use this notebook as the conceptual reference; the procedural sequence for executing a migration lives in the companion **NR2DT** series.
 
+### Sprint 1.337 (April 2026) Updates
+
+Three sprint-1.337 changes affect the NR→DT component conversion patterns:
+
+1. **OTel `service.name` enrichment** — Dynatrace now uses the OpenTelemetry `service.name` resource attribute to enrich the existing service entity (Smartscape displays `service.name (detected name)`; new `dt.service.name` field). NR services that emit OTel via the New Relic Collector → Dynatrace path map cleanly without two-services-per-process duplication.
+2. **OneAgent primary fields/tags at the source** (`dt.security_context`, `dt.cost.costcenter`, `dt.cost.product` + customer-defined primary tags) — top-level on all signals. Reduces parse-processor work for migrated NR data.
+3. **Entity API: `attributes` removed** + **Event API: `metadata` removed from `GET /events`** (sprint-337 Dynatrace API). Update any conversion-engine code (Dynatrace-NewRelic / nrql-engine / nrql-translator) that parses these properties — see [reference_nr_migration_tools memory entry] for the engine repos.
+
+The Authorization scheme by token prefix rule documented in NRLC-05 remains correct and is reinforced by sprint-337's broader Platform-token push.
+
+---
+
 ---
 
 ## Table of Contents

@@ -1,6 +1,6 @@
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -48,7 +48,7 @@ By the end of this notebook, you will:
 ## Record-Level Permissions
 Record-level permissions filter data at query time based on record attributes:
 
-![Record-Level Permissions Flow](images/record-level-permissions.png)
+![Record-Level Permissions Flow](images/07-record-level-permissions.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action |
@@ -266,7 +266,7 @@ This boundary can then be applied alongside any policy (logs access, metrics acc
 ## Enterprise Architecture Patterns
 ### Tiered Access Model
 
-![Tiered Access Model](images/tiered-access-model.png)
+![Tiered Access Model](images/07-tiered-access-model.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Tier | Role | Access |

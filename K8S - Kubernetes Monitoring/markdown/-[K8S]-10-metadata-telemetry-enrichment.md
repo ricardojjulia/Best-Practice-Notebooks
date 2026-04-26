@@ -1,6 +1,6 @@
 # K8S-10: Metadata Telemetry Enrichment
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 10 of 13 | **Created:** January 2026 | **Last Updated:** 02/05/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 10 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Enriching All Telemetry with Kubernetes Metadata
 Kubernetes metadata enrichment automatically adds labels and annotations from your Kubernetes resources to all telemetry signals. This is the **recommended approach** for adding context to your observability data because it enriches everything: metrics, logs, traces, events, and entities.
@@ -119,7 +119,7 @@ In addition to settings-based enrichment, Dynatrace automatically propagates cer
 ## 2. Enrichment Methods Comparison
 Dynatrace offers multiple ways to add Kubernetes metadata. Choose based on your needs:
 
-![Enrichment Methods Comparison](images/enrichment-methods-comparison.png)
+![Enrichment Methods Comparison](images/10-enrichment-methods-comparison.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Method | Scope | All Signals? | Recommendation |

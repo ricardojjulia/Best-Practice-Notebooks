@@ -1,6 +1,6 @@
 # AUTOM-07: CI/CD Integration
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/15/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -35,13 +35,13 @@ Before starting this notebook, ensure you have:
 | CI/CD Platform | GitHub Actions, GitLab CI, or Jenkins |
 | Monaco or Terraform | One of the config-as-code tools |
 | Git Repository | For storing configurations |
-| Authentication | API Token + Platform Token for full coverage (see [AUTOM-04](./-%5BAUTOM%5D-04-terraform.ipynb)) |
+| Authentication | API Token + Platform Token for full coverage (see AUTOM-04) |
 | HashiCorp Vault | *Optional* — for runtime credential retrieval instead of static CI/CD secrets |
 | OPA / Conftest | *Optional* — for policy-as-code gates in pipelines |
 
 ### Token Types Reminder
 
-As of Dynatrace Terraform provider **v1.88.0**, synthetic monitors and SLOs require a classic **API Token** (`dt0c01`). For full resource coverage in pipelines, use **Platform Token + API Token** together. See [AUTOM-04: Provider Configuration](./-%5BAUTOM%5D-04-terraform.ipynb) for details.
+As of Dynatrace Terraform provider **v1.88.0**, synthetic monitors and SLOs require a classic **API Token** (`dt0c01`). For full resource coverage in pipelines, use **Platform Token + API Token** together. See AUTOM-04: Terraform Provider for details.
 
 ---
 
@@ -85,7 +85,7 @@ By the end of this notebook, you will:
 | 6 | Merge triggers deploy |
 -->
 
-![GitOps Workflow](images/autom-gitops-workflow_930x500.png)
+![GitOps Workflow](images/07-gitops-workflow_930x500.png)
 
 ---
 

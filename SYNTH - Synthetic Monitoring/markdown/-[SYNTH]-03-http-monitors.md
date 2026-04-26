@@ -1,6 +1,6 @@
 # SYNTH-03: HTTP Monitors
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
 
 ## Lightweight API and Endpoint Monitoring
 This notebook covers HTTP monitors for API health checks, endpoint validation, and multi-step API workflows using the latest Dynatrace platform.
@@ -25,7 +25,8 @@ This notebook covers HTTP monitors for API health checks, endpoint validation, a
 - ✅ Completed SYNTH-01 Fundamentals
 - ✅ API endpoint(s) to monitor
 
-## 1. HTTP Monitor Overview <a name="overview"></a>
+<a id="http-monitor-overview"></a>
+## 1. HTTP Monitor Overview
 
 HTTP monitors execute lightweight HTTP requests without browser overhead:
 
@@ -96,6 +97,7 @@ fetch dt.entity.http_check
 | sort entity.name asc
 | limit 50
 
+
 ```
 
 ```dql
@@ -119,7 +121,7 @@ Chain multiple HTTP requests with data passing between steps:
 
 ### Multi-Step Workflow Example
 
-![HTTP Monitor Workflow](images/http-monitor-workflow.png)
+![HTTP Monitor Workflow](images/03-http-monitor-workflow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Action | Description |
 |------|--------|-------------|

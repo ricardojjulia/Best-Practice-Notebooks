@@ -1,6 +1,6 @@
 # MOBL-02: iOS SDK Setup (Swift & SwiftUI)
 
-> **Series:** MOBL — Mobile Monitoring | **Notebook:** 2 of 12 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MOBL — Mobile Monitoring | **Notebook:** 2 of 12 | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -312,7 +312,7 @@ This query lists mobile application entities that contain "iOS" in their name or
 
 ```dql
 // Find iOS mobile applications
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | filter contains(toString(entity.name), "iOS") or contains(toString(tags), "iOS")
 | fields entity.name, id, tags
 | sort entity.name asc
@@ -339,7 +339,7 @@ This query retrieves general details for your mobile app entities, including the
 
 ```dql
 // iOS app entity details
-fetch dt.entity.device_application
+fetch dt.entity.mobile_application
 | fields entity.name, id, lifetime, tags
 | limit 10
 ```

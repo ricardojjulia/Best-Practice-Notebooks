@@ -1,6 +1,6 @@
 # IAM-02: SSO and Authentication Configuration
 
-> **Series:** IAM — IAM Administration | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 02/27/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 2 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Setting Up Enterprise Authentication
 Single Sign-On (SSO) is the foundation of enterprise IAM. Configure SSO before setting up groups, policies, or user provisioning. This notebook covers SAML configuration, IdP integration, and authentication best practices.

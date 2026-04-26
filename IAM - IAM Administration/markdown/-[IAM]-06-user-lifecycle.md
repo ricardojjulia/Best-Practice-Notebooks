@@ -1,6 +1,6 @@
 # IAM-06: User Lifecycle and Provisioning
 
-> **Series:** IAM — IAM Administration | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 03/23/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 6 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Automating User Management at Scale
 Manual user management doesn't scale. This notebook covers user lifecycle automation including SCIM provisioning, JIT access, service accounts, token management, and inviting external users from other domains.
@@ -31,7 +31,7 @@ Manual user management doesn't scale. This notebook covers user lifecycle automa
 
 Users have a lifecycle from creation to deactivation. Effective management requires automation at each stage.
 
-![User Lifecycle Flow](images/user-lifecycle-flow.png)
+![User Lifecycle Flow](images/06-user-lifecycle-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Trigger | Actions |
 |-------|---------|----------|
@@ -66,7 +66,7 @@ Users have a lifecycle from creation to deactivation. Effective management requi
 ## 2. SCIM Provisioning
 SCIM (System for Cross-domain Identity Management) automatically syncs users and groups from your IdP to Dynatrace.
 
-![SCIM Provisioning Flow](images/scim-provisioning-flow.png)
+![SCIM Provisioning Flow](images/06-scim-provisioning-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Component | Action |
 |------|-----------|--------|

@@ -1,6 +1,6 @@
 # K8S-01: Kubernetes Monitoring Fundamentals
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 04/04/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 ## Introduction to Kubernetes Observability with Dynatrace
 Kubernetes introduces unique observability challenges: ephemeral workloads, dynamic scaling, complex networking, and multi-layer abstractions. Dynatrace provides comprehensive Kubernetes monitoring through the DynaKube operator, which deploys and manages monitoring components automatically.
@@ -74,7 +74,7 @@ Dynatrace monitors Kubernetes through multiple components:
 
 ### Data Flow
 
-![Kubernetes Monitoring Data Flow](images/k8s-data-flow.png)
+![Kubernetes Monitoring Data Flow](images/01-k8s-data-flow.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Function |
@@ -103,7 +103,7 @@ Dynatrace creates entities for each Kubernetes resource and maintains relationsh
 
 ### Entity Relationships
 
-![Kubernetes Entity Relationships](images/k8s-entity-relationships.png)
+![Kubernetes Entity Relationships](images/01-k8s-entity-relationships.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Parent Entity | Relationship | Child Entity |

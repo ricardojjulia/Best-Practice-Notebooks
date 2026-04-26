@@ -1,6 +1,6 @@
 # ORGNZ-09 LAB: Enterprise Data Organization Patterns - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 02/19/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-09: Enter
 
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
 
 
 This notebook brings together buckets, segments, and security context into comprehensive enterprise patterns. Learn how to combine these mechanisms for effective data governance at scale.
@@ -94,7 +94,7 @@ Security Context: lob:finance
 
 Complete isolation by business unit:
 
-![LOB Isolation Pattern](images/lob-isolation-pattern.png)
+![LOB Isolation Pattern](images/09-lob-isolation-pattern.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | LOB | Buckets | Segment | Security Context | Policy |
@@ -218,7 +218,7 @@ includes:
 
 Use this framework to choose your organization strategy:
 
-![Organization Decision Framework](images/organization-decision-framework.png)
+![Organization Decision Framework](images/09-organization-decision-framework.png)
 
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | YES → Solution |
