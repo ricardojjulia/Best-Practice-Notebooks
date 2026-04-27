@@ -1,6 +1,6 @@
 # IAM-05: Boundary Design Patterns
 
-> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 04/27/2026
 
 ## Controlling Data Visibility with Boundaries
 Boundaries determine **what data** users can see. While policies control actions, boundaries filter visibility. This notebook covers boundary syntax, patterns, and implementation strategies.
@@ -115,12 +115,36 @@ If you only boundary one domain:
 <domain>:<field> <operator> (<values>)
 ```
 
-**Complete Three-Domain Boundary:**
+**Pair Gen2 policies with Gen2 boundaries; pair Gen3 policies with Gen3 boundaries.** Each boundary's conditions evaluate against the policy it's attached to — using `environment:management-zone` to scope a `storage:logs:read` policy is a no-op (the Gen3 policy doesn't read `environment:` conditions), and using `storage:dt.security_context` to scope an `environment:roles:viewer` policy is also a no-op (Classic entity access doesn't read Gen3 conditions). Mixing them in one boundary creates the illusion of unified scope while leaving one path wide open.
+
+The right shape is **two parallel policy bindings on the same group**:
+
 ```
-environment:management-zone IN ("checkout");
-storage:dt.security_context IN ("checkout");
+# Gen3 policy
+ALLOW storage:logs:read,
+      storage:spans:read,
+      storage:metrics:read,
+      settings:objects:read,
+      settings:objects:write;
+```
+
+```
+# Gen3 boundary
+storage:dt.security_context  IN ("checkout");
 settings:dt.security_context IN ("checkout");
 ```
+
+```
+# Gen2 policy (transitional, for Classic entity access)
+ALLOW environment:roles:viewer;
+```
+
+```
+# Gen2 boundary
+environment:management-zone IN ("checkout");
+```
+
+Attach both to the user's group. When Management Zone retirement completes, the Gen2 binding is removed cleanly without touching the Gen3 one. **A `MATCH` operator on a Gen2 policy's boundary (e.g., `MATCH('*')` against `storage:entities:read`) would grant access to all Gen2 entities — `MATCH` belongs in Gen3 boundaries only.**
 
 ### Operators
 
@@ -133,7 +157,9 @@ settings:dt.security_context IN ("checkout");
 | `contains` | Substring | `contains "prod"` |
 | `MATCH` | Wildcard pattern match | `storage:dt.security_context MATCH('*/app:easytrade')` |
 
-> **`MATCH()` is available for `storage` domain only.** It supports `*` as a wildcard at any position. Classic entity access (`environment:` domain) does not support `MATCH()` — use `startsWith` or `IN` there instead.
+> **`MATCH()` is available for the `storage` and `settings` domains.** It supports `*` as a wildcard at any position — anchor with a trailing `*` to mimic prefix matching. The `environment:` domain (Classic Management Zones) does **not** support `MATCH()` — use `IN` (preferred) or `startsWith` there.
+>
+> **⚠️ `storage:smartscape:read` + `startsWith` has a known bug.** Use `MATCH('value*')` instead (e.g. `MATCH('comp:db*')`) for Smartscape and Classic entity access.
 
 ### Common Fields
 
@@ -147,23 +173,47 @@ settings:dt.security_context IN ("checkout");
 
 ### Multiple Values
 
-Grant access to multiple security contexts:
+Grant access to multiple security contexts (two parallel policy bindings):
 
 ```
-environment:management-zone IN ("checkout", "payments", "shared");
-storage:dt.security_context IN ("checkout", "payments", "shared");
+# Gen3 policy
+ALLOW storage:logs:read,
+      storage:spans:read,
+      settings:objects:read;
+```
+
+```
+# Gen3 boundary
+storage:dt.security_context  IN ("checkout", "payments", "shared");
 settings:dt.security_context IN ("checkout", "payments", "shared");
+```
+
+```
+# Gen2 policy (transitional)
+ALLOW environment:roles:viewer;
+```
+
+```
+# Gen2 boundary
+environment:management-zone IN ("checkout", "payments", "shared");
 ```
 
 ### Wildcard Access
 
-For admin groups needing full access:
+For admin groups needing full access (still two parallel policy bindings):
 
 ```
-environment:management-zone IN ("*");
-storage:dt.security_context IN ("*");
-settings:dt.security_context IN ("*");
+# Gen3 admin: all data + settings, no boundary scope
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      settings:objects:read, settings:objects:write;
 ```
+
+```
+# Gen2 admin: all Classic entity access (transitional, remove once MZ retirement is complete)
+ALLOW environment:roles:manage-settings, environment:roles:viewer;
+```
+
+> **Don't write `MATCH('*')` on a Gen2 policy.** `MATCH` is a Gen3-domain operator only; using it as a wildcard on `storage:entities:read` (a Gen2 surface) would silently grant access to all Gen2 entities.
 
 ### Boundary Limitations
 
@@ -171,7 +221,7 @@ settings:dt.security_context IN ("*");
 |------------|-------------|------------|
 | **Max 10 conditions** | Only 10 lines per boundary | Create multiple boundaries |
 | **No AND between lines** | Each line is OR-combined | Use multiple boundaries for AND logic |
-| **MATCH storage-only** | `MATCH()` not supported in `environment:` domain | Use `startsWith` / `IN` for Classic entities |
+| **MATCH not in `environment:`** | `MATCH()` not supported in `environment:` domain (Classic MZ) | Use `IN` (preferred) for management zones |
 
 <a id="security-context-and-data-partitioning-strategy"></a>
 ## 4. Security Context and Data Partitioning Strategy
@@ -259,10 +309,17 @@ Use `storage:bucket-name` in boundaries to restrict team access to their data:
 // Policy: Grant read access to team's bucket
 ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
 ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans"
+```
 
-// Boundary: Restrict to team's buckets and security context
+```
+# Gen3 boundary — pair with a Gen3 policy (storage:*, settings:*)
 storage:bucket-name IN ("checkout_logs", "checkout_spans");
 storage:dt.security_context IN ("checkout");
+settings:dt.security_context IN ("checkout");
+```
+
+```
+# Gen2 boundary — pair with a Gen2 policy (environment:*), transitional
 environment:management-zone IN ("Checkout");
 ```
 
@@ -366,12 +423,17 @@ environment:management-zone IN ("checkout", "shared");
 ## 5. Common Boundary Patterns
 ### Pattern 1: Single Team Boundary
 
-Restrict to one team's data:
+Restrict to one team's data using two boundaries (Gen3 canonical + Gen2 transitional). Both attach to the same policy.
 
 ```
-environment:management-zone IN ("checkout");
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("checkout");
 settings:dt.security_context IN ("checkout");
+```
+
+```
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("checkout");
 ```
 
 ### Pattern 2: Team + Shared
@@ -379,9 +441,14 @@ settings:dt.security_context IN ("checkout");
 Team data plus shared infrastructure:
 
 ```
-environment:management-zone IN ("checkout", "shared", "infrastructure");
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("checkout", "shared", "infrastructure");
 settings:dt.security_context IN ("checkout", "shared");
+```
+
+```
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("checkout", "shared", "infrastructure");
 ```
 
 ### Pattern 3: Multiple Teams (Cross-Functional)
@@ -389,27 +456,42 @@ settings:dt.security_context IN ("checkout", "shared");
 For SRE or platform teams:
 
 ```
-environment:management-zone IN ("checkout", "payments", "catalog", "shared");
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("checkout", "payments", "catalog", "shared");
 settings:dt.security_context IN ("checkout", "payments", "catalog", "shared");
+```
+
+```
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("checkout", "payments", "catalog", "shared");
 ```
 
 ### Pattern 4: Environment Tier
 
 Production vs non-production:
 
-**Production:**
+**Production (two boundaries):**
 ```
-environment:management-zone IN ("prod-checkout", "prod-payments");
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("prod-checkout", "prod-payments");
 settings:dt.security_context IN ("prod-checkout", "prod-payments");
 ```
 
-**Non-Production:**
 ```
-environment:management-zone IN ("dev-checkout", "staging-checkout");
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("prod-checkout", "prod-payments");
+```
+
+**Non-Production (two boundaries):**
+```
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("dev-checkout", "staging-checkout");
 settings:dt.security_context IN ("dev-checkout", "staging-checkout");
+```
+
+```
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("dev-checkout", "staging-checkout");
 ```
 
 ### Pattern 5: Read-All, Write-Scoped
@@ -433,13 +515,14 @@ Boundary: environment:management-zone IN ("checkout");
 When `dt.security_context` follows the `comp:<component>/bu:<bu>/app:<app>` format (see **Structured Security Context Design** in **IAM-04**), app teams can access all component types for their application using a single wildcard boundary:
 
 ```
-// 3rd Gen signals and entities — wildcard on app dimension
+// 3rd Gen Grail data — wildcard on app dimension (mid-string)
 storage:dt.security_context MATCH('*/app:easytrade');
 
-// Classic entities — explicit per-component prefix (startsWith not supported in environment: domain)
-storage:dt.security_context startsWith('comp:app/bu:digital/app:easytrade');
-storage:dt.security_context startsWith('comp:db/bu:digital/app:easytrade');
-storage:dt.security_context startsWith('comp:lb/bu:digital/app:easytrade');
+// Smartscape/Classic entities — anchored MATCH per component
+// (do NOT use startsWith on storage:smartscape:read or storage:entities:read — known bug)
+storage:dt.security_context MATCH('comp:app/bu:digital/app:easytrade*');
+storage:dt.security_context MATCH('comp:db/bu:digital/app:easytrade*');
+storage:dt.security_context MATCH('comp:lb/bu:digital/app:easytrade*');
 ```
 
 This grants access to all data tagged with any component prefix for that application:
@@ -452,11 +535,11 @@ This grants access to all data tagged with any component prefix for that applica
 Infrastructure teams (database, network, OS) that need cross-application access to their component type use a leading `comp:` prefix to enable a single rule:
 
 ```
-// 3rd Gen signals and entities — all database components, all applications
+// 3rd Gen Grail data — all database components, all applications
 storage:dt.security_context MATCH('comp:db*');
 
-// Classic entities
-storage:dt.security_context startsWith('comp:db');
+// Smartscape/Classic entities — anchored MATCH (NOT startsWith — known bug)
+storage:dt.security_context MATCH('comp:db*');
 ```
 
 This grants access to all data matching:
@@ -464,7 +547,7 @@ This grants access to all data matching:
 - `comp:db/bu:digital/app:easytravel`
 - `comp:db/bu:corp/app:hipstershop`
 
-> **Dimension order is the key design decision.** Placing `comp` first in the string means component-based transversal access is always a simple prefix match. Access by `bu` or other mid-string dimensions requires `MATCH('*/bu:digital/*')` for Grail and explicit per-component rules for Classic entities.
+> **Dimension order is the key design decision.** Placing `comp` first in the string means component-based transversal access is always a simple anchored match. Access by `bu` or other mid-string dimensions requires `MATCH('*/bu:digital/*')`.
 
 ### Multi-Value Security Context (Upcoming)
 
@@ -510,25 +593,40 @@ For organizations serving multiple customers or business units that require stri
 
 ### Multi-Tenant Boundary Example
 
-**Tenant A Group:**
+**Tenant A Group (two boundaries):**
 ```
-environment:management-zone IN ("tenant-a");
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("tenant-a");
 settings:dt.security_context IN ("tenant-a");
 ```
 
-**Tenant B Group:**
 ```
-environment:management-zone IN ("tenant-b");
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("tenant-a");
+```
+
+**Tenant B Group (two boundaries):**
+```
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("tenant-b");
 settings:dt.security_context IN ("tenant-b");
 ```
 
-**Platform Team (cross-tenant):**
 ```
-environment:management-zone IN ("platform", "shared");
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("tenant-b");
+```
+
+**Platform Team (cross-tenant, two boundaries):**
+```
+# Gen3 boundary — pair with Gen3 policy
 storage:dt.security_context IN ("platform", "shared");
 settings:dt.security_context IN ("platform", "shared");
+```
+
+```
+# Gen2 boundary — pair with Gen2 policy (transitional)
+environment:management-zone IN ("platform", "shared");
 ```
 
 ### Entity Enrichment for Multi-Tenancy

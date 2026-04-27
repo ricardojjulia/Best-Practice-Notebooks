@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -31,11 +31,6 @@
 10. [Segment Design Checklist](#segment-design-checklist)
 
 ---
-
--------------|----------|
-| **Dynatrace Environment** | SaaS environment with Grail enabled |
-| **Permissions** | `segment:read` for viewing, `segment:write` for creating |
-| **Knowledge** | Completed ORGNZ-01 through ORGNZ-07 |
 
 ## Learning Objectives
 

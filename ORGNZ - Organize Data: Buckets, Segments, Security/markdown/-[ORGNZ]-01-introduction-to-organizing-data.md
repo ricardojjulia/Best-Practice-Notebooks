@@ -1,6 +1,6 @@
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -28,11 +28,6 @@ Dynatrace Grail organizes data in **buckets**, **tables**, and **views** to ensu
 7. [Organization Decision Framework](#organization-decision-framework)
 
 ---
-
--------------|----------|
-| **Dynatrace Environment** | SaaS environment with Grail enabled |
-| **Permissions** | `storage:buckets:read` for viewing data organization |
-| **Knowledge** | Basic familiarity with Dynatrace and DQL |
 
 ## Learning Objectives
 

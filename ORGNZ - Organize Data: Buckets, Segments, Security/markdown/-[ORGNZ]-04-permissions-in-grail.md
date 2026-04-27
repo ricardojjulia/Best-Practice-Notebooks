@@ -1,6 +1,6 @@
 # ORGNZ-04: Permissions in Grail Overview
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -30,11 +30,6 @@ Dynatrace provides a comprehensive permission model for Grail that applies to al
 9. [Choosing Your Permission Strategy](#choosing-your-permission-strategy)
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | IAM policy management permissions |
-| **Knowledge** | Completed ORGNZ-01 through ORGNZ-03 |
 
 ## Learning Objectives
 

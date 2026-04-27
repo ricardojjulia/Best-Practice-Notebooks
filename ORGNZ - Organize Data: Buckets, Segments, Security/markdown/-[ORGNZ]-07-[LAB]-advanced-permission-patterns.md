@@ -1,6 +1,6 @@
 # ORGNZ-07 LAB: Advanced Permission Patterns - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-07: Advan
 
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 
 This notebook covers advanced permission patterns including record-level permissions, field-based access, and combining multiple access control mechanisms for enterprise-scale data governance.
@@ -52,11 +52,6 @@ This notebook covers advanced permission patterns including record-level permiss
 8. Best Practices
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | IAM policy management permissions |
-| **Knowledge** | Completed ORGNZ-04 through ORGNZ-06 |
 
 
 By the end of this notebook, you will:

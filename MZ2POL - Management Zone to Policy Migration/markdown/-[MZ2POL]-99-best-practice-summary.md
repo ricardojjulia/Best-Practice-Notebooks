@@ -1,6 +1,6 @@
 # MZ2POL-99: Best Practice Summary
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/27/2026
 
 ## Overview
 
@@ -69,7 +69,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 
 | Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
-| Include all three domains in every boundary | `environment:management-zone IN ("LOB5");` + `storage:dt.security_context IN ("LOB5");` + `settings:dt.security_context IN ("LOB5");` | Critical |
+| Pair Gen2 + Gen3 policies with their own boundaries | Two parallel bindings on the group: (Gen3) `storage:dt.security_context` + `settings:dt.security_context` for Grail data and Settings 2.0; (Gen2 transitional) `environment:management-zone` for Classic entity access. Don't bundle conditions in one boundary — each boundary only filters its own policy domain | **Critical** |
 | Keep boundary conditions simple | One condition per line; each line is OR-combined within the boundary | Critical |
 | Stay within the 10-line limit per boundary | Create multiple boundaries if you need more than 10 conditions | Critical |
 | Use `startsWith` for environment/region prefixes | `storage:dt.security_context startsWith "prod-"` to match all production contexts | Recommended |

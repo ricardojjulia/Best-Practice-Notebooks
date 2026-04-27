@@ -1,6 +1,6 @@
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -29,11 +29,6 @@ If permissions on deployment-level attributes or bucket level are insufficient, 
 8. [Entity Security Context](#entity-security-context)
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | OpenPipeline configuration, IAM policy management |
-| **Knowledge** | Completed ORGNZ-04 and ORGNZ-05 |
 
 ## Learning Objectives
 

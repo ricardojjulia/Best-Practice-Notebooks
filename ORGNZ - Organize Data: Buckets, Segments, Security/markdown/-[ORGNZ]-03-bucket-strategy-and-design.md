@@ -30,11 +30,6 @@ A well-defined bucket strategy optimizes query performance, controls costs, and 
 
 ---
 
--------------|----------|
-| **Dynatrace Environment** | SaaS environment with Grail enabled |
-| **Permissions** | `storage:bucket-definitions:write` for bucket creation |
-| **Knowledge** | Completed ORGNZ-02 |
-
 ## Learning Objectives
 
 By the end of this notebook, you will:

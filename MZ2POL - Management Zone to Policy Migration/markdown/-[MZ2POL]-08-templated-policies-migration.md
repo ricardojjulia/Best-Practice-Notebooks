@@ -1,6 +1,6 @@
 # MZ2POL-08: Templated Policies for MZ Migration
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 9 of 9 | **Created:** February 2026 | **Last Updated:** 04/04/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 9 of 9 | **Created:** February 2026 | **Last Updated:** 04/27/2026
 
 ## Overview
 
@@ -99,14 +99,20 @@ ALLOW storage:*:write WHERE storage:dt.security_context = "${bindParam:lob}";
 ALLOW settings:objects:* WHERE settings:dt.security_context = "${bindParam:lob}";
 ```
 
-Combined with a **boundary** using the same scope:
+Combined with **two parallel boundaries** using the same scope (Gen2 boundary attaches to Gen2 policy, Gen3 boundary attaches to Gen3 policy):
+
 ```
-environment:management-zone IN ("LOB5");
+# Gen3 boundary — pairs with Gen3 policies (storage:* / settings:*)
 storage:dt.security_context IN ("LOB5");
 settings:dt.security_context IN ("LOB5");
 ```
 
-**Binding:** `{"parameters": {"lob": "LOB5"}}`
+```
+# Gen2 boundary — pairs with Gen2 policies (environment:*), transitional
+environment:management-zone IN ("LOB5");
+```
+
+**Binding:** `{"parameters": {"lob": "LOB5"}}` — applied to both bindings on the group.
 
 ### Conversion Decision Table
 
