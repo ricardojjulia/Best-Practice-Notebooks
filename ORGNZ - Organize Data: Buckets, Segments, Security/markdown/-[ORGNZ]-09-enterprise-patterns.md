@@ -1,6 +1,6 @@
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -31,11 +31,6 @@ This notebook brings together buckets, segments, and security context into compr
 10. [Series Summary](#series-summary)
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | Full IAM and bucket management permissions |
-| **Knowledge** | Completed ORGNZ-01 through ORGNZ-08 |
 
 ## Learning Objectives
 

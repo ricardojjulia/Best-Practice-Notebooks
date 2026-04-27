@@ -63,6 +63,7 @@ Drop rules and parsing patterns translate predictably between NRQL/Grok and DPL.
 -- NRQL
 DELETE FROM Log WHERE message LIKE '%health%' AND service = 'frontend'
 ```
+
 ```
 -- DPL (OpenPipeline filterOut)
 filterOut: contains(content, "health") AND service.name == "frontend"
@@ -73,6 +74,7 @@ filterOut: contains(content, "health") AND service.name == "frontend"
 -- Grok
 %{IPORHOST:client_ip} - %{NUMBER:response_ms} %{TIMESTAMP_ISO8601:ts}
 ```
+
 ```
 -- DPL
 IPADDR:client_ip ' - ' INT:response_ms ' ' TIMESTAMP('yyyy-MM-dd''T''HH:mm:ss.SSS'):ts

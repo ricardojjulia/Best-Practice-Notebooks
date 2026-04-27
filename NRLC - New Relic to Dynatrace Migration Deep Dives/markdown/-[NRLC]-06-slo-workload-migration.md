@@ -41,6 +41,7 @@ Every SLO contains a NRQL indicator query that must produce the equivalent DQL. 
 SELECT percentage(count(*), WHERE error IS FALSE) FROM Transaction
 -- target: > 99.9
 ```
+
 ```
 -- DQL (SLO metric expression)
 100.0 * countIf(isNull(error)) / count()
@@ -53,6 +54,7 @@ SELECT percentage(count(*), WHERE error IS FALSE) FROM Transaction
 SELECT percentage(count(*), WHERE duration < 0.5) FROM Transaction
 -- target: > 99
 ```
+
 ```
 -- DQL
 100.0 * countIf(duration < duration("500ms")) / count()
@@ -65,6 +67,7 @@ SELECT percentage(count(*), WHERE duration < 0.5) FROM Transaction
 SELECT count(*) FROM TransactionError SINCE 1 hour ago
 -- threshold: above (1 - SLO_target) * total
 ```
+
 ```
 -- DQL (in SLO definition)
 100.0 * countIf(isNotNull(error)) / count()

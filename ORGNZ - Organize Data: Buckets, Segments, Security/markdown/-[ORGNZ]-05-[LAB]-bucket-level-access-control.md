@@ -1,6 +1,6 @@
 # ORGNZ-05 LAB: Bucket-Level Access Control - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-05: Bucke
 
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 
 Bucket-level access control provides a straightforward way to isolate data by team, application, or business unit. By granting permissions to specific buckets, you can ensure teams only access data relevant to their responsibilities.
@@ -51,11 +51,6 @@ Bucket-level access control provides a straightforward way to isolate data by te
 7. When Bucket-Level Isn't Enough
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | IAM policy management permissions |
-| **Knowledge** | Completed ORGNZ-04 |
 
 
 By the end of this notebook, you will:

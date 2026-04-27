@@ -267,7 +267,7 @@ comp:<component>/bu:<business-unit>/app:<application>
 | Easytrade database | `comp:db/bu:digital/app:easytrade` |
 | Easytrade load balancer | `comp:lb/bu:digital/app:easytrade` |
 
-> **⚠️ Dimension order matters for Classic entities.** Dynatrace Classic IAM uses prefix-based matching (`startsWith`). Place the dimension you need transversal access on **first** — typically `comp` for infrastructure teams.
+> **⚠️ Dimension order matters for Smartscape/Classic entities.** Place the dimension you need transversal access on **first** — typically `comp` for infrastructure teams. Use `MATCH('comp:db*')` to anchor at the start (equivalent to a prefix match). **Do not use `startsWith` on `storage:smartscape:read` or `storage:entities:read`** — there is a known bug; `MATCH` with a trailing `*` is the supported alternative.
 
 **Using `MATCH()` for flexible policy conditions:**
 
@@ -285,11 +285,12 @@ Transversal database team — access all database components across all applicat
 ALLOW storage:metrics:read WHERE storage:dt.security_context MATCH('comp:db*');
 ALLOW storage:logs:read    WHERE storage:dt.security_context MATCH('comp:db*');
 ALLOW storage:spans:read   WHERE storage:dt.security_context MATCH('comp:db*');
-// Classic entities (prefix-based)
-ALLOW storage:entities:read WHERE storage:dt.security_context startsWith('comp:db');
+// Smartscape/Classic entities — use MATCH (NOT startsWith — known bug)
+ALLOW storage:entities:read  WHERE storage:dt.security_context MATCH('comp:db*');
+ALLOW storage:smartscape:read WHERE storage:dt.security_context MATCH('comp:db*');
 ```
 
-> **Note:** `MATCH()` applies to 3rd Gen (Grail) data. Classic entity access (`storage:entities:read`) must use `startsWith` with explicit component prefixes. See **IAM-05** for the corresponding boundary patterns.
+> **Note:** `MATCH()` is the recommended operator for both Grail signals (`storage:logs:read` etc.) and Smartscape/Classic entity access (`storage:smartscape:read`, `storage:entities:read`). Anchor at the start with a trailing `*` to mimic prefix matching (e.g. `MATCH('comp:db*')`). `startsWith` has a known bug on `storage:smartscape:read` and is no longer recommended. See **IAM-05** for the corresponding boundary patterns.
 
 <a id="common-policy-patterns"></a>
 ## 5. Common Policy Patterns

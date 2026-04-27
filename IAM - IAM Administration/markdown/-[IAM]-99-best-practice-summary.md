@@ -1,6 +1,6 @@
 # IAM-99: Best Practice Summary
 
-> **Series:** IAM — IAM Administration | **Notebook:** Bonus Summary | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** IAM — IAM Administration | **Notebook:** Bonus Summary | **Created:** March 2026 | **Last Updated:** 04/27/2026
 
 ## Overview
 
@@ -100,7 +100,7 @@ This notebook distills every actionable best practice from the IAM series (IAM-0
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
-| 28 | Define boundaries across all three domains | Every boundary must include: `environment:management-zone`, `storage:dt.security_context`, AND `settings:dt.security_context` | **Critical** | Boundaries |
+| 28 | Split Gen2 + Gen3 conditions across separate boundaries | Don't bundle inside one boundary. Boundary 1 (Gen3): `storage:dt.security_context IN (...)` + `settings:dt.security_context IN (...)`. Boundary 2 (Gen2 transitional): `environment:management-zone IN (...)`. Attach both to the policy — multiple boundaries on one policy is supported, and the split lets MZ retirement remove a boundary cleanly | **Critical** | **Boundaries** |
 | 29 | Include "shared" context in team boundaries | `storage:dt.security_context IN ("team-a", "shared", "infrastructure")` for infrastructure visibility | **Recommended** | Boundaries |
 | 30 | Achieve >95% security context coverage on entities | Query: `fetch dt.entity.service` and check `countIf(isNotNull(dt.security_context)) / count()`. Target: >95% | **Critical** | Boundaries |
 | 31 | Use Entity Enrichment rules (not auto-tags) for security context | Settings > Entity Enrichment: assign `dt.security_context` based on host group, K8s namespace, or host property | **Recommended** | Boundaries |

@@ -1,6 +1,6 @@
 # MZ2POL-02: Understanding the New Access Control Model
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 04/27/2026
 
 ## Overview
 
@@ -244,12 +244,26 @@ ALLOW storage:metrics:read WHERE storage:bucket.name = "frontend_metrics"
 
 Combine buckets with security context for layered control:
 
+**Pair Gen3 policies with Gen3 boundaries; pair Gen2 policies with Gen2 boundaries.** Two parallel bindings, not one mixed boundary:
+
 ```
-// Boundary: Restrict to team's buckets AND security context
-storage:bucket.name IN ("frontend_logs", "frontend_spans", "frontend_metrics");
-storage:dt.security_context IN ("team-frontend");
+# Gen3 binding: storage policies + Gen3 boundary
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read
+WHERE storage:bucket.name IN ("frontend_logs", "frontend_spans", "frontend_metrics")
+  AND storage:dt.security_context IN ("team-frontend");
+```
+
+```
+# Gen2 policy (transitional)
+ALLOW environment:roles:viewer;
+```
+
+```
+# Gen2 boundary
 environment:management-zone IN ("Frontend-Team");
 ```
+
+> **`MATCH` is Gen3-only.** Don't use `MATCH('*')` on `storage:entities:read` (a Gen2 surface) — it silently grants all Gen2 entities.
 
 ### When to Use Buckets vs Other Options
 

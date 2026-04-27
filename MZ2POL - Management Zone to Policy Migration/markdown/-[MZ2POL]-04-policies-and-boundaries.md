@@ -1,6 +1,6 @@
 # MZ2POL-04: Policies and Boundaries
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 5 of 9 | **Created:** December 2025 | **Last Updated:** 04/27/2026
 
 ## Overview
 
@@ -259,24 +259,35 @@ storage:dt.security_context = "team-platform"
 ---
 
 <a id="best-practice-complete-boundary-for-mz-restriction"></a>
-## 6. Best Practice: Complete Boundary for MZ Restriction
-When restricting access to replicate a Management Zone, use **all three domains** in your boundary query:
+## 6. Best Practice: Two Boundaries (Gen3 + Gen2 Transitional)
+When restricting access to replicate a Management Zone, **don't bundle Gen2 and Gen3 conditions inside one boundary.** Split them into two boundaries and attach both to the policy. A policy carries multiple boundaries; their effective scope is the intersection.
 
 ```
-environment:management-zone IN ("LOB5");
-storage:dt.security_context IN ("LOB5");
-settings:dt.security_context IN ("LOB5");
+# Gen3 policy binding (canonical) — Grail data + Settings 2.0
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      settings:objects:read, settings:objects:write
+WHERE storage:dt.security_context IN ("LOB5")
+   OR settings:dt.security_context IN ("LOB5");
 ```
 
-### Why All Three Domains?
+```
+# Gen2 policy binding (transitional) — Classic entity access via Management Zones
+ALLOW environment:roles:viewer
+WHERE environment:management-zone IN ("LOB5");
+```
 
-| Domain | What It Restricts |
-|--------|-------------------|
-| `environment:management-zone` | Classic entity access (hosts, services, processes) |
-| `storage:dt.security_context` | Grail data (logs, spans, metrics, events) |
-| `settings:dt.security_context` | Settings objects |
+### Why Split Gen2 from Gen3?
 
-Using only one domain leaves gaps in access control. For complete MZ replacement, include all three.
+| Boundary | Domain | What It Restricts | Generation |
+|---|---|---|---|
+| **Boundary 1 (Gen3)** | `storage:dt.security_context` | Grail data (logs, spans, metrics, events) | Modern, canonical |
+| **Boundary 1 (Gen3)** | `settings:dt.security_context` | Settings 2.0 objects | Modern, canonical |
+| **Boundary 2 (Gen2)** | `environment:management-zone` | Classic entity access (hosts, services, processes) | Transitional |
+
+Each boundary's conditions evaluate against the policy it's attached to — using `environment:management-zone` to scope a `storage:logs:read` policy is a no-op (the Gen3 policy doesn't read `environment:` conditions), and using `storage:dt.security_context` to scope an `environment:roles:viewer` policy is also a no-op. Mixing them in one boundary creates the illusion of unified scope while leaving one path wide open. Use **two parallel policy bindings** on the same group instead.
+
+Until MZ retirement is complete, keep both bindings active so legacy entity-level paths still resolve. After retirement, the Gen2 binding is removed cleanly without touching the Gen3 one. **Don't use `MATCH` on a Gen2 policy** — `MATCH('*')` against `storage:entities:read` (a Gen2 surface) silently grants access to all Gen2 entities.
+---
 
 ---
 
@@ -286,12 +297,15 @@ For organizations using SAML/SSO with Active Directory, this structure provides 
 
 ```
 Group: "LOB5-Team" (SAML from Active Directory)
-├── Policy: Dynatrace Viewer (standard read access)
-└── Policy: Dynatrace Professional
-    └── Boundary:
-        environment:management-zone IN ("LOB5");
-        storage:dt.security_context IN ("LOB5");
-        settings:dt.security_context IN ("LOB5");
+├── Policy binding 1 — Gen3 (canonical):
+│   Policy: Dynatrace Standard User (Grail data + Settings 2.0)
+│   Boundary:
+│     storage:dt.security_context IN ("LOB5");
+│     settings:dt.security_context IN ("LOB5");
+└── Policy binding 2 — Gen2 (transitional):
+    Policy: environment:roles:viewer
+    Boundary:
+      environment:management-zone IN ("LOB5");
 ```
 
 ### Key Benefits
@@ -360,17 +374,25 @@ Group: "LOB5-Team" (SAML from AD)
 1. Set security context on entities:
    - Services get dt.security_context = "team-frontend"
 
-2. Create boundary:
-   Name: Frontend Team Scope
-   Query:
-   environment:management-zone IN ("Frontend-Team");
-   storage:dt.security_context IN ("team-frontend");
-   settings:dt.security_context IN ("team-frontend");
+2. Create two parallel policy bindings — Gen3 with Gen3 boundary, Gen2 with Gen2 boundary:
 
-3. Bind to group:
+   **Binding 1 — Gen3 (canonical):**
+   ```
+   ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+         settings:objects:read, settings:objects:write
+   WHERE storage:dt.security_context IN ("team-frontend")
+      OR settings:dt.security_context IN ("team-frontend");
+   ```
+
+   **Binding 2 — Gen2 (transitional, until MZ retirement):**
+   ```
+   ALLOW environment:roles:viewer
+   WHERE environment:management-zone IN ("Frontend-Team");
+   ```
+
+3. Attach both bindings to the group:
    Group: Frontend Developers (SAML)
-   Policy: Dynatrace Standard User
-   Boundary: Frontend Team Scope
+   Bindings: Gen3 binding + Gen2 binding (both active during migration window)
 ```
 
 ### Migration Example: Environment MZ
@@ -457,17 +479,35 @@ When migrating from Management Zones, leverage **Primary Grail Fields** for cons
 
 When replacing team-based MZs, use buckets in **both policies AND boundaries**:
 
-```
-// Policy: Grant team access to their specific buckets
-ALLOW storage:logs:read WHERE storage:bucket-name = "frontend_logs"
-ALLOW storage:spans:read WHERE storage:bucket-name = "frontend_spans"
-ALLOW storage:metrics:read WHERE storage:bucket-name = "frontend_metrics"
+**Pair Gen3 policies with Gen3 boundaries; pair Gen2 policies with Gen2 boundaries.** Two parallel bindings on the group, not one mixed boundary:
 
-// Boundary: Restrict to team's buckets and security context
-storage:bucket-name IN ("frontend_logs", "frontend_spans", "frontend_metrics");
-storage:dt.security_context IN ("team-frontend");
+```
+# Gen3 policy
+ALLOW storage:logs:read,
+      storage:spans:read,
+      storage:metrics:read,
+      settings:objects:read,
+      settings:objects:write;
+```
+
+```
+# Gen3 boundary — scoped by bucket + security context
+storage:bucket-name          IN ("frontend_logs", "frontend_spans", "frontend_metrics");
+storage:dt.security_context  IN ("team-frontend");
+settings:dt.security_context IN ("team-frontend");
+```
+
+```
+# Gen2 policy — Classic entity access, transitional
+ALLOW environment:roles:viewer;
+```
+
+```
+# Gen2 boundary
 environment:management-zone IN ("Frontend-Team");
 ```
+
+> **Don't** use `MATCH` on Gen2 policies (e.g., `MATCH('*')` against `storage:entities:read` — that's a Gen2 surface). `MATCH` is a Gen3-only operator; using it as a wildcard in a Gen2 boundary will silently grant access to all Gen2 entities.
 
 ### Migration Mapping: MZ to Buckets
 

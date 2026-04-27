@@ -1,6 +1,6 @@
 # ORGNZ-03 LAB: Bucket Strategy and Design - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -30,7 +30,7 @@ This lab notebook contains 3 hands-on exercises extracted from **ORGNZ-03: Bucke
 
 # ORGNZ-03: Bucket Strategy and Design
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 
 A well-defined bucket strategy optimizes query performance, controls costs, and ensures compliance. This notebook covers naming conventions, retention planning, organizational alignment, and common bucket design patterns.
@@ -52,11 +52,6 @@ A well-defined bucket strategy optimizes query performance, controls costs, and 
 8. Bucket Design Checklist
 
 ---
-
--------------|----------|
-| **Dynatrace Environment** | SaaS environment with Grail enabled |
-| **Permissions** | `storage:bucket-definitions:write` for bucket creation |
-| **Knowledge** | Completed ORGNZ-02 |
 
 
 By the end of this notebook, you will:

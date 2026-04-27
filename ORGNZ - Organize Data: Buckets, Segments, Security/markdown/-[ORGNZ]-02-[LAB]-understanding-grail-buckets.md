@@ -1,6 +1,6 @@
 # ORGNZ-02 LAB: Understanding Grail Buckets - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -32,7 +32,7 @@ This lab notebook contains 5 hands-on exercises extracted from **ORGNZ-02: Under
 
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 
 **Buckets** are logical storage containers in Dynatrace Grail where records are stored. Think of a bucket as a folder in a filesystem. Use buckets to group telemetry data that naturally belongs together, such as data from the same region, environment, or with the same sensitivity classification.
@@ -56,11 +56,6 @@ This lab notebook contains 5 hands-on exercises extracted from **ORGNZ-02: Under
 10. When to Create Custom Buckets
 
 ---
-
--------------|----------|
-| **Dynatrace Environment** | SaaS environment with Grail enabled |
-| **Permissions** | `storage:buckets:read` for viewing, `storage:bucket-definitions:write` for creating |
-| **Knowledge** | Completed ORGNZ-01 |
 
 
 | Permission | Purpose |

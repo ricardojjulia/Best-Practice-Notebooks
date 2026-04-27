@@ -43,6 +43,7 @@ Each NRQL alert condition contains a query that becomes a DQL Metric Event. The 
 SELECT count(*) FROM TransactionError WHERE appName = 'checkout'
 -- threshold: above 10 for at least 5 minutes
 ```
+
 ```
 -- DQL (Metric Event query)
 fetch spans, from:-5m
@@ -57,6 +58,7 @@ fetch spans, from:-5m
 SELECT percentile(duration, 95) FROM Transaction WHERE appName = 'api'
 -- threshold: above 1.0 for at least 5 minutes
 ```
+
 ```
 -- DQL
 fetch spans, from:-5m
@@ -71,6 +73,7 @@ fetch spans, from:-5m
 SELECT percentage(count(*), WHERE error) FROM Transaction
 -- threshold: above 5 (= 5%) for 5 minutes
 ```
+
 ```
 -- DQL
 fetch spans, from:-5m

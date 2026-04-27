@@ -43,6 +43,7 @@ Every dashboard widget contains a query. These are the NRQL→DQL patterns that 
 SELECT count(*), average(duration) FROM Transaction
 WHERE appName = 'checkout' SINCE 1 hour ago FACET host
 ```
+
 ```
 -- DQL
 fetch spans, from:-1h
@@ -55,6 +56,7 @@ fetch spans, from:-1h
 -- NRQL
 SELECT count(*) FROM Transaction TIMESERIES 5 minutes
 ```
+
 ```
 -- DQL
 fetch spans
@@ -66,6 +68,7 @@ fetch spans
 -- NRQL
 SELECT percentage(count(*), WHERE httpResponseCode = 200) FROM Transaction
 ```
+
 ```
 -- DQL
 fetch spans
@@ -77,6 +80,7 @@ fetch spans
 -- NRQL
 SELECT count(*) FROM Transaction COMPARE WITH 1 week ago SINCE 1 day ago
 ```
+
 ```
 -- DQL
 fetch spans, from:-1d

@@ -1,6 +1,6 @@
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -31,11 +31,6 @@
 10. [When to Create Custom Buckets](#when-to-create-custom-buckets)
 
 ---
-
--------------|----------|
-| **Dynatrace Environment** | SaaS environment with Grail enabled |
-| **Permissions** | `storage:buckets:read` for viewing, `storage:bucket-definitions:write` for creating |
-| **Knowledge** | Completed ORGNZ-01 |
 
 ### Bucket Administration Permissions
 

@@ -1,6 +1,6 @@
 # ORGNZ-06 LAB: Security Context - Hands-on Exercises
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Type:** LAB | **Created:** February 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -31,7 +31,7 @@ This lab notebook contains 4 hands-on exercises extracted from **ORGNZ-06: Secur
 
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 
 If permissions on deployment-level attributes or bucket level are insufficient, Dynatrace allows you to set up **fine-grained permissions** by adding a `dt.security_context` attribute to your data. This enables record-level access control that scales beyond bucket limits.
@@ -53,11 +53,6 @@ If permissions on deployment-level attributes or bucket level are insufficient, 
 8. Entity Security Context
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | OpenPipeline configuration, IAM policy management |
-| **Knowledge** | Completed ORGNZ-04 and ORGNZ-05 |
 
 
 By the end of this notebook, you will:

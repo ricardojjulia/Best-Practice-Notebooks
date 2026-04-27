@@ -1,6 +1,6 @@
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
 
 ## Overview
 
@@ -28,11 +28,6 @@ Bucket-level access control provides a straightforward way to isolate data by te
 7. [When Bucket-Level Isn't Enough](#when-bucket-level-isnt-enough)
 
 ---
-
--------------|----------|
-| **Dynatrace Account** | Account-level administrative access |
-| **Permissions** | IAM policy management permissions |
-| **Knowledge** | Completed ORGNZ-04 |
 
 ## Learning Objectives
 
