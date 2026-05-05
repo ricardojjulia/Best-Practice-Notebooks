@@ -39,9 +39,15 @@ Framework for assessing and advancing Dynatrace observability adoption across th
 - [ADOPT-99: Best Practice Summary](ADOPT%20-%20Observability%20Adoption%20%26%20Maturity/markdown/-%5BADOPT%5D-99-best-practice-summary.md) — Consolidated best practices from the ADOPT series
 
 ### [AIOPS - Dynatrace Intelligence](AIOPS%20-%20Dynatrace%20Intelligence/README.md)
-Comprehensive guide to AIOps and Dynatrace Intelligence capabilities.
-
-*Notebooks coming soon.*
+Comprehensive guide to AIOps and Dynatrace Intelligence — Causal AI, Predictive AI, and Generative AI capabilities across the platform.
+- [AIOPS-01: Dynatrace Intelligence Overview](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-01-dynatrace-intelligence-overview.md) — Causal, Predictive, and Generative AI categories and where they appear in the product
+- [AIOPS-02: Anomaly Detection](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-02-anomaly-detection.md) — Static thresholds, auto-adaptive, seasonal baselines, and multi-dimensional detection
+- [AIOPS-03: Davis AI — Problems and Root Cause Analysis](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-03-davis-ai-problems-and-root-cause.md) — Causal AI engine, problem grouping via Smartscape, and DQL for querying problems
+- [AIOPS-04: Davis CoPilot — Dynatrace Assist for Investigation](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-04-davis-copilot-dynatrace-assist.md) — Generative AI surfaces, NL-to-DQL, problem summaries, and investigative patterns
+- [AIOPS-05: AI Models — Causal, Predictive, and Generative](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-05-ai-models.md) — Model inventory, responsibilities, costs, and governance considerations
+- [AIOPS-06: AI Integrations and Agentic Workflows](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-06-ai-integrations-and-agentic-workflows.md) — AI Workflow tasks, Dynatrace MCP server, and external agent integration
+- [AIOPS-07: Putting It Together — Detect, Investigate, Remediate](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-07-putting-it-together.md) — Composing all AI categories into the full operational AIOps pattern
+- [AIOPS-99: Series Summary](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-99-series-summary.md) — DQL query index, cross-series pointers, and next steps for an AIOps initiative
 
 ### [AUTOM - Dynatrace Automation](AUTOM%20-%20Dynatrace%20Automation/README.md)
 Comprehensive guide to automating Dynatrace configuration and operations.
