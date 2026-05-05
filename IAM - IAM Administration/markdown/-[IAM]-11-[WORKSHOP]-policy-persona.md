@@ -1,6 +1,6 @@
 # IAM-11: Policy Persona Workshop
 
-> **Series:** IAM — IAM Administration | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** IAM — IAM Administration | **Notebook:** Bonus Workshop | **Created:** February 2026 | **Last Updated:** 04/27/2026
 
 ## Overview
 
@@ -327,14 +327,14 @@ Consider five dimensions:
 
 #### Data Access Matrix Template
 
-| Persona | Metrics | Logs | Traces | Events | Boundary Scope | Sensitive Fields |
-|---------|:---:|:---:|:---:|:---:|----------------|:---:|
-| Standard User | All | Own apps | Own apps | All | App boundary | No |
-| Power User | All | All | All | All | Environment-wide | No |
-| SRE - Scoped | All | Own org | Own org | All | Org boundary | Yes |
-| SRE - Platform | All | All | All | All | No restriction | Yes |
-| Security Viewer | None | Audit only | None | Security events | Audit bucket only | No |
-| Admin | All | All | All | All | No restriction | Yes |
+| Persona | Metrics | Logs | Traces | Events | Gen3 Boundary (Grail data) | Gen2 Boundary (Classic entities) | Sensitive Fields |
+|---------|:---:|:---:|:---:|:---:|---|---|:---:|
+| Standard User | All | Own apps | Own apps | All | `storage:dt.security_context IN ("team")` | `environment:management-zone IN ("Team-MZ")` | No |
+| Power User | All | All | All | All | None (env-wide) | None (env-wide) | No |
+| SRE - Scoped | All | Own org | Own org | All | `storage:dt.security_context IN ("org")` | `environment:management-zone IN ("Org-MZ")` | Yes |
+| SRE - Platform | All | All | All | All | None (env-wide) | None (env-wide) | Yes |
+| Security Viewer | None | Audit only | None | Security events | `storage:bucket-name IN ("default_audit_logs")` | None | No |
+| Admin | All | All | All | All | None (env-wide) | None (env-wide) | Yes |
 
 #### Deliverable
 
@@ -387,7 +387,9 @@ ALLOW settings:objects:read, settings:objects:write, settings:schemas:read
 
 #### Deliverable
 
-A policy statement (or template reference from **IAM-10**) for each persona covering configuration access. You should have 3 policies per persona (UI + Data + Config) = typically 15-21 policy documents total.
+A policy statement (or template reference from **IAM-10**) for each persona covering configuration access.
+
+> **Binding count:** Scoped personas (Standard User, SRE-Scoped, Security Viewer) need **4 policy bindings**: UI + Gen3-Data + Gen2-Data (Classic entity) + Config. Unscoped personas (Power User, SRE-Platform, Admin) need **3 bindings**: UI + Data + Config. Budget 18-24 policy bindings for a typical 6-persona deployment. See **Writing Policies** for the complete Standard User example showing all four bindings.
 
 <a id="writing-policies"></a>
 
@@ -434,7 +436,8 @@ For each persona, compose three policy documents using your deliverables from Go
 | Step | Input | Output Policy |
 |------|-------|---------------|
 | 1 | Goal 4 app visibility matrix | `<SCOPE>-<PERSONA>-UI` |
-| 2 | Goal 5 data access matrix | `<SCOPE>-<PERSONA>-Data` |
+| 2a | Goal 5 Gen3 Grail data requirements | `<SCOPE>-<PERSONA>-Data` (Gen3) |
+| 2b | Goal 5 Gen2 Classic entity requirements | `<SCOPE>-<PERSONA>-Data-Classic` (Gen2; omit if env-wide) |
 | 3 | Goal 3 schema audit + Goal 6 config design | `<SCOPE>-<PERSONA>-Config` |
 
 **Example: Complete Standard User policy set**
@@ -451,11 +454,20 @@ ALLOW document:documents:read;
 ```
 
 ```
-// GLOBAL-Standard-Data
-ALLOW storage:logs:read WHERE storage:dt.security_context = "${bindParam:team}";
-ALLOW storage:spans:read WHERE storage:dt.security_context = "${bindParam:team}";
+// GLOBAL-Standard-Data (Gen3 Grail data — pair with a Gen3 boundary)
+// Gen3 boundary: storage:dt.security_context IN ("team"); settings:dt.security_context IN ("team");
+ALLOW storage:logs:read WHERE storage:dt.security_context IN ("${bindParam:team}");
+ALLOW storage:spans:read WHERE storage:dt.security_context IN ("${bindParam:team}");
 ALLOW storage:metrics:read;
 ALLOW storage:events:read;
+```
+
+```
+// GLOBAL-Standard-Data-Classic (Gen2 Classic entity access — pair with a Gen2 boundary)
+// Gen2 boundary: environment:management-zone IN ("Team-MZ");
+// Attach this binding SEPARATELY from the Gen3 binding above — never merge boundary conditions.
+// Remove this binding when Management Zone retirement is complete.
+ALLOW environment:roles:viewer;
 ```
 
 ```
@@ -511,15 +523,22 @@ DT-<SCOPE>-<PERSONA>
 
 ### Boundary Naming Convention
 
+Gen3 (Grail data) and Gen2 (Classic entities) boundaries are **separate named entities** — never merged into one boundary block. Use a suffix to distinguish them:
+
 ```
-bnd-<ISOLATION-TYPE>-<SCOPE>
+bnd-gen3-<ISOLATION-TYPE>-<SCOPE>   ← storage:/settings: domain conditions
+bnd-gen2-<ISOLATION-TYPE>-<SCOPE>   ← environment: domain conditions
 ```
 
-| Boundary Name | Isolation |
-|--------------|-----------|
-| `bnd-team-checkout` | Data scoped to the checkout team |
-| `bnd-env-production` | Data scoped to production environment |
-| `bnd-audit-security` | Audit logs only |
+| Boundary Name | Domain | Conditions |
+|---|---|---|
+| `bnd-gen3-team-checkout` | Gen3 (Grail) | `storage:dt.security_context IN ("checkout");` `settings:dt.security_context IN ("checkout");` |
+| `bnd-gen2-team-checkout` | Gen2 (Classic) | `environment:management-zone IN ("Checkout-Team");` |
+| `bnd-gen3-env-production` | Gen3 (Grail) | `storage:dt.security_context IN ("production");` |
+| `bnd-gen2-env-production` | Gen2 (Classic) | `environment:management-zone IN ("Production-MZ");` |
+| `bnd-gen3-audit-security` | Gen3 (Grail) | `storage:bucket-name IN ("default_audit_logs");` |
+
+> **Two bindings per scoped group:** attach `bnd-gen3-team-*` to the Gen3 data policy binding, and `bnd-gen2-team-*` to the Gen2 Classic entity policy binding. See **IAM-05: Boundary Design Patterns** for the full two-binding pattern.
 
 <a id="policy-flow"></a>
 
@@ -566,8 +585,8 @@ Use the following DQL query to audit recent IAM changes and confirm your policy 
 // Use this after binding persona policies to verify assignments are in place
 // Note: audit log field names may vary by tenant — adjust filters as needed
 fetch logs, from:-7d
-| filter matchesPhrase(log.source, "audit")
-| filter matchesPhrase(content, "policy") or matchesPhrase(content, "group")
+| filter contains(log.source, "audit")
+| filter contains(content, "policy") or contains(content, "group")
 | fields timestamp, content
 | sort timestamp desc
 | limit 50
