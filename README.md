@@ -23,7 +23,7 @@ Series are grouped into six categories for navigation. An alphabetical index fol
 - **Data Processing & Analytics** — ingestion, shaping, querying, dashboards
   [OPLOGS](#oplogs---openpipeline-logs) · [OPIPE](#opipe---openpipeline-beyond-logs) · [SPANS](#spans---distributed-tracing-and-spans) · [BIZEV](#bizev---business-events--funnel-analysis) · [DASH](#dash---dashboard-design--building)
 - **Automation & Workflows** — configuration-as-code and operational workflows
-  [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications)
+  [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications) · [AIOPS](#aiops---dynatrace-intelligence)
 - **Migrations** — moving to Dynatrace or between Dynatrace environments
   [M2S](#m2s---managed-to-saas-migration) · [S2S](#s2s---saas-to-saas-migration) · [S2D](#s2d---splunk-to-dynatrace-migration) · [SL2DT](#sl2dt---sumo-logic-to-dynatrace) · [NR2DT](#nr2dt---new-relic-to-dynatrace-migration-steps) · [NRLC](#nrlc---new-relic-to-dynatrace-migration-deep-dives) · [OPMIG](#opmig---openpipeline-migration) · [MZ2POL](#mz2pol---management-zone-to-policy-migration)
 
@@ -37,6 +37,11 @@ Framework for assessing and advancing Dynatrace observability adoption across th
 - [ADOPT-04: Team Enablement](ADOPT%20-%20Observability%20Adoption%20%26%20Maturity/markdown/-%5BADOPT%5D-04-team-enablement.md) — Training and organization strategies
 - [ADOPT-05: Optimization Roadmap](ADOPT%20-%20Observability%20Adoption%20%26%20Maturity/markdown/-%5BADOPT%5D-05-optimization-roadmap.md) — Building your adoption roadmap
 - [ADOPT-99: Best Practice Summary](ADOPT%20-%20Observability%20Adoption%20%26%20Maturity/markdown/-%5BADOPT%5D-99-best-practice-summary.md) — Consolidated best practices from the ADOPT series
+
+### [AIOPS - Dynatrace Intelligence](AIOPS%20-%20Dynatrace%20Intelligence/README.md)
+Comprehensive guide to AIOps and Dynatrace Intelligence capabilities.
+
+*Notebooks coming soon.*
 
 ### [AUTOM - Dynatrace Automation](AUTOM%20-%20Dynatrace%20Automation/README.md)
 Comprehensive guide to automating Dynatrace configuration and operations.
