@@ -1,10 +1,12 @@
 # ORGNZ-04: Permissions in Grail Overview
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 4 of 10 | **Created:** January 2026 | **Last Updated:** 04/30/2026
 
 ## Overview
 
 Dynatrace provides a comprehensive permission model for Grail that applies to all telemetry data including metrics, logs, spans, and events. Permissions can be assigned at the **bucket**, **table**, **record**, and **field** level. Without permissions, users cannot query data from Grail.
+
+> **Canonical pattern (for production guidance):** This notebook is a conceptual overview — the policy examples below illustrate how permissions work, not what to ship in production. For the canonical production pattern (parameterized policies on `dt.security_context` as the boundary spine, with bucket-match as a scenario-driven overlay), see **[IAM REFERENCE.md § Policy Parameterization and Boundary Standardization](../../iam/docs/REFERENCE.md#policy-parameterization-and-boundary-standardization)**. The default for general team-scoped data access is `dt.security_context` parameterization; bucket boundaries layer in only when there's a specific reason (compliance separation, retention isolation, hard cost attribution).
 
 ## Prerequisites
 
@@ -208,13 +210,16 @@ This allows multiple teams to share buckets while seeing only authorized data.
 
 <a id="choosing-your-permission-strategy"></a>
 ## Choosing Your Permission Strategy
+
+> **Default for general team-scoped data access:** `dt.security_context` + record-level permissions (the second row below). Bucket-level boundaries fit in specific scenarios (compliance separation, retention isolation, hard cost attribution) but aren't a general substitute for `dt.security_context`. See **[IAM REFERENCE.md § Bucket-Match Overlay](../../iam/docs/REFERENCE.md#bucket-match-overlay-scenario-driven)** for the scenario gating.
+
 | Scenario | Recommended Approach |
 |----------|---------------------|
-| Small org, few teams | Bucket-level policies |
-| Large org, many teams | Security context + record-level |
-| Kubernetes-centric | Namespace-based policies |
-| Multi-cloud | Cloud account-based policies |
-| Complex hierarchy | Hierarchical security context |
+| **Compliance / retention / hard-cost separation** | Bucket-level policies (the bucket IS the boundary) |
+| General team-scoped access (any org size) | Security context + record-level |
+| Kubernetes-centric | Namespace-based policies (or `dt.security_context` derived from namespace) |
+| Multi-cloud | Cloud account-based policies (or `dt.security_context` derived from account) |
+| Complex hierarchy | Hierarchical `dt.security_context` (e.g., `comp:db/bu:digital/app:easytrade`) |
 
 ## Next Steps
 

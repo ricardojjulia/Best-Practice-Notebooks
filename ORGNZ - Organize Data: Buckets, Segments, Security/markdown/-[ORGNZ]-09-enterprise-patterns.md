@@ -1,6 +1,6 @@
 # ORGNZ-09: Enterprise Data Organization Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 9 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -255,7 +255,19 @@ For environments where SVG doesn't render
 <a id="auditing-your-organization"></a>
 ## Auditing Your Organization
 
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-09 LAB** for hands-on practice with these concepts.
+### DQL: Environment Audit
+
+Measure security context adoption across all ingested logs:
+
+```dql
+// Audit security context coverage — percentage of logs with dt.security_context assigned
+fetch logs, from:-1h
+| summarize
+    total = count(),
+    withContext = countIf(isNotNull(dt.security_context)),
+    withoutContext = countIf(isNull(dt.security_context))
+| fieldsAdd coverage = round(toDouble(withContext) / toDouble(total) * 100, decimals: 2)
+```
 
 <a id="best-practices-summary"></a>
 ## Best Practices Summary

@@ -1,10 +1,12 @@
 # ORGNZ-05: Bucket-Level Access Control
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 5 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
 Bucket-level access control provides a straightforward way to isolate data by team, application, or business unit. By granting permissions to specific buckets, you can ensure teams only access data relevant to their responsibilities.
+
+> **Canonical pattern (when bucket-level access fits):** Bucket-level access works well in specific scenarios — **compliance separation** (PCI/HIPAA), **retention isolation** (different retention requirements naturally produce distinct buckets), **hard cost attribution** (per-LOB billing buckets), or **hostile multi-tenancy** (strict cross-tenant isolation). For general team-scoped data access without one of those scenarios, **`dt.security_context` + record-level permissions** (covered in **ORGNZ-06**) is usually the simpler choice — it scales beyond the 80-bucket limit and is mutable without re-routing ingest. See **[IAM REFERENCE.md § Bucket-Match Overlay](../../iam/docs/REFERENCE.md#bucket-match-overlay-scenario-driven)** for the canonical scenario gating. The patterns below teach bucket-level mechanics for when the scenario fits.
 
 ## Prerequisites
 
@@ -111,6 +113,9 @@ Use pattern matching for complex bucket names:
 
 <a id="team-isolation-pattern"></a>
 ## Team Isolation Pattern
+
+> **When this approach fits:** team isolation via dedicated buckets is well-suited to scenarios where each team's data already needs its own bucket for compliance, retention, or hard-cost-attribution reasons. For routine per-team scoping without one of those reasons, **`dt.security_context` parameterization** (one policy template, bound per team — see **ORGNZ-06** and **IAM-04 Pattern 2**) is usually simpler and avoids the 80-bucket limit. The pattern below applies once you've decided buckets are the right tool for your team-isolation scenario.
+
 ### Architecture
 
 ![Team Isolation Architecture](images/05-team-isolation-architecture.png)
@@ -180,8 +185,6 @@ ALLOW storage:logs:read, storage:metrics:read, storage:spans:read;
 <a id="verifying-bucket-access"></a>
 ## Verifying Bucket Access
 
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-05 LAB** for hands-on practice with these concepts.
-
 <a id="best-practices"></a>
 ## Best Practices
 | Practice | Rationale |
@@ -219,3 +222,14 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+
+### DQL: Verifying Bucket Access
+
+Confirm you can read from the expected buckets:
+
+```dql
+// Verify bucket access — check data distribution across buckets you can read
+fetch logs, from:-1h
+| summarize count = count(), by:{dt.system.bucket}
+| sort count desc
+```

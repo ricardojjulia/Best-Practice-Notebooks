@@ -1,6 +1,6 @@
 # ORGNZ-07: Advanced Permission Patterns
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 7 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -285,8 +285,6 @@ For environments where SVG doesn't render
 <a id="testing-permissions"></a>
 ## Testing Permissions
 
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-07 LAB** for hands-on practice with these concepts.
-
 <a id="best-practices"></a>
 ## Best Practices
 | Practice | Rationale |
@@ -315,3 +313,17 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+
+### DQL: Access Distribution Audit
+
+Measure coverage of key access control fields across your log data:
+
+```dql
+// Verify accessible data distribution across all key access control dimensions
+fetch logs, from:-1h
+| summarize
+    total = count(),
+    withSecurityContext = countIf(isNotNull(dt.security_context)),
+    withNamespace = countIf(isNotNull(k8s.namespace.name)),
+    withHostGroup = countIf(isNotNull(dt.host_group.id))
+```
