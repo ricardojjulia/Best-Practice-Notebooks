@@ -57,6 +57,17 @@ ALLOW storage:logs:read;  // Then allow table access
 | 1. Bucket access | Define which buckets | `storage:buckets:read WHERE bucket-name = 'x'` |
 | 2. Table access | Define which data types | `storage:logs:read`, `storage:metrics:read` |
 
+
+![Bucket Access Tiers — Multi-Signal View](images/05-bucket-access-tiers.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Zone | Buckets (logs / events / spans) | Access |
+|------|---------------------------------|--------|
+| Default | default_logs, default_events, default_spans | Granted |
+| Custom shared | logs_shared, events_shared, spans_shared | Granted |
+| Custom delivery/accounting | logs_delivery, logs_accounting, events_delivery, events_accounting, spans_delivery, spans_accounting | No Access |
+| Custom infra | logs_infra_cloud, logs_infra_esxi, events_infra, spans_infra | Granted |
+-->
 <a id="policy-examples"></a>
 ## Policy Examples
 ### Example 1: Single Bucket Access
