@@ -289,7 +289,7 @@ Guide for migrating monitoring capabilities from Splunk to Dynatrace.
 - [S2D-01: Getting Started](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-01-getting-started.md) — Migration overview and roadmap
 - [S2D-02: Locating Logs](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-02-locating-logs.md) — Finding and verifying log data in Dynatrace
 - [S2D-03: SPL to DQL Translation](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-03-spl-to-dql.md) — Converting Splunk queries to DQL
-- [S2D-04: Davis Anomaly Detectors](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-04-davis-anomaly-detectors.md) — Migrating alerts to continuous monitoring
+- [S2D-04: Davis Anomaly Detectors](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-04-anomaly-detectors.md) — Migrating alerts to continuous monitoring
 - [S2D-05: Workflow-Based Alerts](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-05-workflow-alerts.md) — Migrating alerts to scheduled workflows
 - [S2D-06: ArrayMovingSum](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-06-arraymovingsum.md) — Rolling sums for extended timeframes
 - [S2D-07: Metric Creation](S2D%20-%20Splunk%20to%20Dynatrace%20Migration/markdown/-%5BS2D%5D-07-metric-creation.md) — Extracting metrics from logs via OpenPipeline
