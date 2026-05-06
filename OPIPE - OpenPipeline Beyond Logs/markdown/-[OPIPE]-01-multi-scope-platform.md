@@ -1,6 +1,6 @@
 # OPIPE-01: OpenPipeline as a Multi-Scope Platform
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 ## Beyond Logs: Processing Spans, Metrics, and Events at Ingestion
 
@@ -118,35 +118,50 @@ fetch bizevents, from:-1h
 <a id="shared-architecture-across-scopes"></a>
 ## 2. Shared Architecture Across Scopes
 
-Every scope follows the same six-stage processing pipeline. The stages are identical in concept — only the data types and available processors differ.
+![Multi-Scope Architecture](images/01-multi-scope-architecture.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Scope | Key fields | Shared 4-stage flow |
+|-------|------------|---------------------|
+| Logs | content, loglevel, log.source | Ingest → Routing → Processing → Storage |
+| Spans | span.kind, trace.id, duration | Ingest → Routing → Processing → Storage |
+| Metrics | metric.key, dt.entity.* | Ingest → Routing → Processing → Storage |
+| Events | event.kind, event.type | Ingest → Routing → Processing → Storage |
+| Business Events | event.type, event.provider | Ingest → Routing → Processing → Storage |
+| Security Events | SECURITY_EVENT, security.category | Ingest → Routing → Processing → Storage |
+-->
+
+Every scope follows the same **four-stage data flow** (Ingest → Routing → Processing → Storage), with optional pre-processing on custom sources. The stages are identical in concept across scopes — only the data types and available processors differ.
 
 | Stage | Purpose | Logs Example | Spans Example |
 |-------|---------|-------------|---------------|
-| **1. Routing** | Direct data to the right pipeline | Match by `log.source` or `k8s.namespace.name` | Match by `span.kind` or `service.name` |
-| **2. Masking** | Redact sensitive data before processing | Mask credit card numbers in `content` | Mask PII in span attributes |
-| **3. Filtering** | Drop noise before storage | Drop debug-level logs | Drop health-check spans |
-| **4. Processing** | Parse, enrich, transform | Parse JSON from `content` | Add business context to span attributes |
-| **5. Extraction** | Create derived data | Extract metrics from log patterns | Extract RED metrics from spans |
-| **6. Storage** | Route to Grail buckets | Send to `app_logs` bucket | Send to `trace_data` bucket |
+| **1. Ingest** | Receive records from a built-in / ready-made / custom source | OneAgent log ingest | OTLP span ingest |
+| **2. Routing** | Direct data to the right pipeline (dynamic DQL match or static for custom sources) | Match by `log.source` or `k8s.namespace.name` | Match by `span.kind` or `service.name` |
+| **3. Processing** | All in-pipeline work — Mask, Drop, Transform/Parse, Extract (counter / value / histogram / Smartscape / event), Cost, Security, Bucket assignment | Mask credit card numbers; drop debug; parse JSON; extract metrics | Mask PII; drop health-check spans; sampling-aware metrics; extract RED metrics |
+| **4. Storage** | Persist to a Grail bucket (or skip with No storage assignment) | Send to `app_logs` bucket | Send to `trace_data` bucket |
+
+> **Doc alignment (May 2026):** Per `/concepts/data-flow`, masking, filtering, transformation, and extraction are **processor categories within the Processing stage** — not separate pipeline stages. Earlier versions of this notebook described a six-stage pipeline; the corrected four-stage flow is shown above. The processor execution order *within* Processing is documented in OPMIG-02 § Processing Order.
 
 ### The Key Insight
 
-If you understand how to build a log pipeline (routing → masking → filtering → processing → extraction → storage), you already understand how to build a span pipeline or an event pipeline. The concepts transfer directly — only the field names and processor options change.
+If you understand how to build a log pipeline (route → mask → drop → transform → extract → assign bucket within Processing), you already understand how to build a span pipeline or an event pipeline. The concepts transfer directly — only the field names and processor options change.
 
 ### Processors Available Per Scope
 
-Not every processor is available in every scope. The following table shows key differences:
+Not every processor is available in every scope. The following table shows key differences (refresh against `/concepts/processing` for the current list):
 
 | Processor | Logs | Spans | Metrics | Events | Bizevents |
 |-----------|------|-------|---------|--------|-----------|
 | DPL parsing | Yes | Yes | — | Yes | Yes |
-| Field enrichment | Yes | Yes | Yes | Yes | Yes |
-| Metric extraction | Yes | Yes | — | Yes | Yes |
-| Event generation | Yes | Yes | — | — | — |
+| Field enrichment (Add / Remove / Rename / DQL) | Yes | Yes | Yes | Yes | Yes |
+| Metric extraction (Counter / Value / Histogram Preview) | Yes | Yes (sampling-aware variants) | — | Yes | Yes |
+| Smartscape node / edge | Yes | Yes | Yes | Yes | Yes |
+| Event extraction (Bizevent / SDLC / Davis) | Yes | Yes | — | — | — |
 | Masking | Yes | Yes | — | Yes | Yes |
-| Drop/filter | Yes | Yes | Yes | Yes | Yes |
-| Bucket routing | Yes | Yes | Yes | Yes | Yes |
-| Sampling | Yes | Yes | — | — | — |
+| Drop record | Yes | Yes | Yes | Yes | Yes |
+| Bucket assignment / No storage assignment | Yes | Yes | Yes | Yes | Yes |
+| Set dt.security_context | Yes | Yes | Yes | Yes | Yes |
+| DPS Cost Allocation (Cost Center / Product) | Yes | Yes | Yes | Yes | Yes |
 
 ### OneAgent Attribute Enrichment (OneAgent 1.331+)
 
@@ -542,7 +557,7 @@ Ask these questions in order:
 In this notebook you learned:
 
 - **Six scopes** — OpenPipeline processes logs, spans, metrics, events, business events, and security events independently
-- **Shared architecture** — All scopes follow the same six-stage pipeline (routing → masking → filtering → processing → extraction → storage)
+- **Shared architecture** — All scopes follow the same four-stage flow (ingest → routing → processing → storage); masking, filtering, transformation, and extraction are processor categories within the Processing stage per `/concepts/data-flow`
 - **The default pipeline anti-pattern** — Sending everything through the default pipeline causes query performance, cost, security, and blast radius problems
 - **Pipeline design principles** — One pipeline per source type, filter early, differentiate retention, order routing rules from specific to general
 - **Processing groups** — Conditional logic within a pipeline: group processors by matching condition to handle multiple data formats without creating separate pipelines. Use groups for different processing; use pipelines for different lifecycle.
@@ -561,10 +576,10 @@ Continue to **OPIPE-02: Span Processing & Enrichment** to configure OpenPipeline
 <a id="references"></a>
 ## References
 
-- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
+- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [OpenPipeline Processing](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/processing)
-- [OpenPipeline Spans](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/openpipeline-spans)
-- [OpenPipeline Metrics](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/openpipeline-metrics)
+- [OpenPipeline Spans](https://docs.dynatrace.com/docs/platform/openpipeline/openpipeline-spans)
+- [OpenPipeline Metrics](https://docs.dynatrace.com/docs/platform/openpipeline/openpipeline-metrics)
 - [Grail Bucket Management](https://docs.dynatrace.com/docs/manage/data-privacy-and-security/data-management/grail-bucket-management)
 - [Data Security Context](https://docs.dynatrace.com/docs/manage/data-privacy-and-security/data-management/security-context)
 

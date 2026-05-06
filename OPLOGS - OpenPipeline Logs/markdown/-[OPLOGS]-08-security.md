@@ -1,6 +1,6 @@
 # OPLOGS-08: Security & Data Protection
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 8 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Sensitive Data Discovery, Masking, and Compliance
 This notebook covers sensitive data discovery, OpenPipeline masking configuration, security event monitoring, and compliance reporting.
@@ -69,7 +69,7 @@ All sensitive data should be masked at ingestion using OpenPipeline.
 | Phone numbers | `+1-555-123-4567` | Medium |
 | JWT tokens | `eyJhbG...` | High |
 
-```python
+```dql
 // Search for potential email addresses in logs
 fetch logs, from: now() - 1h
 | filter contains(content, "@")
@@ -81,7 +81,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Search for potential API keys or tokens
 fetch logs, from: now() - 1h
 | filter contains(content, "key=") 
@@ -95,7 +95,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Search for potential JWT tokens
 fetch logs, from: now() - 1h
 | filter contains(content, "eyJ")  // JWT typically starts with eyJ
@@ -105,7 +105,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Search for potential credit card patterns (16 digits)
 fetch logs, from: now() - 1h
 | filter contains(content, "card")
@@ -118,7 +118,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Search for password-related entries (should never be logged!)
 fetch logs, from: now() - 1h
 | filter contains(content, "password")
@@ -192,7 +192,7 @@ Step 4: Verify Masking
 \b(?:\d{1,3}\.){3}\d{1,3}\b
 ```
 
-```python
+```dql
 // Verify masking is working (look for masked patterns)
 fetch logs, from: now() - 1h
 | filter contains(content, "MASKED")
@@ -204,7 +204,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Check which pipelines are processing logs
 fetch logs, from: now() - 1h
 | summarize {count = count()}, by: {dt.openpipeline.pipelines}
@@ -215,7 +215,7 @@ fetch logs, from: now() - 1h
 ## 3. IP Address Analysis
 IP addresses may require masking depending on your compliance requirements.
 
-```python
+```dql
 // Find logs containing IP addresses
 fetch logs, from: now() - 1h
 | parse content, "IPADDR:ip_found"
@@ -225,7 +225,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Classify IP addresses (internal vs external)
 fetch logs, from: now() - 1h
 | parse content, "IPADDR:ip_found"
@@ -244,7 +244,7 @@ fetch logs, from: now() - 1h
 ## 4. Security Event Monitoring
 Monitor logs for security-relevant events.
 
-```python
+```dql
 // Authentication-related logs
 fetch logs, from: now() - 1h
 | filter contains(content, "login")
@@ -257,7 +257,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Failed authentication attempts
 fetch logs, from: now() - 1h
 | filter (contains(content, "failed") OR contains(content, "denied") OR contains(content, "unauthorized"))
@@ -268,7 +268,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Security-related errors over time
 fetch logs, from: now() - 24h
 | filter loglevel == "ERROR"
@@ -279,7 +279,7 @@ fetch logs, from: now() - 24h
 | makeTimeseries {security_errors = count()}, interval: 30m
 ```
 
-```python
+```dql
 // Access pattern anomalies - hourly access distribution
 fetch logs, from: now() - 24h
 | filter contains(content, "access") OR contains(content, "request")
@@ -292,7 +292,7 @@ fetch logs, from: now() - 24h
 ## 5. Audit Log Queries
 Track administrative and configuration changes.
 
-```python
+```dql
 // Administrative action logs
 fetch logs, from: now() - 24h
 | filter contains(content, "created")
@@ -312,7 +312,7 @@ fetch logs, from: now() - 24h
 | limit 20
 ```
 
-```python
+```dql
 // Configuration change events
 fetch logs, from: now() - 24h
 | filter contains(content, "config")
@@ -327,7 +327,7 @@ fetch logs, from: now() - 24h
 | limit 15
 ```
 
-```python
+```dql
 // Permission-related events
 fetch logs, from: now() - 24h
 | filter contains(content, "permission")
@@ -343,7 +343,7 @@ fetch logs, from: now() - 24h
 <a id="compliance-reporting"></a>
 ## 6. Compliance Reporting
 
-```python
+```dql
 // Data access summary
 fetch logs, from: now() - 24h
 | filter contains(content, "access") OR contains(content, "read") OR contains(content, "view")
@@ -355,7 +355,7 @@ fetch logs, from: now() - 24h
 | limit 15
 ```
 
-```python
+```dql
 // Log retention verification
 fetch logs, from: now() - 7d
 | summarize {
@@ -366,7 +366,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd retention_days = (latest - earliest) / 86400000000000
 ```
 
-```python
+```dql
 // Sensitive field exposure audit
 fetch logs, from: now() - 1h
 | summarize {
@@ -416,7 +416,7 @@ processors:
     replacement: "$1=[KEY-MASKED]"
 ```
 
-```python
+```dql
 // Security health summary
 fetch logs, from: now() - 1h
 | summarize {

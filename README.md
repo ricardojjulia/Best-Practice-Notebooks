@@ -235,14 +235,14 @@ Advanced OpenPipeline patterns for spans, metrics, business events, and security
 
 ### [OPLOGS - OpenPipeline Logs](OPLOGS%20-%20OpenPipeline%20Logs/README.md)
 End-to-end guidance for managing logs with Dynatrace OpenPipeline.
-- [OPLOGS-01: Fundamentals](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-01-fundamentals.md) — Core OpenPipeline concepts
-- [OPLOGS-02: Migration](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-02-migration.md) — Moving from other logging platforms
-- [OPLOGS-03: Pipeline Processing](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-03-pipeline-processing.md) — Transformations and processing stages
-- [OPLOGS-04: Buckets & Governance](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-04-buckets-governance.md) — Storage management and governance
-- [OPLOGS-05: Querying & Parsing](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-05-querying-parsing.md) — Query techniques and parsing rules
-- [OPLOGS-06: Topology](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-06-topology.md) — Log topology and relationships
-- [OPLOGS-07: Analytics](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-07-analytics.md) — Advanced log analytics
-- [OPLOGS-08: Security](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-08-security.md) — Security, masking, and compliance
+- [OPLOGS-01: OpenPipeline Fundamentals](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-01-fundamentals.md) — Core OpenPipeline concepts and the unified data ingestion framework
+- [OPLOGS-02: Migration to OpenPipeline](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-02-migration.md) — Moving from classic log processing and other platforms
+- [OPLOGS-03: OpenPipeline Processing](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-03-pipeline-processing.md) — Transformations and processing stages
+- [OPLOGS-04: Buckets & Data Governance](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-04-buckets-governance.md) — Storage management, retention, and governance
+- [OPLOGS-05: Querying & Parsing Logs](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-05-querying-parsing.md) — DQL query techniques and parsing rules
+- [OPLOGS-06: Topology & Entity Context](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-06-topology.md) — Log topology and relationships to monitored entities
+- [OPLOGS-07: Analytics & Dashboards](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-07-analytics.md) — Advanced log analytics and dashboard patterns
+- [OPLOGS-08: Security & Data Protection](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-08-security.md) — Security, masking, and compliance
 - [OPLOGS-99: Best Practice Summary](OPLOGS%20-%20OpenPipeline%20Logs/markdown/-%5BOPLOGS%5D-99-best-practice-summary.md) — Consolidated best practices from the OPLOGS series
 
 ### [OPMIG - OpenPipeline Migration](OPMIG%20-%20OpenPipeline%20Migration/README.md)

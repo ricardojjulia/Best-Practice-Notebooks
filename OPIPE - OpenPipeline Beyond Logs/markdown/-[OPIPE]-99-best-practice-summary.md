@@ -1,6 +1,6 @@
 # OPIPE-99: Best Practice Summary
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 Definitive best practice settings for OpenPipeline beyond logs — spans, metrics, events, and cross-scope patterns. Each entry specifies the exact configuration.
 
@@ -30,7 +30,7 @@ Definitive best practice settings for OpenPipeline beyond logs — spans, metric
 | Never leave >20% of volume in default pipeline | Target 0% in default for production environments | Critical |
 | Route ordering: most specific first | Security/audit → application → infrastructure → API-ingested → default catch-all | Critical |
 | Configure all six scopes independently | Logs, Spans, Metrics, Events, Business Events, Security Events — changes in one scope have zero effect on others | Recommended |
-| Six-stage pipeline order in every scope | Routing → Masking → Filtering → Processing → Extraction → Storage | Critical |
+| Four-stage pipeline order in every scope | Ingest → Routing → Processing → Storage. Within Processing, processor execution order: Mask → Drop → Transform → Extract → Cost/Security → Bucket assignment (per `/concepts/data-flow`) | Critical |
 | Default pipeline retention | `default_logs`: 14 days. `default_spans`: 7 days | Recommended |
 | Audit default bucket percentage weekly | `countIf(dt.system.bucket == "default_logs")/count()` — CRITICAL if >80%, WARNING if >50% | Critical |
 | Check pipeline count per scope | `countDistinct(dt.openpipeline.pipelines)` — minimum 3+ for logs, 2+ for spans | Critical |

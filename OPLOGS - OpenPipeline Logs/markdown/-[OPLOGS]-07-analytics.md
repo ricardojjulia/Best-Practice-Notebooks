@@ -1,6 +1,6 @@
 # OPLOGS-07: Analytics & Dashboards
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 7 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Aggregation, Time Series, and Visualization Queries
 This notebook covers aggregation functions, time series analysis, statistical patterns, and dashboard-ready queries for log analytics.
@@ -82,7 +82,7 @@ All aggregations must use named aliases for downstream operations.
 | sort count() desc  // ERROR!
 ```
 
-```python
+```dql
 // Basic aggregations
 fetch logs, from: now() - 1h
 | summarize {
@@ -93,7 +93,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Aggregations with grouping
 fetch logs, from: now() - 1h
 | summarize {
@@ -106,7 +106,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Error rate calculation
 fetch logs, from: now() - 1h
 | summarize {
@@ -123,13 +123,13 @@ fetch logs, from: now() - 1h
 ## 2. Time Series Analysis
 The `makeTimeseries` command creates time-bucketed data for trend visualization.
 
-```python
+```dql
 // Log volume over time (5-minute buckets)
 fetch logs, from: now() - 6h
 | makeTimeseries {log_count = count()}, interval: 5m
 ```
 
-```python
+```dql
 // Error trend over time
 fetch logs, from: now() - 6h
 | makeTimeseries {
@@ -139,7 +139,7 @@ fetch logs, from: now() - 6h
   }, interval: 5m
 ```
 
-```python
+```dql
 // Time series by dimension (namespace)
 fetch logs, from: now() - 6h
 | filter isNotNull(k8s.namespace.name)
@@ -148,7 +148,7 @@ fetch logs, from: now() - 6h
   }, by: {k8s.namespace.name}, interval: 10m
 ```
 
-```python
+```dql
 // Error rate time series by host
 fetch logs, from: now() - 6h
 | filter isNotNull(dt.entity.host)
@@ -161,7 +161,7 @@ fetch logs, from: now() - 6h
 <a id="statistical-analysis"></a>
 ## 3. Statistical Analysis
 
-```python
+```dql
 // Log volume statistics by source
 fetch logs, from: now() - 24h
 | summarize {
@@ -175,7 +175,7 @@ fetch logs, from: now() - 24h
 | sort total desc
 ```
 
-```python
+```dql
 // Percentile analysis (if numeric field available)
 fetch logs, from: now() - 1h
 | fieldsAdd content_length = stringLength(content)
@@ -189,7 +189,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Hourly distribution analysis
 fetch logs, from: now() - 24h
 | fieldsAdd hour_bucket = bin(timestamp, 1h)
@@ -197,7 +197,7 @@ fetch logs, from: now() - 24h
 | sort hour_bucket asc
 ```
 
-```python
+```dql
 // Daily distribution analysis
 fetch logs, from: now() - 7d
 | fieldsAdd day_bucket = bin(timestamp, 1d)
@@ -210,74 +210,13 @@ fetch logs, from: now() - 7d
 
 <a id="dashboard-ready-queries"></a>
 ## 4. Dashboard-Ready Queries
-These queries are optimized for dashboard tiles and visualizations.
 
-```python
-// Single Value: Total Logs (Last Hour)
-fetch logs, from: now() - 1h
-| summarize {total_logs = count()}
-```
-
-```python
-// Single Value: Error Count (Last Hour)
-fetch logs, from: now() - 1h
-| filter loglevel == "ERROR"
-| summarize {error_count = count()}
-```
-
-```python
-// Pie Chart: Log Level Distribution
-fetch logs, from: now() - 1h
-| summarize {count = count()}, by: {loglevel}
-| sort count desc
-```
-
-```python
-// Bar Chart: Top Error Sources
-fetch logs, from: now() - 1h
-| filter loglevel == "ERROR"
-| summarize {error_count = count()}, by: {k8s.namespace.name}
-| sort error_count desc
-| limit 10
-```
-
-```python
-// Line Chart: Log Trend (6 Hours)
-fetch logs, from: now() - 6h
-| makeTimeseries {
-    errors = countIf(loglevel == "ERROR"),
-    warnings = countIf(loglevel == "WARN"),
-    info = countIf(loglevel == "INFO")
-  }, interval: 5m
-```
-
-```python
-// Table: Top Error Messages
-fetch logs, from: now() - 1h
-| filter loglevel == "ERROR"
-| fieldsAdd error_preview = substring(content, from: 0, to: 100)
-| summarize {
-    occurrences = count(),
-    first_seen = min(timestamp),
-    last_seen = max(timestamp)
-  }, by: {error_preview, k8s.namespace.name}
-| sort occurrences desc
-| limit 20
-```
-
-```python
-// Heat Map: Errors by Hour and Namespace
-fetch logs, from: now() - 24h
-| filter loglevel == "ERROR"
-| fieldsAdd hour_bucket = bin(timestamp, 1h)
-| summarize {error_count = count()}, by: {hour_bucket, k8s.namespace.name}
-| sort hour_bucket asc
-```
+> 📊 **Reference queries moved to OPLOGS-99.** See [**OPLOGS-99 § 9.1 Dashboard-Ready Queries**](../../oplogs/notebooks/-[OPLOGS]-99-best-practice-summary.ipynb) for single-value, time-series, breakdown, and percentile queries optimized for dashboard tiles. The teaching content for *how* dashboard queries are constructed lives in OPLOGS-05 (querying-parsing).
 
 <a id="trend-analysis"></a>
 ## 5. Trend Analysis
 
-```python
+```dql
 // Compare current hour to previous hour
 fetch logs, from: now() - 2h
 | fieldsAdd period = if(timestamp > now() - 1h, "current", else: "previous")
@@ -285,7 +224,7 @@ fetch logs, from: now() - 2h
 | sort period asc, count desc
 ```
 
-```python
+```dql
 // New error patterns (appeared in last hour)
 fetch logs, from: now() - 1h
 | filter loglevel == "ERROR"
@@ -299,7 +238,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Volume anomaly detection (compare to baseline)
 fetch logs, from: now() - 6h
 | fieldsAdd time_bucket = bin(timestamp, 15m)
@@ -311,7 +250,7 @@ fetch logs, from: now() - 6h
 <a id="log-pattern-analysis"></a>
 ## 6. Log Pattern Analysis
 
-```python
+```dql
 // Top log patterns (by content prefix)
 fetch logs, from: now() - 1h
 | fieldsAdd pattern = substring(content, from: 0, to: 60)
@@ -320,7 +259,7 @@ fetch logs, from: now() - 1h
 | limit 25
 ```
 
-```python
+```dql
 // Unique log levels and statuses
 fetch logs, from: now() - 1h
 | summarize {
@@ -330,7 +269,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Log diversity score (unique patterns per namespace)
 fetch logs, from: now() - 1h
 | fieldsAdd pattern = substring(content, from: 0, to: 50)
@@ -346,44 +285,7 @@ fetch logs, from: now() - 1h
 <a id="operational-dashboard-queries"></a>
 ## 7. Operational Dashboard Queries
 
-```python
-// Operations Summary (last 1h)
-fetch logs, from: now() - 1h
-| summarize {
-    total_logs = count(),
-    error_count = countIf(loglevel == "ERROR"),
-    warn_count = countIf(loglevel == "WARN"),
-    unique_hosts = countDistinct(dt.entity.host),
-    unique_pods = countDistinct(k8s.pod.name)
-  }
-| fieldsAdd error_rate = round((error_count * 100.0) / total_logs, decimals: 2)
-```
-
-```python
-// Health scorecard by namespace
-fetch logs, from: now() - 1h
-| filter isNotNull(k8s.namespace.name)
-| summarize {
-    total = count(),
-    errors = countIf(loglevel == "ERROR"),
-    warnings = countIf(loglevel == "WARN")
-  }, by: {k8s.namespace.name}
-| fieldsAdd error_rate = round((errors * 100.0) / total, decimals: 2)
-| fieldsAdd health_status = if(error_rate > 10, "CRITICAL",
-                            else: if(error_rate > 5, "WARNING",
-                            else: "HEALTHY"))
-| sort error_rate desc
-```
-
-```python
-// Ingestion pipeline summary
-fetch logs, from: now() - 1h
-| summarize {
-    log_count = count(),
-    unique_pipelines = countDistinct(dt.openpipeline.pipelines)
-  }, by: {dt.openpipeline.source, dt.system.bucket}
-| sort log_count desc
-```
+> 🚦 **Reference queries moved to OPLOGS-99.** See [**OPLOGS-99 § 9.2 Operational Dashboard Queries**](../../oplogs/notebooks/-[OPLOGS]-99-best-practice-summary.ipynb) for SLO-style queries: error budgets, top-N services by volume, per-host log distribution.
 
 ---
 

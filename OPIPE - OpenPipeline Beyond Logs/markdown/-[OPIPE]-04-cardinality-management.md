@@ -1,6 +1,6 @@
 # OPIPE-04: Cardinality Management
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 ## Controlling Dimension Explosion Across All Scopes
 
@@ -72,6 +72,18 @@ Now add `user.id` (100,000 unique users):
 
 <a id="high-cardinality-fields"></a>
 ## 2. High-Cardinality Fields by Scope
+
+![Cardinality Risk by Field](images/04-cardinality-risk.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Risk Tier | Span Fields (examples) | Log Fields (examples) | Use as dimension? |
+|-----------|------------------------|-----------------------|-------------------|
+| EXTREME | trace.id, span.id, request_id (GUIDs) | content (raw), unparsed JSON, stack traces | NEVER — parse / hash first |
+| VERY HIGH | http.url, http.target, user_id, db.statement | user_id, client_ip, request URL | AVOID — normalize to template |
+| HIGH | span.name, db.collection, k8s.pod.name | k8s.pod.name, container_id, log.source (custom) | CAUTION — monitor over time |
+| MEDIUM | http.route, status_code, db.system | dt.entity.host, k8s.deployment.name | OK — good dimension |
+| LOW | service.name, span.kind, deployment.environment | log.source (managed), k8s.namespace.name | IDEAL — always safe |
+-->
 
 Different scopes have different cardinality offenders. Know which fields to watch:
 
@@ -310,7 +322,7 @@ Continue to **OPIPE-05: Business & Security Event Pipelines** to configure OpenP
 ## References
 
 - [Metric Ingestion Protocol](https://docs.dynatrace.com/docs/extend-dynatrace/extend-metrics/reference/metric-ingestion-protocol)
-- [OpenPipeline Processing](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
+- [OpenPipeline Processing](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [Grail Data Model](https://docs.dynatrace.com/docs/platform/grail)
 
 ---

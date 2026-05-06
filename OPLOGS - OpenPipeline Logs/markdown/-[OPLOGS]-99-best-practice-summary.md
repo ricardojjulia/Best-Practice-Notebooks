@@ -1,6 +1,6 @@
 # OPLOGS-99: Best Practice Summary
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 Definitive best practice settings for OpenPipeline log processing. Each entry specifies the exact configuration — no hedging, no options.
 
@@ -16,6 +16,7 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 6. [Cost Optimization](#cost-optimization)
 7. [Security & Access Control](#security-access-control)
 8. [Monitoring & Alerting](#monitoring-alerting)
+9. [DQL Cookbook](#dql-cookbook)
 
 ---
 
@@ -122,6 +123,122 @@ Definitive best practice settings for OpenPipeline log processing. Each entry sp
 | Pod crash loop detection | Filter for startup/initializing content per pod, alert when >3 in 1 hour | Recommended |
 | Security error trends | `makeTimeseries count(), interval:30m` filtered on unauthorized/forbidden/denied | Recommended |
 | Weekly bucket health check | Total logs, unique sources, debug %, error % per bucket over 7 days | Recommended |
+
+---
+
+<a id="dql-cookbook"></a>
+## 9. DQL Cookbook
+
+Reference queries consolidated from across the OPLOGS series — copy / paste into your tenant for dashboard tiles, monitoring widgets, or SLO calculations. These were previously embedded in OPLOGS-07 (Analytics & Dashboards); they live here so the main analytics notebook stays focused on the *how* of building queries rather than serving as a query repository.
+
+### 9.1 Dashboard-Ready Queries
+
+Single-value, time-series, breakdown, and percentile queries optimized for dashboard tiles. Drop them directly into a Dashboard tile or Notebook visualization.
+
+```dql
+// Single Value: Total Logs (Last Hour)
+fetch logs, from: now() - 1h
+| summarize {total_logs = count()}
+```
+
+```dql
+// Single Value: Error Count (Last Hour)
+fetch logs, from: now() - 1h
+| filter loglevel == "ERROR"
+| summarize {error_count = count()}
+```
+
+```dql
+// Pie Chart: Log Level Distribution
+fetch logs, from: now() - 1h
+| summarize {count = count()}, by: {loglevel}
+| sort count desc
+```
+
+```dql
+// Bar Chart: Top Error Sources
+fetch logs, from: now() - 1h
+| filter loglevel == "ERROR"
+| summarize {error_count = count()}, by: {k8s.namespace.name}
+| sort error_count desc
+| limit 10
+```
+
+```dql
+// Line Chart: Log Trend (6 Hours)
+fetch logs, from: now() - 6h
+| makeTimeseries {
+    errors = countIf(loglevel == "ERROR"),
+    warnings = countIf(loglevel == "WARN"),
+    info = countIf(loglevel == "INFO")
+  }, interval: 5m
+```
+
+```dql
+// Table: Top Error Messages
+fetch logs, from: now() - 1h
+| filter loglevel == "ERROR"
+| fieldsAdd error_preview = substring(content, from: 0, to: 100)
+| summarize {
+    occurrences = count(),
+    first_seen = min(timestamp),
+    last_seen = max(timestamp)
+  }, by: {error_preview, k8s.namespace.name}
+| sort occurrences desc
+| limit 20
+```
+
+```dql
+// Heat Map: Errors by Hour and Namespace
+fetch logs, from: now() - 24h
+| filter loglevel == "ERROR"
+| fieldsAdd hour_bucket = bin(timestamp, 1h)
+| summarize {error_count = count()}, by: {hour_bucket, k8s.namespace.name}
+| sort hour_bucket asc
+```
+
+### 9.2 Operational Dashboard Queries
+
+SLO and operational queries: error budgets, top-N services by log volume, per-host log distribution. Designed for an ops-on-call dashboard.
+
+```dql
+// Operations Summary (last 1h)
+fetch logs, from: now() - 1h
+| summarize {
+    total_logs = count(),
+    error_count = countIf(loglevel == "ERROR"),
+    warn_count = countIf(loglevel == "WARN"),
+    unique_hosts = countDistinct(dt.entity.host),
+    unique_pods = countDistinct(k8s.pod.name)
+  }
+| fieldsAdd error_rate = round((error_count * 100.0) / total_logs, decimals: 2)
+```
+
+```dql
+// Health scorecard by namespace
+fetch logs, from: now() - 1h
+| filter isNotNull(k8s.namespace.name)
+| summarize {
+    total = count(),
+    errors = countIf(loglevel == "ERROR"),
+    warnings = countIf(loglevel == "WARN")
+  }, by: {k8s.namespace.name}
+| fieldsAdd error_rate = round((errors * 100.0) / total, decimals: 2)
+| fieldsAdd health_status = if(error_rate > 10, "CRITICAL",
+                            else: if(error_rate > 5, "WARNING",
+                            else: "HEALTHY"))
+| sort error_rate desc
+```
+
+```dql
+// Ingestion pipeline summary
+fetch logs, from: now() - 1h
+| summarize {
+    log_count = count(),
+    unique_pipelines = countDistinct(dt.openpipeline.pipelines)
+  }, by: {dt.openpipeline.source, dt.system.bucket}
+| sort log_count desc
+```
 
 ---
 

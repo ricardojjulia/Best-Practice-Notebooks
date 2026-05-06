@@ -1,6 +1,6 @@
 # OPMIG-09: Troubleshooting & Validation
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 > **Level:** Intermediate  
 > **Prerequisites:** OPMIG-01 through OPMIG-08  
 > **Estimated Time:** 45 minutes  
@@ -39,6 +39,15 @@ By the end of this notebook, you will be able to:
 - **Test end-to-end pipeline flows** before production deployment
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and active OpenPipeline pipelines |
+| **Permissions** | `openpipeline.configurations.read`, `logs.read` |
+| **API Access** | `logs.read` token scope |
+| **Knowledge** | OPMIG-01 through OPMIG-08; at least one active pipeline configured |
 
 ---
 
@@ -476,7 +485,7 @@ fetch logs
 
 ---
 
-```python
+```dql
 // Overview: Log volume by pipeline (last 24 hours)
 fetch logs, from: now() - 24h
 | summarize {log_count = count()}, by: {dt.openpipeline.pipelines}
@@ -794,13 +803,13 @@ If dimension has > 1,000 unique values → BUCKET IT or REMOVE IT
 
 ---
 
-```python
+```dql
 // Pipeline volume trend over time
 fetch logs, from: now() - 24h
 | makeTimeseries {log_count = count()}, by: {dt.openpipeline.pipelines}, interval: 1h
 ```
 
-```python
+```dql
 // Check for logs without pipeline assignment (potential routing issues)
 fetch logs, from: now() - 1h
 | filter isNull(dt.openpipeline.pipelines)
@@ -808,7 +817,7 @@ fetch logs, from: now() - 1h
 | sort unrouted_count desc
 ```
 
-```python
+```dql
 // Bucket distribution check
 fetch logs, from: now() - 24h
 | summarize {
@@ -817,7 +826,7 @@ fetch logs, from: now() - 24h
 | sort log_count desc
 ```
 
-```python
+```dql
 // Log source health - are all expected sources sending data?
 fetch logs, from: now() - 1h
 | summarize {
@@ -840,7 +849,7 @@ fetch logs, from: now() - 1h
 
 **Diagnosis:**
 
-```python
+```dql
 // Check if logs are being dropped
 // Compare volume before and after drop processors
 fetch logs, from: now() - 1h
@@ -865,7 +874,7 @@ fetch logs, from: now() - 1h
 
 **Diagnosis:**
 
-```python
+```dql
 // Find logs with parsing failures
 fetch logs, from: now() - 1h
 | filter isNull(loglevel)
@@ -887,7 +896,7 @@ fetch logs, from: now() - 1h
 
 **Diagnosis:**
 
-```python
+```dql
 // Check routing - are logs going to expected pipelines?
 fetch logs, from: now() - 1h
 | summarize {log_count = count()}, by: {log.source, dt.openpipeline.pipelines}
@@ -908,7 +917,7 @@ fetch logs, from: now() - 1h
 
 **Diagnosis:**
 
-```python
+```dql
 // Check if masking is working
 fetch logs, from: now() - 1h
 | filter contains(content, "@")  // Potential email
@@ -931,7 +940,7 @@ fetch logs, from: now() - 1h
 
 **Diagnosis:**
 
-```python
+```dql
 // List log-extracted metrics
 // Note: Use the Dynatrace UI (Observe > Metrics) to browse metrics
 // Or use timeseries to query a specific metric:
@@ -948,106 +957,15 @@ fetch logs, from: now() - 1h
 
 <a id="parsing-validation"></a>
 ## Parsing Validation
-Comprehensive checks for parsing effectiveness.
 
-```python
-// Parsing success rate by pipeline
-fetch logs, from: now() - 24h
-| summarize {
-    total = count(),
-    with_loglevel = countIf(isNotNull(loglevel)),
-    without_loglevel = countIf(isNull(loglevel))
-  }, by: {dt.openpipeline.pipelines}
-| fieldsAdd parse_rate = round((toDouble(with_loglevel) / toDouble(total)) * 100, decimals: 1)
-| sort parse_rate asc
-```
-
-```python
-// Log level distribution (verify expected values)
-fetch logs, from: now() - 24h
-| summarize {log_count = count()}, by: {loglevel}
-| sort log_count desc
-```
-
-```python
-// Find log sources with low parsing rates
-fetch logs, from: now() - 24h
-| summarize {
-    total = count(),
-    parsed = countIf(isNotNull(loglevel))
-  }, by: {log.source}
-| fieldsAdd parse_rate = round((toDouble(parsed) / toDouble(total)) * 100, decimals: 1)
-| filter parse_rate < 90
-| sort parse_rate asc
-```
-
-```python
-// Sample unparsed logs from problematic sources
-// Replace 'your-source' with source from previous query
-fetch logs, from: now() - 1h
-| filter log.source == "your-source"
-| filter isNull(loglevel)
-| fields content
-| limit 30
-```
-
-```python
-// Verify custom field extraction
-// Add your expected custom fields here
-fetch logs, from: now() - 24h
-| summarize {
-    total = count(),
-    with_request_id = countIf(isNotNull(request_id)),
-    with_user_id = countIf(isNotNull(user_id)),
-    with_order_id = countIf(isNotNull(order_id))
-  }, by: {dt.openpipeline.pipelines}
-```
+> 🔍 **Reference queries moved to OPMIG-99.** See [**OPMIG-99 § 11.1 Parsing Validation**](../../opmig/notebooks/-[OPMIG]-99-best-practice-summary.ipynb) for diagnostic queries that check parsing success rates, log-level distribution, and unparsed-source identification. Run them after configuring or modifying parse processors.
 
 ---
 
 <a id="volume-cost-validation"></a>
 ## Volume & Cost Validation
-Verify data volumes and cost optimization effectiveness.
 
-```python
-// Daily log volume by bucket (cost impact)
-fetch logs, from: now() - 7d
-| fieldsAdd day = formatTimestamp(timestamp, format: "yyyy-MM-dd")
-| summarize {log_count = count()}, by: {day, dt.system.bucket}
-| sort day desc, log_count desc
-```
-
-```python
-// Volume trend - verify stable after migration
-fetch logs, from: now() - 7d
-| makeTimeseries {log_count = count()}, interval: 1h
-```
-
-```python
-// Check if debug/trace logs are being dropped (cost savings)
-fetch logs, from: now() - 24h
-| filter loglevel == "DEBUG" OR loglevel == "TRACE"
-| summarize {debug_trace_count = count()}
-| fieldsAdd status = if(debug_trace_count == 0, 
-    "✅ Debug/trace logs dropped as expected",
-    else: "⚠️ Debug/trace logs still present - check drop processors")
-```
-
-```python
-// Volume by log level (should see mostly INFO/WARN/ERROR)
-fetch logs, from: now() - 24h
-| summarize {log_count = count()}, by: {loglevel}
-| fieldsAdd percentage = round((toDouble(log_count) / 100), decimals: 1)
-| sort log_count desc
-```
-
-```python
-// Top 10 highest volume sources
-fetch logs, from: now() - 24h
-| summarize {log_count = count()}, by: {log.source}
-| sort log_count desc
-| limit 10
-```
+> 📊 **Reference queries moved to OPMIG-99.** See [**OPMIG-99 § 11.2 Volume & Cost Validation**](../../opmig/notebooks/-[OPMIG]-99-best-practice-summary.ipynb) for queries that check daily log volume by bucket, drop-processor effectiveness, log-level distribution, and top-volume sources. Useful in the first week after cutover.
 
 ---
 
@@ -1080,7 +998,7 @@ Tips for optimizing OpenPipeline performance.
 | Specific literals | Greedy matchers |
 | Short patterns | Long complex patterns |
 
-```python
+```dql
 // Identify pipelines with high volume (candidates for optimization)
 fetch logs, from: now() - 1h
 | summarize {hourly_volume = count()}, by: {dt.openpipeline.pipelines}
@@ -1143,7 +1061,7 @@ After migration, establish these maintenance practices.
 - [ ] Clean up unused pipelines
 - [ ] Document any changes
 
-```python
+```dql
 // Weekly health report query
 fetch logs, from: now() - 7d
 | summarize {
@@ -1157,7 +1075,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd error_rate = round((toDouble(error_logs) / toDouble(total_logs)) * 100, decimals: 2)
 ```
 
-```python
+```dql
 // Find new log sources that may need pipeline configuration
 fetch logs, from: now() - 24h
 | filter isNull(dt.openpipeline.pipelines) OR dt.openpipeline.pipelines == "default"
@@ -1225,7 +1143,7 @@ Final validation before declaring migration complete.
 - [ ] Escalation paths defined
 - [ ] Monitoring dashboards created
 
-```python
+```dql
 // Final migration validation summary
 fetch logs, from: now() - 24h
 | summarize {
@@ -1274,14 +1192,15 @@ You've completed the OpenPipeline migration notebook series!
 
 ## References
 
-- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
-- [OpenPipeline Best Practices](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/best-practices)
-- [DQL Reference](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-query-language)
+- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
+- [OpenPipeline Best Practices](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases)
+- [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
+- [OpenPipeline Limits](https://docs.dynatrace.com/docs/platform/openpipeline/reference/limits) — Concrete numeric limits
 - [Dynatrace Community](https://community.dynatrace.com/)
 
 ---
 
-*Last Updated: December 12, 2025*
+*Last Updated: May 6, 2026*
 
 ---
 

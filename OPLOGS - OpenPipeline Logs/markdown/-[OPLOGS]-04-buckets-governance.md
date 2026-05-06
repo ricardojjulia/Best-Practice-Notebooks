@@ -1,6 +1,6 @@
 # OPLOGS-04: Buckets & Data Governance
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 4 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Strategic Storage Management for OpenPipeline Logs
 This notebook covers Grail bucket architecture, retention policies, routing configuration, access control, and cost optimization strategies.
@@ -29,21 +29,21 @@ This notebook covers Grail bucket architecture, retention policies, routing conf
 - ✅ Understanding of OpenPipeline basics (OPLOGS-01 to OPLOGS-03)
 - ✅ Admin access for bucket configuration (optional)
 
-```python
+```dql
 // Discover all buckets with log data
 fetch logs, from: now() - 24h
 | summarize {log_count = count()}, by: {dt.system.bucket}
 | sort log_count desc
 ```
 
-```python
+```dql
 // Bucket volume analysis over time
 fetch logs, from: now() - 7d
 | makeTimeseries {count = count()}, by: {dt.system.bucket}, interval: 1d
 | limit 100
 ```
 
-```python
+```dql
 // Bucket composition by log level
 fetch logs, from: now() - 24h
 | summarize {count = count()}, by: {dt.system.bucket, loglevel}
@@ -97,7 +97,7 @@ Examples:
 - `prod_security_logs`
 - `payment_audit_logs`
 
-```python
+```dql
 // Analyze current log distribution for bucket planning
 fetch logs, from: now() - 24h
 | summarize {
@@ -113,7 +113,7 @@ fetch logs, from: now() - 24h
 | fieldsAdd error_pct = round((error * 100.0) / total, decimals: 1)
 ```
 
-```python
+```dql
 // Identify audit/security logs for specialized bucket
 fetch logs, from: now() - 24h
 | filter contains(content, "auth")
@@ -126,7 +126,7 @@ fetch logs, from: now() - 24h
 | limit 20
 ```
 
-```python
+```dql
 // Volume by source - helps determine routing needs
 fetch logs, from: now() - 24h
 | summarize {count = count()}, by: {dt.openpipeline.source, dt.system.bucket}
@@ -157,7 +157,7 @@ Example:
 - Savings: 80% reduction in DEBUG storage
 ```
 
-```python
+```dql
 // Estimate storage by log level
 fetch logs, from: now() - 24h
 | fieldsAdd content_bytes = stringLength(content)
@@ -169,7 +169,7 @@ fetch logs, from: now() - 24h
 | sort total_mb desc
 ```
 
-```python
+```dql
 // Calculate retention cost comparison (DEBUG logs)
 fetch logs, from: now() - 24h
 | filter loglevel == "DEBUG" OR loglevel == "TRACE"
@@ -181,7 +181,7 @@ fetch logs, from: now() - 24h
 | fieldsAdd savings_pct = round((savings_gb * 100) / retention_35d_gb, decimals: 1)
 ```
 
-```python
+```dql
 // Retention planning: volume by bucket and loglevel
 fetch logs, from: now() - 24h
 | fieldsAdd content_bytes = stringLength(content)
@@ -228,7 +228,7 @@ routes:
 2. Order rules from specific to general
 3. Always include a default catch-all
 
-```python
+```dql
 // Preview routing decision logic
 fetch logs, from: now() - 1h
 | limit 1000
@@ -240,7 +240,7 @@ fetch logs, from: now() - 1h
 | sort target_bucket asc, count desc
 ```
 
-```python
+```dql
 // Validate current routing effectiveness
 fetch logs, from: now() - 24h
 | summarize {
@@ -251,7 +251,7 @@ fetch logs, from: now() - 24h
 | sort default_pct desc
 ```
 
-```python
+```dql
 // Namespace-based routing analysis
 fetch logs, from: now() - 24h
 | filter isNotNull(k8s.namespace.name)
@@ -295,7 +295,7 @@ Configure in **Settings → Access tokens & IAM → Policies**
 }
 ```
 
-```python
+```dql
 // Identify sensitive data patterns for access control planning
 fetch logs, from: now() - 24h
 | filter contains(content, "password")
@@ -308,7 +308,7 @@ fetch logs, from: now() - 24h
 | limit 15
 ```
 
-```python
+```dql
 // Data governance audit: bucket access patterns
 fetch logs, from: now() - 24h
 | summarize {
@@ -346,14 +346,14 @@ fetch logs, bucket: {"prod_logs", "error_logs"}, from: now() - 24h
 | filter loglevel == "ERROR"
 ```
 
-```python
+```dql
 // Query specific bucket (efficient)
 fetch logs, bucket: "default_logs", from: now() - 1h
 | summarize {count = count()}, by: {loglevel}
 | sort count desc
 ```
 
-```python
+```dql
 // Compare bucket query efficiency
 fetch logs, from: now() - 1h
 | summarize {
@@ -362,7 +362,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Bucket-aware dashboarding: hourly volume by bucket
 fetch logs, from: now() - 24h
 | makeTimeseries {count = count()}, by: {dt.system.bucket}, interval: 1h
@@ -397,7 +397,7 @@ Optimized State:
 Savings: ~8% immediate, scales with volume
 ```
 
-```python
+```dql
 // Calculate potential cost savings
 fetch logs, from: now() - 24h
 | fieldsAdd content_bytes = stringLength(content)
@@ -414,7 +414,7 @@ fetch logs, from: now() - 24h
 | sort savings_gb desc
 ```
 
-```python
+```dql
 // Identify high-volume low-value logs
 fetch logs, from: now() - 24h
 | filter loglevel == "DEBUG" OR loglevel == "INFO"
@@ -446,7 +446,7 @@ fetch logs, from: now() - 24h
 4. **Don't create too many buckets** - complexity overhead
 5. **Don't skip access controls** - security risk
 
-```python
+```dql
 // Weekly bucket health check query
 fetch logs, from: now() - 7d
 | summarize {
@@ -458,7 +458,7 @@ fetch logs, from: now() - 7d
 | sort total_logs desc
 ```
 
-```python
+```dql
 // Bucket routing effectiveness
 fetch logs, from: now() - 24h
 | summarize {count = count()}, by: {dt.system.bucket, dt.openpipeline.pipelines}

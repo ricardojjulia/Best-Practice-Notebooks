@@ -1,6 +1,6 @@
 # OPMIG-99: Best Practice Summary
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 10 of 10 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 10 of 10 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 Definitive best practice settings for migrating from classic logs to OpenPipeline. Each entry specifies the exact configuration.
 
@@ -18,8 +18,17 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 8. [Compliance](#compliance)
 9. [Troubleshooting & Validation](#troubleshooting-validation)
 10. [Data Limits & Constraints](#data-limits-constraints)
+11. [DQL Cookbook](#dql-cookbook)
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and OpenPipeline access |
+| **Knowledge** | Completion of or familiarity with OPMIG-01 through OPMIG-09 |
+| **Purpose** | This notebook serves as a reference card — no active environment required |
 
 <a id="migration-planning"></a>
 ## 1. Migration Planning
@@ -158,6 +167,114 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 | Timestamp window | Logs: 24h past to 10min future. Spans: 2h past. Metrics: 1h past to 1min future | Critical |
 | Max fields per record | 1,000 fields, 10 levels JSON nesting, 32 KB per attribute value, 1,000 array elements | Recommended |
 | Rate limits | Log Ingest API: 500 req/min/token. OTLP: 1,000 req/min. Config API: 100 req/min | Recommended |
+
+---
+
+<a id="dql-cookbook"></a>
+## 11. DQL Cookbook
+
+Reference queries consolidated from across the OPMIG series — copy / paste into your tenant for ad-hoc validation, monitoring, or troubleshooting. These were previously scattered through OPMIG-09 (Troubleshooting & Validation); they live here as a cookbook so the main notebook stays focused on teaching content.
+
+### 11.1 Parsing Validation
+
+Diagnostic queries to check whether your DQL/DPL parsers are working correctly. Run these after configuring or modifying parse processors.
+
+```dql
+// Parsing success rate by pipeline
+fetch logs, from: now() - 24h
+| summarize {
+    total = count(),
+    with_loglevel = countIf(isNotNull(loglevel)),
+    without_loglevel = countIf(isNull(loglevel))
+  }, by: {dt.openpipeline.pipelines}
+| fieldsAdd parse_rate = round((toDouble(with_loglevel) / toDouble(total)) * 100, decimals: 1)
+| sort parse_rate asc
+```
+
+```dql
+// Log level distribution (verify expected values)
+fetch logs, from: now() - 24h
+| summarize {log_count = count()}, by: {loglevel}
+| sort log_count desc
+```
+
+```dql
+// Find log sources with low parsing rates
+fetch logs, from: now() - 24h
+| summarize {
+    total = count(),
+    parsed = countIf(isNotNull(loglevel))
+  }, by: {log.source}
+| fieldsAdd parse_rate = round((toDouble(parsed) / toDouble(total)) * 100, decimals: 1)
+| filter parse_rate < 90
+| sort parse_rate asc
+```
+
+```dql
+// Sample unparsed logs from problematic sources
+// Replace 'your-source' with source from previous query
+fetch logs, from: now() - 1h
+| filter log.source == "your-source"
+| filter isNull(loglevel)
+| fields content
+| limit 30
+```
+
+```dql
+// Verify custom field extraction
+// Add your expected custom fields here
+fetch logs, from: now() - 24h
+| summarize {
+    total = count(),
+    with_request_id = countIf(isNotNull(request_id)),
+    with_user_id = countIf(isNotNull(user_id)),
+    with_order_id = countIf(isNotNull(order_id))
+  }, by: {dt.openpipeline.pipelines}
+```
+
+### 11.2 Volume & Cost Validation
+
+Verify post-migration data volumes match expectations and that drop processors are reducing volume as designed. Useful in the first week after cutover and as a recurring check.
+
+```dql
+// Daily log volume by bucket (cost impact)
+fetch logs, from: now() - 7d
+| fieldsAdd day = formatTimestamp(timestamp, format: "yyyy-MM-dd")
+| summarize {log_count = count()}, by: {day, dt.system.bucket}
+| sort day desc, log_count desc
+```
+
+```dql
+// Volume trend - verify stable after migration
+fetch logs, from: now() - 7d
+| makeTimeseries {log_count = count()}, interval: 1h
+```
+
+```dql
+// Check if debug/trace logs are being dropped (cost savings)
+fetch logs, from: now() - 24h
+| filter loglevel == "DEBUG" OR loglevel == "TRACE"
+| summarize {debug_trace_count = count()}
+| fieldsAdd status = if(debug_trace_count == 0, 
+    "✅ Debug/trace logs dropped as expected",
+    else: "⚠️ Debug/trace logs still present - check drop processors")
+```
+
+```dql
+// Volume by log level (should see mostly INFO/WARN/ERROR)
+fetch logs, from: now() - 24h
+| summarize {log_count = count()}, by: {loglevel}
+| fieldsAdd percentage = round((toDouble(log_count) / 100), decimals: 1)
+| sort log_count desc
+```
+
+```dql
+// Top 10 highest volume sources
+fetch logs, from: now() - 24h
+| summarize {log_count = count()}, by: {log.source}
+| sort log_count desc
+| limit 10
+```
 
 ---
 

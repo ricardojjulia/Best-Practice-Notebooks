@@ -1,6 +1,6 @@
 # OPLOGS-06: Topology & Entity Context
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 6 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Leveraging Entity Relationships in Log Analysis
 This notebook explores how Dynatrace enriches logs with entity context (hosts, processes, services, Kubernetes) for topology-aware analysis.
@@ -78,7 +78,7 @@ Relationships flow from infrastructure → application → kubernetes context.
 | `k8s.workload.name` | Workload name |
 | `k8s.workload.kind` | Workload type (Deployment, StatefulSet, etc.) |
 
-```python
+```dql
 // Discover available entity types in your logs
 fetch logs, from: now() - 1h
 | summarize {
@@ -95,7 +95,7 @@ fetch logs, from: now() - 1h
 ## 2. Host Topology
 Analyze logs by host to understand infrastructure patterns.
 
-```python
+```dql
 // Log volume by host
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.host)
@@ -104,7 +104,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Error distribution by host
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.host)
@@ -117,7 +117,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Host with log.source breakdown
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.host)
@@ -130,7 +130,7 @@ fetch logs, from: now() - 1h
 ## 3. Process Group Topology
 Process groups represent logical application components across hosts.
 
-```python
+```dql
 // Logs by process group
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.process_group)
@@ -139,7 +139,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Process group error analysis
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.process_group)
@@ -150,7 +150,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Process group to host mapping
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.process_group) AND isNotNull(dt.entity.host)
@@ -163,7 +163,7 @@ fetch logs, from: now() - 1h
 ## 4. Kubernetes Topology
 OpenPipeline enriches container logs with rich Kubernetes context.
 
-```python
+```dql
 // Logs by Kubernetes namespace
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name)
@@ -172,7 +172,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Kubernetes namespace with error breakdown
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name)
@@ -185,7 +185,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Pod-level analysis
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.pod.name)
@@ -197,7 +197,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Workload analysis (Deployments, StatefulSets, etc.)
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.workload.name)
@@ -209,7 +209,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Container-level detail
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.container.name)
@@ -222,7 +222,7 @@ fetch logs, from: now() - 1h
 ## 5. Service Mapping
 Connect logs to Dynatrace-detected services for full observability.
 
-```python
+```dql
 // Logs by service entity
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.service)
@@ -231,7 +231,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Service error rates from logs
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.service)
@@ -244,7 +244,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Service to process group relationship
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.service) AND isNotNull(dt.entity.process_group)
@@ -257,7 +257,7 @@ fetch logs, from: now() - 1h
 ## 6. Cross-Entity Correlation
 Use entity context to correlate logs across the topology.
 
-```python
+```dql
 // Full topology view: Cluster > Namespace > Pod > Container
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.cluster.name)
@@ -271,7 +271,7 @@ fetch logs, from: now() - 1h
 | limit 25
 ```
 
-```python
+```dql
 // Entity coverage report
 fetch logs, from: now() - 1h
 | summarize {
@@ -283,7 +283,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Logs without entity context (potential configuration issue)
 fetch logs, from: now() - 1h
 | filter isNull(dt.entity.host) AND isNull(dt.entity.process_group)
@@ -291,7 +291,7 @@ fetch logs, from: now() - 1h
 | sort orphan_count desc
 ```
 
-```python
+```dql
 // Trace correlation: Logs with trace context
 fetch logs, from: now() - 1h
 | filter isNotNull(trace_id) OR isNotNull(span_id)
@@ -307,7 +307,7 @@ fetch logs, from: now() - 1h
 ## 7. Using Entity IDs for Lookups
 Entity IDs enable cross-data-type correlation.
 
-```python
+```dql
 // Get distinct entity IDs for a namespace
 fetch logs, from: now() - 1h
 | filter k8s.namespace.name == "hipstershop"
@@ -318,7 +318,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Find logs for a specific entity (replace with actual entity ID)
 // fetch logs, from: now() - 1h
 // | filter dt.entity.host == "HOST-XXXXXX"
@@ -335,7 +335,7 @@ fetch logs, from: now() - 1h
 ## 8. Topology-Based Alerting Patterns
 Use entity context to create meaningful alert conditions.
 
-```python
+```dql
 // Alert pattern: Errors per namespace (for threshold alerting)
 fetch logs, from: now() - 15m
 | filter loglevel == "ERROR"
@@ -344,7 +344,7 @@ fetch logs, from: now() - 15m
 | sort error_count desc
 ```
 
-```python
+```dql
 // Alert pattern: Hosts with high error rate
 fetch logs, from: now() - 15m
 | filter isNotNull(dt.entity.host)
@@ -358,7 +358,7 @@ fetch logs, from: now() - 15m
 | sort error_rate desc
 ```
 
-```python
+```dql
 // Alert pattern: Pod restarts (look for startup patterns)
 fetch logs, from: now() - 1h
 | filter contains(content, "started") OR contains(content, "initializing")

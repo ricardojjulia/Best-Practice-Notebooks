@@ -1,6 +1,6 @@
 # OPLOGS-05: Querying & Parsing Logs
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 5 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## DQL Fundamentals and DPL Pattern Matching
 This notebook covers DQL query syntax, filtering, string matching, and DPL (Dynatrace Pattern Language) for extracting structured data from logs.
@@ -69,14 +69,14 @@ fetch logs, from: now() - 1h          // Data source and time range
 | `summarize {count = count()}` | `SELECT COUNT(*)` |
 | `isNull(field)` | `field IS NULL` |
 
-```python
+```dql
 // Basic log query - explore recent logs
 fetch logs, from: now() - 1h
 | fields timestamp, content, loglevel, dt.entity.host
 | limit 10
 ```
 
-```python
+```dql
 // Query with time range options
 fetch logs, from: now() - 24h, to: now() - 12h
 | summarize {count = count()}, by: {loglevel}
@@ -102,7 +102,7 @@ fetch logs, from: now() - 24h, to: now() - 12h
 | `OR` | Either condition | `loglevel == "ERROR" OR loglevel == "WARN"` |
 | `NOT` | Negate | `NOT contains(content, "health")` |
 
-```python
+```dql
 // Filter by log level
 fetch logs, from: now() - 1h
 | filter loglevel == "ERROR"
@@ -110,7 +110,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Multiple conditions with AND/OR
 fetch logs, from: now() - 1h
 | filter (loglevel == "ERROR" OR loglevel == "WARN")
@@ -120,7 +120,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Filter using in() for multiple values
 fetch logs, from: now() - 1h
 | filter in(loglevel, {"ERROR", "WARN", "INFO"})
@@ -138,7 +138,7 @@ fetch logs, from: now() - 1h
 | `matchesPhrase(str, phrase)` | Word boundary match | `matchesPhrase(content, "connection refused")` |
 | `matchesValue(str, pattern)` | Exact or wildcard match | `matchesValue(host, "web-*")` |
 
-```python
+```dql
 // Search for specific content patterns
 fetch logs, from: now() - 1h
 | filter contains(content, "Exception")
@@ -147,7 +147,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Use matchesPhrase for word-boundary matching
 fetch logs, from: now() - 1h
 | filter matchesPhrase(content, "connection")
@@ -157,7 +157,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Exclude patterns with NOT
 fetch logs, from: now() - 1h
 | filter loglevel == "ERROR"
@@ -179,7 +179,7 @@ fetch logs, from: now() - 1h
 | `fieldsAdd` | Add computed fields |
 | `fieldsRemove` | Remove fields |
 
-```python
+```dql
 // Add computed fields
 fetch logs, from: now() - 1h
 | filter loglevel == "ERROR"
@@ -191,7 +191,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // String manipulation functions
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name)
@@ -226,7 +226,7 @@ DPL extracts structured data from unstructured log content.
 | `'literal'` | Match exact string |
 | `(opt1\|opt2)` | Match alternatives |
 
-```python
+```dql
 // Parse log level from content (e.g., "[ERROR] message")
 fetch logs, from: now() - 1h
 | filter startsWith(content, "[")
@@ -237,7 +237,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Parse HTTP-style logs
 // Example: GET /api/users 200 45ms
 fetch logs, from: now() - 1h
@@ -249,7 +249,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Parse key-value pairs
 // Example: "user=john action=login status=success"
 fetch logs, from: now() - 1h
@@ -260,7 +260,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Parse IP addresses from logs
 fetch logs, from: now() - 1h
 | parse content, "IPADDR:client_ip"
@@ -274,7 +274,7 @@ fetch logs, from: now() - 1h
 ## 6. Working with JSON Logs
 Many applications emit JSON-formatted logs. DQL provides tools to work with JSON content.
 
-```python
+```dql
 // Find JSON-formatted logs
 fetch logs, from: now() - 1h
 | filter startsWith(content, "{")
@@ -284,7 +284,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Parse JSON and extract fields
 fetch logs, from: now() - 1h
 | filter startsWith(content, "{")
@@ -294,7 +294,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Access nested JSON fields
 fetch logs, from: now() - 1h
 | filter startsWith(content, "{")
@@ -317,7 +317,7 @@ DQL uses three-valued logic. `NULL` comparisons require special functions.
 | `field == null` | `isNull(field)` |
 | `field != null` | `isNotNull(field)` |
 
-```python
+```dql
 // Check for null values
 fetch logs, from: now() - 1h
 | summarize {
@@ -329,7 +329,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Use coalesce for default values
 fetch logs, from: now() - 1h
 | fieldsAdd effective_level = coalesce(loglevel, status, "UNKNOWN")
@@ -340,7 +340,7 @@ fetch logs, from: now() - 1h
 <a id="advanced-parsing-examples"></a>
 ## 8. Advanced Parsing Examples
 
-```python
+```dql
 // Parse exception patterns
 fetch logs, from: now() - 24h
 | filter contains(content, "Exception") OR contains(content, "Error")
@@ -351,7 +351,7 @@ fetch logs, from: now() - 24h
 | limit 15
 ```
 
-```python
+```dql
 // Parse with optional fields
 // Matches: "error code=123" or "error code=123 message=failed"
 fetch logs, from: now() - 1h
@@ -363,7 +363,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Parse alternative formats
 // Matches: "user=john", "username=john"
 fetch logs, from: now() - 1h
@@ -400,8 +400,8 @@ Continue to **OPLOGS-06: Topology & Entity Context** to learn about entity conte
 ## 📚 References
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
 - [DQL Functions](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/functions)
-- [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language)
-- [DPL Architect Tool](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language/dpl-architect)
+- [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language)
+- [DPL Architect Tool](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language/dpl-architect)
 
 ---
 
