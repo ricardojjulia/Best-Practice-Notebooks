@@ -17,7 +17,7 @@ Each topic follows the same structure:
 Series are grouped into six categories for navigation. An alphabetical index follows below.
 
 - **Foundations & Adoption** — getting started, maturity, access, data organization
-  [ONBRD](#onbrd---dynatrace-onboarding) · [ADOPT](#adopt---observability-adoption--maturity) · [IAM](#iam---iam-administration) · [ORGNZ](#orgnz---organize-data-buckets-segments-security)
+  [ONBRD](#onbrd---dynatrace-onboarding) · [ADOPT](#adopt---observability-adoption--maturity) · [IAM](#iam---iam-administration) · [ORGNZ](#orgnz---organize-data-buckets-segments-security) · [FAQ](#faq---frequently-asked-questions)
 - **Data Sources & Instrumentation** — what you monitor and how to instrument it
   [K8S](#k8s---kubernetes-monitoring) · [CLOUD](#cloud---cloud-provider-integrations) · [MOBL](#mobl---mobile-monitoring) · [WEBRUM](#webrum---web-real-user-monitoring) · [SYNTH](#synth---synthetic-monitoring) · [DBMON](#dbmon---database-monitoring) · [OTEL](#otel---opentelemetry-integration)
 - **Data Processing & Analytics** — ingestion, shaping, querying, dashboards
@@ -103,6 +103,11 @@ End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
 - [DBMON-05: Query Analysis](DBMON%20-%20Database%20Monitoring/markdown/-%5BDBMON%5D-05-query-analysis.md) — Performance analysis and optimization
 - [DBMON-06: Dashboards and Alerting](DBMON%20-%20Database%20Monitoring/markdown/-%5BDBMON%5D-06-dashboards-and-alerting.md) — Database performance dashboards
 - [DBMON-99: Best Practice Summary](DBMON%20-%20Database%20Monitoring/markdown/-%5BDBMON%5D-99-best-practice-summary.md) — Consolidated best practices from the DBMON series
+
+### [FAQ - Frequently Asked Questions](FAQ%20-%20Frequently%20Asked%20Questions/README.md)
+Frequently asked questions and answers across the Dynatrace Best-Practice Notebooks series.
+
+*Notebooks coming soon.*
 
 ### [IAM - IAM Administration](IAM%20-%20IAM%20Administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
