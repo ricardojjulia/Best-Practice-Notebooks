@@ -1,10 +1,6 @@
 # OPMIG-07: Metric & Event Extraction
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
-
-> **OpenPipeline Migration Series** | Notebook 7 of 9  
-> **Level:** Intermediate to Advanced  
-> **Estimated Time:** 70 minutes
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ---
 
@@ -38,30 +34,39 @@ By completing this notebook, you will:
 
 ---
 
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and OpenPipeline access |
+| **Permissions** | `openpipeline.configurations.read`, `openpipeline.configurations.write`, `metrics.ingest` |
+| **API Access** | `logs.read`, `logs.ingest`, `metrics.ingest` token scopes |
+| **Knowledge** | OPMIG-01 through OPMIG-06; understanding of processing/parsing concepts |
+
 ---
 
-## Extraction Stage Overview
+## Extraction Processors Overview
 
-The Extraction stage runs **after** Processing and **before** Storage. It generates:
+> **Doc alignment (May 2026):** Per the official `/concepts/processing` documentation, **extraction is not a separate pipeline stage** — it is a category of processors that run *within* the Processing stage. Earlier versions of this notebook treated Extraction as the fourth stage between Processing and Storage; the corrected 4-stage model is `Ingest → Routing → Processing → Storage`, with the extraction processors below all executing inside Processing.
 
-![Extraction Stage](images/extraction-stage.png)
+The extraction processors generate derived signals (metrics, events, business events, Smartscape topology) from records before they reach Storage:
 
-<!--MARKDOWN_TABLE_ALTERNATIVE
+![Extraction Processors](images/extraction-stage.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
 | Extraction Type | Output | Use Case |
 |-----------------|--------|----------|
-| Metric Extraction | Metrics (10yr retention) | SLI dashboards, alerts, low cardinality |
-| Event Extraction | Dynatrace Intelligence Events | Root cause analysis, problem detection |
-| Business Event | Grail Bizevents | Revenue tracking, funnels, analytics |
+| **Counter metric** | Incrementing counter timeseries | Request counts, error counts |
+| **Value metric** | Gauge timeseries with dimensions | Response times, sizes, amounts |
+| **Histogram metric** *(Preview)* | Distribution capture for percentiles | Latency P50/P95/P99 |
+| **Smartscape node** | Smartscape topology node | Custom topology entities |
+| **Smartscape edge** | Smartscape topology edge | Custom topology relationships |
+| **Business event** | Bizevent record | Revenue, transactions, funnels |
+| **SDLC event** | SDLC event record | Build/deploy/release events |
+| **Davis event** | Davis event record | Custom Davis-analyzable events |
 -->
 
-### Key Benefits
-
-| Benefit | Description |
-|---------|-------------|
-| **Derived signals** | Create metrics from logs without app changes |
-| **Cost optimization** | Extract metrics, then drop verbose logs |
-| **Dynatrace Intelligence integration** | Generated events feed into AI analysis |
-| **Business visibility** | Business events enable analytics dashboards |
+> **Span sampling note:** When extracting metrics from spans, use the **sampling-aware** variants of counter/value/histogram processors so the extracted metric remains unbiased by trace sampling decisions. Span-specific extraction is covered in OPIPE-03 (sampling-aware metrics).
 
 ---
 
@@ -304,7 +309,7 @@ Dimensions: feature_name, feature_enabled, user_segment
 
 ---
 
-```python
+```dql
 // Query business events extracted from logs
 fetch bizevents, from: now() - 24h
 | filter event.type == "com.example.order.placed"
@@ -312,7 +317,7 @@ fetch bizevents, from: now() - 24h
 | limit 50
 ```
 
-```python
+```dql
 // Business event analytics - order totals by hour
 fetch bizevents, from: now() - 24h
 | filter event.type == "com.example.order.placed"
@@ -439,14 +444,14 @@ From a single payment log line, extract:
 ## Validating Extractions
 After configuring extractions, verify they're working.
 
-```python
+```dql
 // List log-extracted metrics
 // Note: Use the Dynatrace UI (Observe > Metrics) to browse metrics
 // Or use timeseries to query a specific metric:
 // timeseries avg_value = avg(log.your_metric_name), from: now() - 24h
 ```
 
-```python
+```dql
 // Query a specific extracted metric
 // Replace 'log.api.request_duration_ms' with your metric key
 timeseries {
@@ -455,7 +460,7 @@ timeseries {
   }, from: now() - 2h, interval: 5m
 ```
 
-```python
+```dql
 // View extracted counter metric by dimension
 // Replace 'log.api.request_count' with your metric key
 timeseries {
@@ -463,7 +468,7 @@ timeseries {
   }, from: now() - 2h, interval: 5m
 ```
 
-```python
+```dql
 // View extracted events
 fetch events, from: now() - 24h
 | filter isNotNull(event.name)
@@ -471,7 +476,7 @@ fetch events, from: now() - 24h
 | sort event_count desc
 ```
 
-```python
+```dql
 // View specific event details
 fetch events, from: now() - 24h
 | filter event.name == "payment.transaction.failed"
@@ -480,14 +485,14 @@ fetch events, from: now() - 24h
 | limit 25
 ```
 
-```python
+```dql
 // View business events by type
 fetch bizevents, from: now() - 24h
 | summarize {bizevent_count = count()}, by: {event.type, event.provider}
 | sort bizevent_count desc
 ```
 
-```python
+```dql
 // Compare source log volume to extracted metrics
 // This helps verify extraction is capturing expected data
 fetch logs, from: now() - 1h
@@ -684,14 +689,14 @@ Now that you can extract metrics and events, continue with:
 
 ## References
 
-- [OpenPipeline Data Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/concepts/data-extraction)
-- [Metric Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/metric-extraction)
-- [Business Event Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/bizevent-extraction)
+- [OpenPipeline Data Extraction](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/processing)
+- [Metric Extraction](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/metric-extraction)
+- [Business Event Extraction](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/bizevent-extraction)
 - [Dynatrace Intelligence Events](https://docs.dynatrace.com/docs/platform/davis-ai/basics/events)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

@@ -1,10 +1,6 @@
 # OPMIG-08: Security, Masking & Compliance
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
-
-> **OpenPipeline Migration Series** | Notebook 8 of 9  
-> **Level:** Advanced  
-> **Estimated Time:** 80 minutes
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ---
 
@@ -36,6 +32,16 @@ By completing this notebook, you will:
 8. Design complete security pipelines
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and OpenPipeline access |
+| **Permissions** | `openpipeline.configurations.read` and `openpipeline.configurations.write` |
+| **API Access** | `logs.read` token scope |
+| **DPL Architect** | Access to `https://{env}.apps.dynatrace.com/ui/apps/dynatrace.dpl.architect` |
+| **Knowledge** | OPMIG-01 through OPMIG-07; understanding of compliance requirements (PCI, HIPAA, GDPR) |
 
 ---
 
@@ -336,7 +342,7 @@ After configuring masking, verify it's working correctly.
 
 > ⚠️ **Important:** Test with sample data before deploying to production.
 
-```python
+```dql
 // Check for any remaining credit card patterns in stored logs
 // If masking works, this should return 0 results
 fetch logs, from: now() - 24h
@@ -346,7 +352,7 @@ fetch logs, from: now() - 24h
 | limit 10
 ```
 
-```python
+```dql
 // Check for any remaining email patterns
 // Look for @ symbol with surrounding text
 fetch logs, from: now() - 24h
@@ -356,7 +362,7 @@ fetch logs, from: now() - 24h
 | limit 10
 ```
 
-```python
+```dql
 // Verify redaction placeholders are present
 // This confirms masking is actively working
 fetch logs, from: now() - 24h
@@ -368,7 +374,7 @@ fetch logs, from: now() - 24h
 | sort masked_count desc
 ```
 
-```python
+```dql
 // Sample masked logs to verify format
 fetch logs, from: now() - 24h
 | filter contains(content, "REDACTED")
@@ -376,7 +382,7 @@ fetch logs, from: now() - 24h
 | limit 20
 ```
 
-```python
+```dql
 // Audit: Count masked records by pipeline and type
 fetch logs, from: now() - 24h
 | fieldsAdd has_cc_mask = contains(content, "[CC_REDACTED]"),
@@ -392,7 +398,7 @@ fetch logs, from: now() - 24h
   }, by: {dt.openpipeline.pipelines}
 ```
 
-```python
+```dql
 // Check for potential SSN patterns that might be missed
 // Pattern: ###-##-#### where # is a digit
 fetch logs, from: now() - 24h
@@ -509,7 +515,7 @@ fieldsAdd content = replacePattern(content, "'Bearer ' NSPACE", replacement: "Be
 
 ### Pipeline Verification Query
 
-```python
+```dql
 // Verify complete masking for payment-logs pipeline
 fetch logs, from: now() - 1h
 | filter dt.openpipeline.pipelines == "payment-logs-secure"
@@ -536,14 +542,14 @@ Now that security is configured, complete your migration:
 
 ## References
 
-- [OpenPipeline Masking](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/mask-sensitive-data)
-- [DPL replacePattern](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language/dpl-architecture)
+- [OpenPipeline Masking](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases)
+- [DPL replacePattern](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language)
 - [Data Privacy in Dynatrace](https://docs.dynatrace.com/docs/manage/data-privacy-and-security)
 - [Compliance Best Practices](https://docs.dynatrace.com/docs/manage/data-privacy-and-security/data-privacy)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

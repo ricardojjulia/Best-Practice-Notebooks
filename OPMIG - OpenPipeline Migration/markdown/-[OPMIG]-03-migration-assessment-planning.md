@@ -1,6 +1,6 @@
 # OPMIG-03: OpenPipeline Migration Guide: Part 3
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Migration Assessment & Planning
 ---
@@ -36,6 +36,15 @@ By the end of this notebook, you will:
 - ✅ Generate comprehensive source inventory
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and existing log ingestion |
+| **API Access** | `logs.read` token scope |
+| **Existing Logs** | At least 7 days of classic log data for assessment queries |
+| **Knowledge** | OPMIG-01 and OPMIG-02 concepts |
 
 ---
 
@@ -124,7 +133,7 @@ fetch logs, from: now() - 1h
 
 ---
 
-```python
+```dql
 // Overall data volume summary by data type
 // Understand the scale of your migration
 fetch logs, from: now() - 7d
@@ -132,7 +141,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd data_type = "logs", daily_avg = log_count / 7
 ```
 
-```python
+```dql
 // Compare logs processed by OpenPipeline vs potentially classic
 // Identifies migration progress
 fetch logs, from: now() - 7d
@@ -142,7 +151,7 @@ fetch logs, from: now() - 7d
 | sort record_count desc
 ```
 
-```python
+```dql
 // Breakdown by OpenPipeline source type
 // Shows which ingestion methods are being used
 fetch logs, from: now() - 7d
@@ -151,7 +160,7 @@ fetch logs, from: now() - 7d
 | sort record_count desc
 ```
 
-```python
+```dql
 // Check span ingestion landscape (OpenPipeline handles spans too!)
 fetch spans, from: now() - 7d
 | summarize {span_count = count()}, by: {dt.openpipeline.source}
@@ -165,14 +174,14 @@ fetch spans, from: now() - 7d
 ## Volume Analysis
 Understanding volume patterns helps you prioritize migration and plan for cost optimization.
 
-```python
+```dql
 // Daily log volume trend
 // Identify growth patterns and peak days
 fetch logs, from: now() - 30d
 | makeTimeseries {daily_count = count()}, interval: 24h
 ```
 
-```python
+```dql
 // Hourly volume pattern (typical day)
 // Understand when peak ingestion occurs
 fetch logs, from: now() - 7d
@@ -181,7 +190,7 @@ fetch logs, from: now() - 7d
 | sort hour_of_day asc
 ```
 
-```python
+```dql
 // Volume by log source - TOP 25
 // Identify highest volume sources for prioritization
 fetch logs, from: now() - 7d
@@ -191,7 +200,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd daily_avg = round(record_count / 7, decimals: 0)
 ```
 
-```python
+```dql
 // Volume by host entity
 // Identify which hosts generate the most logs
 fetch logs, from: now() - 7d
@@ -202,7 +211,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd daily_avg = round(record_count / 7, decimals: 0)
 ```
 
-```python
+```dql
 // Volume by Kubernetes namespace (if applicable)
 fetch logs, from: now() - 7d
 | filter isNotNull(k8s.namespace.name)
@@ -218,7 +227,7 @@ fetch logs, from: now() - 7d
 ## Source Inventory
 Create a comprehensive inventory of log sources for migration planning.
 
-```python
+```dql
 // Complete log source inventory with characteristics
 fetch logs, from: now() - 7d
 | summarize {
@@ -233,7 +242,7 @@ fetch logs, from: now() - 7d
 | limit 30
 ```
 
-```python
+```dql
 // Log sources by ingestion method
 // Map sources to their OpenPipeline ingestion type
 fetch logs, from: now() - 7d
@@ -242,7 +251,7 @@ fetch logs, from: now() - 7d
 | limit 50
 ```
 
-```python
+```dql
 // Log sources by current pipeline assignment
 // Identify which sources already have custom pipelines
 fetch logs, from: now() - 7d
@@ -251,7 +260,7 @@ fetch logs, from: now() - 7d
 | limit 50
 ```
 
-```python
+```dql
 // Log sources by bucket
 // Shows current storage distribution
 fetch logs, from: now() - 7d
@@ -266,7 +275,7 @@ fetch logs, from: now() - 7d
 ## Parsing Requirements Analysis
 Identify which log sources need parsing pipelines to extract structured data.
 
-```python
+```dql
 // Overall parsing coverage assessment
 // What percentage of logs have structured log levels?
 fetch logs, from: now() - 24h
@@ -281,7 +290,7 @@ fetch logs, from: now() - 24h
 | fieldsAdd overall_coverage = round((toDouble(either) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Sources with low parsing coverage (need custom parsing)
 // These sources should be prioritized for parsing pipelines
 fetch logs, from: now() - 7d
@@ -296,7 +305,7 @@ fetch logs, from: now() - 7d
 | limit 25
 ```
 
-```python
+```dql
 // Sample unparsed log content for pattern analysis
 // Review these to design parsing rules
 fetch logs, from: now() - 1h
@@ -305,7 +314,7 @@ fetch logs, from: now() - 1h
 | limit 50
 ```
 
-```python
+```dql
 // Identify JSON logs that could benefit from JSON parsing
 // JSON logs can be automatically parsed in OpenPipeline
 fetch logs, from: now() - 1h
@@ -315,7 +324,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Sample JSON logs for structure analysis
 fetch logs, from: now() - 1h
 | filter startsWith(toString(content), "{")
@@ -329,7 +338,7 @@ fetch logs, from: now() - 1h
 ## Cost Optimization Opportunities
 Identify logs that can be dropped or routed to shorter retention buckets to reduce costs.
 
-```python
+```dql
 // Debug log volume - prime candidates for dropping
 fetch logs, from: now() - 7d
 | summarize {
@@ -342,7 +351,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd droppable_pct = round((toDouble(debug_logs + trace_logs) / toDouble(total)) * 100, decimals: 2)
 ```
 
-```python
+```dql
 // Health check and metrics endpoint logs - often droppable
 fetch logs, from: now() - 7d
 | summarize {
@@ -356,7 +365,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd savings_pct = round((toDouble(droppable) / toDouble(total)) * 100, decimals: 2)
 ```
 
-```python
+```dql
 // Log level distribution by source
 // Identify sources with high debug/trace output
 fetch logs, from: now() - 7d
@@ -365,7 +374,7 @@ fetch logs, from: now() - 7d
 | sort log.source asc, record_count desc
 ```
 
-```python
+```dql
 // Highly repetitive log patterns (noise candidates)
 // Find logs with same content appearing many times
 fetch logs, from: now() - 1h
@@ -375,7 +384,7 @@ fetch logs, from: now() - 1h
 | limit 25
 ```
 
-```python
+```dql
 // Estimate potential cost savings from dropping debug/noise
 fetch logs, from: now() - 7d
 | summarize {
@@ -625,7 +634,7 @@ fetch logs, from: now() - 7d
 ## Security & Compliance Assessment
 Identify logs containing sensitive data that needs masking before storage.
 
-```python
+```dql
 // Search for potential PII patterns
 // CAUTION: Review results carefully for actual sensitive data
 fetch logs, from: now() - 1h
@@ -639,7 +648,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Look for email patterns in logs
 fetch logs, from: now() - 1h
 | filter contains(toString(content), "@")
@@ -648,7 +657,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Sample logs with potential sensitive data for review
 // Review these to design masking rules
 fetch logs, from: now() - 1h
@@ -657,7 +666,7 @@ fetch logs, from: now() - 1h
 | limit 25
 ```
 
-```python
+```dql
 // Look for IP addresses in logs (may need masking for GDPR)
 fetch logs, from: now() - 1h
 | filter contains(toString(content), ".")
@@ -666,7 +675,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Audit log sources - may need longer retention
 fetch logs, from: now() - 7d
 | filter contains(toString(log.source), "audit")
@@ -703,7 +712,7 @@ Based on your assessment, prioritize sources for migration using this framework:
 | **Wave 3** | 🟡 Medium | Medium volume, standard processing | Application logs |
 | **Wave 4** | 🟢 Low | Low volume, minimal processing | Development, test environments |
 
-```python
+```dql
 // Generate migration priority assessment by source
 fetch logs, from: now() - 7d
 | summarize {
@@ -781,7 +790,7 @@ For each source being migrated, document:
 ## Assessment Summary Export
 Run these queries to create a summary you can export and share with your team.
 
-```python
+```dql
 // Complete source inventory with all metrics
 // Export this for migration planning documentation
 fetch logs, from: now() - 7d
@@ -818,13 +827,13 @@ With your assessment complete, continue with:
 
 ## References
 
-- [OpenPipeline Configuration Tutorial](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/getting-started/tutorial-configure-processing)
+- [OpenPipeline Configuration Tutorial](https://docs.dynatrace.com/docs/platform/openpipeline/getting-started/tutorial-configure-processing)
 - [Log Management Limits](https://docs.dynatrace.com/docs/analyze-explore-automate/logs/lma-limits)
 - [Grail Buckets](https://docs.dynatrace.com/docs/platform/grail/data-model/buckets)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

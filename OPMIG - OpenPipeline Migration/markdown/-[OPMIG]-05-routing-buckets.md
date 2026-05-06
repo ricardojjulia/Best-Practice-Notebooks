@@ -1,6 +1,6 @@
 # OPMIG-05: Dynamic Routing & Bucket Management
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 > **OpenPipeline Migration Series** | Notebook 5 of 9  
 > **Level:** Intermediate  
@@ -38,6 +38,15 @@ By completing this notebook, you will:
 7. Analyze bucket usage and identify optimization opportunities
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and OpenPipeline access |
+| **Permissions** | `openpipeline.configurations.read`, `openpipeline.configurations.write`, `storage.buckets.read` |
+| **API Access** | `logs.read` token scope |
+| **Knowledge** | OPMIG-01 through OPMIG-04; understanding of pipeline configuration |
 
 ---
 
@@ -388,7 +397,7 @@ TOTAL:          $4,040/month
 ## Analyzing Your Bucket Usage
 Use these queries to understand your current bucket utilization and plan optimization.
 
-```python
+```dql
 // Current bucket distribution for logs
 // Shows where your logs are being stored
 fetch logs, from: now() - 7d
@@ -397,7 +406,7 @@ fetch logs, from: now() - 7d
 | sort record_count desc
 ```
 
-```python
+```dql
 // Bucket usage by log source
 // Identify which sources are consuming bucket capacity
 fetch logs, from: now() - 7d
@@ -406,7 +415,7 @@ fetch logs, from: now() - 7d
 | limit 30
 ```
 
-```python
+```dql
 // Bucket usage by pipeline
 // Shows which pipelines are routing to which buckets
 fetch logs, from: now() - 7d
@@ -415,13 +424,13 @@ fetch logs, from: now() - 7d
 | sort record_count desc
 ```
 
-```python
+```dql
 // Bucket usage trend over time
 fetch logs, from: now() - 7d
 | makeTimeseries {record_count = count()}, by: {dt.system.bucket}, interval: 1d
 ```
 
-```python
+```dql
 // Identify logs that could move to shorter retention buckets
 // Debug and trace logs are prime candidates
 fetch logs, from: now() - 7d
@@ -437,7 +446,7 @@ fetch logs, from: now() - 7d
 | fieldsAdd optimization_potential = round((toDouble(debug + trace) / toDouble(total)) * 100, decimals: 2)
 ```
 
-```python
+```dql
 // Check span bucket distribution
 // Spans also use buckets
 fetch spans, from: now() - 7d
@@ -445,7 +454,7 @@ fetch spans, from: now() - 7d
 | sort span_count desc
 ```
 
-```python
+```dql
 // Estimate storage reduction from tiered retention
 // Shows potential savings from routing to different buckets
 fetch logs, from: now() - 7d
@@ -578,7 +587,7 @@ Both pipelines process the same record
 
 > ⚠️ **Limit:** A record can be processed by maximum 5 pipelines. Beyond this, extraction stops.
 
-```python
+```dql
 // Identify records processed by multiple pipelines
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.openpipeline.pipelines)
@@ -588,7 +597,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Count of logs by number of pipelines processing them
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.openpipeline.pipelines)
@@ -872,13 +881,13 @@ Now that you understand routing and buckets, continue with:
 
 ## References
 
-- [OpenPipeline Data Flow](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/concepts/data-flow)
+- [OpenPipeline Data Flow](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/data-flow)
 - [Grail Buckets](https://docs.dynatrace.com/docs/platform/grail/data-model/buckets)
-- [OpenPipeline Limits](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/reference/limits)
+- [OpenPipeline Limits](https://docs.dynatrace.com/docs/platform/openpipeline/reference/limits)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

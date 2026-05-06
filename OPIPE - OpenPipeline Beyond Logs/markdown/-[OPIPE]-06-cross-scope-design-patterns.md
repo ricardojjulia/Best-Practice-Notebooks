@@ -1,6 +1,6 @@
 # OPIPE-06: Cross-Scope Design Patterns
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 ## Correlating Logs, Spans, Metrics, and Events Across Scopes
 
@@ -264,7 +264,7 @@ You have completed the OPIPE series. From here:
 <a id="references"></a>
 ## References
 
-- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
+- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [Grail Data Lakehouse](https://docs.dynatrace.com/docs/platform/grail)
 - [DQL Cross-Data Queries](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
 - [SLO Configuration](https://docs.dynatrace.com/docs/observe-and-explore/service-level-objectives)

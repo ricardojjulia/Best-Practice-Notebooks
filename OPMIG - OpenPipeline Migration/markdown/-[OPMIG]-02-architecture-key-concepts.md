@@ -1,6 +1,6 @@
 # OPMIG-02: OpenPipeline Migration Guide: Part 2
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Architecture & Key Concepts
 ---
@@ -35,6 +35,14 @@ By the end of this notebook, you will:
 
 ---
 
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail enabled |
+| **API Access** | `logs.read` token scope for DQL validation |
+| **Knowledge** | OPMIG-01 or familiarity with Classic log ingestion concepts |
+
 ---
 
 <a id="data-flow-architecture"></a>
@@ -48,35 +56,52 @@ Understanding how data flows through OpenPipeline is essential for designing eff
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Components | Description |
 |-------|------------|-------------|
-| **Ingest Sources** | OneAgent, Generic API, OTLP, Custom | Data entry points |
-| **Routing Stage** | Matching conditions, Pipeline selection | Route to appropriate pipeline(s) |
-| **Processing Stage** | Masking, Filtering, Parsing, Transformation | Transform data before storage |
-| **Extraction Stage** | Metrics, Events, Business Events | Create derived data |
-| **Storage Stage** | Bucket routing, Retention policies | Persist to Grail |
+| **Ingest** | OneAgent, Generic API, OTLP, Custom (built-in / ready-made / custom sources) | Data entry points; source recorded in `dt.openpipeline.source` |
+| **Pre-processing** *(custom sources only, optional)* | Source-level DQL transform | Normalize raw data into a common shape before routing |
+| **Routing** | Dynamic matchers (DQL) or static assignment (custom sources) | Route records to one or more pipelines |
+| **Processing** | Mask, drop, transform, parse, enrich, extract metrics/events/Smartscape, assign cost/security context | All in-pipeline work — masking, filtering, parsing, transformation, and extraction are processor categories within this stage, not separate stages |
+| **Storage** | Bucket assignment, retention policies, no-storage option | Persist to a Grail bucket, or skip retention with the No storage assignment processor |
 -->
+
+> **Doc alignment (May 2026):** OpenPipeline's official `/concepts/data-flow` documentation describes a **four-stage flow** (Ingest → Routing → Processing → Storage) with optional pre-processing on custom sources. Earlier versions of this notebook described a five-stage flow with a separate "Extraction" stage; metric, event, Smartscape, and cost-allocation extraction processors actually live *within* the Processing stage.
 
 ### Key Principles
 
-1. **Pre-storage Processing**: All transformations happen BEFORE data is written to Grail
-2. **Order Matters**: Processors execute in defined order within each stage
-3. **Multi-pipeline Support**: A single record can be processed by up to 5 pipelines
-4. **Entity Detection**: Entity fields (`dt.entity.*`) are added AFTER the Processing stage
-5. **Immutable Storage**: Once stored, data cannot be modified (mask early!)
+1. **Pre-storage Processing**: All transformations happen BEFORE data is written to Grail.
+2. **Order Matters**: Processors execute in the order defined within each pipeline.
+3. **Multi-pipeline Support**: A single record can be processed by up to 5 pipelines.
+4. **Entity Detection**: Entity fields (`dt.entity.*`) are added AFTER the Processing stage.
+5. **Immutable Storage**: Once stored, data cannot be modified (mask early!).
 
 ---
 
 <a id="processing-stages-in-detail"></a>
 ## Processing Stages in Detail
-### Stage 1: Routing
+
+### Stage 1: Ingest
+
+Records enter via an ingest source. The source is recorded as `dt.openpipeline.source`.
+
+| Source Type | Owner | Pre-processing | Routing |
+|-------------|-------|----------------|---------|
+| **Built-in** | OpenPipeline (view-only) | No | Dynamic only |
+| **Ready-made** | Extensions | No | Dynamic only |
+| **Custom** | User-defined | Yes (optional) | Dynamic or static |
+
+### Stage 2: Pre-processing *(optional, custom sources only)*
+
+A DQL transform applied to records from a custom source *before* routing. Use this to normalize raw data from third-party shippers into a common shape that all downstream pipelines can consume.
+
+### Stage 3: Routing
 
 The routing stage determines which pipeline(s) process each incoming record.
 
 | Aspect | Description |
 |--------|-------------|
 | **Purpose** | Match incoming data to appropriate pipelines |
-| **Timing** | First stage - before any processing |
-| **Configuration** | Dynamic routing rules with matching conditions |
-| **Fallback** | Unmatched data goes to default pipeline |
+| **Timing** | Before any pipeline processing |
+| **Configuration** | Dynamic routing rules with matching conditions, or static assignment for custom sources |
+| **Fallback** | Unmatched data goes to the default pipeline |
 
 **Matching Condition Examples:**
 ```
@@ -86,42 +111,32 @@ contains(content, "payment")
 dt.openpipeline.source == "oneagent"
 ```
 
-### Stage 2: Processing
+### Stage 4: Processing
 
-The processing stage transforms, enriches, and filters data.
+All in-pipeline work happens here. Processors execute in the order defined in the pipeline. Functional groups within Processing:
 
-**Sub-stages (in order):**
+| Group | Processors | Purpose |
+|-------|-----------|---------|
+| **Masking** | DQL with `replacePattern` | Redact PII before anything else |
+| **Filtering** | Drop record | Remove unwanted records early |
+| **Field & record manipulation** | Add/Remove/Rename fields, DQL, Parse, Technology | Transform and enrich |
+| **Metric extraction** | Counter, Value, Histogram (Preview); sampling-aware variants for spans | Generate timeseries from records |
+| **Smartscape topology** | Smartscape node, Smartscape edge | Populate the Smartscape topology graph |
+| **Event extraction** | Business event, SDLC event, Davis event | Convert records into events |
+| **Cost & security** | DPS Cost Allocation — Cost Center, DPS Cost Allocation — Product, Set dt.security_context | Attribute cost / apply record-level access |
+| **Storage assignment** | Bucket assignment, No storage assignment | Place the record in a bucket, or skip retention |
 
-1. **Masking** - Redact sensitive data (applied FIRST for security)
-2. **Filtering** - Drop unwanted records
-3. **Processing** - Parse, transform, enrich
+> Recommended order *within* Processing: mask → drop → transform/parse → extract → assign cost/security → bucket assignment.
 
-| Processor Type | Purpose | Example |
-|----------------|---------|----------|
-| **DQL** | Transform with DQL commands | `fieldsAdd`, `fieldsRemove`, `parse` |
-| **Drop** | Remove matching records | Drop debug logs |
-| **Technology Parser** | Apply built-in parsers | Apache, JSON, syslog |
+### Stage 5: Storage
 
-### Stage 3: Extraction
-
-The extraction stage creates derived data from processed records.
-
-| Extraction Type | Output | Use Case |
-|-----------------|--------|----------|
-| **Value Metric** | Numeric metric with dimensions | Response times, counts |
-| **Counter Metric** | Incrementing counter | Request counts, errors |
-| **Event** | Platform event | Custom alerts, notifications |
-| **Business Event** | Business analytics event | Transactions, user actions |
-
-### Stage 4: Storage
-
-The storage stage routes data to Grail buckets.
+The storage stage routes data to Grail buckets. Use the **No storage assignment** processor to skip retention entirely (useful when a record is only needed to extract a metric or event).
 
 | Aspect | Description |
 |--------|-------------|
 | **Bucket Routing** | Direct data to specific buckets |
 | **Retention** | Different retention periods per bucket |
-| **Cost Control** | Route high-volume data to shorter retention |
+| **Cost Control** | Route high-volume data to shorter retention or to no-storage |
 
 ---
 
@@ -312,12 +327,19 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 
 > ⚠️ **Critical:** Historical data imports require workarounds. Contact Dynatrace support for backfilling options.
 
+### Pipeline Group Limits *(per group)*
+
+| Limit | Value | Notes |
+|-------|-------|-------|
+| **Pipeline slots per group** | 10 | Per `/reference/limits` |
+| **Member pipelines per group** | 1,000 | Per `/reference/limits` |
+
 ### Pipeline & Routing Limits
 
 | Limit | Value | Scope |
 |-------|-------|-------|
 | **Max custom pipelines** | 100 pipelines | Per configuration scope (logs, spans, etc.) |
-| **Max dynamic routes** | 100 routes | Per configuration scope |
+| **Max dynamic routes** | 3,000 routes | Per configuration scope |
 | **Max conditions per route** | 10 conditions | Combine with AND/OR operators |
 | **Max pipeline name length** | 100 characters | Validation error |
 | **Max route name length** | 100 characters | Validation error |
@@ -337,7 +359,8 @@ This comprehensive reference contains ALL OpenPipeline limits you need to know f
 
 | Limit | Value | Context |
 |-------|-------|------|
-| **Max DQL query length** | 64 KB | In processor definition |
+| **DQL processor script length** | 8,192 characters | Per `/reference/limits` (May 2026 doc) |
+| **Processor matching condition length** | 1,500 characters | Per `/reference/limits` (May 2026 doc) |
 | **Max DPL pattern length** | 4 KB | Per parse pattern |
 | **Max captured groups per parse** | 100 groups | Use multiple parse operations |
 | **Max alternatives in pattern** | 50 alternatives | `(opt1\|opt2\|...\|opt50)` |
@@ -531,7 +554,7 @@ Extraction: Dimensions: app_tier, dt.entity.service  ✅
 ## Exploring Your Pipeline Configuration
 Use these queries to understand how your environment is configured.
 
-```python
+```dql
 // View data sources currently sending to OpenPipeline
 // Shows the distribution of data by ingestion source
 fetch logs, from: now() - 24h
@@ -539,7 +562,7 @@ fetch logs, from: now() - 24h
 | sort record_count desc
 ```
 
-```python
+```dql
 // Analyze which pipelines are processing your logs
 // Helps verify routing is working correctly
 fetch logs, from: now() - 24h
@@ -548,7 +571,7 @@ fetch logs, from: now() - 24h
 | sort record_count desc
 ```
 
-```python
+```dql
 // Check bucket distribution for stored logs
 // Verify data is routing to expected buckets
 fetch logs, from: now() - 24h
@@ -556,7 +579,7 @@ fetch logs, from: now() - 24h
 | sort record_count desc
 ```
 
-```python
+```dql
 // Analyze pipeline processing by source and pipeline
 // Shows the relationship between sources and pipelines
 fetch logs, from: now() - 24h
@@ -566,7 +589,7 @@ fetch logs, from: now() - 24h
 | limit 25
 ```
 
-```python
+```dql
 // Check for span processing through OpenPipeline
 // Spans also flow through OpenPipeline
 fetch spans, from: now() - 24h
@@ -574,7 +597,7 @@ fetch spans, from: now() - 24h
 | sort span_count desc
 ```
 
-```python
+```dql
 // View pipeline processing over time
 // Helps identify volume patterns and processing trends
 fetch logs, from: now() - 24h
@@ -582,7 +605,7 @@ fetch logs, from: now() - 24h
 | makeTimeseries {record_count = count()}, by: {dt.openpipeline.pipelines}, interval: 1h
 ```
 
-```python
+```dql
 // Identify logs going to default pipeline (may need custom routing)
 // High volume in default may indicate missing routing rules
 fetch logs, from: now() - 24h
@@ -596,37 +619,41 @@ fetch logs, from: now() - 24h
 
 <a id="understanding-processing-order"></a>
 ## Understanding Processing Order
-The order of processing within a pipeline is critical:
+
+The order of processors within the Processing stage is critical:
 
 ![Processing Stage Order](images/processing-order.png)
 
-<!--MARKDOWN_TABLE_ALTERNATIVE
-| Order | Stage | Purpose |
-|-------|-------|---------|
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Order | Processor Category | Purpose |
+|-------|-------------------|---------|
 | 1 | MASKING | Security first - redact PII before anything |
-| 2 | FILTERING | Drop unwanted records early |
-| 3 | PROCESSING | Parse, transform, enrich |
-| 4 | ENTITY DETECTION | dt.entity.* added automatically |
-| 5 | EXTRACTION | Metrics, events, bizevents |
-| 6 | STORAGE | Route to buckets |
+| 2 | FILTERING (Drop record) | Drop unwanted records early |
+| 3 | TRANSFORM (DQL, Parse, fields) | Parse, enrich, normalize |
+| 4 | ENTITY DETECTION (automatic) | `dt.entity.*` fields are added by Dynatrace |
+| 5 | EXTRACTION | Metric, event, Smartscape, business event, SDLC, Davis event processors |
+| 6 | COST & SECURITY | DPS Cost Allocation, Set dt.security_context |
+| 7 | STORAGE ASSIGNMENT | Bucket assignment or No storage assignment |
 -->
 
-> 💡 **Tip:** Masking is applied FIRST so sensitive data is protected even if subsequent processors fail.
+> 💡 **Tip:** Masking is applied FIRST so sensitive data is protected even if subsequent processors fail. The numbered groups above are processor *categories within the Processing stage* — they are not separate pipeline stages.
 
 ---
 
 <a id="summary-key-architecture-concepts"></a>
 ## Summary: Key Architecture Concepts
+
 | Concept | Key Points |
 |---------|------------|
-| **Data Flow** | Ingest → Route → Process → Extract → Store |
+| **Data Flow** | Ingest → (Pre-process) → Route → Process → Store (4 stages + optional pre-processing per `/concepts/data-flow`) |
 | **Pre-storage** | All processing happens before data is persisted |
-| **Routing** | Dynamic routes match data to pipelines |
-| **Processing Order** | Masking → Filtering → Processing |
-| **Entity Detection** | Happens AFTER processing, BEFORE extraction |
-| **Multi-pipeline** | One record can be processed by up to 5 pipelines |
+| **Source Types** | Built-in / Ready-made / Custom — only custom sources support pre-processing and static routing |
+| **Routing** | Dynamic (DQL matcher) or static (custom sources only) |
+| **Processing Order** | Mask → Drop → Transform → Extract → Cost/Security → Storage assignment |
+| **Entity Detection** | Happens AFTER processing, BEFORE most extraction processors run |
+| **Multi-pipeline** | One record can be processed by up to 5 pipelines (`/reference/limits`) |
 | **DPL** | Powerful pattern language for parsing |
-| **Buckets** | Control retention and cost at storage stage |
+| **Buckets** | Control retention and cost at the storage assignment step; or skip with No storage assignment |
 
 ---
 
@@ -645,14 +672,15 @@ Now that you understand OpenPipeline architecture, continue with:
 
 ## References
 
-- [OpenPipeline Data Flow](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/concepts/data-flow)
-- [OpenPipeline Processing](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/concepts/processing)
-- [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language)
-- [DPL Architect Tool](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language/dpl-architect)
+- [OpenPipeline Data Flow](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/data-flow)
+- [OpenPipeline Processing](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/processing)
+- [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language)
+- [OpenPipeline Limits](https://docs.dynatrace.com/docs/platform/openpipeline/reference/limits)
+- [DPL Architect Tool](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language/dpl-architect)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

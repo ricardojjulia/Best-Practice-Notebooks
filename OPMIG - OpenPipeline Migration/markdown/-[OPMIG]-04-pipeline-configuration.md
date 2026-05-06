@@ -1,6 +1,6 @@
 # OPMIG-04: OpenPipeline Migration Guide: Part 4
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 4 of 10 | **Created:** December 2025 | **Last Updated:** 04/26/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 4 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Pipeline Configuration Fundamentals
 ---
@@ -35,6 +35,15 @@ By the end of this notebook, you will:
 - ✅ Verify pipeline processing with DQL
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and OpenPipeline access |
+| **Permissions** | `openpipeline.configurations.read` and `openpipeline.configurations.write` |
+| **API Access** | `logs.read` and `logs.ingest` token scopes |
+| **Knowledge** | OPMIG-01 through OPMIG-03; basic understanding of log ingestion |
 
 ### Sprint 1.337 (April 2026): Configuration API → Settings v2 Acceleration
 
@@ -693,7 +702,7 @@ Within a pipeline, order processors logically:
 ## Verifying Pipeline Processing
 After configuring pipelines, verify they're working correctly with these queries.
 
-```python
+```dql
 // Verify logs are being processed by your new pipeline
 // Replace 'your-pipeline-name' with your actual pipeline name
 fetch logs, from: now() - 1h
@@ -702,14 +711,14 @@ fetch logs, from: now() - 1h
 | fieldsAdd status = if(processed_count > 0, "✅ Pipeline is processing logs", else: "⚠️ No logs processed yet")
 ```
 
-```python
+```dql
 // Check routing distribution across all pipelines
 fetch logs, from: now() - 1h
 | summarize {record_count = count()}, by: {dt.openpipeline.pipelines}
 | sort record_count desc
 ```
 
-```python
+```dql
 // Verify parsing is extracting expected fields
 // Check for a specific field that should be parsed
 fetch logs, from: now() - 1h
@@ -722,14 +731,14 @@ fetch logs, from: now() - 1h
 | fieldsAdd parsing_rate = round((toDouble(with_loglevel) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Sample recent logs from your pipeline to inspect parsed fields
 fetch logs, from: now() - 1h
 | filter contains(toString(dt.openpipeline.pipelines), "your-pipeline-name")
 | limit 10
 ```
 
-```python
+```dql
 // Check logs going to default pipeline (may need routing)
 // High counts here suggest missing routing rules
 fetch logs, from: now() - 1h
@@ -739,14 +748,14 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Monitor pipeline processing over time
 fetch logs, from: now() - 24h
 | filter isNotNull(dt.openpipeline.pipelines)
 | makeTimeseries {record_count = count()}, by: {dt.openpipeline.pipelines}, interval: 1h
 ```
 
-```python
+```dql
 // Verify bucket routing is working
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.openpipeline.pipelines)
@@ -809,14 +818,14 @@ Now that you can create and configure pipelines, continue with:
 
 ## References
 
-- [Configure Processing Pipeline](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/getting-started/tutorial-configure-processing)
-- [Processing Examples](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/processing-examples)
-- [DQL Functions in OpenPipeline](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/reference/openpipeline-dql-functions)
+- [Configure Processing Pipeline](https://docs.dynatrace.com/docs/platform/openpipeline/getting-started/tutorial-configure-processing)
+- [Processing Examples](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/processing-examples)
+- [DQL Functions in OpenPipeline](https://docs.dynatrace.com/docs/platform/openpipeline/reference/openpipeline-dql-functions)
 - [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

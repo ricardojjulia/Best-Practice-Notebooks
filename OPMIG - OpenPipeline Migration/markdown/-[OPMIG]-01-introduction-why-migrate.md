@@ -1,6 +1,6 @@
 # OPMIG-01: OpenPipeline Migration Guide: Part 1
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Introduction & Why Migrate from Classic to OpenPipeline v2.0
 
@@ -40,6 +40,15 @@ By the end of this notebook, you will:
 - ✅ Assess your readiness to migrate
 
 ---
+
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail enabled |
+| **Classic Log Ingestion** | Existing logs flowing via `/api/v2/logs/ingest` |
+| **API Access** | `logs.read` and `logs.ingest` token scopes |
+| **Knowledge** | Basic Dynatrace familiarity; no OpenPipeline experience required |
 
 ---
 
@@ -105,7 +114,7 @@ Understanding the fundamental differences helps you plan your migration effectiv
 | Model | Flow | Key Difference |
 |-------|------|----------------|
 | **Classic** | Ingest → Store → Query (parse at query time) | Post-storage processing |
-| **OpenPipeline** | Ingest → Route → Process → Extract → Store | Pre-storage processing |
+| **OpenPipeline** | Ingest → Route → Process → Store (extract & enrich within Process) | Pre-storage processing — 4-stage flow per `/concepts/data-flow` |
 -->
 
 > ⚠️ **Important:** With OpenPipeline, data processing happens **before** storage. This means you can reduce storage costs by dropping unwanted data and masking sensitive information before it's ever written to Grail.
@@ -311,7 +320,7 @@ Good news: **The API endpoint remains the same!**
 ## Understanding Your Current State
 Before migrating, you need to understand your current log ingestion landscape. The following queries help you assess what you're working with.
 
-```python
+```dql
 // Identify your current log sources and volume
 // This shows which sources are sending the most logs
 fetch logs, from: now() - 7d
@@ -320,7 +329,7 @@ fetch logs, from: now() - 7d
 | limit 25
 ```
 
-```python
+```dql
 // Check which logs are already processed by OpenPipeline vs Classic
 // This helps identify migration progress
 fetch logs, from: now() - 24h
@@ -331,7 +340,7 @@ fetch logs, from: now() - 24h
 | sort log_count desc
 ```
 
-```python
+```dql
 // Analyze log volume by OpenPipeline source
 // Identify the ingestion methods being used
 fetch logs, from: now() - 24h
@@ -339,7 +348,7 @@ fetch logs, from: now() - 24h
 | sort log_count desc
 ```
 
-```python
+```dql
 // Check current bucket distribution
 // Understand where your logs are being stored
 fetch logs, from: now() - 24h
@@ -347,7 +356,7 @@ fetch logs, from: now() - 24h
 | sort log_count desc
 ```
 
-```python
+```dql
 // Identify which pipelines are processing your logs
 // Shows custom pipelines already configured
 fetch logs, from: now() - 24h
@@ -362,7 +371,7 @@ fetch logs, from: now() - 24h
 ## Migration Readiness Assessment
 Use these queries to assess your migration readiness and identify areas that need attention.
 
-```python
+```dql
 // Check parsing coverage - how many logs have structured data?
 // Low coverage indicates need for parsing pipelines
 fetch logs, from: now() - 24h
@@ -375,7 +384,7 @@ fetch logs, from: now() - 24h
 | fieldsAdd coverage_pct = round((toDouble(structured) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Identify logs that could be dropped to save costs
 // Debug logs and health checks are common candidates
 fetch logs, from: now() - 24h
@@ -390,7 +399,7 @@ fetch logs, from: now() - 24h
 | fieldsAdd potential_savings_pct = round((toDouble(droppable) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Find logs with potential PII that needs masking
 // Look for common patterns that might contain sensitive data
 fetch logs, from: now() - 1h
@@ -404,7 +413,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Analyze log level distribution
 // Helps identify noise reduction opportunities
 fetch logs, from: now() - 24h
@@ -412,7 +421,7 @@ fetch logs, from: now() - 24h
 | sort log_count desc
 ```
 
-```python
+```dql
 // Check log volume trends over time
 // Understand your ingestion patterns
 fetch logs, from: now() - 7d
@@ -493,7 +502,7 @@ Before migrating, understand these key limits:
 | Limit | Value | Notes |
 |-------|-------|-------|
 | **Max custom pipelines** | 100 | Per configuration scope (includes built-in and custom) |
-| **Max dynamic routes** | 100 routes | Per configuration scope |
+| **Max dynamic routes** | 3,000 routes | Per configuration scope (per `/reference/limits`) |
 | **Max conditions per route** | 10 conditions | Use AND/OR to combine |
 
 ### Field Restrictions
@@ -510,7 +519,7 @@ Before migrating, understand these key limits:
 - `dt.entity.process_group`
 - `dt.entity.kubernetes_cluster`
 
-> 💡 **Design Tip:** Entity fields are NOT available during routing or processing. They're added automatically by Dynatrace before the Extraction stage.
+> 💡 **Design Tip:** Entity fields are NOT available during routing or processing. They're added automatically by Dynatrace after the transform processors and before the extraction processors run, all of which live within the Processing stage.
 
 ---
 
@@ -535,15 +544,15 @@ Now that you understand OpenPipeline and have assessed your current state, conti
 
 ## References
 
-- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
-- [OpenPipeline Limits](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/reference/limits)
-- [Processing Examples](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/processing-examples)
-- [Log Processing Tutorial](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/tutorial-log-processing-pipeline)
-- [Ingest API Reference](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/reference/api-ingestion-reference)
+- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
+- [OpenPipeline Limits](https://docs.dynatrace.com/docs/platform/openpipeline/reference/limits)
+- [Processing Examples](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/processing-examples)
+- [Log Processing Tutorial](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline)
+- [Ingest API Reference](https://docs.dynatrace.com/docs/platform/openpipeline/reference/api-ingestion-reference)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

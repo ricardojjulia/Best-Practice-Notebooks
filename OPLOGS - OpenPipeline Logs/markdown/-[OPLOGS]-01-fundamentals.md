@@ -1,6 +1,6 @@
 # OPLOGS-01: OpenPipeline Fundamentals
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 1 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Understanding the Unified Data Ingestion Framework
 This notebook introduces OpenPipeline, Dynatrace's unified data processing framework for logs, traces, metrics, and events.
@@ -64,35 +64,35 @@ This notebook introduces OpenPipeline, Dynatrace's unified data processing frame
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Component | Function |
 |-------|-----------|----------|
-| **Data Sources** | OneAgent, Log Ingest API, OTLP, Generic Ingest | Ingestion entry points |
-| **1. Routing** | Pipeline Selection | Route data to appropriate pipeline |
-| **2. Masking** | PII Redaction | Protect sensitive data |
-| **3. Filtering** | Drop Processor | Remove unwanted records |
-| **4. Processing** | Parse & Enrich | Transform and add fields |
-| **5. Extraction** | Metrics & Events | Extract business metrics |
-| **6. Storage** | Bucket Assignment | Route to Grail buckets |
+| **Data Sources** *(Ingest)* | OneAgent, Log Ingest API, OTLP, Generic Ingest, custom | Ingestion entry points; source recorded as `dt.openpipeline.source` |
+| **1. Ingest** | Built-in / Ready-made / Custom sources (custom supports optional pre-processing) | Records enter the platform |
+| **2. Routing** | Pipeline Selection | Dynamic (DQL matcher) or static (custom sources only) |
+| **3. Processing** | Mask · Drop · Transform · Parse · Extract (counter / value / histogram / Smartscape / bizevent / SDLC / Davis) · Cost / Security | All in-pipeline work — masking, filtering, transformation, and extraction are processor categories *within* this stage |
+| **4. Storage** | Bucket assignment / No storage assignment | Persist to Grail bucket, or skip retention |
 | **Output** | Grail | Logs, Spans, Metrics, Events storage |
 -->
+
+> **Doc alignment (May 2026):** Per the official `/concepts/data-flow` documentation, OpenPipeline has a **four-stage flow**: Ingest → Routing → Processing → Storage. The diagram above shows processor categories within Processing (Mask, Filter, Transform, Extract) inline so you can see the in-pipeline execution order — they are not independent stages.
 
 <a id="exploring-your-openpipeline-data"></a>
 ## 3. Exploring Your OpenPipeline Data
 Let's start by discovering what data sources and pipelines are active in your environment.
 
-```python
+```dql
 // Discover data sources feeding OpenPipeline
 fetch logs, from: now() - 1h
 | summarize {log_count = count()}, by: {dt.openpipeline.source}
 | sort log_count desc
 ```
 
-```python
+```dql
 // See which pipelines are processing your logs
 fetch logs, from: now() - 1h
 | summarize {log_count = count()}, by: {dt.openpipeline.pipelines}
 | sort log_count desc
 ```
 
-```python
+```dql
 // Check storage bucket distribution
 fetch logs, from: now() - 1h
 | summarize {log_count = count()}, by: {dt.system.bucket}
@@ -122,7 +122,7 @@ OpenPipeline adds metadata fields to every log record:
 | `log.source` | Source identifier (e.g., "Container Output") |
 | `log.iostream` | Stream type (stdout, stderr) |
 
-```python
+```dql
 // View a sample log record with all key fields
 fetch logs, from: now() - 1h
 | fields timestamp, content, loglevel, status, log.source, log.iostream,
@@ -130,7 +130,7 @@ fetch logs, from: now() - 1h
 | limit 5
 ```
 
-```python
+```dql
 // Analyze log levels in your environment
 fetch logs, from: now() - 1h
 | summarize {count = count()}, by: {loglevel}
@@ -157,7 +157,7 @@ OpenTelemetry Protocol logs:
 - Fluent Bit with OTLP output
 - Custom OTLP exporters
 
-```python
+```dql
 // Compare volume by data source
 fetch logs, from: now() - 24h
 | summarize {
@@ -167,7 +167,7 @@ fetch logs, from: now() - 24h
 | sort log_count desc
 ```
 
-```python
+```dql
 // Logs per hour by source (trend analysis)
 fetch logs, from: now() - 24h
 | makeTimeseries {log_count = count()}, by: {dt.openpipeline.source}, interval: 1h
@@ -208,7 +208,7 @@ OpenPipeline processes data through ordered stages:
 ## 7. Environment Summary
 Let's get a complete picture of your OpenPipeline environment:
 
-```python
+```dql
 // Complete environment summary
 fetch logs, from: now() - 1h
 | summarize {
@@ -221,7 +221,7 @@ fetch logs, from: now() - 1h
   }
 ```
 
-```python
+```dql
 // Top log sources by entity
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.entity.host)
@@ -252,7 +252,7 @@ Continue to **OPLOGS-02: Migration Guide** to learn how to migrate from classic 
 
 <a id="references"></a>
 ## 📚 References
-- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
+- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [Grail Data Lakehouse](https://docs.dynatrace.com/docs/platform/grail)
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
 

@@ -1,6 +1,6 @@
 # OPLOGS-03: OpenPipeline Processing
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 04/26/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 3 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Configuring Pipeline Stages for Log Transformation
 This notebook covers OpenPipeline processing stages: parsing, enrichment, metric extraction, event generation, bucket routing, and filtering.
@@ -96,7 +96,7 @@ The suggestions also flag **sensitive-pattern matches** before promotion, so PII
 
 ---
 
-```python
+```dql
 // Discover log patterns for parsing design
 fetch logs, from: now() - 1h
 | fieldsAdd content_preview = substring(content, from: 0, to: 100)
@@ -105,7 +105,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Test parse pattern before configuring in OpenPipeline
 fetch logs, from: now() - 1h
 | filter contains(content, "GET") OR contains(content, "POST")
@@ -116,10 +116,9 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Verify fields already extracted by OpenPipeline
 fetch logs, from: now() - 1h
-| limit 100
 | summarize {
     has_loglevel = countIf(isNotNull(loglevel)),
     has_status = countIf(isNotNull(status)),
@@ -161,7 +160,7 @@ processors:
 | Error occurred | `log.error.count` | error_type, service |
 | Queue depth | `log.queue.size` | queue_name |
 
-```python
+```dql
 // Identify logs with numeric values for metric extraction
 fetch logs, from: now() - 1h
 | filter contains(content, "duration") 
@@ -174,7 +173,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Simulate metric extraction: count by dimensions
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name)
@@ -187,7 +186,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Preview: What dimensions would be valuable?
 fetch logs, from: now() - 1h
 | summarize {
@@ -239,7 +238,7 @@ processors:
 | `severity_score` | loglevel | Prioritization |
 | `log_category` | content patterns | Classification |
 
-```python
+```dql
 // Preview attribute creation logic
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name)
@@ -253,7 +252,7 @@ fetch logs, from: now() - 1h
 | sort environment asc, severity_score desc
 ```
 
-```python
+```dql
 // Categorize logs by content patterns
 fetch logs, from: now() - 1h
 | fieldsAdd log_category = if(contains(content, "Exception") OR contains(content, "Error"), "exception",
@@ -265,7 +264,7 @@ fetch logs, from: now() - 1h
 | sort count desc
 ```
 
-```python
+```dql
 // Identify namespaces for team ownership mapping
 fetch logs, from: now() - 1h
 | filter isNotNull(k8s.namespace.name)
@@ -313,7 +312,7 @@ processors:
 | Deployment | `deployment.completed` | Change tracking |
 | Critical error | `error.critical` | Incident trigger |
 
-```python
+```dql
 // Discover patterns suitable for event generation
 fetch logs, from: now() - 1h
 | filter contains(content, "completed") 
@@ -326,7 +325,7 @@ fetch logs, from: now() - 1h
 | limit 20
 ```
 
-```python
+```dql
 // Check existing bizevents (if any generated)
 fetch bizevents, from: now() - 24h
 | summarize {count = count()}, by: {event.type}
@@ -334,7 +333,7 @@ fetch bizevents, from: now() - 24h
 | limit 15
 ```
 
-```python
+```dql
 // Preview: Logs that would become critical error events
 fetch logs, from: now() - 1h
 | filter loglevel == "ERROR"
@@ -381,14 +380,14 @@ processors:
     bucket: error_logs
 ```
 
-```python
+```dql
 // Current bucket distribution
 fetch logs, from: now() - 1h
 | summarize {count = count()}, by: {dt.system.bucket}
 | sort count desc
 ```
 
-```python
+```dql
 // Preview routing decisions
 fetch logs, from: now() - 1h
 | fieldsAdd target_bucket = if(loglevel == "DEBUG" OR loglevel == "TRACE", "debug_logs",
@@ -399,7 +398,7 @@ fetch logs, from: now() - 1h
 | sort count desc
 ```
 
-```python
+```dql
 // Estimate storage savings from routing
 fetch logs, from: now() - 24h
 | fieldsAdd content_bytes = stringLength(content)
@@ -438,7 +437,7 @@ processors:
     rate: 0.1  # Keep only 10% of DEBUG logs
 ```
 
-```python
+```dql
 // Identify candidates for filtering (high volume, low value)
 fetch logs, from: now() - 1h
 | filter contains(content, "health")
@@ -450,7 +449,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Calculate potential savings from filtering health checks
 fetch logs, from: now() - 24h
 | summarize {
@@ -520,7 +519,7 @@ processors:
     bucket: debug_logs
 ```
 
-```python
+```dql
 // Verify current pipeline processing
 fetch logs, from: now() - 1h
 | summarize {
@@ -531,7 +530,7 @@ fetch logs, from: now() - 1h
 | sort total_logs desc
 ```
 
-```python
+```dql
 // Pipeline processing summary
 fetch logs, from: now() - 1h
 | summarize {count = count()}, by: {dt.openpipeline.pipelines, dt.system.bucket}

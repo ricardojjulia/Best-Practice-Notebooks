@@ -1,6 +1,6 @@
 # OPIPE-03: Sampling-Aware Metrics
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 05/06/2026
 
 ## Extracting Accurate Metrics from Sampled Trace Data
 
@@ -37,6 +37,16 @@ For log-derived metrics (which are not affected by sampling), see **OPMIG-07: Me
 
 <a id="the-sampling-problem"></a>
 ## 1. The Sampling Problem
+
+![Sampling-Aware Metric Extraction](images/03-sampling-aware-metrics.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Path | What happens | Reported errors (10K real, 800 errors, 10% sample) |
+|------|--------------|----------------------------------------------------|
+| Trace sampler keeps 10% | 1,000 spans reach OpenPipeline | — |
+| Naive counter | Counts each arriving span = 1 | 80 (undercounts by 10×) |
+| Sampling-aware counter | Multiplies by 1 / sampling_ratio | ~800 (unbiased estimate) |
+-->
 
 ### Why Sampling Exists
 
@@ -276,7 +286,7 @@ Continue to **OPIPE-04: Cardinality Management** for strategies to control dimen
 <a id="references"></a>
 ## References
 
-- [OpenPipeline Metric Extraction](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/openpipeline-spans/span-metric-extraction)
+- [OpenPipeline Metric Extraction](https://docs.dynatrace.com/docs/platform/openpipeline/openpipeline-spans/span-metric-extraction)
 - [Distributed Traces Sampling](https://docs.dynatrace.com/docs/observe-and-explore/distributed-traces/analysis/trace-sampling)
 - [RED Method](https://www.weave.works/blog/the-red-method-key-metrics-for-microservices-architecture/)
 - [Metric Cardinality](https://docs.dynatrace.com/docs/extend-dynatrace/extend-metrics/reference/metric-ingestion-protocol)

@@ -1,10 +1,6 @@
 # OPMIG-06: Processing, Parsing & Transformation
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 04/25/2026
-
-> **OpenPipeline Migration Series** | Notebook 6 of 9  
-> **Level:** Intermediate to Advanced  
-> **Estimated Time:** 75 minutes
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ---
 
@@ -40,36 +36,59 @@ By completing this notebook, you will:
 
 ---
 
+## Prerequisites
+
+| Requirement | Details |
+|-------------|---------|
+| **Dynatrace Environment** | SaaS or Managed with Grail and OpenPipeline access |
+| **Permissions** | `openpipeline.configurations.read` and `openpipeline.configurations.write` |
+| **API Access** | `logs.read` token scope |
+| **DPL Architect** | Access to `https://{env}.apps.dynatrace.com/ui/apps/dynatrace.dpl.architect` |
+| **Knowledge** | OPMIG-01 through OPMIG-05; basic regex or pattern matching familiarity |
+
 ---
 
 ## Processing Stage Overview
 
-The Processing stage is where data transformation happens. It includes three sub-stages executed in order:
+The Processing stage is where all data transformation happens. Per the official `/concepts/processing` documentation, it contains processor categories that execute in the order defined within the pipeline:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    PROCESSING STAGE                              │
+│                  PROCESSING STAGE (in-pipeline order)            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  1. MASKING (Security First)                                     │
-│     └─ Redact sensitive data before any other processing         │
+│  1. MASKING (security first)                                     │
+│     └─ DQL with replacePattern — redact PII before anything      │
 │                                                                  │
-│  2. FILTERING (Drop)                                             │
-│     └─ Remove unwanted records before further processing         │
+│  2. FILTERING (Drop record)                                      │
+│     └─ Remove unwanted records before transformation             │
 │                                                                  │
-│  3. PROCESSING (Transform)                                       │
-│     ├─ DQL Processors (fieldsAdd, parse, etc.)                  │
-│     ├─ Technology Parsers (JSON, Apache, etc.)                   │
-│     └─ Custom transformations                                    │
+│  3. TRANSFORM                                                    │
+│     ├─ DQL processor (fieldsAdd / fieldsRemove / fieldsRename)   │
+│     ├─ Parse processor (DPL patterns)                            │
+│     └─ Technology parser (Apache, Nginx, JSON, syslog, log4j…)   │
+│                                                                  │
+│  4. EXTRACT (counter, value, histogram, Smartscape, events)      │
+│     └─ Covered in OPMIG-07                                       │
+│                                                                  │
+│  5. COST & SECURITY                                              │
+│     ├─ DPS Cost Allocation — Cost Center / Product               │
+│     └─ Set dt.security_context                                   │
+│                                                                  │
+│  6. STORAGE ASSIGNMENT                                           │
+│     ├─ Bucket assignment                                         │
+│     └─ No storage assignment (skip retention)                    │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+> **Doc alignment (May 2026):** These are processor *categories within* the Processing stage of the 4-stage data flow (Ingest → Routing → Processing → Storage). Earlier versions of this notebook referred to "three sub-stages"; the documented model has all of the categories above executing in defined order inside Processing. See OPMIG-02 § Data Flow Architecture for the full stage diagram.
+
 ### Processor Execution Order
 
-Within each sub-stage, processors execute in the order they're defined. You can reorder them in the UI.
+Within the Processing stage, processors execute in the order they're defined. You can reorder them in the UI. This notebook focuses on categories 1-3 (masking, filtering, transform); OPMIG-07 covers extraction.
 
-> 💡 **Best Practice:** Order processors logically - parse first, then enrich with computed fields based on parsed values.
+> 💡 **Best Practice:** Order processors logically — mask first, drop second, then parse, then enrich with computed fields based on parsed values.
 
 ---
 
@@ -708,7 +727,7 @@ parse content, "'/api/v' INT '/' LD:service_name"
 ## Validating Your Processing
 After configuring processors, validate that parsing is working correctly.
 
-```python
+```dql
 // Check parsing success rate across all pipelines
 fetch logs, from: now() - 1h
 | summarize {
@@ -720,7 +739,7 @@ fetch logs, from: now() - 1h
 | fieldsAdd parsing_rate = round((toDouble(with_either) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Parsing success rate by pipeline
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.openpipeline.pipelines)
@@ -732,7 +751,7 @@ fetch logs, from: now() - 1h
 | sort parsing_rate asc
 ```
 
-```python
+```dql
 // Sample logs that failed parsing (no loglevel extracted)
 fetch logs, from: now() - 1h
 | filter isNull(loglevel) AND isNull(status)
@@ -740,7 +759,7 @@ fetch logs, from: now() - 1h
 | limit 25
 ```
 
-```python
+```dql
 // Verify specific parsed fields exist
 // Replace 'your_field' with fields your parsing should create
 fetch logs, from: now() - 1h
@@ -752,14 +771,14 @@ fetch logs, from: now() - 1h
   }, by: {dt.openpipeline.pipelines}
 ```
 
-```python
+```dql
 // Sample successfully parsed logs to verify field extraction
 fetch logs, from: now() - 1h
 | filter isNotNull(loglevel)
 | limit 20
 ```
 
-```python
+```dql
 // Verify drop processors are working
 // If drops are configured, debug log count should be low
 fetch logs, from: now() - 1h
@@ -768,7 +787,7 @@ fetch logs, from: now() - 1h
                        else: "⚠️ Debug logs still present - check drop configuration")
 ```
 
-```python
+```dql
 // Check log level distribution after processing
 fetch logs, from: now() - 1h
 | summarize {log_count = count()}, by: {loglevel}
@@ -847,15 +866,15 @@ Now that you can transform data, continue with:
 
 ## References
 
-- [OpenPipeline Processing](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/concepts/processing)
-- [Processing Examples](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/use-cases/processing-examples)
-- [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language)
-- [DPL Architect Tool](https://docs.dynatrace.com/docs/discover-dynatrace/platform/grail/dynatrace-pattern-language/dpl-architect)
-- [DQL Functions in OpenPipeline](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline/reference/openpipeline-dql-functions)
+- [OpenPipeline Processing](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/processing)
+- [Processing Examples](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases)
+- [Dynatrace Pattern Language](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language)
+- [DPL Architect Tool](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language/dpl-architect)
+- [DQL Functions in OpenPipeline](https://docs.dynatrace.com/docs/platform/openpipeline/reference/openpipeline-dql-functions)
 
 ---
 
-*Last Updated: April 25, 2026*
+*Last Updated: May 6, 2026*
 
 ---
 

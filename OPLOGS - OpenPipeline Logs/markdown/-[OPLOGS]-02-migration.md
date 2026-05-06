@@ -1,6 +1,6 @@
 # OPLOGS-02: Migration to OpenPipeline
 
-> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** OPLOGS — OpenPipeline Logs | **Notebook:** 2 of 8 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Planning and Executing Your Log Migration
 This notebook guides you through assessing your current log environment and planning migration to OpenPipeline v2.0.
@@ -40,7 +40,7 @@ Before migrating, you need to understand your current log landscape.
 4. **What sensitive data exists?** (PII, credentials)
 5. **What can be dropped?** (debug, health checks)
 
-```python
+```dql
 // Assessment Query 1: Log sources inventory
 fetch logs, from: now() - 24h
 | summarize {
@@ -51,13 +51,13 @@ fetch logs, from: now() - 24h
 | limit 20
 ```
 
-```python
+```dql
 // Assessment Query 2: Log volume by hour (capacity planning)
 fetch logs, from: now() - 24h
 | makeTimeseries {log_count = count()}, interval: 1h
 ```
 
-```python
+```dql
 // Assessment Query 3: Log level distribution
 fetch logs, from: now() - 24h
 | summarize {
@@ -72,7 +72,7 @@ fetch logs, from: now() - 24h
 | fieldsAdd none_pct = round((toDouble(none) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Assessment Query 4: Identify logs that need parsing (loglevel = NONE)
 fetch logs, from: now() - 1h
 | filter loglevel == "NONE" OR status == "NONE"
@@ -82,7 +82,7 @@ fetch logs, from: now() - 1h
 | limit 15
 ```
 
-```python
+```dql
 // Assessment Query 5: Potential drop candidates (health checks, heartbeats)
 fetch logs, from: now() - 24h
 | summarize {
@@ -124,7 +124,7 @@ For OpenTelemetry-based logging:
 2. Logs flow through OpenPipeline automatically
 3. Configure pipelines for OTLP-specific processing
 
-```python
+```dql
 // Check which data sources are already using OpenPipeline
 fetch logs, from: now() - 1h
 | filter isNotNull(dt.openpipeline.pipelines)
@@ -153,7 +153,7 @@ fetch logs, from: now() - 1h
 | Debug/Verbose | Drop or 7 days | Minimal |
 | Audit/Compliance | `audit_logs` | 365+ days |
 
-```python
+```dql
 // Analyze current bucket usage
 fetch logs, from: now() - 24h
 | summarize {
@@ -174,7 +174,7 @@ After configuring OpenPipeline, validate that:
 4. ✅ Masking rules are applied correctly
 5. ✅ Routing sends logs to correct buckets
 
-```python
+```dql
 // Validation Query 1: Confirm all sources are flowing
 fetch logs, from: now() - 1h
 | summarize {
@@ -186,13 +186,13 @@ fetch logs, from: now() - 1h
 | fieldsAdd pipeline_coverage = round((toDouble(has_pipeline) / toDouble(total)) * 100, decimals: 1)
 ```
 
-```python
+```dql
 // Validation Query 2: Check log volume consistency (compare hours)
 fetch logs, from: now() - 4h
 | makeTimeseries {log_count = count()}, by: {dt.openpipeline.source}, interval: 1h
 ```
 
-```python
+```dql
 // Validation Query 3: Verify entity context is preserved
 fetch logs, from: now() - 1h
 | summarize {
@@ -242,7 +242,7 @@ Send error logs to a dedicated bucket with longer retention for compliance.
 - **Bucket:** `error_logs`
 - **Retention:** 90 days
 
-```python
+```dql
 // Simulate parsing log levels from content
 fetch logs, from: now() - 1h
 | filter loglevel == "NONE" OR status == "NONE"
@@ -252,7 +252,7 @@ fetch logs, from: now() - 1h
 | limit 10
 ```
 
-```python
+```dql
 // Identify logs that would be dropped (DEBUG + health checks)
 fetch logs, from: now() - 24h
 | filter loglevel == "DEBUG" 
@@ -308,7 +308,7 @@ Continue to **OPLOGS-03: Querying & Parsing** to learn DQL syntax and DPL parsin
 
 <a id="references"></a>
 ## 📚 References
-- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/discover-dynatrace/platform/openpipeline)
+- [OpenPipeline Documentation](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [Log Ingest API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/log-monitoring-v2/post-ingest-logs)
 - [OTLP Log Ingestion](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/getting-started/logs)
 
