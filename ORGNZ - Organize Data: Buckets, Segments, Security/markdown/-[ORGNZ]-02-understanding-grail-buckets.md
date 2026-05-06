@@ -96,12 +96,36 @@ fetch dt.system.buckets
 
 > **Extended retention:** You can extend bucket retention beyond the defaults by joining the Dynatrace preview program. See [Preview releases](https://docs.dynatrace.com/docs/whats-new/preview-releases#extended-retention-for-rum-and-synthetic) for details.
 
+
+![Bucket Hierarchy — Logs, Events, and Spans](images/02-multi-signal-bucket-hierarchy.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Column | Tier | Buckets |
+|--------|------|---------|
+| logs | Default | default_logs |
+| logs | Custom | logs_shared, logs_delivery, logs_accounting, logs_infra |
+| events | Default | default_events |
+| events | Custom | events_shared, events_delivery, events_accounting, events_infra |
+| spans | Default | default_spans |
+| spans | Custom | spans_shared, spans_delivery, spans_accounting, spans_infra |
+-->
 ## Supported Data Types (Tables)
 
 Each bucket is associated with exactly **one data type**. You cannot mix data types in the same bucket.
 
 **Custom buckets can be created for:** logs, events, security events, bizevents, and spans.
 
+
+![Logs Bucket Hierarchy — Default and Custom](images/02-logs-bucket-hierarchy.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Tier | Bucket | Notes |
+|------|--------|-------|
+| Default | default_logs | Predefined, 35-day retention |
+| Custom | logs_shared | Shared platform logs |
+| Custom | logs_delivery, logs_delivery_90d | Short-term delivery diagnostics |
+| Custom | logs_accounting, logs_infra | Cost tracking and infra signals |
+-->
 > **Important:** Metrics do not support custom buckets — all metric data routes to `default_metrics`.
 
 ## System Tables

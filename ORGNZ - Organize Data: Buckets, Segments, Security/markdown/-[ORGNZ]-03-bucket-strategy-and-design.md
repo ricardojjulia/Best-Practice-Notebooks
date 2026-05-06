@@ -162,6 +162,15 @@ Cost: Chargeback to Finance cost center
 
 <a id="analyzing-bucket-usage"></a>
 ## Analyzing Bucket Usage
+![Bucket-Scoped Query Time Window](images/03-bucket-query-time-window.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| DQL Parameter | Effect |
+|---------------|--------|
+| bucket: {"logs_infra"} | Restricts scan to the logs_infra bucket only |
+| from: -14d, to: -7d | Scans only data ingested in that 7-day window |
+| Other buckets | Skipped entirely — no bytes scanned |
+-->
 
 ### Sprint 1.337 (April 2026) Updates
 
