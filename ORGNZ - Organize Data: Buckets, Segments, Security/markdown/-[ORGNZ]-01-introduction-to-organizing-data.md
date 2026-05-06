@@ -1,6 +1,6 @@
 # ORGNZ-01: Introduction to Organizing Data in Grail
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 1 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -129,8 +129,6 @@ Grail supports permissions at multiple levels:
 <a id="exploring-your-data-organization"></a>
 ## Exploring Your Data Organization
 
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-01 LAB** for hands-on practice with these concepts.
-
 <a id="organization-decision-framework"></a>
 ## Organization Decision Framework
 Use this framework to decide how to organize your data:
@@ -180,3 +178,14 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+
+### DQL: Bucket Discovery
+
+Use the following query to explore your Grail bucket configuration:
+
+```dql
+// List all buckets — foundational discovery query for your Grail environment
+fetch dt.system.buckets
+| fields name, display_name, dt.system.table, retention_days, estimated_uncompressed_bytes
+| sort dt.system.table asc, name asc
+```

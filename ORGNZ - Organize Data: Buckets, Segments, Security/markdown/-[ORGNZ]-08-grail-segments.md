@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -88,21 +88,27 @@ Segment:
   name: "segment-identifier"
   displayName: "Human Readable Name"
   description: "What this segment filters"
-  
+
   includes:
     - type: logs
       filter: "host.name starts-with 'prod-'"
-    
+
     - type: dt.entity.host
       filter: "tags contains 'environment:production'"
-    
+
     - type: spans
       filter: "service.name == 'checkout'"
-  
+
   variables:
     - name: environment
       values: ["production", "staging"]
 ```
+
+**Key behavioral rules:**
+
+- **Include blocks are ORed together** — data matching *any* include is in scope; display order in the UI does not affect which data is included
+- **One include per data/entity type** — you cannot add two log includes; use AND/OR within a single filter condition instead
+- **Evaluated at query time** — filter conditions inject into every query that uses the segment; complex conditions increase query overhead. Preprocess fields via **OpenPipeline** to simplify conditions and improve performance
 
 <a id="segment-limits"></a>
 ## Segment Limits
@@ -206,6 +212,13 @@ includes:
 
 <a id="entity-relationship-strategies"></a>
 ## Entity Relationship Strategies
+
+> **Backward compatibility note**: Entity-to-entity relationship traversal in segments is supported only for **classic entities** (application, service, process, host, data center). Smartscape node-based segments should use direct field filters on Primary Grail Fields instead.
+
+**Traversal rules:**
+- Only **one relationship hop** is supported per include block
+- Multiple **parallel** relationships from the same originating entity type are allowed
+
 ### Top-Down (Host-Centric)
 
 Start from hosts and include related entities:
@@ -214,10 +227,10 @@ Start from hosts and include related entities:
 includes:
   - type: dt.entity.host
     filter: "tags contains 'team:platform'"
-  
+
   - type: dt.entity.process_group
     relationship: "runsOn dt.entity.host"
-  
+
   - type: dt.entity.service
     relationship: "runsOnProcessGroup dt.entity.process_group"
 ```
@@ -230,18 +243,16 @@ Start from services and include supporting infrastructure:
 includes:
   - type: dt.entity.service
     filter: "tags contains 'app:checkout'"
-  
+
   - type: dt.entity.process_group
     relationship: "hostsService dt.entity.service"
-  
+
   - type: dt.entity.host
     relationship: "runsProcessGroup dt.entity.process_group"
 ```
 
 <a id="testing-segments"></a>
 ## Testing Segments
-
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-08 LAB** for hands-on practice with these concepts.
 
 <a id="segments-and-access-control"></a>
 ## Segments and Access Control
@@ -283,3 +294,48 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+
+<a id="bucket-based-segments"></a>
+## Bucket-Based Segment Filtering
+
+Segments can filter by **`dt.system.bucket`** — making them useful for restricting dashboards and notebooks to specific storage buckets without modifying the query itself.
+
+### Static Bucket Segment
+
+A segment that always targets a single bucket:
+
+| Field | Value |
+|-------|-------|
+| Data type | Logs |
+| Filter condition | `dt.system.bucket = "default_logs"` |
+
+### Dynamic Bucket Segment (with Variable)
+
+Use a variable to make the bucket selection interactive at runtime:
+
+```
+Variable DQL:
+fetch dt.system.buckets
+| filter dt.system.table == "logs"
+| fields bucket = name
+| sort bucket asc
+```
+
+Then reference `$bucket` in the filter condition: `dt.system.bucket = $bucket`
+
+This lets users pick a bucket from a dropdown in Dashboards or Notebooks without changing the underlying DQL query — useful for security reviews (pick the `audit_logs` bucket) or cost analysis (pick a specific team bucket).
+
+> **Performance benefit:** targeting a bucket via segment reduces the data scanned compared to a full table scan, directly reducing query licensing costs.
+
+### DQL: Segment Simulation
+
+Simulate a host-group-based segment filter on log data:
+
+```dql
+// Filter logs by host group — simulates a segment filter condition on log data
+fetch logs, from:-1h
+| filter isNotNull(host.group)
+| summarize count = count(), by:{host.group}
+| sort count desc
+| limit 10
+```

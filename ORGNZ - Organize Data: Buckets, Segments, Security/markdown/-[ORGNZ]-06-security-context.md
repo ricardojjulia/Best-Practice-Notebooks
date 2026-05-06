@@ -1,6 +1,6 @@
 # ORGNZ-06: Security Context
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 6 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -174,8 +174,6 @@ ALLOW storage:logs:read WHERE storage:dt.security_context = "crn-70400-team";
 <a id="querying-security-context"></a>
 ## Querying Security Context
 
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-06 LAB** for hands-on practice with these concepts.
-
 <a id="security-context-patterns"></a>
 ## Security Context Patterns
 ### Pattern 1: Team-Based Access
@@ -295,3 +293,16 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+
+### DQL: Security Context Verification
+
+Verify that `dt.security_context` is being set on your log data:
+
+```dql
+// Summarize log volume by security context — verify dt.security_context is assigned correctly
+fetch logs, from:-1h
+| filter isNotNull(dt.security_context)
+| summarize recordCount = count(), by:{dt.security_context}
+| sort recordCount desc
+| limit 20
+```

@@ -1,6 +1,6 @@
 # ORGNZ-02: Understanding Grail Buckets
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 2 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -63,19 +63,59 @@ Buckets organize data to meet performance, compliance, and retention requirement
 | **Cost Attribution** | Enable data cost tracking by organizational unit |
 
 <a id="supported-data-types-tables"></a>
+## Built-in Grail Buckets
+
+Dynatrace provides a set of predefined built-in buckets that cannot be modified. Use this DQL to discover them all:
+
+```dql
+fetch dt.system.buckets
+| filter startsWith(name, "default_") or startsWith(name, "dt_")
+```
+
+| Bucket Name | Table | Default Retention |
+|-------------|-------|------------------|
+| `default_logs` | logs | 35 days |
+| `default_metrics` | metrics | 15 months |
+| `default_spans` | spans | 10 days |
+| `default_events` | events | 35 days |
+| `default_bizevents` | bizevents | 35 days |
+| `default_securityevents` | security.events | 1 year |
+| `default_securityevents_builtin` | security.events | 3 years |
+| `default_user_events` | user.events | 35 days |
+| `default_user_sessions` | user.sessions | 35 days |
+| `default_mobile_user_replays` | mobile.user.replays | 35 days |
+| `default_web_user_replays` | web.user.replays | 35 days |
+| `default_synthetic_events` | synthetic.events | 35 days |
+| `default_synthetic_user_events` | synthetic.user.events | 35 days |
+| `default_synthetic_user_sessions` | synthetic.user.sessions | 35 days |
+| `default_synthetic_detailed_events` | synthetic.detailed.events | 35 days |
+| `default_application_snapshots` | application.snapshots | 10 days |
+| `dt_system_events` | dt.system.events | 1 year |
+
+> **Note:** The `default_securityevents` table was recently migrated to a new Grail security events schema. If you use security events, follow the [Grail security table migration guide](https://docs.dynatrace.com/docs/secure/threat-observability/migration) to complete any required actions.
+
+> **Extended retention:** You can extend bucket retention beyond the defaults by joining the Dynatrace preview program. See [Preview releases](https://docs.dynatrace.com/docs/whats-new/preview-releases#extended-retention-for-rum-and-synthetic) for details.
+
 ## Supported Data Types (Tables)
-Each bucket is associated with exactly **one data type**:
 
-| Data Type | Default Bucket | Description |
-|-----------|----------------|-------------|
-| **logs** | `default_logs` | Log records from all sources |
-| **metrics** | `default_metrics` | Metric data points |
-| **spans** | `default_spans` | Distributed trace spans |
-| **events** | `default_events` | Platform events |
-| **bizevents** | `default_bizevents` | Business events |
-| **security_events** | `default_securityevents` | Security-related events |
+Each bucket is associated with exactly **one data type**. You cannot mix data types in the same bucket.
 
-> **Important**: You cannot mix data types in the same bucket. A logs bucket only stores logs.
+**Custom buckets can be created for:** logs, events, security events, bizevents, and spans.
+
+> **Important:** Metrics do not support custom buckets — all metric data routes to `default_metrics`.
+
+## System Tables
+
+In addition to regular data tables, Grail exposes **system tables** — virtual tables representing Grail metadata, not stored in any bucket:
+
+| System Table | Contents |
+|--------------|----------|
+| `dt.system.buckets` | Bucket inventory (name, retention, size, table type) |
+| `dt.system.data_objects` | Schema and data object metadata |
+| `dt.system.files` | Lookup files uploaded for DQL enrichment |
+| `dt.system.events` | Audit events (bucket changes, platform actions) |
+
+System tables are queried with `fetch dt.system.*` — they never need a `bucket:` parameter.
 
 <a id="bucket-limits"></a>
 ## Bucket Limits
@@ -91,8 +131,8 @@ Each bucket is associated with exactly **one data type**:
 | Metric | Value | Impact |
 |--------|-------|--------|
 | Optimal ingest per bucket | ~1 TB/day | Best query performance |
-| Acceptable ingest | 1-3 TB/day | Limited query window |
-| Maximum ingest | 3 TB/day | Performance degrades above this |
+| Acceptable ingest | 1-2 TB/day | Reduced query window |
+| Split threshold | >2 TB/day | Dynatrace recommends splitting above this |
 
 ### Retention Limits
 
@@ -145,12 +185,8 @@ Dynatrace provides default buckets with varying retention:
 <a id="querying-bucket-information"></a>
 ## Querying Bucket Information
 
-> **Lab Exercise:** Complete Exercise 1 in **ORGNZ-02 LAB** for hands-on practice with this concept.
-
 <a id="querying-data-from-buckets"></a>
 ## Querying Data from Buckets
-
-> **Lab Exercise:** Complete Exercises 2-3 in **ORGNZ-02 LAB** for hands-on practice with these concepts.
 
 <a id="bucket-characteristics"></a>
 ## Bucket Characteristics
@@ -175,6 +211,7 @@ Dynatrace provides default buckets with varying retention:
 ## Bucket Naming Rules
 | Rule | Requirement |
 |------|-------------|
+| Name length | 3–100 characters |
 | First character | Must be a letter |
 | Allowed characters | Lowercase alphanumeric, underscores, hyphens |
 | Case | Lowercase only |
@@ -223,3 +260,42 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+
+### DQL: Built-in Bucket Discovery
+
+Discover all built-in Grail buckets in your environment:
+
+```dql
+// List all built-in Grail buckets — inventory check
+fetch dt.system.buckets
+| filter startsWith(name, "default_") or startsWith(name, "dt_")
+| fields name, display_name, dt.system.table, retention_days
+| sort dt.system.table asc, name asc
+```
+
+### DQL: Bucket Audit Events
+
+Track who created, updated, truncated, or deleted a bucket:
+
+```dql
+// Audit bucket management actions — returns create, update, truncate, delete events
+fetch dt.system.events
+| filter event.kind == "AUDIT_EVENT" and event.category == "BUCKET_MANAGEMENT"
+| sort timestamp desc
+```
+
+### DQL: Querying Data from Buckets
+
+Use the `bucket:` parameter to target specific storage:
+
+```dql
+// Query logs from a specific bucket — use the bucket: parameter to target storage
+fetch logs, from:-1h, bucket:"default_logs"
+| limit 10
+```
+
+```dql
+// Query from multiple buckets simultaneously — controls scan scope
+fetch logs, from:-1h, bucket:{"default_logs", "audit_logs", "security_logs"}
+| limit 100
+```

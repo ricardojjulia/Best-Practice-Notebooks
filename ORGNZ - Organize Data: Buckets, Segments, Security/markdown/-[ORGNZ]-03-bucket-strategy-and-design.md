@@ -1,6 +1,6 @@
 # ORGNZ-03: Bucket Strategy and Design
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 3 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -188,8 +188,6 @@ Available only on Latest Dynatrace tenants. See **ORGNZ-06: Security Context** f
 
 **Smartscape Ownership integration.** Smartscape entities now carry ownership information that Dynatrace Workflows can read directly — useful when bucket-routing decisions depend on which team owns the producing host or service. See **WFLOW** for the routing-on-ownership pattern.
 
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-03 LAB** for hands-on practice with these concepts.
-
 <a id="bucket-strategy-considerations"></a>
 ## Bucket Strategy Considerations
 ### Access Control Options
@@ -217,8 +215,8 @@ Bucket sizing directly impacts queryability due to the 500 GB scan limit:
 | Bucket Ingest | Impact |
 |---------------|--------|
 | ~1 TB/day | Optimal - can query ~12 hours of data |
-| 1-3 TB/day | Acceptable - limited query window |
-| >3 TB/day | Split bucket or use aggregations |
+| 1-2 TB/day | Acceptable — reduced query window |
+| >2 TB/day | Split — Dynatrace recommends splitting above this threshold |
 
 ### Data Immutability
 
@@ -273,3 +271,31 @@ Continue with the ORGNZ series:
 ---
 
 <sub>*This notebook was AI-generated from Dynatrace documentation and enterprise best practices. It is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+<a id="query-billing-model"></a>
+## Query Billing Model
+
+Each custom Grail bucket offers **two query billing models** — choose at creation time based on your workload:
+
+| Model | How Billed | Best For |
+|-------|-----------|----------|
+| **Usage-based** | Charged per GiB scanned at query time | Buckets queried infrequently or unpredictably |
+| **Retain with Included Queries** | Flat rate — query costs included in retention price | Buckets queried frequently or heavily by dashboards/alerts |
+
+> The billing model cannot be changed after bucket creation. For compliance and audit buckets queried daily by security dashboards, **Retain with Included Queries** typically lowers total cost. For debug or ephemeral buckets queried only during incidents, **Usage-based** avoids paying for query capacity you rarely use.
+
+### Excluding Logs from Storage
+
+When you extract metrics from logs via OpenPipeline (e.g., parsing error rates into a metric), you may not need to retain the source log records at all. Configure a **No Storage Assignment** in the OpenPipeline Storage stage to drop matching records after processing — this avoids retaining data purely for a signal you've already transformed.
+
+> Use with caution: once records are dropped they cannot be recovered. Only use No Storage Assignment when metrics extraction fully captures the required signal.
+
+### DQL: Capacity Planning
+
+Track ingest trends to validate routing rules and spot anomalies:
+
+```dql
+// Track log ingest trends by bucket — use for capacity planning and routing anomaly detection
+fetch logs, from:-1h
+| summarize recordCount = count(), by:{time_bucket = bin(timestamp, 1h), dt.system.bucket}
+| sort time_bucket desc
+```

@@ -260,17 +260,17 @@ Structured migration path to Dynatrace OpenPipeline.
 
 ### [ORGNZ - Organize Data: Buckets, Segments, Security](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/README.md)
 Organizing data in Dynatrace Grail using buckets, segments, and security context.
-- [ORGNZ-01: Introduction to Organizing Data](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-01-introduction-to-organizing-data.md) — Why data organization matters in Grail
+- [ORGNZ-01: Introduction to Organizing Data in Grail](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-01-introduction-to-organizing-data.md) — Why data organization matters in Grail
 - [ORGNZ-02: Understanding Grail Buckets](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-02-understanding-grail-buckets.md) — Bucket fundamentals and data types
 - [ORGNZ-03: Bucket Strategy and Design](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-03-bucket-strategy-and-design.md) — Naming conventions and retention planning
-- [ORGNZ-04: Permissions in Grail](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-04-permissions-in-grail.md) — Overview of Grail permission levels
-- [ORGNZ-05: Bucket-Level Access Control](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-05-bucket-level-access-control.md) — IAM policies for bucket access
-- [ORGNZ-06: Security Context](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-06-security-context.md) — Fine-grained access with dt.security_context
+- [ORGNZ-04: Permissions in Grail Overview](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-04-permissions-in-grail.md) — Permission levels and the canonical `dt.security_context` boundary pattern
+- [ORGNZ-05: Bucket-Level Access Control](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-05-bucket-level-access-control.md) — IAM policies for bucket access and when bucket-level isolation fits
+- [ORGNZ-06: Security Context](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-06-security-context.md) — Fine-grained record-level access with dt.security_context
 - [ORGNZ-07: Advanced Permission Patterns](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-07-advanced-permission-patterns.md) — Record and field-level permissions
 - [ORGNZ-08: Grail Segments](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-08-grail-segments.md) — Logical data filtering with segments
-- [ORGNZ-09: Enterprise Patterns](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-09-enterprise-patterns.md) — Combining mechanisms for enterprise governance
+- [ORGNZ-09: Enterprise Data Organization Patterns](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-09-enterprise-patterns.md) — Combining buckets, segments, and security context for enterprise governance
 - [ORGNZ-10: Advanced Segment Definitions](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-10-advanced-segment-definitions.md) — Complex segment filters with multi-include patterns
-- [ORGNZ-99: Best Practice Summary](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-99-best-practice-summary.md) — Consolidated best practices from the ORGNZ series
+- [ORGNZ-99: Best Practice Summary & DQL Reference](ORGNZ%20-%20Organize%20Data%3A%20Buckets%2C%20Segments%2C%20Security/markdown/-%5BORGNZ%5D-99-best-practice-summary.md) — Consolidated best practices and validation DQL from the ORGNZ series
 
 ### [OTEL - OpenTelemetry Integration](OTEL%20-%20OpenTelemetry%20Integration/README.md)
 Integrating OpenTelemetry with Dynatrace for observability.

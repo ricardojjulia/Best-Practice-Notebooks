@@ -1,6 +1,6 @@
 # ORGNZ-10: Advanced Segment Definitions
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 10 of 10 | **Created:** February 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
@@ -89,8 +89,6 @@ Segment filter conditions define which data a segment includes. Understanding th
 ### Test Your Filter Conditions
 
 Before creating a segment, always validate your filter conditions with DQL. Run the equivalent filter clause as a DQL query to verify the results match your expectations.
-
-> **Lab Exercise:** Complete Exercises 1-2 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
 
 <a id="data-type-include-rules"></a>
 
@@ -206,8 +204,6 @@ For dedicated infrastructure, enrich hosts via **Deployment Status** → select 
 
 Before building segments, verify that the fields you plan to filter on actually exist on your signal data. Fields with 0% coverage need enrichment via OneAgent configuration or OpenPipeline.
 
-> **Lab Exercise:** Complete Exercises 3-4 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
-
 <a id="advanced-variable-patterns"></a>
 
 ## 4. Advanced Variable Patterns
@@ -237,8 +233,6 @@ The variable definition is a DQL query. The columns in the result set determine 
 ### Variable DQL Examples
 
 The following queries demonstrate how to create variable definitions for common use cases.
-
-> **Lab Exercise:** Complete Exercises 5-6 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
 
 ### Multi-Include Segment Pattern: Tag-Based Variables
 
@@ -320,8 +314,6 @@ Create a **separate segment for each dimension** (platform, app, stage). This gi
 ### Step 1: Extract Dimensions with DQL
 
 Use DQL to parse the host group name and extract each dimension as a variable:
-
-> **Lab Exercise:** Complete Exercise 9 in **ORGNZ-10 LAB** for hands-on practice with this concept.
 
 ### Step 2: Create Variable DQL for Each Dimension
 
@@ -486,7 +478,25 @@ Every segment filter condition is injected into every query the user runs. Keep 
 
 ### Discover Available Filter Candidates
 
-> **Lab Exercise:** Complete Exercises 10-11 in **ORGNZ-10 LAB** for hands-on practice with these concepts.
+### DQL: Enrichment Coverage Audit
+
+Audit primary Grail field population before building segment definitions:
+
+```dql
+// Audit primary Grail field coverage on logs — low-coverage fields need enrichment before segment use
+fetch logs, from:-1h
+| summarize
+    total = count(),
+    with_namespace = countIf(isNotNull(k8s.namespace.name)),
+    with_cluster = countIf(isNotNull(k8s.cluster.name)),
+    with_host_group = countIf(isNotNull(dt.host_group.id)),
+    with_security_ctx = countIf(isNotNull(dt.security_context))
+| fieldsAdd
+    ns_pct = round(toDouble(with_namespace) / toDouble(total) * 100, decimals: 1),
+    cluster_pct = round(toDouble(with_cluster) / toDouble(total) * 100, decimals: 1),
+    hg_pct = round(toDouble(with_host_group) / toDouble(total) * 100, decimals: 1),
+    sec_pct = round(toDouble(with_security_ctx) / toDouble(total) * 100, decimals: 1)
+```
 
 ## Summary
 
