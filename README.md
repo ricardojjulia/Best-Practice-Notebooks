@@ -106,8 +106,8 @@ End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
 
 ### [FAQ - Frequently Asked Questions](FAQ%20-%20Frequently%20Asked%20Questions/README.md)
 Frequently asked questions and answers across the Dynatrace Best-Practice Notebooks series.
-
-*Notebooks coming soon.*
+- [FAQ-01: Why you need a good Host Group naming strategy](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-01-host-group-naming-strategy.md) — How host group naming influences access control, alerting, automation, and tenant maintainability
+- [FAQ-02: Tagging — Sources, Standards, and Strategy](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-02-tagging-sources-standards-strategy.md) — The four tag sources, primary tags vs. ordinary tags, and the standards that turn tag sprawl into a managed asset
 
 ### [IAM - IAM Administration](IAM%20-%20IAM%20Administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
