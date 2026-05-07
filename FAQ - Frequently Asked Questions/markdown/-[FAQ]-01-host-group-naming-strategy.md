@@ -1,6 +1,6 @@
 # FAQ-01: Why you need a good Host Group naming strategy
 
-> **Series:** FAQ — Frequently Asked Questions | **Reference:** 01 — Host Group Naming Strategy | **Created:** May 2026 | **Last Updated:** 05/06/2026
+> **Series:** FAQ — Frequently Asked Questions | **Reference:** 01 — Host Group Naming Strategy | **Created:** May 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -26,6 +26,7 @@ This FAQ entry consolidates the case for taking host group naming seriously, the
 10. [How a Strong Strategy Compounds as Your Environment Grows](#scaling)
 11. [Recommended Design Principles](#design-principles)
 12. [Final Recommendation](#final-recommendation)
+13. [Sources and References](#sources)
 
 ---
 
@@ -353,6 +354,30 @@ Host groups are the root of context for everything Dynatrace observes — proces
 - Define the naming convention before the next host onboarding wave
 - Document the convention alongside your IAM policy patterns (see IAM topic series) and bucket strategy (see ORGNZ topic series)
 - Pilot any structural changes in nonprod groups first
+
+<a id="sources"></a>
+## 13. Sources and References
+
+**Dynatrace official documentation:**
+
+- [Host groups (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — host group concept, naming constraints (alphanumeric, hyphens, underscores, periods; cannot start with `dt.`; 100-character maximum), assignment via `oneagentctl --set-host-group=<name>`. The doc explicitly states *"when identical processes run in different host groups, Dynatrace will create one process group for each host group"* — this is the authoritative basis for per-host-group thresholds, alerting overrides, OneAgent update settings, and management-zone integration described in §1
+- [Process groups and process group instances (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/process-groups) — PG / PGI distinction; default detection rules; reference to host groups as a means to separate clusters into different process groups
+- [oneagentctl reference (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/oneagentctl) — `--set-host-group`, `--set-host-tag`, and `--set-host-property` post-install commands. The `--set-host-property=dt.security_context=<value>` form is the documented primary-field assignment surface referenced in §3
+- [Tags and metadata (Dynatrace docs)](https://docs.dynatrace.com/docs/manage/tags-and-metadata) — sources of tags in Dynatrace and how they relate to host groups for downstream consumption
+
+**Related topic series in this notebook collection (the consuming patterns):**
+
+- **ORGNZ series** (`topics/orgnz/`) — bucket strategy, segments, and the `dt.security_context` ABAC boundary; see ORGNZ-99 for the consolidated DQL reference
+- **IAM series** (`topics/iam/`) — IAM policies, `MATCH`-clause boundary patterns, persona/policy mapping, host-group-aware access scoping
+- **ONBRD series** (`topics/onbrd/`) — Dynatrace onboarding fundamentals and tenant standup checklist; host-group naming is part of standup
+- **K8S series** (`topics/k8s/`) — Kubernetes monitoring with DynaKube; how K8s context interacts with host-group context for hybrid VM/pod environments
+
+**Related FAQ entries:**
+
+- [FAQ-02: Tagging — Sources, Standards, and Strategy](-[FAQ]-02-tagging-sources-standards-strategy.ipynb) — companion question on tagging dimensions; host-group naming and tag-source-of-truth are decided together
+- [FAQ-03: OneAgent vs OpenTelemetry for Java/Scala](-[FAQ]-03-oneagent-vs-otel-java-scala.ipynb) — host-group-driven topology depends on OneAgent presence; FAQ-03 covers when OneAgent is and is not the right tool
+
+**Source currency:** Dynatrace doc shortlinks verified against the live `docs.dynatrace.com` site at the date in the metadata header. Specific claims about per-host-group threshold scoping, OneAgent update settings, and management-zone integration are taken directly from the host-groups documentation. The IAM `dt.security_context` boundary and `--set-host-property` syntax are taken directly from the oneagentctl reference.
 
 ---
 
