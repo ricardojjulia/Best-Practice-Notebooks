@@ -90,16 +90,36 @@ OpenTelemetry alone can fully instrument an application and ship to Dynatrace vi
 <a id="what-each-is"></a>
 ## 3. What Each Tool Actually Is
 
-**OneAgent** is a Dynatrace-installed binary that runs on the host (or as a container sidecar/initcontainer in Kubernetes via the Dynatrace Operator). When the JVM starts, OneAgent injects itself and auto-instruments a long list of frameworks and runtimes. It produces *PurePath* traces, host metrics, JVM metrics, log streams, process snapshots, and Smartscape topology — all without code changes.
+**OneAgent** is a Dynatrace-installed binary that runs on the host (or as a container sidecar/initcontainer in Kubernetes via the Dynatrace Operator). It auto-instruments JVMs by attaching at process startup *or* dynamically into already-running JVMs via the [JDK Attach API (`jdk.attach`)](https://docs.oracle.com/en/java/javase/21/docs/api/jdk.attach/module-summary.html) — no restart required to begin monitoring an existing process. Once attached, it produces *PurePath* traces, host metrics, JVM metrics, log streams, process snapshots, and Smartscape topology — all without code changes.
 
 **OpenTelemetry (OTel)** is a CNCF specification with two main consumption modes on the JVM:
 
-1. **OTel Java Agent** (`opentelemetry-javaagent.jar`) — a `-javaagent` JVM argument that auto-instruments a similar (but not identical) list of frameworks. Vendor-neutral; emits OTLP.
+1. **OTel Java Agent** (`opentelemetry-javaagent.jar`) — most commonly launched via the `-javaagent:` JVM argument at startup, but the same agent JAR can also be attached at runtime to an already-running JVM via the JDK Attach API (the OpenTelemetry project ships an attach loader for exactly this case). Auto-instruments a similar (but not identical) list of frameworks. Vendor-neutral; emits OTLP.
 2. **OTel SDK / API in code** — explicit imports of `io.opentelemetry.api` to create custom spans, metrics, log records, and baggage from inside your application. This is what Scala libraries like *otel4s* and *zio-telemetry* wrap.
 
 These two OTel modes are independent — you can use either, both, or neither. "Already instrumented with OTel" usually means a mix: the Java agent for HTTP/DB instrumentation plus some manual SDK calls for business logic.
 
 **The Dynatrace OneAgent SDK for Java** (a separate, narrow library — see [Dynatrace/OneAgent-SDK-for-Java](https://github.com/Dynatrace/OneAgent-SDK-for-Java)) is *not* OneAgent itself. It is a thin API for adding custom traces inside an application that is *already running under OneAgent*. With no OneAgent attached, the SDK calls become no-ops. Its current version is 1.9.0, and it explicitly recommends OpenTelemetry for serverless workloads where OneAgent cannot run.
+
+**Practical implication of runtime attach:** for both tools, "instrumenting a service" does not strictly require a JVM restart on a long-lived process — the JDK Attach API lets either agent be loaded into a running PID. In day-to-day operations, OneAgent's host-resident model takes advantage of this routinely (newly started or already-running JVMs on a OneAgent-equipped host are picked up automatically), while OTel deployments typically prefer `-javaagent:` for reproducibility but can use runtime attach when a restart is not feasible.
+
+**Concrete example — attaching the OTel Java agent to a running JVM:**
+
+```java
+import com.sun.tools.attach.VirtualMachine;
+
+public class DynamicAttacher {
+    public static void main(String[] args) throws Exception {
+        String pid = args[0]; // Target JVM PID
+        String agentPath = "/path/to/opentelemetry-javaagent.jar";
+        VirtualMachine vm = VirtualMachine.attach(pid);
+        vm.loadAgent(agentPath, "otel.service.name=my-service");
+        vm.detach();
+    }
+}
+```
+
+The same `VirtualMachine.attach(pid)` → `loadAgent(...)` pattern works for any compliant JVM agent. OneAgent uses an equivalent attach mechanism internally (driven by the host-resident OneAgent process rather than an operator-launched loader); the OTel Java agent exposes it as a public path for operators who cannot restart the target process. Caveats: the attaching process needs OS-level permission to access the target PID (typically same-user or root), and a small number of `java.lang.instrument` capabilities (e.g., `appendToBootstrapClassLoaderSearch` on some JDKs) behave differently for runtime-attached agents than for `-javaagent:`-loaded ones — reproducibility is the main reason `-javaagent:` remains the default in CI/CD pipelines.
 
 <a id="capability-comparison"></a>
 ## 4. Capability Comparison
@@ -108,7 +128,7 @@ These two OTel modes are independent — you can use either, both, or neither. "
 |-----------|----------|---------------------------------|
 | **Owner** | Dynatrace (vendor) | CNCF / OpenTelemetry community (vendor-neutral) |
 | **Backend** | Locked to Dynatrace | Any OTLP-compatible backend (Dynatrace, Jaeger, Tempo, Datadog, New Relic, Splunk, Honeycomb, Grafana Cloud, etc.) |
-| **Runtime model** | Native binary on host or in container; injects into JVM at startup | Java agent JAR (`-javaagent:`) and/or in-code SDK |
+| **Runtime model** | Native binary on host or in container; attaches to JVMs at startup *or* dynamically into running JVMs via the [JDK Attach API](https://docs.oracle.com/en/java/javase/21/docs/api/jdk.attach/module-summary.html) | Java agent JAR — typically launched via `-javaagent:` at startup, but can also attach at runtime via the JDK Attach API; and/or in-code SDK |
 | **Signals captured** | Traces, JVM metrics, host metrics, process metrics, log streams, topology, real-user, deep code-level (PurePath) | Traces, metrics, logs, baggage, context (signals you choose to emit) |
 | **Auto-instrumented frameworks (JVM)** | Hundreds of frameworks/libs/app servers; Akka HTTP 10.1–10.7, Akka Remoting 2.3–2.7, Play Framework 2.2–2.8, plus all major JDBC drivers, message brokers, web servers | A different (overlapping) list: Akka Actors 2.3+, Akka HTTP 10.0+, Play MVC 2.4+, Play WS, Spark 2.3+, Finatra 2.9+, Scala ForkJoinPool 2.8+, plus extensive Java framework coverage |
 | **Host / JVM / process metrics** | Yes — included automatically | Only if you add the host-metrics receiver or run an OTel Collector node-exporter; not part of basic SDK |
@@ -213,7 +233,7 @@ Coverage is the single biggest factor in whether *adding* OneAgent gets you what
 | Layer | Coverage source | Mechanism |
 |-------|-----------------|-----------|
 | Host / Container / OS | OneAgent (automatic) | Native agent on host or sidecar |
-| JVM (heap, GC, threads) | OneAgent (automatic) | JVM injection at startup |
+| JVM (heap, GC, threads) | OneAgent (automatic) | JVM attach (startup or runtime via JDK Attach API) |
 | Standard frameworks (Akka, Play, JDBC, Kafka) | OneAgent (automatic) — OTel agent if no OneAgent | Bytecode auto-instrumentation |
 | Custom application logic / business spans | OTel SDK in code (otel4s / zio-telemetry / plain OTel Java) | Explicit API calls |
 | Effect-system fiber tracing | OTel via otel4s / zio-telemetry | Effect-system-aware context |
@@ -419,6 +439,11 @@ Dynatrace is explicit that the two are designed to coexist. From the Dynatrace O
 - [OpenTelemetry Java Auto-Instrumentation (GitHub)](https://github.com/open-telemetry/opentelemetry-java-instrumentation) — Java agent JAR
 - [OpenTelemetry Java supported libraries (GitHub)](https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/docs/supported-libraries.md) — Akka Actors 2.3+, Akka HTTP 10.0+, Play MVC 2.4+, Play WS 1.0+, Spark Web 2.3+, Finatra 2.9+, Scala ForkJoinPool 2.8+
 - [OpenTelemetry Java Documentation (opentelemetry.io)](https://opentelemetry.io/docs/languages/java/intro/) — overview, ecosystem, end-to-end examples
+
+**JVM platform references:**
+
+- [JDK Attach API — `jdk.attach` module (Oracle Java 21 docs)](https://docs.oracle.com/en/java/javase/21/docs/api/jdk.attach/module-summary.html) — the standard JVM mechanism that allows agents (including OneAgent and the OpenTelemetry Java agent) to attach to an *already-running* JVM, not only at process startup
+- [`com.sun.tools.attach.VirtualMachine` (Oracle Java 21 docs)](https://docs.oracle.com/en/java/javase/21/docs/api/jdk.attach/com/sun/tools/attach/VirtualMachine.html) — the entry point used by attach loaders
 
 **Effect-system OpenTelemetry libraries:**
 
