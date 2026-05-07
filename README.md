@@ -6,6 +6,11 @@ Dynatrace best-practice notebooks with matching PDF and Markdown exports. These 
 
 > **👉 New here?** Open [`-START-HERE-/`](-START-HERE-/README.md) — a navigational playbook that picks an entry path based on your situation (net-new, expand/consolidate, deployment migration), then sequences the relevant topic series in order.
 
+
+[![Start Here — Find Your Path](-START-HERE-/images/00-readme-banner.svg)](-START-HERE-/README.md)
+
+> Already know what you need? Skip the playbook and **[browse all 28 topic series ↓](#all-series-az)**.
+
 ## Layout
 
 Each topic follows the same structure:
