@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 930 500" font-family="Inter, system-ui, sans-serif">
+  <rect width="930" height="500" fill="#0F172A"/>
+  <text x="465" y="38" text-anchor="middle" fill="#F8FAFC" font-size="22" font-weight="700">Expanding or Consolidating — Four Sub-Paths</text>
+  <text x="465" y="62" text-anchor="middle" fill="#94A3B8" font-size="13">Existing tenant; multiple sub-paths can run in parallel</text>
+  <defs>
+    <marker id="arrowEx" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B"/>
+    </marker>
+  </defs>
+  <rect x="370" y="100" width="190" height="50" fill="#1E293B" stroke="#A78BFA" stroke-width="2" rx="6"/>
+  <text x="465" y="123" text-anchor="middle" fill="#DDD6FE" font-size="14" font-weight="700">Existing Dynatrace Tenant</text>
+  <text x="465" y="140" text-anchor="middle" fill="#94A3B8" font-size="11">working baseline</text>
+  <line x1="430" y1="155" x2="160" y2="200" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrowEx)"/>
+  <line x1="450" y1="155" x2="415" y2="200" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrowEx)"/>
+  <line x1="480" y1="155" x2="670" y2="200" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrowEx)"/>
+  <line x1="500" y1="155" x2="160" y2="345" stroke="#64748B" stroke-width="1.5" marker-end="url(#arrowEx)"/>
+  <rect x="40" y="210" width="240" height="120" fill="#1496FF" opacity="0.08" stroke="#1496FF" stroke-width="1.5" rx="6"/>
+  <text x="160" y="235" text-anchor="middle" fill="#BFDBFE" font-size="13" font-weight="700">A — Adding a Domain</text>
+  <text x="160" y="263" text-anchor="middle" fill="#94A3B8" font-size="10">K8S, MOBL, WEBRUM,</text>
+  <text x="160" y="278" text-anchor="middle" fill="#94A3B8" font-size="10">DBMON, BIZEV, CLOUD,</text>
+  <text x="160" y="293" text-anchor="middle" fill="#94A3B8" font-size="10">SYNTH</text>
+  <text x="160" y="318" text-anchor="middle" fill="#86EFAC" font-size="10" font-weight="700">1–3 weeks per domain</text>
+  <rect x="295" y="210" width="240" height="120" fill="#FFB800" opacity="0.08" stroke="#FFB800" stroke-width="1.5" rx="6"/>
+  <text x="415" y="235" text-anchor="middle" fill="#FCD34D" font-size="13" font-weight="700">B — Log Consolidation</text>
+  <text x="415" y="263" text-anchor="middle" fill="#94A3B8" font-size="10">From Splunk: S2D</text>
+  <text x="415" y="278" text-anchor="middle" fill="#94A3B8" font-size="10">From Sumo: SL2DT</text>
+  <text x="415" y="293" text-anchor="middle" fill="#94A3B8" font-size="10">+ OPLOGS, OPIPE</text>
+  <text x="415" y="318" text-anchor="middle" fill="#FCD34D" font-size="10" font-weight="700">2–4 months</text>
+  <rect x="550" y="210" width="240" height="120" fill="#73BE28" opacity="0.08" stroke="#73BE28" stroke-width="1.5" rx="6"/>
+  <text x="670" y="235" text-anchor="middle" fill="#86EFAC" font-size="13" font-weight="700">C — APM Consolidation</text>
+  <text x="670" y="263" text-anchor="middle" fill="#94A3B8" font-size="10">From New Relic</text>
+  <text x="670" y="278" text-anchor="middle" fill="#94A3B8" font-size="10">NRLC components</text>
+  <text x="670" y="293" text-anchor="middle" fill="#94A3B8" font-size="10">(skip NR2DT runbook)</text>
+  <text x="670" y="318" text-anchor="middle" fill="#86EFAC" font-size="10" font-weight="700">2–6 months</text>
+  <rect x="40" y="350" width="240" height="120" fill="#A78BFA" opacity="0.08" stroke="#A78BFA" stroke-width="1.5" rx="6"/>
+  <text x="160" y="375" text-anchor="middle" fill="#DDD6FE" font-size="13" font-weight="700">D — Maturing Operations</text>
+  <text x="160" y="403" text-anchor="middle" fill="#94A3B8" font-size="10">DASH WFLOW</text>
+  <text x="160" y="418" text-anchor="middle" fill="#94A3B8" font-size="10">AUTOM AIOPS</text>
+  <text x="160" y="433" text-anchor="middle" fill="#94A3B8" font-size="10">+ ADOPT</text>
+  <text x="160" y="458" text-anchor="middle" fill="#DDD6FE" font-size="10" font-weight="700">2–4 months</text>
+  <rect x="500" y="350" width="290" height="120" fill="#22D3EE" opacity="0.08" stroke="#22D3EE" stroke-width="1.5" rx="6"/>
+  <text x="645" y="375" text-anchor="middle" fill="#A5F3FC" font-size="13" font-weight="700">Foundation Refresh Checkpoints</text>
+  <text x="645" y="400" text-anchor="middle" fill="#94A3B8" font-size="10">Even existing customers may need to refresh:</text>
+  <text x="645" y="418" text-anchor="middle" fill="#94A3B8" font-size="10">Gen3 IAM, security_context, bucket strategy,</text>
+  <text x="645" y="433" text-anchor="middle" fill="#94A3B8" font-size="10">tagging governance, OpenPipeline</text>
+  <text x="645" y="458" text-anchor="middle" fill="#A5F3FC" font-size="10" font-weight="700">Run alongside any sub-path</text>
+</svg>
