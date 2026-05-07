@@ -1,6 +1,6 @@
 # ONBRD-10: Building Dashboards
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 10 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Visualizing Your Data
 Dashboards provide at-a-glance visibility into your environment's health and performance. This notebook covers dashboard creation, common visualization patterns, and sharing with your team.
@@ -97,7 +97,7 @@ Dynatrace offers two visualization tools:
 
 ### Visualization Types
 
-![Visualization Guide](images/visualization-guide.png)
+![Visualization Guide](images/10-visualization-guide.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Show This | Use This Tile |
 |-----------|---------------|
@@ -113,7 +113,7 @@ Dynatrace offers two visualization tools:
 
 <a id="dashboard-patterns"></a>
 ## 4. Dashboard Patterns
-![Dashboard Patterns](images/dashboard-patterns.png)
+![Dashboard Patterns](images/10-dashboard-patterns.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Pattern | Use Case |
 |---------|----------|
@@ -250,20 +250,20 @@ fetch logs, from: now() - 1h
 ```dql
 // Active problem count (Single Value tile)
 fetch dt.davis.problems, from: now() - 30d
-| filter status == "OPEN"
+| filter event.status == "ACTIVE"
 | summarize active_problems = count()
 ```
 
 ```dql
 // Problems by status (Pie Chart tile)
 fetch dt.davis.problems, from: now() - 7d
-| summarize count = count(), by: {status}
+| summarize problem_count = count(), by: {event.status}
 ```
 
 ```dql
 // Recent problem list (Table tile)
 fetch dt.davis.problems, from: now() - 24h
-| fields timestamp, display_id, title, status
+| fields timestamp, display_id, title, event.status
 | sort timestamp desc
 | limit 10
 ```
@@ -310,33 +310,45 @@ Congratulations! You've completed the onboarding series.
 | Notebook | Key Topics |
 |----------|------------|
 | **ONBRD-01** | Tenant access, navigation |
-| **ONBRD-02** | IAM, SAML, permissions |
+| **ONBRD-02** | IAM, SAML, Platform Tokens, parameterized policies |
 | **ONBRD-03** | ActiveGate deployment |
 | **ONBRD-04** | Cloud & SaaS integrations |
-| **ONBRD-05** | OneAgent deployment |
-| **ONBRD-06** | Tags, segments, naming conventions |
+| **ONBRD-05** | OneAgent deployment, primary tags at source |
+| **ONBRD-06** | Tags, segments, naming conventions, `dt.security_context` |
 | **ONBRD-07** | Data model, topology |
 | **ONBRD-08** | DQL fundamentals |
 | **ONBRD-09** | Workflows alerting |
 | **ONBRD-10** | Dashboard creation |
 
-### Where to Go Next
+### Where to Go Next — by Topic
 
-| Goal | Resources |
-|------|----------|
-| **Deepen DQL skills** | SPANS series, OPLOGS series |
-| **Log management** | OPMIG series (OpenPipeline migration) |
+| Goal | Topic Series |
+|------|--------------|
+| **Dashboard strategy + executive reporting** | DASH series (8 notebooks) |
+| **Davis AI / anomaly detection / RCA** | AIOPS series (8 notebooks) |
+| **Workflow automation + AI tasks** | WFLOW series (10 notebooks) |
+| **Deepen DQL — spans / logs / OpenPipeline** | SPANS, OPLOGS, OPMIG, OPIPE |
 | **Synthetic monitoring** | SYNTH series |
-| **Access control migration** | MZ2POL series |
-| **Platform migration** | Migration playbooks (NR to Dynatrace) |
+| **Web RUM / Mobile RUM** | WEBRUM, MOBL |
+| **Business events & funnel analysis** | BIZEV series |
+| **Database monitoring** | DBMON series |
+| **Cloud integration deep dives** | CLOUD series |
+| **Kubernetes monitoring** | K8S series |
+| **OpenTelemetry integration** | OTEL series |
+| **IAM administration depth** | IAM series |
+| **Configuration automation / GitOps** | AUTOM series |
+| **Access control modernization** | MZ2POL series (Management Zones → Policies) |
+| **Migration playbooks** | NRLC + NR2DT (New Relic), SL2DT (Sumo), S2D (Splunk), M2S (Managed → SaaS) |
+| **Platform maturity / adoption** | ADOPT series |
 | **Official training** | Dynatrace University |
 | **Community** | community.dynatrace.com |
 
 ### Dashboard Checklist
 
-- [ ] First dashboard created
+- [ ] First dashboard created (using **Dashboards (new)**, not legacy Classic Dashboards)
 - [ ] Key metrics visualized
 - [ ] Problem overview included
+- [ ] SLO / SLI tile evaluated for service-health views
 - [ ] Dashboard shared with team
 - [ ] Segment filter set
 
@@ -346,11 +358,13 @@ Congratulations! You've completed the onboarding series.
 
 In this notebook, you learned:
 
+- Difference between Dashboards (new) and Classic Dashboards
 - Difference between dashboards and notebooks
 - How to create and configure dashboards
 - Common tile types and when to use them
 - Dashboard patterns for different use cases
 - DQL queries that work well in dashboards
+- That `dt.davis.problems` queries use `event.status` (`ACTIVE` / `CLOSED`), not `status` (`OPEN`)
 - How to share dashboards with your team
 
 ---
@@ -358,6 +372,7 @@ In this notebook, you learned:
 ## References
 
 - [Dashboards](https://docs.dynatrace.com/docs/observe-and-explore/dashboards)
+- [Dashboards (new)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dashboards-and-notebooks/dashboards)
 - [Notebooks](https://docs.dynatrace.com/docs/observe-and-explore/dashboards-and-notebooks/notebooks)
 - [DQL Examples](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/dql-examples)
 - [Dashboard Sharing](https://docs.dynatrace.com/docs/observe-and-explore/dashboards/dashboard-sharing)

@@ -177,7 +177,7 @@ This notebook consolidates every actionable best practice from the WEBRUM series
 | 82 | Use `isNotNull()` before aggregating optional fields | Apply `filter isNotNull(web_vitals.largest_contentful_paint)` before CWV aggregations | Critical | WEBRUM-03 |
 | 83 | Use `countDistinct(sessionId)` for error impact measurement | Never use `count()` alone — it inflates impact from retry loops in single sessions | Critical | WEBRUM-05 |
 | 84 | Require minimum sample size before drawing conclusions | Use `filter page_views > 20` (or similar) to avoid misleading statistics from low-volume pages | Recommended | WEBRUM-03, WEBRUM-06 |
-| 85 | Use nanosecond-to-millisecond conversion: `/ 1000000.0` | Dynatrace duration fields are in nanoseconds; divide by 1,000,000 for milliseconds, 1,000,000,000 for seconds | Critical | WEBRUM-03 |
+| 85 | Use nanosecond-to-millisecond conversion: `/ 1ms` | Dynatrace duration fields are in nanoseconds; divide by 1,000,000 for milliseconds, 1,000,000,000 for seconds | Critical | WEBRUM-03 |
 | 86 | Alias all aggregations before using in `sort` | Always write `summarize c = count()` then `sort c desc`, never `sort count() desc` | Critical | All |
 
 ---

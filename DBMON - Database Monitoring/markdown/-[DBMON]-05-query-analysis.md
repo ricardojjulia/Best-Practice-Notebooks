@@ -51,8 +51,8 @@ We detect this by looking for query patterns with unusually high call counts per
 fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(db.statement)
 | summarize calls_per_trace = count(),
-           total_ms = sum(duration) / 1000000.0,
-           avg_ms = avg(duration) / 1000000.0,
+           total_ms = sum(duration) / 1ms,
+           avg_ms = avg(duration) / 1ms,
            by:{trace.id, db.statement, db.system}
 | filter calls_per_trace >= 10
 | sort calls_per_trace desc
@@ -88,9 +88,9 @@ Understanding which queries run most often helps prioritize optimization. A quer
 fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(db.statement)
 | summarize call_count = count(),
-           total_time_ms = sum(duration) / 1000000.0,
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           total_time_ms = sum(duration) / 1ms,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            by:{db.statement, db.system}
 | sort call_count desc
 | limit 20
@@ -111,7 +111,7 @@ fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(db.statement)
 | summarize call_count = count(),
            calling_services = countDistinct(dt.entity.service),
-           avg_ms = avg(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
            by:{db.statement, db.system}
 | filter calling_services >= 2
 | sort calling_services desc
@@ -128,11 +128,11 @@ Analyzing how query durations are distributed reveals bimodal patterns (e.g., ca
 // Duration percentile breakdown by database system
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| summarize p50_ms = percentile(duration, 50) / 1000000.0,
-           p90_ms = percentile(duration, 90) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
-           p99_ms = percentile(duration, 99) / 1000000.0,
-           max_ms = max(duration) / 1000000.0,
+| summarize p50_ms = percentile(duration, 50) / 1ms,
+           p90_ms = percentile(duration, 90) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
+           p99_ms = percentile(duration, 99) / 1ms,
+           max_ms = max(duration) / 1ms,
            total = count(),
            by:{db.system}
 | fieldsAdd tail_ratio = round(p99_ms / p50_ms, decimals:1)
@@ -145,7 +145,7 @@ The `tail_ratio` column shows how much worse the 99th percentile is compared to 
 // Latency bucket distribution — visualize where queries cluster
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| fieldsAdd duration_ms = duration / 1000000.0
+| fieldsAdd duration_ms = duration / 1ms
 | fieldsAdd bucket = if(duration_ms < 0.1, then:"<0.1ms",
     else:if(duration_ms < 1, then:"0.1-1ms",
     else:if(duration_ms < 10, then:"1-10ms",
@@ -177,10 +177,10 @@ fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(db.statement)
 | filter isNotNull(db.operation) and db.operation == "SELECT"
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p50_ms = percentile(duration, 50) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
-           stddev_ms = stddev(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p50_ms = percentile(duration, 50) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
+           stddev_ms = stddev(duration) / 1ms,
            by:{db.statement, db.system}
 | filter call_count >= 50 and avg_ms > 10
 | fieldsAdd variance_ratio = round(stddev_ms / avg_ms, decimals:2)
@@ -193,7 +193,7 @@ fetch spans, from:-1h
 fetch spans, from:-24h
 | filter isNotNull(db.system) and isNotNull(db.statement)
 | filter isNotNull(db.operation) and db.operation == "SELECT"
-| makeTimeseries avg_ms = avg(duration) / 1000000.0,
+| makeTimeseries avg_ms = avg(duration) / 1ms,
                  call_count = count(),
                  by:{db.system},
                  interval:1h
@@ -211,7 +211,7 @@ fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize concurrent_calls = count(),
            unique_db_targets = countDistinct(server.address),
-           avg_ms = avg(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
            by:{dt.entity.service, db.system}
 | fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")
 | sort concurrent_calls desc
@@ -285,9 +285,9 @@ Not all slow queries are worth optimizing. Use the **impact score** to prioritiz
 fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(db.statement)
 | summarize call_count = count(),
-           total_time_ms = sum(duration) / 1000000.0,
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           total_time_ms = sum(duration) / 1ms,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            error_count = countIf(otel.status_code == "ERROR"),
            by:{db.statement, db.system}
 | fieldsAdd error_rate_pct = round((toDouble(error_count) / toDouble(call_count)) * 100, decimals:2)

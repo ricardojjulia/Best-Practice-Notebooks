@@ -137,7 +137,7 @@ fetch user.sessions, from:-7d
 | filter userType == "REAL_USER"
 | fieldsAdd hour = getHour(timestamp)
 | summarize session_count = count(),
-    avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
+    avg_duration_sec = avg(duration / 1s),
     by:{hour}
 | sort hour asc
 ```
@@ -212,7 +212,7 @@ fetch user.sessions, from:-24h
 | summarize session_count = count(),
     avg_actions = avg(userActionCount),
     avg_errors = avg(totalErrorCount),
-    avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
+    avg_duration_sec = avg(duration / 1s),
     by:{country}
 | sort session_count desc
 | limit 15
@@ -252,7 +252,7 @@ fetch user.sessions, from:-24h
 | filter userType == "REAL_USER"
 | filter isNotNull(osFamily)
 | summarize session_count = count(),
-    avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
+    avg_duration_sec = avg(duration / 1s),
     by:{osFamily}
 | sort session_count desc
 ```

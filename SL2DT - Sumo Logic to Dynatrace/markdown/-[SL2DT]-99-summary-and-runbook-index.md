@@ -263,10 +263,6 @@ For environments where SVG doesn't render
 - [M2S](../../m2s/) — Managed → SaaS
 - [S2S](../../s2s/) — SaaS → SaaS
 
-### Customer-specific applications
-
-- [AMPRZ](../../../solutions/amprz/) — Ameriprise engagement (November 2026 cutover)
-
 ### Official documentation
 
 - [Sumo Logic Docs](https://help.sumologic.com/docs/)

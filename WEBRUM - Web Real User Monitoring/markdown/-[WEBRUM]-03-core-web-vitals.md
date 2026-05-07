@@ -97,7 +97,7 @@ fetch user.events, from:-24h
 fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(web_vitals.largest_contentful_paint)
-| fieldsAdd lcp_ms = toDouble(web_vitals.largest_contentful_paint) / 1000000.0
+| fieldsAdd lcp_ms = web_vitals.largest_contentful_paint / 1ms
 | fieldsAdd lcp_category = if(lcp_ms <= 2500, "Good",
     else: if(lcp_ms <= 4000, "Needs Improvement",
     else: "Poor"))
@@ -130,7 +130,7 @@ INP measures the time from when a user interacts (click, tap, keypress) to when 
 // INP percentile analysis by application
 fetch user.events, from:-24h
 | filter isNotNull(web_vitals.interaction_to_next_paint)
-| fieldsAdd inp_ms = toDouble(web_vitals.interaction_to_next_paint) / 1000000.0
+| fieldsAdd inp_ms = web_vitals.interaction_to_next_paint / 1ms
 | summarize avg_inp = avg(inp_ms),
     p75_inp = percentile(inp_ms, 75),
     p95_inp = percentile(inp_ms, 95),
@@ -143,7 +143,7 @@ fetch user.events, from:-24h
 // INP by page — identify the slowest-responding pages
 fetch user.events, from:-24h
 | filter isNotNull(web_vitals.interaction_to_next_paint)
-| fieldsAdd inp_ms = toDouble(web_vitals.interaction_to_next_paint) / 1000000.0
+| fieldsAdd inp_ms = web_vitals.interaction_to_next_paint / 1ms
 | summarize avg_inp = avg(inp_ms),
     p75_inp = percentile(inp_ms, 75),
     action_count = count(),
@@ -204,9 +204,9 @@ Aggregate Core Web Vitals by page to identify which pages need optimization:
 fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize
-    p75_lcp_ms = percentile(toDouble(web_vitals.largest_contentful_paint) / 1000000.0, 75),
+    p75_lcp_ms = percentile(web_vitals.largest_contentful_paint / 1ms, 75),
     p75_cls = percentile(web_vitals.cumulative_layout_shift, 75),
-    p75_inp_ms = percentile(toDouble(web_vitals.interaction_to_next_paint) / 1000000.0, 75),
+    p75_inp_ms = percentile(web_vitals.interaction_to_next_paint / 1ms, 75),
     page_views = count(),
     by:{action.name}
 | filter page_views > 20
@@ -228,7 +228,7 @@ Tracking CWV over time helps identify regressions after deployments, seasonal pa
 fetch user.events, from:-7d
 | filter action.type == "Load"
 | filter isNotNull(web_vitals.largest_contentful_paint)
-| fieldsAdd lcp_ms = toDouble(web_vitals.largest_contentful_paint) / 1000000.0
+| fieldsAdd lcp_ms = web_vitals.largest_contentful_paint / 1ms
 | makeTimeseries p75_lcp = percentile(lcp_ms, 75), interval:1h
 ```
 
@@ -250,8 +250,8 @@ Create a single-query CWV scorecard showing the percentage of page loads in each
 // CWV scorecard — percentage of Good / NI / Poor for each metric
 fetch user.events, from:-24h
 | filter action.type == "Load"
-| fieldsAdd lcp_ms = toDouble(web_vitals.largest_contentful_paint) / 1000000.0,
-    inp_ms = toDouble(web_vitals.interaction_to_next_paint) / 1000000.0
+| fieldsAdd lcp_ms = web_vitals.largest_contentful_paint / 1ms,
+    inp_ms = web_vitals.interaction_to_next_paint / 1ms
 | summarize total = count(),
     lcp_good = countIf(lcp_ms <= 2500),
     lcp_poor = countIf(lcp_ms > 4000),

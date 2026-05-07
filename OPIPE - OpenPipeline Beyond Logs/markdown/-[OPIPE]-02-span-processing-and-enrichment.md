@@ -106,7 +106,7 @@ fetch spans, from:-1h
 | summarize span_count = count(), avg_duration = avg(duration), by:{span.name}
 | sort span_count desc
 | limit 10
-| fieldsAdd avg_duration_ms = round(toDouble(avg_duration) / 1000000, decimals: 2)
+| fieldsAdd avg_duration_ms = round(avg_duration / 1ms, decimals: 2)
 ```
 
 <a id="span-attribute-enrichment"></a>

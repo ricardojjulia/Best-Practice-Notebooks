@@ -49,7 +49,7 @@ Let's start by examining recent closed problems.
 // Recent closed detected problems with duration
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| fieldsAdd duration_min = toLong(resolved_problem_duration) / 60000000000.0
+| fieldsAdd duration_min = resolved_problem_duration / 1m
 | fieldsKeep display_id, event.name, event.start, event.end, duration_min, event.category
 | sort event.start desc
 | limit 10
@@ -204,7 +204,7 @@ Service Level Agreements (SLAs) often include business availability targets. By 
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize total_problem_hours = sum(duration_hours),
            problem_count = count(),
            avg_mttr_hours = avg(duration_hours)
@@ -216,7 +216,7 @@ fetch dt.davis.problems, from:-7d
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize total_downtime_hours = sum(duration_hours)
 | fieldsAdd total_business_hours = 40.0
 | fieldsAdd availability_pct = round((total_business_hours - total_downtime_hours) / total_business_hours * 100, decimals: 2)

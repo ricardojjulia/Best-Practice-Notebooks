@@ -259,7 +259,7 @@ Cloud Run is GCP's serverless container platform. It shares some monitoring patt
 fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(cloud.platform) and cloud.platform == "gcp_cloud_run"
-| summarize avg_duration_ms = avg(duration) / 1000000.0, request_count = count(), by:{service.name}
+| summarize avg_duration_ms = avg(duration) / 1ms, request_count = count(), by:{service.name}
 | sort request_count desc
 | limit 10
 ```

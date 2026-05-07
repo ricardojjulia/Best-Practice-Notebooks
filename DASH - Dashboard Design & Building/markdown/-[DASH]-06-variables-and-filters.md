@@ -157,7 +157,7 @@ In a dashboard tile, this query would use the `$service` variable. In a notebook
 fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(dt.entity.service)
-| makeTimeseries p50_ms = percentile(duration, 50) / 1000000, p95_ms = percentile(duration, 95) / 1000000, interval:5m, by:{dt.entity.service}
+| makeTimeseries p50_ms = percentile(duration, 50) / 1ms, p95_ms = percentile(duration, 95) / 1ms, interval:5m, by:{dt.entity.service}
 ```
 
 ### Example: Log Analysis with Namespace and Level Variables

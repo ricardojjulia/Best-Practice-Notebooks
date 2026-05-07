@@ -1,6 +1,6 @@
 # ONBRD-09: Setting Up Alerts
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 9 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Getting Notified When Things Go Wrong
 Dynatrace's DAVIS AI automatically detects problems, but you need to configure where those alerts go. This notebook covers the Workflows app for modern alerting and notification routing.
@@ -28,7 +28,7 @@ Dynatrace's DAVIS AI automatically detects problems, but you need to configure w
 ## 1. How DAVIS Problem Detection Works
 DAVIS AI continuously monitors your environment and creates **problems** when anomalies are detected:
 
-![DAVIS Problem Detection Flow](images/davis-problem-flow.png)
+![DAVIS Problem Detection Flow](images/09-davis-problem-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|
@@ -63,7 +63,7 @@ Workflows are event-driven automations that can:
 - Execute remediation actions
 - Run on schedules
 
-![Workflow Architecture](images/workflow-architecture.png)
+![Workflow Architecture](images/09-workflow-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|
@@ -191,7 +191,7 @@ Use workflow conditions to route alerts to the right teams.
 
 ### Strategy: Condition-Based Routing
 
-![Alert Routing Example](images/alert-routing.png)
+![Alert Routing Example](images/09-alert-routing.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Filter | Destination |
 |--------|-------------|
@@ -307,12 +307,13 @@ fetch dt.davis.problems, from: now() - 30d
 // Problem duration analysis
 fetch dt.davis.problems, from: now() - 7d
 | filter event.status == "CLOSED"
-| filter isNotNull(event.end)
-| fieldsAdd duration_minutes = (event.end - timestamp) / 60000000000
-| summarize
+| filter isNotNull(event.start) and isNotNull(event.end)
+| fieldsAdd duration_minutes = (event.end - event.start) / 1m
+| summarize {
     avg_duration = avg(duration_minutes),
     max_duration = max(duration_minutes),
     problem_count = count()
+  }
 ```
 
 ### Alert Testing Checklist
@@ -339,10 +340,15 @@ Check for:
 
 With alerting configured:
 
-1. **ONBRD-10: Building Dashboards** - Visualize your data
+1. **ONBRD-10: Building Dashboards** — Visualize your data
 2. Fine-tune workflow conditions based on alert volume
 3. Set up escalation paths with multiple workflows
 4. Document on-call procedures
+
+### Where to Go Deeper
+
+- **AIOPS series** (8 notebooks) — Davis AI in depth: Causal/Predictive/Generative, anomaly detection mechanisms (static / auto-adaptive / seasonal / multi-dimensional baseline / novelty/forecast), Davis problems & RCA, Davis CoPilot / Dynatrace Assist, AI models, integrations & agentic workflows
+- **WFLOW series** (10 notebooks) — Workflows depth: triggers, actions, AI tasks, scheduled workflows, MCP server integration
 
 ### Alerting Checklist
 
@@ -352,6 +358,7 @@ With alerting configured:
 - [ ] Test notifications sent successfully
 - [ ] Critical path to on-call established
 - [ ] Escalation procedures documented
+- [ ] Davis sensitivity defaults reviewed
 
 ---
 
@@ -365,6 +372,7 @@ In this notebook, you learned:
 - How to route alerts to teams using conditions
 - How to create custom metric alerts
 - How to monitor workflow effectiveness
+- That `dt.davis.problems` uses `event.status` / `event.end` fields, and durations should use `/ 1m` (duration arithmetic), not `/ 1m` (nanosecond constants)
 
 ---
 

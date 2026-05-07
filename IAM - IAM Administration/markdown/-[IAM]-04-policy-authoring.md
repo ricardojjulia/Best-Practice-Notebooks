@@ -1,6 +1,6 @@
 # IAM-04: Policy Authoring and Management
 
-> **Series:** IAM — IAM Administration | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 04/30/2026
 
 ## Mastering Dynatrace Policy Syntax
 Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can perform. This notebook provides a comprehensive guide to policy authoring, from basic syntax to advanced patterns.
@@ -182,6 +182,8 @@ ALLOW document:documents:read;
 ## 4. Condition Expressions
 Conditions add fine-grained control to policy statements.
 
+> **Boundary standardization (canonical pattern).** The examples in this section illustrate condition operators with literal values for clarity. In production, the literal value should be a `${bindParam:NAME}` placeholder bound at policy-binding time, with the boundary field standardized on `dt.security_context` (Gen3) or management zone (Classic). See **IAM REFERENCE.md § Policy Parameterization and Boundary Standardization** for the canonical pattern, and **IAM-10: Templated Policy-Group Assignments** for binding mechanics.
+
 ### Condition Syntax
 
 ```
@@ -211,6 +213,8 @@ ALLOW <service>:<resource>:<action> WHERE <condition>
 | Settings | `settings:dt.security_context` | Security context on settings |
 
 ### Security Context vs Bucket Conditions
+
+> **Default to `dt.security_context` for general team-scoped access.** Bucket conditions work well when the bucket already exists for a specific reason — compliance separation, retention isolation, or hard cost attribution. For routine team-scoped access without one of those scenarios, the `dt.security_context` condition alone is usually simpler. See **IAM REFERENCE.md § Bucket-Match Overlay** for the scenario gating.
 
 | Condition Type | Use Case | Example |
 |----------------|----------|----------|
@@ -250,6 +254,22 @@ ALLOW storage:logs:read WHERE storage:dt.security_context IN ("team-a", "team-b"
 ALLOW storage:logs:read WHERE storage:bucket-name IN ("checkout_logs", "shared_logs")
 ALLOW storage:spans:read WHERE storage:bucket-name IN ("checkout_spans", "shared_spans")
 ```
+
+**Parameterizing the boundary (recommended for production):**
+
+The examples above use literal values to illustrate operators. In production, replace each literal with a `${bindParam:NAME}` placeholder and supply the value at binding time. One policy template, N bindings — instead of N near-identical policies.
+
+**Recommended (parameterized):**
+```
+ALLOW storage:logs:read WHERE storage:dt.security_context = "${bindParam:team}";
+```
+
+**Resolved when bound with `{"parameters": {"team": "checkout"}}`:**
+```
+ALLOW storage:logs:read WHERE storage:dt.security_context = "checkout";
+```
+
+The same approach applies to bucket-name overlays, MATCH() patterns, and IN lists. See **IAM-10: Templated Policy-Group Assignments** for binding mechanics and **IAM REFERENCE.md § Policy Parameterization and Boundary Standardization** for the full canonical pattern (including the Gen3 = `dt.security_context` standardization rule and the change-management caveat).
 
 ### Structured Security Context Design
 
@@ -316,35 +336,72 @@ ALLOW settings:objects:read;
 
 ### Pattern 2: Team-Scoped Access (Security Context)
 
+> **Recommended (parameterized):** One policy bound per team via binding parameters. Boundary field standardized on `dt.security_context` (Gen3 universal scoping field). See **IAM REFERENCE.md § Policy Parameterization and Boundary Standardization**.
+
 ```
-// Full access to team's data only (flexible, query-time filtering)
+// Parameterized — one policy template, bound per team via binding parameters
+ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:team}";
+ALLOW storage:*:write WHERE storage:dt.security_context = "${bindParam:team}";
+ALLOW settings:objects:* WHERE settings:dt.security_context = "${bindParam:team}";
+```
+
+**Resolved when bound with `{"parameters": {"team": "checkout-team"}}`:**
+
+```
 ALLOW storage:*:read WHERE storage:dt.security_context = "checkout-team";
 ALLOW storage:*:write WHERE storage:dt.security_context = "checkout-team";
 ALLOW settings:objects:* WHERE settings:dt.security_context = "checkout-team";
 ```
 
+Bind the same template to each team with a different `team` value rather than duplicating the policy. See **IAM-10** for binding mechanics.
+
 ### Pattern 3: Bucket-Based Team Isolation (Recommended for Strict Isolation)
 
 > **Use this pattern** when teams must have physically separated data with no cross-team visibility.
 
+> **When this pattern fits:** bucket boundaries are well-suited to scenarios where the bucket already exists for a specific reason — compliance separation (PCI/HIPAA), retention isolation, or hard cost attribution. For general team-scoped access without one of those reasons, **Pattern 2 (`dt.security_context`) is usually the simpler choice**. When the bucket-based scenario does apply, parameterize per-team bucket names via binding parameters (shared bucket statements stay as literals — "shared" is a singleton, not a per-team scope). See **IAM REFERENCE.md § Bucket-Match Overlay** for scenario gating, and **§ Policy Parameterization and Boundary Standardization** for the full pattern.
+
 ```
-// Grant access to team's specific buckets (hard data isolation)
-ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs";
-ALLOW storage:logs:write WHERE storage:bucket-name = "checkout_logs";
-ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans";
-ALLOW storage:spans:write WHERE storage:bucket-name = "checkout_spans";
+// Parameterized — per-team data permissions (one policy template, bound per team)
+ALLOW storage:logs:read    WHERE storage:bucket-name = "${bindParam:log-bucket}";
+ALLOW storage:logs:write   WHERE storage:bucket-name = "${bindParam:log-bucket}";
+ALLOW storage:spans:read   WHERE storage:bucket-name = "${bindParam:span-bucket}";
+ALLOW storage:spans:write  WHERE storage:bucket-name = "${bindParam:span-bucket}";
+ALLOW storage:metrics:read WHERE storage:bucket-name = "${bindParam:metric-bucket}";
+ALLOW storage:metrics:write WHERE storage:bucket-name = "${bindParam:metric-bucket}";
+
+// Shared buckets — literal (Class C: shared is a singleton, not per-team)
+ALLOW storage:logs:read  WHERE storage:bucket-name = "shared_logs";
+ALLOW storage:spans:read WHERE storage:bucket-name = "shared_spans";
+```
+
+**Resolved when bound with `{"parameters": {"log-bucket": "checkout_logs", "span-bucket": "checkout_spans", "metric-bucket": "checkout_metrics"}}`:**
+
+```
+ALLOW storage:logs:read    WHERE storage:bucket-name = "checkout_logs";
+ALLOW storage:logs:write   WHERE storage:bucket-name = "checkout_logs";
+ALLOW storage:spans:read   WHERE storage:bucket-name = "checkout_spans";
+ALLOW storage:spans:write  WHERE storage:bucket-name = "checkout_spans";
 ALLOW storage:metrics:read WHERE storage:bucket-name = "checkout_metrics";
 ALLOW storage:metrics:write WHERE storage:bucket-name = "checkout_metrics";
-
-// Also grant access to shared buckets
-ALLOW storage:logs:read WHERE storage:bucket-name = "shared_logs";
+ALLOW storage:logs:read  WHERE storage:bucket-name = "shared_logs";
 ALLOW storage:spans:read WHERE storage:bucket-name = "shared_spans";
 ```
 
 **Bucket + Security Context (Defense in Depth):**
+
+> **Recommended (parameterized):** Both fields parameterized; the bucket-match clause is the Gen3 data overlay on the `dt.security_context` spine.
+
 ```
-// Combine bucket restriction with security context for maximum isolation
-ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs" 
+// Parameterized defense-in-depth
+ALLOW storage:logs:read WHERE storage:bucket-name = "${bindParam:log-bucket}"
+  AND storage:dt.security_context = "${bindParam:team}";
+```
+
+**Resolved when bound with `{"parameters": {"log-bucket": "checkout_logs", "team": "checkout"}}`:**
+
+```
+ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
   AND storage:dt.security_context = "checkout";
 ```
 
@@ -507,28 +564,59 @@ iam-config/
 
 ### Policy YAML Format (Monaco)
 
+> **Recommended (parameterized):** One policy template, bound to each team's group with a different `team` value. Source-control the policy AND the bindings — that's how you safely shepherd parameter-shape changes across N bindings (see **IAM REFERENCE.md § Change-Management Caveat**).
+
+**Parameterized policy:**
+
 ```yaml
-# policies/team-checkout-access.yaml
+# policies/team-data-access.yaml
 configs:
-  - id: checkout-team-policy
+  - id: team-data-access-policy
     type:
       settings:
         schema: builtin:iam.policy
     config:
-      name: checkout-team-access
-      description: "Access policy for Checkout team"
+      name: team-data-access
+      description: "Parameterized: data access scoped to ${bindParam:team}"
       statements:
         - effect: ALLOW
           service: storage
           resource: "*"
           action: read
-          condition: "storage:dt.security_context = 'checkout'"
+          condition: "storage:dt.security_context = '${bindParam:team}'"
         - effect: ALLOW
           service: storage
           resource: "*"
-          action: write  
-          condition: "storage:dt.security_context = 'checkout'"
+          action: write
+          condition: "storage:dt.security_context = '${bindParam:team}'"
 ```
+
+**Bindings (one per team, same policy, different parameter values):**
+
+```yaml
+# bindings/team-bindings.yaml
+configs:
+  - id: checkout-team-binding
+    type:
+      settings:
+        schema: builtin:iam.binding
+    config:
+      policyId: "{{ .team-data-access-policy }}"
+      groupId: "{{ .dt-checkout-team }}"
+      parameters:
+        team: "checkout"
+  - id: payments-team-binding
+    type:
+      settings:
+        schema: builtin:iam.binding
+    config:
+      policyId: "{{ .team-data-access-policy }}"
+      groupId: "{{ .dt-payments-team }}"
+      parameters:
+        team: "payments"
+```
+
+Adding a new team is a binding (values-file edit), not a policy review. The policy YAML stays unchanged. See **IAM-10: Templated Policy-Group Assignments** for the full Monaco + IAM API integration pattern.
 
 ### GitOps Workflow
 

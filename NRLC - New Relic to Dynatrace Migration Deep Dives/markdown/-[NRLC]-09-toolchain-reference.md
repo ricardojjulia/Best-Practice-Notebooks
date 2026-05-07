@@ -260,7 +260,7 @@ Beyond direct API import, `Dynatrace-NewRelic` can emit **config-as-code** in tw
 python3 migrate.py export-monaco --input ./output --output ./monaco-project
 ```
 
-Output: a Monaco v2 project (`manifest.yaml` + per-config-type directories with `config.yaml` + JSON templates). Suitable for the SaaS Upgrade Assistant tar.gz upload pattern (see ENBR-90).
+Output: a Monaco v2 project (`manifest.yaml` + per-config-type directories with `config.yaml` + JSON templates). Suitable for the SaaS Upgrade Assistant tar.gz upload pattern documented in the **M2S** (Managed-to-SaaS) series.
 
 ### Terraform HCL
 
@@ -275,7 +275,7 @@ Output: HCL files using the `dynatrace-oss/dynatrace` provider. Resources includ
 - **Monaco** is best for one-time bootstrap and bulk upload via SUA
 - **Terraform** is best for ongoing GitOps-style management
 
-Per ADR-016 in the USFOODS series, **Terraform is the long-term tool**; Monaco is for export and one-time deploys.
+The general guidance is **Terraform as the long-term tool**, with Monaco reserved for export and one-time deploys. The **AUTOM** series covers configuration automation tooling in depth.
 
 <a id="runbook"></a>
 ## 6. End-to-End Runbook
@@ -286,8 +286,8 @@ This is the operational sequence to run a complete NR→DT migration.
 
 - [ ] NR API key + account ID configured
 - [ ] DT Platform Token configured (OAuth / Classic tokens supported but Platform Token is the recommended default)
-- [ ] Bucket strategy in place (USFOODS-G.02)
-- [ ] Host group strategy in place (USFOODS-G.01)
+- [ ] Bucket strategy in place (see **ORGNZ-02 / ORGNZ-99**)
+- [ ] Host group strategy in place (see **FAQ-01**)
 - [ ] Stakeholders identified per wave
 
 ### Phase 0 — Preflight (new in Phase 14; always do this first)
@@ -442,7 +442,7 @@ fi
 
 ## Summary
 
-The toolchain is open-source, modular, and CI-friendly. `Dynatrace-NewRelic` orchestrates; `nrql-engine` translates; `nrql-translator` exposes the engine on the CLI. Together they cover discovery, translation, transformation, validation, drift audit, canary promotion, and rollback. Pair them with the bucket strategy (USFOODS-G.02) and host grouping strategy (USFOODS-G.01) for a complete migration foundation.
+The toolchain is open-source, modular, and CI-friendly. `Dynatrace-NewRelic` orchestrates; `nrql-engine` translates; `nrql-translator` exposes the engine on the CLI. Together they cover discovery, translation, transformation, validation, drift audit, canary promotion, and rollback. Pair them with the bucket strategy (**ORGNZ-02 / ORGNZ-99**) and host grouping strategy (**FAQ-01**) for a complete migration foundation.
 
 ## Series Complete
 

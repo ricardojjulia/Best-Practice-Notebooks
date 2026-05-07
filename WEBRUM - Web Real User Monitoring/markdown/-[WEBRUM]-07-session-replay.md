@@ -183,7 +183,7 @@ Session Replay is most powerful when correlated with performance data. Use DQL t
 fetch user.sessions, from:-24h
 | filter userType == "REAL_USER"
 | filter isNotNull(hasSessionReplay) and hasSessionReplay == true
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | filter duration_sec > 120
 | fieldsKeep sessionId, application, duration_sec, userActionCount, totalErrorCount, country
 | sort duration_sec desc

@@ -1,12 +1,12 @@
 # NR2DT-03: Step 3 — Design
 
-> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 3 of 10 | **Created:** April 2026 | **Last Updated:** 04/14/2026
+> **Series:** NR2DT — New Relic to Dynatrace Migration Steps | **Notebook:** 3 of 10 | **Created:** April 2026 | **Last Updated:** 05/06/2026
 
 ## Overview
 
 **Goal of this step:** lock in the target Dynatrace architecture before any artifact migrates. Bucket strategy, host group taxonomy, IAM model, and OpenPipeline routing are all decided here.
 
-Procedural runbook — see **USFOODS-G.01** (host groups) and **USFOODS-G.02** (Grail buckets) for the recommended design patterns this step uses.
+Procedural runbook — see **FAQ-01** (host group naming strategy) and **ORGNZ-02 / ORGNZ-99** (Grail bucket strategy) for the recommended design patterns this step uses.
 
 ---
 
@@ -28,7 +28,7 @@ Procedural runbook — see **USFOODS-G.01** (host groups) and **USFOODS-G.02** (
 | **Audience** | Migration lead + assigned engineer for this step |
 | **Completed** | NR2DT-02 — Strategize |
 | **Format** | Procedural step — use as a runbook; defer to NRLC for depth |
-| **NRLC deep dives** | USFOODS-G.01 / G.02 (governance recommendations) |
+| **Topic deep dives** | FAQ-01 (host group naming), ORGNZ-02 / ORGNZ-99 (bucket strategy), IAM-04/05 (policy design), IAM-11 (WORKSHOP) |
 
 <a id="outputs"></a>
 ## 1. What You'll Produce
@@ -44,7 +44,7 @@ Procedural runbook — see **USFOODS-G.01** (host groups) and **USFOODS-G.02** (
 <a id="buckets"></a>
 ## 2. Bucket Design
 
-Use the recommended pattern from **USFOODS-G.02 Grail Buckets** as your starting template:
+Use the recommended pattern from **ORGNZ-02 — Understanding Grail Buckets** (with the consolidated reference in **ORGNZ-99**) as your starting template:
 
 | Bucket | Retention | Pricing | Purpose |
 |--------|-----------|---------|---------|
@@ -62,7 +62,7 @@ Document any deviations from this template (e.g., per-app buckets) and why.
 <a id="hostgroups"></a>
 ## 3. Host Group Design
 
-Per **USFOODS-G.01**, group hosts by ownership boundary, not by team alone. Common dimensions:
+Per **FAQ-01 — Host Group Naming Strategy**, group hosts by ownership boundary, not by team alone. Common dimensions:
 
 - Environment (`prod-app`, `nonprod-app`, `prod-infra`)
 - Compliance scope (`payment-pci`)

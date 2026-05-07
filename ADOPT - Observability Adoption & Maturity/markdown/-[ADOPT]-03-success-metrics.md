@@ -67,7 +67,7 @@ Dynatrace Intelligence problems have an `event.start` timestamp (when the underl
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
-| fieldsAdd detection_lag_minutes = (toDouble(timestamp - event.start)) / 60000000000.0
+| fieldsAdd detection_lag_minutes = (timestamp - event.start) / 1m
 | summarize
     avg_mttd_minutes = avg(detection_lag_minutes),
     median_mttd_minutes = median(detection_lag_minutes),
@@ -100,7 +100,7 @@ fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | filter maintenance.is_under_maintenance == false
-| makeTimeseries avg_mttr_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0), time:event.end
+| makeTimeseries avg_mttr_hours = avg(resolved_problem_duration / 1h), time:event.end
 ```
 
 ### 3.2 MTTR Summary Statistics
@@ -111,7 +111,7 @@ fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
 | filter maintenance.is_under_maintenance == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize
     avg_mttr = avg(duration_hours),
     median_mttr = median(duration_hours),
@@ -128,7 +128,7 @@ Different problem categories often have very different resolution times. Breakin
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize
     avg_mttr = avg(duration_hours),
     problem_count = count(),

@@ -10,6 +10,7 @@ Step-by-step migration path from New Relic to Dynatrace, from discovery through 
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
+0. [Step 0 — Tenant Prerequisites](markdown/-[NR2DT]-00-step-0-prerequisites.md) — Readiness gate confirming the target Dynatrace tenant is fit to receive a New Relic migration
 1. [Step 1 — Discover](markdown/-[NR2DT]-01-step-1-discover.md) — Inventorying the New Relic environment and understanding migration scope
 2. [Step 2 — Strategize](markdown/-[NR2DT]-02-step-2-strategize.md) — Planning the migration strategy, phasing, and execution approach
 3. [Step 3 — Design](markdown/-[NR2DT]-03-step-3-design.md) — Designing the target Dynatrace architecture and configuration

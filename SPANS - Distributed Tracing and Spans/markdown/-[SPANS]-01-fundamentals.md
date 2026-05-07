@@ -214,8 +214,8 @@ fetch spans, from:-1h
          span.name,
          service.name,
          duration,
-         duration_ms = duration / 1000000.0,     // Convert to milliseconds
-         duration_sec = duration / 1000000000.0  // Convert to seconds
+         duration_ms = duration / 1ms,     // Convert to milliseconds
+         duration_sec = duration / 1s  // Convert to seconds
 | sort duration desc
 | limit 20
 ```
@@ -232,7 +232,7 @@ fetch spans, from:-1h
 | fields start_time,
          service.name,
          span.name,
-         duration_ms = duration / 1000000.0,
+         duration_ms = duration / 1ms,
          span.status_code
 | sort duration_ms desc
 | limit 50

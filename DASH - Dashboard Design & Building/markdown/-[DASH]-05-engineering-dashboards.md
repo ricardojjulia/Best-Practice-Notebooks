@@ -41,7 +41,7 @@ Engineering dashboards rely heavily on span data. Spans provide the most granula
 // Service throughput and latency — engineering overview
 fetch spans, from:-1h
 | filter span.kind == "server"
-| summarize request_count = count(), avg_ms = avg(duration) / 1000000, p50_ms = percentile(duration, 50) / 1000000, p95_ms = percentile(duration, 95) / 1000000, p99_ms = percentile(duration, 99) / 1000000, error_count = countIf(otel.status_code == "ERROR"), by:{dt.entity.service}
+| summarize request_count = count(), avg_ms = avg(duration) / 1ms, p50_ms = percentile(duration, 50) / 1ms, p95_ms = percentile(duration, 95) / 1ms, p99_ms = percentile(duration, 99) / 1ms, error_count = countIf(otel.status_code == "ERROR"), by:{dt.entity.service}
 | fieldsAdd error_rate_pct = round(100.0 * error_count / request_count, decimals: 2)
 | sort p95_ms desc
 ```
@@ -55,7 +55,7 @@ When investigating errors, engineers need the actual span attributes — status 
 fetch spans, from:-1h
 | filter span.kind == "server" and otel.status_code == "ERROR"
 | fieldsKeep timestamp, trace.id, dt.entity.service, http.route, http.response.status_code, otel.status_message, duration
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fieldsRemove duration
 | sort timestamp desc
 | limit 25
@@ -69,7 +69,7 @@ Understanding the shape of latency distribution helps identify whether slowness 
 // Latency distribution buckets — engineering histogram
 fetch spans, from:-1h
 | filter span.kind == "server"
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fieldsAdd latency_bucket = if(duration_ms < 100, then: "<100ms", else: if(duration_ms < 500, then: "100-500ms", else: if(duration_ms < 1000, then: "500ms-1s", else: if(duration_ms < 5000, then: "1s-5s", else: ">5s"))))
 | summarize request_count = count(), by:{latency_bucket}
 | sort request_count desc
@@ -87,7 +87,7 @@ Database spans reveal query performance, connection issues, and which databases 
 // Database response time by system and namespace
 fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(db.system)
-| summarize avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, query_count = count(), errors = countIf(otel.status_code == "ERROR"), by:{db.system, db.namespace}
+| summarize avg_ms = avg(duration) / 1ms, p95_ms = percentile(duration, 95) / 1ms, query_count = count(), errors = countIf(otel.status_code == "ERROR"), by:{db.system, db.namespace}
 | fieldsAdd error_rate = round(100.0 * errors / query_count, decimals: 2)
 | sort p95_ms desc
 ```
@@ -98,7 +98,7 @@ fetch spans, from:-1h
 // Slowest database operations — engineering deep-dive
 fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(db.system)
-| summarize avg_ms = avg(duration) / 1000000, max_ms = max(duration) / 1000000, call_count = count(), by:{db.system, db.statement}
+| summarize avg_ms = avg(duration) / 1ms, max_ms = max(duration) / 1ms, call_count = count(), by:{db.system, db.statement}
 | sort max_ms desc
 | limit 15
 ```
@@ -109,7 +109,7 @@ fetch spans, from:-1h
 // Database query volume and latency trend
 fetch spans, from:-2h
 | filter span.kind == "client" and isNotNull(db.system)
-| makeTimeseries avg_ms = avg(duration) / 1000000, query_count = count(), interval:5m, by:{db.system}
+| makeTimeseries avg_ms = avg(duration) / 1ms, query_count = count(), interval:5m, by:{db.system}
 ```
 
 <a id="endpoint-metrics"></a>
@@ -124,7 +124,7 @@ Endpoint-level analysis lets engineers identify which specific API routes are pr
 // Endpoint performance breakdown — engineering detail table
 fetch spans, from:-1h
 | filter span.kind == "server" and isNotNull(http.route)
-| summarize requests = count(), avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, errors = countIf(otel.status_code == "ERROR"), by:{http.route, http.request.method}
+| summarize requests = count(), avg_ms = avg(duration) / 1ms, p95_ms = percentile(duration, 95) / 1ms, errors = countIf(otel.status_code == "ERROR"), by:{http.route, http.request.method}
 | fieldsAdd error_rate = round(100.0 * errors / requests, decimals: 2)
 | sort p95_ms desc
 | limit 20
@@ -136,7 +136,7 @@ fetch spans, from:-1h
 // Endpoint latency trend — line chart for top 5 routes
 fetch spans, from:-2h
 | filter span.kind == "server" and isNotNull(http.route)
-| makeTimeseries p95_ms = percentile(duration, 95) / 1000000, interval:5m, by:{http.route}
+| makeTimeseries p95_ms = percentile(duration, 95) / 1ms, interval:5m, by:{http.route}
 ```
 
 <a id="deployment-impact"></a>
@@ -153,11 +153,11 @@ This pattern uses `append` to compare two time windows — 1 hour before the dep
 // Before/after deployment comparison — last 2 hours vs preceding 2 hours
 fetch spans, from:-2h
 | filter span.kind == "server"
-| summarize after_avg_ms = avg(duration) / 1000000, after_p95_ms = percentile(duration, 95) / 1000000, after_error_rate = 100.0 * countIf(otel.status_code == "ERROR") / count()
+| summarize after_avg_ms = avg(duration) / 1ms, after_p95_ms = percentile(duration, 95) / 1ms, after_error_rate = 100.0 * countIf(otel.status_code == "ERROR") / count()
 | append [
     fetch spans, from:-4h, to:-2h
     | filter span.kind == "server"
-    | summarize before_avg_ms = avg(duration) / 1000000, before_p95_ms = percentile(duration, 95) / 1000000, before_error_rate = 100.0 * countIf(otel.status_code == "ERROR") / count()
+    | summarize before_avg_ms = avg(duration) / 1ms, before_p95_ms = percentile(duration, 95) / 1ms, before_error_rate = 100.0 * countIf(otel.status_code == "ERROR") / count()
   ]
 ```
 
@@ -173,7 +173,7 @@ When services are instrumented with custom spans, engineers can see method-level
 // Code-level performance by namespace and function
 fetch spans, from:-1h
 | filter isNotNull(code.namespace)
-| summarize avg_ms = avg(duration) / 1000000, call_count = count(), by:{code.namespace, code.function}
+| summarize avg_ms = avg(duration) / 1ms, call_count = count(), by:{code.namespace, code.function}
 | sort avg_ms desc
 | limit 20
 ```
@@ -183,7 +183,7 @@ fetch spans, from:-1h
 ```dql
 // Span breakdown by kind — understanding the call chain
 fetch spans, from:-1h
-| summarize span_count = count(), avg_ms = avg(duration) / 1000000, by:{span.kind}
+| summarize span_count = count(), avg_ms = avg(duration) / 1ms, by:{span.kind}
 | sort span_count desc
 ```
 

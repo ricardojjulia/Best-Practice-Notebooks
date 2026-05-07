@@ -168,10 +168,10 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
-    p50_ms = percentile(duration, 50) / 1000000,
-    p95_ms = percentile(duration, 95) / 1000000,
-    p99_ms = percentile(duration, 99) / 1000000,
-    max_ms = max(duration) / 1000000
+    p50_ms = percentile(duration, 50) / 1ms,
+    p95_ms = percentile(duration, 95) / 1ms,
+    p99_ms = percentile(duration, 99) / 1ms,
+    max_ms = max(duration) / 1ms
   }, by: {service.name}
 | sort p99_ms desc
 | limit 20
@@ -183,9 +183,9 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     requests = count(),
-    p50_ms = percentile(duration, 50) / 1000000,
-    p95_ms = percentile(duration, 95) / 1000000,
-    p99_ms = percentile(duration, 99) / 1000000
+    p50_ms = percentile(duration, 50) / 1ms,
+    p95_ms = percentile(duration, 95) / 1ms,
+    p99_ms = percentile(duration, 99) / 1ms
   }, by: {service.name, span.name}
 | filter requests > 10
 | sort p95_ms desc
@@ -198,7 +198,7 @@ fetch spans, from:-24h
 | filter span.kind == "server"
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | summarize {
-    p95_ms = percentile(duration, 95) / 1000000,
+    p95_ms = percentile(duration, 95) / 1ms,
     request_count = count()
   }, by: {time_bucket, service.name}
 | sort time_bucket desc, service.name
@@ -216,7 +216,7 @@ Identify and analyze slow requests:
 fetch spans, from:-1h
 | filter span.kind == "server"
 | filter duration > 1s
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          service.name,
          span.name,
@@ -231,7 +231,7 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
-    trace_duration_ms = max(duration) / 1000000,
+    trace_duration_ms = max(duration) / 1ms,
     span_count = count(),
     entry_point = takeFirst(span.name),
     services = collectDistinct(service.name)
@@ -248,8 +248,8 @@ fetch spans, from:-1h
 | filter duration > 500ms
 | summarize {
     slow_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    max_duration_ms = max(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    max_duration_ms = max(duration) / 1ms
   }, by: {service.name, span.name}
 | sort slow_count desc
 | limit 20
@@ -273,7 +273,7 @@ fetch spans, from:-1h
 // Reconstruct full trace (replace YOUR_TRACE_ID with actual trace.id)
 fetch spans, from:-1h
 // | filter trace.id == "YOUR_TRACE_ID"
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          service.name,
          span.name,
@@ -293,7 +293,7 @@ fetch spans, from:-1h
     span_count = count(),
     services_involved = countDistinct(service.name),
     has_errors = countIf(span.status_code == "error") > 0,
-    total_duration_ms = sum(duration) / 1000000
+    total_duration_ms = sum(duration) / 1ms
   }, by: {trace.id}
 | sort span_count desc
 | limit 20
@@ -335,7 +335,7 @@ fetch spans, from:-1h
 // Find the bottleneck span in each trace
 fetch spans, from:-1h
 | summarize {
-    max_duration_ms = max(duration) / 1000000,
+    max_duration_ms = max(duration) / 1ms,
     total_spans = count(),
     services = collectDistinct(service.name)
   }, by: {trace.id}
@@ -348,9 +348,9 @@ fetch spans, from:-1h
 // Time spent per span kind (where is time going?)
 fetch spans, from:-1h
 | summarize {
-    total_time_ms = sum(duration) / 1000000,
+    total_time_ms = sum(duration) / 1ms,
     span_count = count(),
-    avg_time_ms = avg(duration) / 1000000
+    avg_time_ms = avg(duration) / 1ms
   }, by: {span.kind}
 | sort total_time_ms desc
 ```
@@ -381,7 +381,7 @@ fetch spans, from:-1h
 | summarize {
     calls = count(),
     errors = countIf(span.status_code == "error"),
-    p95_latency_ms = percentile(duration, 95) / 1000000
+    p95_latency_ms = percentile(duration, 95) / 1ms
   }, by: {service.name, span.name}
 | fieldsAdd error_rate_pct = (errors * 100.0) / calls
 | filter error_rate_pct > 5 or p95_latency_ms > 500
@@ -397,7 +397,7 @@ fetch spans, from:-1h
 | summarize {
     call_count = count(),
     error_count = countIf(span.status_code == "error"),
-    avg_latency_ms = avg(duration) / 1000000
+    avg_latency_ms = avg(duration) / 1ms
   }, by: {service.name, server.address}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / call_count
 | sort call_count desc
@@ -417,9 +417,9 @@ fetch spans, from:-1h
 | filter duration > 100ms
 | summarize {
     query_count = count(),
-    avg_ms = avg(duration) / 1000000,
-    p95_ms = percentile(duration, 95) / 1000000,
-    max_ms = max(duration) / 1000000
+    avg_ms = avg(duration) / 1ms,
+    p95_ms = percentile(duration, 95) / 1ms,
+    max_ms = max(duration) / 1ms
   }, by: {db.system, db.name, span.name}
 | sort p95_ms desc
 | limit 20
@@ -444,8 +444,8 @@ fetch spans, from:-1h
 | summarize {
     requests = count(),
     errors = countIf(span.status_code == "error"),
-    p50_ms = percentile(duration, 50) / 1000000,
-    p99_ms = percentile(duration, 99) / 1000000
+    p50_ms = percentile(duration, 50) / 1ms,
+    p99_ms = percentile(duration, 99) / 1ms
   }, by: {service.name}
 | fieldsAdd error_rate_pct = (errors * 100.0) / requests
 | sort error_rate_pct desc

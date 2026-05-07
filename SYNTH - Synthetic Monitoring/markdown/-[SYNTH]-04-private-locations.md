@@ -1,6 +1,6 @@
 # SYNTH-04: Private Synthetic Locations
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 05/05/2026
 
 ## Monitoring Internal Applications from Your Infrastructure
 This notebook covers deploying and managing private synthetic locations (ActiveGates) for monitoring internal applications, APIs, and services not accessible from the public internet.
@@ -123,7 +123,7 @@ sudo systemctl status dynatracegateway
 version: '3'
 services:
   activegate:
-    image: dynatrace/activegate:latest
+    image: dynatrace/dynatrace-activegate:latest
     environment:
       - DT_TENANT=abc12345
       - DT_CAPABILITIES=synthetic

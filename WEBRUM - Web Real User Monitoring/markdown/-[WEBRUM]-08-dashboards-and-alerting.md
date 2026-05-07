@@ -56,7 +56,7 @@ fetch user.sessions, from:-24h
     error_sessions = countIf(totalErrorCount > 0),
     bounce_sessions = countIf(userActionCount == 1),
     avg_actions = avg(userActionCount),
-    avg_duration_min = avg(toDouble(duration) / 60000000000.0),
+    avg_duration_min = avg(duration / 1m),
     by:{application}
 | fieldsAdd error_rate_pct = round(toDouble(error_sessions) / toDouble(total_sessions) * 100.0, decimals: 1),
     bounce_rate_pct = round(toDouble(bounce_sessions) / toDouble(total_sessions) * 100.0, decimals: 1),
@@ -101,7 +101,7 @@ The threshold T is configurable per application. Common defaults:
 // Apdex calculation with T = 3 seconds for page loads
 fetch user.events, from:-24h
 | filter action.type == "Load"
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | summarize total = count(),
     satisfied = countIf(duration_sec <= 3),
     tolerating = countIf(duration_sec > 3 and duration_sec <= 12),
@@ -115,7 +115,7 @@ fetch user.events, from:-24h
 // Apdex trend over 7 days — daily Apdex score
 fetch user.events, from:-7d
 | filter action.type == "Load"
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | fieldsAdd is_satisfied = if(duration_sec <= 3, 1.0, else: 0.0),
     is_tolerating = if(duration_sec > 3 and duration_sec <= 12, 0.5, else: 0.0)
 | makeTimeseries
@@ -129,7 +129,7 @@ fetch user.events, from:-7d
 // Apdex by page — which pages have the worst user satisfaction?
 fetch user.events, from:-24h
 | filter action.type == "Load"
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | summarize total = count(),
     satisfied = countIf(duration_sec <= 3),
     tolerating = countIf(duration_sec > 3 and duration_sec <= 12),
@@ -178,7 +178,7 @@ fetch user.events, from:-1h
 // Performance SLA — percentage of page loads under 3 seconds
 fetch user.events, from:-1h
 | filter action.type == "Load"
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | summarize total = count(),
     under_3s = countIf(duration_sec <= 3),
     by:{application}
@@ -255,7 +255,7 @@ Detect when page load performance degrades beyond acceptable thresholds.
 // p75 page load duration per 15-minute window — performance alert data
 fetch user.events, from:-6h
 | filter action.type == "Load"
-| fieldsAdd duration_ms = toDouble(duration) / 1000000.0
+| fieldsAdd duration_ms = duration / 1ms
 | makeTimeseries p75_duration = percentile(duration_ms, 75), interval:15m, by:{application}
 ```
 
@@ -263,7 +263,7 @@ fetch user.events, from:-6h
 // Apdex per 15-minute window — satisfaction alert data
 fetch user.events, from:-6h
 | filter action.type == "Load"
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | fieldsAdd apdex_score = if(duration_sec <= 3, 1.0,
     else: if(duration_sec <= 12, 0.5,
     else: 0.0))
@@ -306,7 +306,7 @@ fetch user.sessions, from:-24h
 // Synthetic vs RUM — compare session types for the same app
 fetch user.sessions, from:-24h
 | summarize session_count = count(),
-    avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
+    avg_duration_sec = avg(duration / 1s),
     error_sessions = countIf(totalErrorCount > 0),
     by:{application, userType}
 | filter userType == "REAL_USER" or userType == "SYNTHETIC"

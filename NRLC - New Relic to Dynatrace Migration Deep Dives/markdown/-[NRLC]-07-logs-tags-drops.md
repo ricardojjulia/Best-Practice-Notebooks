@@ -50,7 +50,7 @@ See [COVERAGE-MATRIX.md §4, §6, §15, §16](../docs/COVERAGE-MATRIX.md) for th
 | **Audience** | Platform engineers, FinOps stakeholders |
 | **Standalone** | This notebook is self-contained for logs/tags/drops migration. No required prerequisite reading. |
 | **Optional depth** | NRLC-08 (validation), NRLC-09 (toolchain) |
-| **Recommended companion** | USFOODS-G.02 Grail Buckets (the bucket strategy this maps onto) |
+| **Recommended companion** | ORGNZ-02 / ORGNZ-99 (Grail bucket strategy this maps onto) |
 | **Tooling** | `Dynatrace-NewRelic`'s `LogParsingTransformer`, `DropRuleTransformer`, `TagTransformer` |
 
 <a id="translation-ctx"></a>
@@ -198,7 +198,7 @@ Migration is a chance to reset the cost profile. Common patterns:
 | Extract metrics from logs | OpenPipeline metric extraction (avoids querying raw logs) |
 | Sample low-value high-volume logs | OpenPipeline sampling processor |
 
-Combined, these typically yield **30–60% lower DPS spend** than a default-bucket-only deployment. See **USFOODS-G.02 Grail Buckets** for the full design pattern.
+Combined, these typically yield **30–60% lower DPS spend** than a default-bucket-only deployment. See **ORGNZ-02 / ORGNZ-99** for the full Grail bucket design pattern.
 
 <a id="validation"></a>
 ## 6. Validation Queries
@@ -245,7 +245,7 @@ Should return enriched data tagged with the expected environment value. (For Gen
 
 ## Summary
 
-The logs/tags/drops layer is where migration pays for itself in cost terms. Drop rules port directly; Grok→DPL parsing is mostly mechanical; tags become OpenPipeline enrichment rules that attach attributes to ingested data (Gen3 pattern). Combined with the bucket strategy in USFOODS-G.02, expect 30–60% cost reduction.
+The logs/tags/drops layer is where migration pays for itself in cost terms. Drop rules port directly; Grok→DPL parsing is mostly mechanical; tags become OpenPipeline enrichment rules that attach attributes to ingested data (Gen3 pattern). Combined with a tiered Grail bucket strategy (see **ORGNZ-02 / ORGNZ-99**), expect 30–60% cost reduction.
 
 Continue to **NRLC-08 Validation, Diff & Rollback** for the verification layer.
 

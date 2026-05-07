@@ -311,7 +311,7 @@ fetch dt.davis.problems, from:-7d
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
-| makeTimeseries avgDurationHours = avg(toLong(resolved_problem_duration) / 3600000000000.0), time: event.end
+| makeTimeseries avgDurationHours = avg(resolved_problem_duration / 1h), time: event.end
 ```
 
 ---

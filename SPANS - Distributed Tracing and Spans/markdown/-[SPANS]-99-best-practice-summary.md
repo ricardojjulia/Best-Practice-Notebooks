@@ -69,11 +69,11 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 
 | Practice | Recommended Setting/Value | Priority |
 |----------|---------|----------|
-| Convert duration from nanoseconds | `/1000000.0` for ms, `/1000000000.0` for seconds | Critical |
+| Convert duration from nanoseconds | `/ 1ms` for ms, `/ 1s` for seconds | Critical |
 | Use duration literals in filters | `filter duration > 100ms`, `filter duration > 1s` | Recommended |
 | Use `countIf()` for conditional counts | `summarize errors = countIf(span.status_code == "error"), total = count()` in single pass | Recommended |
 | Error rate calculation | `(error_count * 100.0) / total_requests` — use `100.0` (float) to avoid integer division | Recommended |
-| Percentile trends with `bin()` | `fieldsAdd time_bucket = bin(start_time, 10m) \| summarize p95 = percentile(duration, 95)/1000000, by:{time_bucket}` — `makeTimeseries` does NOT support `percentile()` | Critical |
+| Percentile trends with `bin()` | `fieldsAdd time_bucket = bin(start_time, 10m) \| summarize p95 = percentile(duration, 95)/ 1ms, by:{time_bucket}` — `makeTimeseries` does NOT support `percentile()` | Critical |
 | Use `makeTimeseries` for dashboard charts | `makeTimeseries requests = count(), errors = countIf(span.status_code == "error"), interval:5m` | Recommended |
 | Minimum sample size before ranking | `filter request_count > 10` before percentile/error rate rankings | Recommended |
 
@@ -125,7 +125,7 @@ Definitive best practice settings for distributed tracing and span analysis. Eac
 | Drop static asset spans | `endsWith(span.name, ".js") or endsWith(span.name, ".css") or endsWith(span.name, ".png")` | Recommended |
 | Never drop error spans | `span.status_code == "error"` → keep at 100% regardless of sampling | Critical |
 | Never drop slow spans | `duration > 1s` → keep at 100% regardless of sampling | Critical |
-| Pre-compute `duration_ms` at ingestion | Transform: `duration_ms = duration / 1000000` | Optional |
+| Pre-compute `duration_ms` at ingestion | Transform: `duration_ms = duration / 1ms` | Optional |
 | Route to environment buckets | Production: `spans_production_90d`. Staging: `spans_staging_7d`. Dev: `spans_default_3d` | Recommended |
 | Route sensitive service spans to restricted buckets | Payment/auth services → `spans_sensitive` with restricted IAM | Recommended |
 | Bucket-level IAM for team isolation | Frontend team: `spans_frontend` only. SRE: all span buckets. Compliance: `audit_spans` | Recommended |

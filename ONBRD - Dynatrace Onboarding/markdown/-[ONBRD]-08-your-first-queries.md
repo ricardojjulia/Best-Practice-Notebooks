@@ -1,6 +1,6 @@
 # ONBRD-08: Your First Queries
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Learning DQL Fundamentals
 Dynatrace Query Language (DQL) is how you access data in Grail. This notebook introduces the core concepts and patterns you'll use daily.
@@ -31,7 +31,7 @@ Dynatrace Query Language (DQL) is how you access data in Grail. This notebook in
 ## 1. DQL Basics
 DQL is a **pipeline-based query language**—not SQL. Data flows through a series of commands connected by the pipe (`|`) operator.
 
-![DQL Pipeline](images/dql-pipeline.png)
+![DQL Pipeline](images/08-dql-pipeline.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Command | Result |
 |-------|---------|--------|
@@ -185,11 +185,11 @@ fetch logs, from:-1h
 ```
 
 ```dql
-// Create calculated fields
+// Create calculated fields (duration / 1ms uses duration arithmetic — preferred)
 fetch spans, from:-1h
 | fields span.name, 
          duration,
-         duration_ms = duration / 1000000.0
+         duration_ms = duration / 1ms
 | limit 20
 ```
 
@@ -212,7 +212,7 @@ fetch dt.entity.host
 ```dql
 // fieldsAdd keeps existing fields and adds new ones
 fetch spans, from:-1h
-| fieldsAdd duration_ms = duration / 1000000.0
+| fieldsAdd duration_ms = duration / 1ms
 | fields span.name, duration, duration_ms
 | limit 10
 ```
@@ -306,7 +306,7 @@ fetch spans, from: now() - 1h
 Control the time range for your queries.
 
 ```dql
-// Last getHour(using from: parameter)
+// Last hour (using the from: parameter on fetch)
 fetch logs, from: now() - 1h
 | summarize count()
 ```
@@ -320,7 +320,7 @@ fetch logs, from: now() - 24h, to: now() - 12h
 ```dql
 // Last 7 days
 fetch dt.davis.problems, from: now() - 7d
-| summarize problem_count = count(), by: {status}
+| summarize problem_count = count(), by: {event.status}
 ```
 
 ### Time Units
@@ -350,14 +350,14 @@ fetch logs, from: now() - 1h
 ### Service Performance
 
 ```dql
-// Service response time summary
+// Service response time summary (use duration / 1ms for ns→ms conversion)
 fetch spans, from: now() - 1h
 | filter span.kind == "server"
-| summarize
+| summarize {
     requests = count(),
-    avg_ms = avg(duration) / 1000000.0,
-    p95_ms = percentile(duration, 95) / 1000000.0,
-    by: {service.name}
+    avg_ms = avg(duration) / 1ms,
+    p95_ms = percentile(duration, 95) / 1ms
+  }, by: {service.name}
 | sort requests desc
 | limit 20
 ```
@@ -390,20 +390,34 @@ fetch dt.entity.host
 
 With DQL fundamentals covered:
 
-1. **ONBRD-09: Setting Up Alerts** - Configure alerting and notifications
+1. **ONBRD-09: Setting Up Alerts** — Configure alerting and notifications
 2. Practice with your own data
 3. Explore the DQL documentation for advanced functions
 4. Try creating queries in Notebooks
+
+### Beyond the Basics
+
+- **`makeTimeseries`** — convert event-based data (logs, spans, bizevents) into time-bucketed metric series. Different from the `timeseries` command, which queries pre-ingested metrics. Example: `fetch logs | makeTimeseries error_rate = countIf(loglevel == "ERROR"), interval:5m, by:{k8s.cluster.name}`
+- **Iterative array expressions** — `arrayAvg`, `arraySum`, `iAny`, etc. for working with timeseries arrays in `fieldsAdd` and `filter`
+- **Smartscape topology navigation** — `smartscapeNodes`, `smartscapeEdges`, `traverse` for entity relationships (the modern alternative to `dt.entity.*`)
+
+### Where to Go Deeper
+
+- **OPLOGS / OPMIG / OPIPE** — Log query patterns, OpenPipeline transformations
+- **SPANS series** — Span-specific DQL patterns
+- **DASH series** — Building dashboards from DQL queries
+- **AIOPS series** — Davis problem queries, anomaly detection DQL
 
 ### DQL Checklist
 
 - [ ] Understand the pipeline model
 - [ ] Can fetch different data types
 - [ ] Can filter with conditions
-- [ ] Can select and calculate fields
+- [ ] Can select and calculate fields (using duration arithmetic, not nanosecond constants)
 - [ ] Can aggregate with summarize
 - [ ] Can sort and limit results
 - [ ] Can specify time ranges
+- [ ] Know that `makeTimeseries` exists for event → series conversion
 
 ---
 
@@ -418,6 +432,7 @@ In this notebook, you learned:
 - `summarize` aggregates data
 - `sort` and `limit` control output
 - Time ranges with `from:` and `to:`
+- Duration arithmetic (`duration / 1ms`) is preferred over nanosecond constants
 
 ---
 

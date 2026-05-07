@@ -1,6 +1,6 @@
 # ONBRD-07: Understanding Your Data
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 7 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Exploring What Dynatrace Discovered
 With OneAgent deployed, Dynatrace has automatically discovered your infrastructure, processes, and services. This notebook helps you understand what's been found and how to explore your data.
@@ -28,7 +28,7 @@ With OneAgent deployed, Dynatrace has automatically discovered your infrastructu
 ## 1. The Dynatrace Data Model
 Dynatrace organizes data into a unified model:
 
-![Grail Data Model](images/grail-data-model.png)
+![Grail Data Model](images/07-grail-data-model.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Data Type | Description | Example |
 |-----------|-------------|---------|
@@ -57,7 +57,7 @@ Dynatrace organizes data into a unified model:
 ## 2. Entities and Relationships
 Dynatrace automatically discovers and relates entities:
 
-![Entity Hierarchy](images/entity-hierarchy.png)
+![Entity Hierarchy](images/07-entity-hierarchy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Entity Type | DQL Name | What It Represents |
 |-------------|----------|--------------------|
@@ -88,6 +88,20 @@ The topology view shows the visual representation of your environment.
 
 ### Understanding Topology Layers
 
+![Smartscape Topology Layers](images/07-smartscape-topology-layers.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Layer | What It Is | Modern Query |
+|-------|------------|--------------|
+| Application | RUM / Mobile App; user-facing entry point | smartscapeNodes "APPLICATION" |
+| Service | Auto-detected by OneAgent code instrumentation; service.name | smartscapeNodes "SERVICE" |
+| Process Group / Process | Detected processes, grouped by command line + version | smartscapeNodes "PROCESS_GROUP" |
+| Host | OneAgent-monitored; grouped by host group | smartscapeNodes "HOST" |
+| Container / K8s Pod | k8s.namespace · k8s.deployment · pod labels | smartscapeNodes for K8s entity types |
+| Cloud Resource | AWS/Azure/GCP; cloud-tag enriched | smartscapeNodes for cloud entity types |
+Legacy fetch dt.entity.* still works on hybrid tenants but is deprecated
+For environments where SVG doesn't render
+-->
+
 | Layer | Shows | Use Case |
 |-------|-------|----------|
 | **Applications** | Frontend apps, user sessions | User experience |
@@ -111,29 +125,51 @@ The topology view shows the visual representation of your environment.
 
 <a id="data-types-in-grail"></a>
 ## 4. Data Types in Grail
-Grail stores different data types with different retention and query patterns.
+Grail stores different data types — each queried via a specific DQL command. Retention is **per-bucket and customer-configurable**, not a fixed default.
 
-| Data Type | DQL Fetch | Typical Use |
-|-----------|-----------|-------------|
-| **Logs** | `fetch logs` | Troubleshooting, audit |
+| Data Type | DQL Fetch / Command | Typical Use |
+|-----------|---------------------|-------------|
+| **Logs** | `fetch logs` | Troubleshooting, audit, compliance |
 | **Spans** | `fetch spans` | Distributed tracing |
-| **Metrics** | `timeseries` | Performance monitoring |
-| **Events** | `fetch events` | Change tracking |
-| **Problems** | `fetch dt.davis.problems` | Incident management |
-| **Entities** | `fetch dt.entity.*` | Topology queries |
-| **Bizevents** | `fetch bizevents` | Business transactions |
+| **Metrics** | `timeseries` *(not `fetch`)* | Performance monitoring, SLOs |
+| **Events** | `fetch events` | Change tracking, infra events |
+| **Bizevents** | `fetch bizevents` | Business transactions, conversion funnels |
+| **Davis problems** | `fetch dt.davis.problems` | Detected incidents (uses `event.status` / `event.end` fields) |
+| **Davis events** | `fetch dt.davis.events` | Raw signals that feed problem detection (kind = `DAVIS_EVENT`) |
+| **Security events** | `fetch securityEvents` | Vulnerabilities, security signals |
+| **RUM sessions** | `fetch usersessions` | Session-level RUM aggregates |
+| **RUM individual events** | `fetch user.events` | Page views, clicks, requests, errors |
+| **RUM session replays** | `fetch user.replays` | Recorded session replays |
+| **Entities (topology)** | `smartscapeNodes "<TYPE>"` *(modern)* / `fetch dt.entity.<type>` *(legacy)* | Topology queries; `dt.entity.*` is deprecated, prefer `smartscapeNodes` for new queries |
 
 ### Data Retention
 
-Default retention varies by data type and license:
+Retention is **bucket-scoped and customer-configurable** — there is no universal default. Out-of-the-box retention varies by license tier and Grail bucket configuration. Inspect your tenant's bucket retention with:
 
-| Data Type | Typical Retention |
-|-----------|-------------------|
-| Metrics | 5 years (aggregated) |
-| Logs | 35 days (configurable) |
-| Spans | 35 days |
-| Events | 35 days |
-| Entity state | Real-time |
+```dql
+// List configured Grail buckets and their retention (use Bucket Management UI for full detail)
+fetch dt.system.buckets
+| fields name, table, retention
+| sort name asc
+```
+
+Typical starting points (subject to customer configuration):
+
+| Data Type | Common Out-of-the-Box Retention |
+|-----------|---------------------------------|
+| Metrics (raw) | 14 days |
+| Metrics (aggregated) | up to 5 years |
+| Logs | 35 days (default bucket; can be 14d / 90d / 365d per tier) |
+| Spans | 14 days |
+| Events / Bizevents | 35 days |
+| Davis problems | 35 days |
+
+> **Where to go deeper:**
+> - **ORGNZ-02 / ORGNZ-99** — Grail bucket strategy and retention design
+> - **OPLOGS series** — Log processing in OpenPipeline
+> - **OPMIG series** — Classic Logs → OpenPipeline migration
+> - **OPIPE series** — OpenPipeline beyond logs (spans, metrics, events, bizevents)
+> - **SPANS series** — Distributed tracing and span analysis
 
 <a id="discovery-queries"></a>
 ## 5. Discovery Queries
@@ -290,7 +326,7 @@ fetch dt.entity.cloud_application
 ```dql
 // Check for recent problems
 fetch dt.davis.problems, from: now() - 7d
-| fields timestamp, display_id, title, status, affected_entity_types
+| fields timestamp, display_id, title, event.status, affected_entity_types
 | sort timestamp desc
 | limit 20
 ```
@@ -298,7 +334,7 @@ fetch dt.davis.problems, from: now() - 7d
 ```dql
 // Problem summary by status
 fetch dt.davis.problems, from: now() - 30d
-| summarize problem_count = count(), by: {status}
+| summarize problem_count = count(), by: {event.status}
 | sort problem_count desc
 ```
 
@@ -306,10 +342,18 @@ fetch dt.davis.problems, from: now() - 30d
 
 Now that you understand your data:
 
-1. **ONBRD-08: Your First Queries** - Learn DQL fundamentals
+1. **ONBRD-08: Your First Queries** — Learn DQL fundamentals
 2. Explore topology for dependency visualization
 3. Review any detected problems
 4. Plan which additional hosts to instrument
+
+### Where to Go Deeper
+
+- **ORGNZ-02 / ORGNZ-99** — Grail bucket strategy
+- **OPLOGS / OPMIG / OPIPE** — Log and OpenPipeline depth
+- **SPANS series** — Distributed tracing depth
+- **AIOPS series** — Davis problems, RCA, anomaly detection deep dives
+- **K8S series** — Kubernetes monitoring depth
 
 ### Discovery Checklist
 
@@ -319,6 +363,7 @@ Now that you understand your data:
 - [ ] Topology showing relationships
 - [ ] Log ingestion working (if applicable)
 - [ ] Kubernetes entities visible (if applicable)
+- [ ] Bucket retention reviewed against expected data class
 
 ---
 
@@ -326,11 +371,13 @@ Now that you understand your data:
 
 In this notebook, you learned:
 
-- The Dynatrace data model (entities, metrics, logs, spans)
+- The Dynatrace data model (entities, metrics, logs, spans, events, bizevents, security, RUM)
 - How entities relate to each other
 - How to navigate topology views
-- Different data types stored in Grail
+- Different data types stored in Grail and their DQL fetch commands
+- That `dt.davis.problems` uses `event.status` / `event.end` fields (not `status` / `end_time`)
 - Discovery queries for infrastructure, services, and logs
+- That retention is bucket-scoped and customer-configurable
 
 ---
 
@@ -340,6 +387,7 @@ In this notebook, you learned:
 - [Topology and Dependencies](https://docs.dynatrace.com/docs/observe-and-explore/services/service-analysis/service-flow)
 - [Grail Data Model](https://docs.dynatrace.com/docs/platform/grail)
 - [Entity Types Reference](https://docs.dynatrace.com/docs/discover-dynatrace/references/entity-types)
+- [Davis Problems App](https://docs.dynatrace.com/docs/dynatrace-intelligence/problems-app)
 
 ---
 

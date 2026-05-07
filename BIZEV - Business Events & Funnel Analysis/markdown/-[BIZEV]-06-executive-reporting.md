@@ -82,7 +82,7 @@ fetch dt.davis.problems, from:-24h
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize problem_count = count(),
            avg_resolution_hours = avg(duration_hours),
            max_resolution_hours = max(duration_hours),
@@ -151,7 +151,7 @@ fetch bizevents, from:-7d
 fetch dt.davis.problems, from:-30d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false and dt.davis.is_frequent_event == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize avg_mttr = avg(duration_hours),
            median_mttr = median(duration_hours),
            p95_mttr = percentile(duration_hours, 95),
@@ -279,7 +279,7 @@ fetch bizevents, from:-7d
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false
-| fieldsAdd resolution_hours = round(toLong(resolved_problem_duration) / 3600000000000.0, decimals: 1)
+| fieldsAdd resolution_hours = round(resolved_problem_duration / 1h, decimals: 1)
 | fieldsKeep display_id, event.name, event.category, event.start, event.end, resolution_hours
 | sort event.start desc
 ```

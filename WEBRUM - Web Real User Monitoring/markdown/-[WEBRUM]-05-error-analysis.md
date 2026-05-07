@@ -226,7 +226,7 @@ fetch user.sessions, from:-24h
 | fieldsAdd has_errors = if(totalErrorCount > 0, "With Errors", else: "No Errors")
 | summarize session_count = count(),
     avg_actions = avg(userActionCount),
-    avg_duration_sec = avg(toDouble(duration) / 1000000000.0),
+    avg_duration_sec = avg(duration / 1s),
     bounce_rate = countIf(userActionCount == 1),
     by:{has_errors}
 | fieldsAdd bounce_pct = round(toDouble(bounce_rate) / toDouble(session_count) * 100.0, decimals: 1)

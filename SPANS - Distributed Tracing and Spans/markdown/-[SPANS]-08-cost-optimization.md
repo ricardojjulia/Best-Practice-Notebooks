@@ -78,7 +78,7 @@ fetch spans, from:-1h
 // ❌ INEFFICIENT: Processing before filtering scans more data
 // This pattern wastes resources - shown for comparison only
 fetch spans, from:-1h
-| fieldsAdd duration_ms = duration / 1000000  // Processing first (bad)
+| fieldsAdd duration_ms = duration / 1ms  // Processing first (bad)
 | summarize {avg_duration = avg(duration_ms)}, by:{dt.entity.service, span.name}
 | filter dt.entity.service == "SERVICE-6C36694E683AD694"  // Too late!
 | limit 100
@@ -178,7 +178,7 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter span.kind == "server"
 | filter duration > 500ms
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time, dt.entity.service, span.name, duration_ms
 | sort duration_ms desc
 | limit 50
@@ -230,7 +230,7 @@ fetch spans, from:-1h
 | summarize {
     span_count = count(),
     error_count = countIf(span.status_code == "error"),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by:{dt.entity.service}
 | sort span_count desc
 | limit 25
@@ -261,8 +261,8 @@ fetch spans, from:-1h
 | summarize {
     total_requests = count(),
     error_count = countIf(span.status_code == "error"),
-    p50_duration_ms = percentile(duration, 50) / 1000000,
-    p95_duration_ms = percentile(duration, 95) / 1000000
+    p50_duration_ms = percentile(duration, 50) / 1ms,
+    p95_duration_ms = percentile(duration, 95) / 1ms
   }, by:{dt.entity.service}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / total_requests
 | sort total_requests desc
@@ -275,11 +275,11 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
-    p50 = percentile(duration, 50) / 1000000,
-    p75 = percentile(duration, 75) / 1000000,
-    p90 = percentile(duration, 90) / 1000000,
-    p95 = percentile(duration, 95) / 1000000,
-    p99 = percentile(duration, 99) / 1000000
+    p50 = percentile(duration, 50) / 1ms,
+    p75 = percentile(duration, 75) / 1ms,
+    p90 = percentile(duration, 90) / 1ms,
+    p95 = percentile(duration, 95) / 1ms,
+    p99 = percentile(duration, 99) / 1ms
   }, by:{dt.entity.service}
 | limit 20
 ```
@@ -291,7 +291,7 @@ fetch spans, from:-1h
 | fieldsAdd time_bucket = bin(start_time, 5m)
 | summarize {
     request_count = count(),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by:{time_bucket, dt.entity.service}
 | sort time_bucket desc, request_count desc
 | limit 100
@@ -346,7 +346,7 @@ fetch spans, bucket: {"default_spans"}
 | summarize {
     requests = count(),
     errors = countIf(span.status_code == "error"),
-    avg_latency_ms = avg(duration) / 1000000
+    avg_latency_ms = avg(duration) / 1ms
   }, by:{dt.entity.service}
 | fieldsAdd error_rate = (errors * 100.0) / requests
 | sort requests desc
@@ -378,7 +378,7 @@ fetch spans, bucket: {"default_spans"}
 | fieldsAdd time_bucket = bin(start_time, 5m)
 | summarize {
     request_count = count(),
-    p95_latency_ms = percentile(duration, 95) / 1000000
+    p95_latency_ms = percentile(duration, 95) / 1ms
   }, by:{time_bucket}
 | sort time_bucket desc
 | limit 50
@@ -392,8 +392,8 @@ fetch spans, bucket: {"default_spans"}
 | filter duration > 1s
 | summarize {
     occurrence_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    max_duration_ms = max(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    max_duration_ms = max(duration) / 1ms
   }, by:{dt.entity.service, span.name}
 | sort avg_duration_ms desc
 | limit 20
@@ -410,7 +410,7 @@ fetch spans, from:-1h
 | fields start_time, span.name, duration, http.route  // 4. Only needed fields
 | summarize {
     error_count = count(),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by:{span.name, http.route}            // 5. Low cardinality
 | sort error_count desc
 | limit 20                                 // 6. Limited results

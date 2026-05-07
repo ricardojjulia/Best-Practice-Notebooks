@@ -508,7 +508,7 @@ fetch spans, from:-1h
 | filter isNotNull(http.route)
 | summarize {
     requests = count(),
-    avg_ms = avg(duration) / 1000000
+    avg_ms = avg(duration) / 1ms
   }, by:{dt.entity.service, http.route, http.request.method}
 | sort requests desc
 | limit 20

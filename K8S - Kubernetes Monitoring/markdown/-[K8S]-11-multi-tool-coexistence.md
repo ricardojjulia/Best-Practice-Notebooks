@@ -172,7 +172,7 @@ The `opentelemetry-injector` project ([github.com/open-telemetry/opentelemetry-i
 3. **Configure DynaKube namespace selector** (Section 2 above) to exclude OTel-managed namespaces from OneAgent injection.
 4. **Keep OneAgent for infra:** even in OTel-managed namespaces, OneAgent at the host/node level still provides Smartscape topology, network-zone routing, and host-level metrics — those don't conflict with in-pod instrumentation.
 
-> See **OTEL** series for the OTel collector configuration and **CAESARS A.25** for a worked OneAgent-vs-OTel decision framework.
+> See the **OTEL** series for OTel collector configuration. The OneAgent-vs-OTel decision is workload-specific — record it explicitly per language runtime and per namespace before instrumenting.
 
 <a id="feature-flags-reference"></a>
 ## 3. Feature Flags Reference

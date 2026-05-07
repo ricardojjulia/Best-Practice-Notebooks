@@ -113,7 +113,7 @@ fetch user.events, from:-24h
 fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(server.time)
-| fieldsAdd ttfb_ms = toDouble(server.time) / 1000000.0
+| fieldsAdd ttfb_ms = server.time / 1ms
 | fieldsAdd ttfb_category = if(ttfb_ms <= 800, "Good",
     else: if(ttfb_ms <= 1800, "Needs Improvement",
     else: "Poor"))
@@ -158,9 +158,9 @@ fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(country)
 | summarize page_views = count(),
-    avg_duration_ms = avg(toDouble(duration) / 1000000.0),
-    p75_duration_ms = percentile(toDouble(duration) / 1000000.0, 75),
-    avg_ttfb_ms = avg(toDouble(server.time) / 1000000.0),
+    avg_duration_ms = avg(duration / 1ms),
+    p75_duration_ms = percentile(duration / 1ms, 75),
+    avg_ttfb_ms = avg(server.time / 1ms),
     by:{country}
 | filter page_views > 20
 | sort p75_duration_ms desc
@@ -173,8 +173,8 @@ fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(continent)
 | summarize page_views = count(),
-    avg_ttfb_ms = avg(toDouble(server.time) / 1000000.0),
-    p75_ttfb_ms = percentile(toDouble(server.time) / 1000000.0, 75),
+    avg_ttfb_ms = avg(server.time / 1ms),
+    p75_ttfb_ms = percentile(server.time / 1ms, 75),
     by:{continent}
 | sort p75_ttfb_ms desc
 ```
@@ -193,8 +193,8 @@ fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(connection.type)
 | summarize page_views = count(),
-    avg_duration_ms = avg(toDouble(duration) / 1000000.0),
-    p75_duration_ms = percentile(toDouble(duration) / 1000000.0, 75),
+    avg_duration_ms = avg(duration / 1ms),
+    p75_duration_ms = percentile(duration / 1ms, 75),
     by:{connection.type}
 | sort p75_duration_ms desc
 ```
@@ -205,8 +205,8 @@ fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(browser.family)
 | summarize page_views = count(),
-    avg_duration_ms = avg(toDouble(duration) / 1000000.0),
-    p75_duration_ms = percentile(toDouble(duration) / 1000000.0, 75),
+    avg_duration_ms = avg(duration / 1ms),
+    p75_duration_ms = percentile(duration / 1ms, 75),
     by:{browser.family}
 | filter page_views > 20
 | sort p75_duration_ms desc
@@ -219,8 +219,8 @@ fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(os.family)
 | summarize page_views = count(),
-    avg_duration_ms = avg(toDouble(duration) / 1000000.0),
-    p75_duration_ms = percentile(toDouble(duration) / 1000000.0, 75),
+    avg_duration_ms = avg(duration / 1ms),
+    p75_duration_ms = percentile(duration / 1ms, 75),
     by:{os.family}
 | filter page_views > 20
 | sort p75_duration_ms desc
@@ -237,9 +237,9 @@ Find the pages that need optimization attention — ranked by the impact of thei
 fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize page_views = count(),
-    avg_ms = avg(toDouble(duration) / 1000000.0),
-    p75_ms = percentile(toDouble(duration) / 1000000.0, 75),
-    p95_ms = percentile(toDouble(duration) / 1000000.0, 95),
+    avg_ms = avg(duration / 1ms),
+    p75_ms = percentile(duration / 1ms, 75),
+    p95_ms = percentile(duration / 1ms, 95),
     by:{action.name}
 | filter page_views > 20
 | sort p95_ms desc
@@ -251,7 +251,7 @@ fetch user.events, from:-24h
 fetch user.events, from:-24h
 | filter action.type == "Load"
 | summarize page_views = count(),
-    avg_ms = avg(toDouble(duration) / 1000000.0),
+    avg_ms = avg(duration / 1ms),
     by:{action.name}
 | fieldsAdd impact_score = page_views * avg_ms
 | sort impact_score desc
@@ -270,7 +270,7 @@ Track performance over time to detect regressions and measure the impact of opti
 // Page load duration trend — daily p75 over the last 7 days
 fetch user.events, from:-7d
 | filter action.type == "Load"
-| fieldsAdd duration_ms = toDouble(duration) / 1000000.0
+| fieldsAdd duration_ms = duration / 1ms
 | makeTimeseries p75_duration = percentile(duration_ms, 75), interval:1d
 ```
 
@@ -279,7 +279,7 @@ fetch user.events, from:-7d
 fetch user.events, from:-24h
 | filter action.type == "Load"
 | filter isNotNull(server.time)
-| fieldsAdd ttfb_ms = toDouble(server.time) / 1000000.0
+| fieldsAdd ttfb_ms = server.time / 1ms
 | makeTimeseries p75_ttfb = percentile(ttfb_ms, 75), interval:1h
 ```
 
