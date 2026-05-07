@@ -21,34 +21,34 @@
 
 | Code | Series | Notebooks | Focus |
 |---|---|---|---|
-| **ADOPT** | [Observability Adoption & Maturity](../adopt/) | 6 | Maturity model, success metrics, optimization roadmap, FinOps |
-| **AIOPS** | [Dynatrace Intelligence](../aiops/) | 8 | Davis problems, anomaly detection, generative AI, agentic workflows |
-| **AUTOM** | [Dynatrace Automation](../autom/) | 11 | Settings API, Monaco, Terraform, workflows-as-code, GitOps, CI/CD |
-| **BIZEV** | [Business Events & Funnel Analysis](../bizev/) | 7 | Business event ingestion, conversion funnels, revenue impact, executive reporting |
-| **CLOUD** | [Cloud Provider Integrations](../cloud/) | 9 | AWS, Azure, GCP integrations; Lambda, EKS, multi-cloud patterns |
-| **DASH** | [Dashboard Design & Building](../dash/) | 8 | Dashboard hierarchy, executive/operations/engineering audiences, sharing and reporting |
-| **DBMON** | [Database Monitoring](../dbmon/) | 7 | SQL, NoSQL, cache, messaging, query analysis |
-| **FAQ** | [Frequently Asked Questions](../faq/) | 2+ | Standalone single-page reference docs (host-group naming, tagging) — growing |
-| **IAM** | [IAM Administration](../iam/) | 13 | Policies, boundaries, groups, SSO, audit, parameterized assignments |
-| **K8S** | [Kubernetes Monitoring](../k8s/) | 15 | DynaKube, GitOps deployment, cluster + workload monitoring, troubleshooting |
-| **M2S** | [Managed to SaaS Migration](../m2s/) | 10 | 9-step procedural runbook for Managed → SaaS deployment migration |
-| **MOBL** | [Mobile Monitoring](../mobl/) | 13 | iOS, Android, cross-platform SDKs; crash reporting, session replay, privacy |
-| **MZ2POL** | [Management Zone to Policy Migration](../mz2pol/) | 10 | MZ analysis, Gen2 → Gen3 access control migration |
-| **NR2DT** | [New Relic to Dynatrace Migration Steps](../nr2dt/) | 11 | Procedural runbook (00 prereqs + 9 steps + summary); refers to NRLC for component depth |
-| **NRLC** | [New Relic to Dynatrace Migration Deep Dives](../nrlc/) | 9 | Standalone component deep dives (NRQL→DQL, dashboards, alerts, synthetics, SLOs, logs) |
-| **ONBRD** | [Dynatrace Onboarding](../onbrd/) | 11 | First steps, IAM, ActiveGate, OneAgent, basic data org and dashboards |
-| **OPIPE** | [OpenPipeline Beyond Logs](../opipe/) | 7 | Spans, metrics, business and security event pipelines; cross-scope design patterns |
-| **OPLOGS** | [OpenPipeline Logs](../oplogs/) | 9 | Log fundamentals, processing, buckets, parsing, security |
-| **OPMIG** | [OpenPipeline Migration](../opmig/) | 10 | Classic Logs → OpenPipeline migration runbook |
-| **ORGNZ** | [Organize Data: Buckets, Segments, Security](../orgnz/) | 11 | Buckets, security_context, permissions, segments, enterprise patterns |
-| **OTEL** | [OpenTelemetry Integration](../otel/) | 9 | OTel collector deployment, trace/metric/log instrumentation, Dynatrace integration |
-| **S2D** | [Splunk to Dynatrace Migration](../s2d/) | 10 | SPL → DQL, anomaly detectors, dashboards, naming standards |
-| **S2S** | [SaaS to SaaS Migration](../s2s/) | 11 | 9-step runbook for SaaS → SaaS tenant consolidation; includes migration scripts |
-| **SL2DT** | [Sumo Logic to Dynatrace](../sl2dt/) | 10 | Sumo procedural runbook; logs/dashboards/monitors; Gen3-first |
-| **SPANS** | [Distributed Tracing and Spans](../spans/) | 9 | Span fundamentals, querying, topology, analytics, cost optimization |
-| **SYNTH** | [Synthetic Monitoring](../synth/) | 7 | Browser monitors, HTTP monitors, private locations, network monitoring |
-| **WEBRUM** | [Web Real User Monitoring](../webrum/) | 9 | RUM fundamentals, SPA, Core Web Vitals, session replay |
-| **WFLOW** | [Workflows and Alert Notifications](../wflow/) | 10 | Workflow triggers, notification routing, incident management, JS/HTTP actions, governance |
+| **ADOPT** | [Observability Adoption & Maturity](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) | 6 | Maturity model, success metrics, optimization roadmap, FinOps |
+| **AIOPS** | [Dynatrace Intelligence](../AIOPS%20-%20Dynatrace%20Intelligence/) | 8 | Davis problems, anomaly detection, generative AI, agentic workflows |
+| **AUTOM** | [Dynatrace Automation](../AUTOM%20-%20Dynatrace%20Automation/) | 11 | Settings API, Monaco, Terraform, workflows-as-code, GitOps, CI/CD |
+| **BIZEV** | [Business Events & Funnel Analysis](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) | 7 | Business event ingestion, conversion funnels, revenue impact, executive reporting |
+| **CLOUD** | [Cloud Provider Integrations](../CLOUD%20-%20Cloud%20Provider%20Integrations/) | 9 | AWS, Azure, GCP integrations; Lambda, EKS, multi-cloud patterns |
+| **DASH** | [Dashboard Design & Building](../DASH%20-%20Dashboard%20Design%20&%20Building/) | 8 | Dashboard hierarchy, executive/operations/engineering audiences, sharing and reporting |
+| **DBMON** | [Database Monitoring](../DBMON%20-%20Database%20Monitoring/) | 7 | SQL, NoSQL, cache, messaging, query analysis |
+| **FAQ** | [Frequently Asked Questions](../FAQ%20-%20Frequently%20Asked%20Questions/) | 2+ | Standalone single-page reference docs (host-group naming, tagging) — growing |
+| **IAM** | [IAM Administration](../IAM%20-%20IAM%20Administration/) | 13 | Policies, boundaries, groups, SSO, audit, parameterized assignments |
+| **K8S** | [Kubernetes Monitoring](../K8S%20-%20Kubernetes%20Monitoring/) | 15 | DynaKube, GitOps deployment, cluster + workload monitoring, troubleshooting |
+| **M2S** | [Managed to SaaS Migration](../M2S%20-%20Managed%20to%20SaaS%20Migration/) | 10 | 9-step procedural runbook for Managed → SaaS deployment migration |
+| **MOBL** | [Mobile Monitoring](../MOBL%20-%20Mobile%20Monitoring/) | 13 | iOS, Android, cross-platform SDKs; crash reporting, session replay, privacy |
+| **MZ2POL** | [Management Zone to Policy Migration](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) | 10 | MZ analysis, Gen2 → Gen3 access control migration |
+| **NR2DT** | [New Relic to Dynatrace Migration Steps](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) | 11 | Procedural runbook (00 prereqs + 9 steps + summary); refers to NRLC for component depth |
+| **NRLC** | [New Relic to Dynatrace Migration Deep Dives](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) | 9 | Standalone component deep dives (NRQL→DQL, dashboards, alerts, synthetics, SLOs, logs) |
+| **ONBRD** | [Dynatrace Onboarding](../ONBRD%20-%20Dynatrace%20Onboarding/) | 11 | First steps, IAM, ActiveGate, OneAgent, basic data org and dashboards |
+| **OPIPE** | [OpenPipeline Beyond Logs](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) | 7 | Spans, metrics, business and security event pipelines; cross-scope design patterns |
+| **OPLOGS** | [OpenPipeline Logs](../OPLOGS%20-%20OpenPipeline%20Logs/) | 9 | Log fundamentals, processing, buckets, parsing, security |
+| **OPMIG** | [OpenPipeline Migration](../OPMIG%20-%20OpenPipeline%20Migration/) | 10 | Classic Logs → OpenPipeline migration runbook |
+| **ORGNZ** | [Organize Data: Buckets, Segments, Security](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) | 11 | Buckets, security_context, permissions, segments, enterprise patterns |
+| **OTEL** | [OpenTelemetry Integration](../OTEL%20-%20OpenTelemetry%20Integration/) | 9 | OTel collector deployment, trace/metric/log instrumentation, Dynatrace integration |
+| **S2D** | [Splunk to Dynatrace Migration](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) | 10 | SPL → DQL, anomaly detectors, dashboards, naming standards |
+| **S2S** | [SaaS to SaaS Migration](../S2S%20-%20SaaS%20to%20SaaS%20Migration/) | 11 | 9-step runbook for SaaS → SaaS tenant consolidation; includes migration scripts |
+| **SL2DT** | [Sumo Logic to Dynatrace](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) | 10 | Sumo procedural runbook; logs/dashboards/monitors; Gen3-first |
+| **SPANS** | [Distributed Tracing and Spans](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) | 9 | Span fundamentals, querying, topology, analytics, cost optimization |
+| **SYNTH** | [Synthetic Monitoring](../SYNTH%20-%20Synthetic%20Monitoring/) | 7 | Browser monitors, HTTP monitors, private locations, network monitoring |
+| **WEBRUM** | [Web Real User Monitoring](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) | 9 | RUM fundamentals, SPA, Core Web Vitals, session replay |
+| **WFLOW** | [Workflows and Alert Notifications](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) | 10 | Workflow triggers, notification routing, incident management, JS/HTTP actions, governance |
 
 ---
 
@@ -58,9 +58,9 @@
 
 Every customer needs these regardless of entry point.
 
-- [ONBRD](../onbrd/) — Tenant orientation, OneAgent, ActiveGate
-- [ORGNZ](../orgnz/) — Buckets, security_context, segments
-- [IAM](../iam/) — Policies, groups, boundaries
+- [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — Tenant orientation, OneAgent, ActiveGate
+- [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — Buckets, security_context, segments
+- [IAM](../IAM%20-%20IAM%20Administration/) — Policies, groups, boundaries
 
 ### Migration (Pick Based on Source)
 
@@ -68,47 +68,47 @@ These are entry points for customers leaving another tool or migrating their Dyn
 
 **Tool migration (typically with a net-new Dynatrace tenant):**
 
-- [NRLC](../nrlc/) + [NR2DT](../nr2dt/) — From New Relic
-- [S2D](../s2d/) — From Splunk
-- [SL2DT](../sl2dt/) — From Sumo Logic
-- [OPMIG](../opmig/) — Classic Logs → OpenPipeline (internal Dynatrace migration)
-- [MZ2POL](../mz2pol/) — Management Zones → Policies (internal Dynatrace migration)
+- [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) + [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) — From New Relic
+- [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) — From Splunk
+- [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) — From Sumo Logic
+- [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) — Classic Logs → OpenPipeline (internal Dynatrace migration)
+- [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) — Management Zones → Policies (internal Dynatrace migration)
 
 **Deployment migration (existing Dynatrace customer):**
 
-- [M2S](../m2s/) — Managed → SaaS
-- [S2S](../s2s/) — SaaS → SaaS
+- [M2S](../M2S%20-%20Managed%20to%20SaaS%20Migration/) — Managed → SaaS
+- [S2S](../S2S%20-%20SaaS%20to%20SaaS%20Migration/) — SaaS → SaaS
 
 ### Domain (Pick Based on What You Monitor)
 
-- [K8S](../k8s/) — Kubernetes
-- [CLOUD](../cloud/) — AWS, Azure, GCP
-- [SPANS](../spans/) — Distributed tracing
-- [WEBRUM](../webrum/) — Web Real User Monitoring
-- [MOBL](../mobl/) — Mobile (iOS, Android)
-- [DBMON](../dbmon/) — Databases
-- [BIZEV](../bizev/) — Business events
-- [SYNTH](../synth/) — Synthetic monitoring
+- [K8S](../K8S%20-%20Kubernetes%20Monitoring/) — Kubernetes
+- [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) — AWS, Azure, GCP
+- [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — Distributed tracing
+- [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) — Web Real User Monitoring
+- [MOBL](../MOBL%20-%20Mobile%20Monitoring/) — Mobile (iOS, Android)
+- [DBMON](../DBMON%20-%20Database%20Monitoring/) — Databases
+- [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) — Business events
+- [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — Synthetic monitoring
 
 ### Ingestion (Cross-Cutting Mechanism)
 
-- [OTEL](../otel/) — OpenTelemetry collector and instrumentation
-- [OPLOGS](../oplogs/) — Log processing in OpenPipeline
-- [OPIPE](../opipe/) — OpenPipeline for spans, metrics, business and security events
+- [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) — OpenTelemetry collector and instrumentation
+- [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) — Log processing in OpenPipeline
+- [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — OpenPipeline for spans, metrics, business and security events
 
 ### Operationalize (Day-2 Operations)
 
 Read in order; each builds on the previous.
 
-- [DASH](../dash/) — Dashboards
-- [WFLOW](../wflow/) — Workflows and alerting
-- [AUTOM](../autom/) — Configuration automation
-- [AIOPS](../aiops/) — Davis intelligence and AI workflows
+- [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — Dashboards
+- [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — Workflows and alerting
+- [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — Configuration automation
+- [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — Davis intelligence and AI workflows
 
 ### Maturity & Reference
 
-- [ADOPT](../adopt/) — Continuous improvement framework
-- [FAQ](../faq/) — Standalone reference docs
+- [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — Continuous improvement framework
+- [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) — Standalone reference docs
 
 ---
 
@@ -143,34 +143,34 @@ For each series, the related series most often read alongside it:
 
 | If you are reading… | Also see… |
 |---|---|
-| [ADOPT](../adopt/) | [DASH](../dash/), [ORGNZ](../orgnz/) (cost optimization), [BIZEV](../bizev/) (success metrics) |
-| [AIOPS](../aiops/) | [WFLOW](../wflow/) (alert routing), [DASH](../dash/) (visualizing problems), [AUTOM](../autom/) (workflow-as-code) |
-| [AUTOM](../autom/) | [WFLOW](../wflow/) (workflow-as-code overlap), [IAM](../iam/) (provisioning), [K8S](../k8s/) (GitOps), [ONBRD](../onbrd/) (Settings API basics) |
-| [BIZEV](../bizev/) | [OPIPE](../opipe/) (event pipelines), [DASH](../dash/) (executive reporting), [WEBRUM](../webrum/) (frontend events) |
-| [CLOUD](../cloud/) | [OTEL](../otel/) (collectors), [K8S](../k8s/) (managed K8s), [OPLOGS](../oplogs/) (CloudWatch ingestion) |
-| [DASH](../dash/) | [WFLOW](../wflow/), [BIZEV](../bizev/) (executive dashboards), [ORGNZ](../orgnz/) (segments and filters) |
-| [DBMON](../dbmon/) | [SPANS](../spans/) (database call tracing), [DASH](../dash/) (database dashboards) |
-| [FAQ](../faq/) | [ORGNZ](../orgnz/) (tagging), [ONBRD](../onbrd/) (host groups) |
-| [IAM](../iam/) | [ORGNZ](../orgnz/) (security_context for boundaries), [MZ2POL](../mz2pol/) (Gen2 → Gen3), [ONBRD](../onbrd/) (initial setup) |
-| [K8S](../k8s/) | [OTEL](../otel/) (collector deployment), [CLOUD](../cloud/) (managed K8s), [AUTOM](../autom/) (GitOps), [OPLOGS](../oplogs/) (K8s logs) |
-| [M2S](../m2s/) | [ORGNZ](../orgnz/), [IAM](../iam/), [MZ2POL](../mz2pol/) (Gen2 → Gen3) |
-| [MOBL](../mobl/) | [SPANS](../spans/) (mobile-to-backend tracing), [DASH](../dash/) (mobile dashboards) |
-| [MZ2POL](../mz2pol/) | [IAM](../iam/), [ORGNZ](../orgnz/) |
-| [NR2DT](../nr2dt/) | [NRLC](../nrlc/) (component depth), [ONBRD](../onbrd/), [OPLOGS](../oplogs/) (logs migration) |
-| [NRLC](../nrlc/) | [NR2DT](../nr2dt/) (procedural runbook), [SPANS](../spans/), [DASH](../dash/), [WFLOW](../wflow/), [SYNTH](../synth/) |
-| [ONBRD](../onbrd/) | [ORGNZ](../orgnz/), [IAM](../iam/), [DASH](../dash/), [WFLOW](../wflow/) |
-| [OPIPE](../opipe/) | [SPANS](../spans/), [BIZEV](../bizev/), [OPLOGS](../oplogs/), [ORGNZ](../orgnz/) (buckets) |
-| [OPLOGS](../oplogs/) | [OPMIG](../opmig/) (migration), [OPIPE](../opipe/), [ORGNZ](../orgnz/) (buckets) |
-| [OPMIG](../opmig/) | [OPLOGS](../oplogs/), [OPIPE](../opipe/), [ORGNZ](../orgnz/) |
-| [ORGNZ](../orgnz/) | [IAM](../iam/), [FAQ](../faq/) (tagging), [MZ2POL](../mz2pol/) |
-| [OTEL](../otel/) | [K8S](../k8s/), [CLOUD](../cloud/), [SPANS](../spans/), [NRLC](../nrlc/) |
-| [S2D](../s2d/) | [OPLOGS](../oplogs/), [OPIPE](../opipe/), [DASH](../dash/), [WFLOW](../wflow/), [ORGNZ](../orgnz/) |
-| [S2S](../s2s/) | [ORGNZ](../orgnz/), [IAM](../iam/), [MZ2POL](../mz2pol/) |
-| [SL2DT](../sl2dt/) | [OPLOGS](../oplogs/), [OPIPE](../opipe/), [DASH](../dash/), [WFLOW](../wflow/), [ORGNZ](../orgnz/) |
-| [SPANS](../spans/) | [OTEL](../otel/), [OPIPE](../opipe/) (span pipelines), [DBMON](../dbmon/) (DB tracing) |
-| [SYNTH](../synth/) | [DASH](../dash/), [WFLOW](../wflow/) (alerting on synthetic) |
-| [WEBRUM](../webrum/) | [SPANS](../spans/) (frontend-to-backend tracing), [BIZEV](../bizev/), [DASH](../dash/) |
-| [WFLOW](../wflow/) | [AIOPS](../aiops/) (problem routing), [AUTOM](../autom/) (workflow-as-code), [DASH](../dash/) |
+| [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (cost optimization), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) (success metrics) |
+| [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (alert routing), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (visualizing problems), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (workflow-as-code) |
+| [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (workflow-as-code overlap), [IAM](../IAM%20-%20IAM%20Administration/) (provisioning), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (GitOps), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (Settings API basics) |
+| [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) (event pipelines), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (executive reporting), [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) (frontend events) |
+| [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) (collectors), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (managed K8s), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (CloudWatch ingestion) |
+| [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) (executive dashboards), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (segments and filters) |
+| [DBMON](../DBMON%20-%20Database%20Monitoring/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) (database call tracing), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (database dashboards) |
+| [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (tagging), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (host groups) |
+| [IAM](../IAM%20-%20IAM%20Administration/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (security_context for boundaries), [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) (Gen2 → Gen3), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (initial setup) |
+| [K8S](../K8S%20-%20Kubernetes%20Monitoring/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) (collector deployment), [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (managed K8s), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (GitOps), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (K8s logs) |
+| [M2S](../M2S%20-%20Managed%20to%20SaaS%20Migration/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/), [IAM](../IAM%20-%20IAM%20Administration/), [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) (Gen2 → Gen3) |
+| [MOBL](../MOBL%20-%20Mobile%20Monitoring/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) (mobile-to-backend tracing), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (mobile dashboards) |
+| [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) | [IAM](../IAM%20-%20IAM%20Administration/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) |
+| [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) | [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) (component depth), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (logs migration) |
+| [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) | [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) (procedural runbook), [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) |
+| [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/), [IAM](../IAM%20-%20IAM%20Administration/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) |
+| [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (buckets) |
+| [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) | [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) (migration), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (buckets) |
+| [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) |
+| [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) | [IAM](../IAM%20-%20IAM%20Administration/), [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) (tagging), [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) |
+| [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) | [K8S](../K8S%20-%20Kubernetes%20Monitoring/), [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/), [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/), [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) |
+| [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) |
+| [S2S](../S2S%20-%20SaaS%20to%20SaaS%20Migration/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/), [IAM](../IAM%20-%20IAM%20Administration/), [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) |
+| [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) |
+| [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) (span pipelines), [DBMON](../DBMON%20-%20Database%20Monitoring/) (DB tracing) |
+| [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (alerting on synthetic) |
+| [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) (frontend-to-backend tracing), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) |
+| [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) (problem routing), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (workflow-as-code), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) |
 
 ---
 
@@ -182,22 +182,22 @@ Quick lists for time-boxed reading:
 
 1. This document — sections [Alphabetical Catalog](#alphabetical-catalog) and [By Category](#by-category)
 2. [README front door](README.md) — pick a doorway based on your situation
-3. [ONBRD](../onbrd/) — first 1–2 notebooks for orientation
+3. [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — first 1–2 notebooks for orientation
 
 ### "I have 1 week" — Foundation only
 
-1. [ONBRD](../onbrd/) — full series (11 notebooks)
-2. [ORGNZ](../orgnz/) — first 5 notebooks (introduction, buckets, bucket strategy, Grail permissions, bucket-level access)
-3. [IAM](../iam/) — first 5 notebooks (governance, SSO, group architecture, policies, boundaries)
+1. [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — full series (11 notebooks)
+2. [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — first 5 notebooks (introduction, buckets, bucket strategy, Grail permissions, bucket-level access)
+3. [IAM](../IAM%20-%20IAM%20Administration/) — first 5 notebooks (governance, SSO, group architecture, policies, boundaries)
 
 Aligned with [Foundation Module](04-foundation.md).
 
 ### "I have 1 month" — Foundation + first domain + light operationalize
 
 1. [Foundation Module](04-foundation.md) reading order
-2. One domain — typically [K8S](../k8s/) or [CLOUD](../cloud/) depending on environment
-3. [DASH](../dash/) — first 4 notebooks (fundamentals, hierarchy, executive, operations)
-4. [WFLOW](../wflow/) — first 4 notebooks (fundamentals, triggers, notifications basics, notification routing)
+2. One domain — typically [K8S](../K8S%20-%20Kubernetes%20Monitoring/) or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) depending on environment
+3. [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — first 4 notebooks (fundamentals, hierarchy, executive, operations)
+4. [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — first 4 notebooks (fundamentals, triggers, notifications basics, notification routing)
 
 ### "I have 1 quarter" — full Net New track
 

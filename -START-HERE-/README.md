@@ -106,10 +106,10 @@ Time estimates within each doorway file refine these numbers by sub-track.
 
 ## Where to Get Help
 
-- For frequently-asked questions, see the [FAQ](../faq/) topic series — standalone single-page reference docs (host group naming, tagging strategy, and growing).
-- For DQL syntax and query patterns, the [ORGNZ](../orgnz/) and [SPANS](../spans/) series each have query references. Official Dynatrace documentation is authoritative.
-- For unresolved questions during a migration, see the appropriate migration series: [NR2DT](../nr2dt/), [NRLC](../nrlc/), [S2D](../s2d/), [SL2DT](../sl2dt/), [M2S](../m2s/), [S2S](../s2s/).
-- For platform maturity and adoption questions, see [ADOPT](../adopt/).
+- For frequently-asked questions, see the [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) topic series — standalone single-page reference docs (host group naming, tagging strategy, and growing).
+- For DQL syntax and query patterns, the [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) and [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) series each have query references. Official Dynatrace documentation is authoritative.
+- For unresolved questions during a migration, see the appropriate migration series: [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/), [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/), [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/), [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/), [M2S](../M2S%20-%20Managed%20to%20SaaS%20Migration/), [S2S](../S2S%20-%20SaaS%20to%20SaaS%20Migration/).
+- For platform maturity and adoption questions, see [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/).
 
 ---
 

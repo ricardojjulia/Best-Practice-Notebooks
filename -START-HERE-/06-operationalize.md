@@ -23,10 +23,10 @@
 
 | Step | Reading | Time | Why this position in the sequence |
 |---|---|---|---|
-| 1 | [DASH](../dash/) | 1–2 weeks | Everything else needs dashboards to be visible. You alert against what you see; you automate around what you can dashboard; you trust Davis when its findings are visible somewhere. |
-| 2 | [WFLOW](../wflow/) | 2–3 weeks | Alert response. Needs dashboards to point at and incidents to route. |
-| 3 | [AUTOM](../autom/) | 3–6 weeks | Configuration automation, GitOps. Needs dashboards and workflows as deliverables — automating their lifecycle. |
-| 4 | [AIOPS](../aiops/) | 2–4 weeks | Davis intelligence layered on top. Needs all of the above to be enriched and acted on. |
+| 1 | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) | 1–2 weeks | Everything else needs dashboards to be visible. You alert against what you see; you automate around what you can dashboard; you trust Davis when its findings are visible somewhere. |
+| 2 | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) | 2–3 weeks | Alert response. Needs dashboards to point at and incidents to route. |
+| 3 | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) | 3–6 weeks | Configuration automation, GitOps. Needs dashboards and workflows as deliverables — automating their lifecycle. |
+| 4 | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) | 2–4 weeks | Davis intelligence layered on top. Needs all of the above to be enriched and acted on. |
 
 You can read partially out of order, but the reasoning above is why each builds on the previous.
 
@@ -34,7 +34,7 @@ You can read partially out of order, but the reasoning above is why each builds 
 
 ## DASH — Dashboards (First)
 
-8 notebooks in [DASH](../dash/). Coverage: hierarchy, audience-specific dashboards, variables and filters, sharing.
+8 notebooks in [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/). Coverage: hierarchy, audience-specific dashboards, variables and filters, sharing.
 
 | # | Notebook | Priority |
 |---|---|---|
@@ -47,13 +47,13 @@ You can read partially out of order, but the reasoning above is why each builds 
 | 07 | Sharing and Reporting | Recommended |
 | 99 | Best Practice Summary | Reference |
 
-Dependencies: [ORGNZ](../orgnz/) notebook 08 (segments) is helpful background before DASH-06 (variables and filters).
+Dependencies: [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebook 08 (segments) is helpful background before DASH-06 (variables and filters).
 
 ---
 
 ## WFLOW — Workflows and Alerting (Second)
 
-10 notebooks in [WFLOW](../wflow/). Coverage: triggers, notification routing, incident management, custom templates, remediation, governance.
+10 notebooks in [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/). Coverage: triggers, notification routing, incident management, custom templates, remediation, governance.
 
 | # | Notebook | Priority |
 |---|---|---|
@@ -68,13 +68,13 @@ Dependencies: [ORGNZ](../orgnz/) notebook 08 (segments) is helpful background be
 | 09 | Governance | Recommended for mature organizations |
 | 99 | Best Practice Summary | Reference |
 
-Dependencies: [AIOPS](../aiops/) notebook 02 (anomaly detection) is helpful background before WFLOW-04 (notification routing) if you'll be routing on Davis problems.
+Dependencies: [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) notebook 02 (anomaly detection) is helpful background before WFLOW-04 (notification routing) if you'll be routing on Davis problems.
 
 ---
 
 ## AUTOM — Configuration Automation (Third)
 
-11 notebooks in [AUTOM](../autom/), including 2 hands-on labs. Coverage: Settings API, Monaco, Terraform, workflows-as-code, SDKs, CI/CD, migration automation.
+11 notebooks in [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/), including 2 hands-on labs. Coverage: Settings API, Monaco, Terraform, workflows-as-code, SDKs, CI/CD, migration automation.
 
 | # | Notebook | Priority |
 |---|---|---|
@@ -96,7 +96,7 @@ Decision: Monaco vs Terraform — most teams pick one. Read both 03 and 04 to ma
 
 ## AIOPS — Davis Intelligence (Fourth)
 
-8 notebooks in [AIOPS](../aiops/). Coverage: Davis problems, anomaly detection, generative AI (Davis CoPilot, Dynatrace Assist), AI models, agentic workflows.
+8 notebooks in [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/). Coverage: Davis problems, anomaly detection, generative AI (Davis CoPilot, Dynatrace Assist), AI models, agentic workflows.
 
 | # | Notebook | Priority |
 |---|---|---|
@@ -117,10 +117,10 @@ Some topics appear in multiple Operationalize series:
 
 | Topic | Canonical | Also covered in | Read order |
 |---|---|---|---|
-| Davis problems | [AIOPS](../aiops/) — notebooks 02–03 | [WFLOW](../wflow/) — notebook 04 (alerting on problems) | AIOPS-02, 03 first; then WFLOW-04 |
-| Workflow as code | [WFLOW](../wflow/) — full series for concepts | [AUTOM](../autom/) — notebook 05 (workflows-as-code) | WFLOW for concepts; AUTOM-05 for IaC delivery |
-| Dashboard automation | [DASH](../dash/) — notebook 07 (sharing and reporting) | [AUTOM](../autom/) — notebooks 02–04 (dashboards-as-code) | DASH first; AUTOM-02..04 once dashboards stabilize |
-| Alerting on synthetics | [SYNTH](../synth/) — notebook 02 (browser monitors) | [WFLOW](../wflow/) — notebook 04 | SYNTH for what to alert on; WFLOW for routing |
+| Davis problems | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebooks 02–03 | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 (alerting on problems) | AIOPS-02, 03 first; then WFLOW-04 |
+| Workflow as code | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — full series for concepts | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebook 05 (workflows-as-code) | WFLOW for concepts; AUTOM-05 for IaC delivery |
+| Dashboard automation | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — notebook 07 (sharing and reporting) | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 02–04 (dashboards-as-code) | DASH first; AUTOM-02..04 once dashboards stabilize |
+| Alerting on synthetics | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — notebook 02 (browser monitors) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 | SYNTH for what to alert on; WFLOW for routing |
 
 See [Overlap Map](08-overlap-map.md) for the full overlap table across all 28 series.
 

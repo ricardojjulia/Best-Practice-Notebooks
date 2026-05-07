@@ -34,14 +34,14 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| First-user setup and authentication | [IAM](../iam/) — notebooks 02 (SSO), 03 (groups) | [ONBRD](../onbrd/) — notebook 02 (light intro) | ONBRD-02 first for orientation; IAM-02..03 for depth |
-| Tagging strategy | [FAQ](../faq/) — entry 02 (sources, standards, strategy) for the framework; [ORGNZ](../orgnz/) — notebook 01 for organizational concepts | [ONBRD](../onbrd/) — notebook 06 (basic tags); host-group naming in [FAQ](../faq/) entry 01 | FAQ-02 first for the framework; then ORGNZ-01; reference ONBRD-06 only if you need the basics |
-| Bucket basics | [ORGNZ](../orgnz/) — notebooks 02 (understanding), 03 (strategy) | [ONBRD](../onbrd/) — notebook 06 (mention only) | ORGNZ-02..03 always — ONBRD's coverage is too light |
-| Bucket access control | [ORGNZ](../orgnz/) — notebook 05 (bucket-level access control) | [IAM](../iam/) — notebook 05 (boundary design references it) | Read ORGNZ-05 only if scenario applies (compliance, retention, hard cost separation) |
-| security_context | [ORGNZ](../orgnz/) — notebook 06 | [IAM](../iam/) — notebooks 04, 05 use it for boundaries | ORGNZ-06 first — IAM boundary work depends on it |
-| Policy authoring | [IAM](../iam/) — notebooks 04 (policy authoring), 05 (boundary design), 10 (parameterized) | [ONBRD](../onbrd/) — notebook 02 (basic policy intro) | IAM-04..05 always; ONBRD-02 only for orientation |
-| Gen2 → Gen3 access control | [MZ2POL](../mz2pol/) — full series | (overview only in [ONBRD](../onbrd/), [IAM](../iam/)) | MZ2POL only if migrating from Gen2; otherwise skip |
-| Audit log queries | [IAM](../iam/) — notebook 07 (audit and compliance) | [ORGNZ](../orgnz/) — notebook 07 (advanced patterns) | IAM-07 for compliance lens; ORGNZ-07 for general patterns |
+| First-user setup and authentication | [IAM](../IAM%20-%20IAM%20Administration/) — notebooks 02 (SSO), 03 (groups) | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — notebook 02 (light intro) | ONBRD-02 first for orientation; IAM-02..03 for depth |
+| Tagging strategy | [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) — entry 02 (sources, standards, strategy) for the framework; [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 01 for organizational concepts | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — notebook 06 (basic tags); host-group naming in [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) entry 01 | FAQ-02 first for the framework; then ORGNZ-01; reference ONBRD-06 only if you need the basics |
+| Bucket basics | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebooks 02 (understanding), 03 (strategy) | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — notebook 06 (mention only) | ORGNZ-02..03 always — ONBRD's coverage is too light |
+| Bucket access control | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 05 (bucket-level access control) | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 05 (boundary design references it) | Read ORGNZ-05 only if scenario applies (compliance, retention, hard cost separation) |
+| security_context | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 06 | [IAM](../IAM%20-%20IAM%20Administration/) — notebooks 04, 05 use it for boundaries | ORGNZ-06 first — IAM boundary work depends on it |
+| Policy authoring | [IAM](../IAM%20-%20IAM%20Administration/) — notebooks 04 (policy authoring), 05 (boundary design), 10 (parameterized) | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — notebook 02 (basic policy intro) | IAM-04..05 always; ONBRD-02 only for orientation |
+| Gen2 → Gen3 access control | [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) — full series | (overview only in [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/), [IAM](../IAM%20-%20IAM%20Administration/)) | MZ2POL only if migrating from Gen2; otherwise skip |
+| Audit log queries | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 07 (audit and compliance) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 07 (advanced patterns) | IAM-07 for compliance lens; ORGNZ-07 for general patterns |
 
 ---
 
@@ -49,14 +49,14 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| NR component-level translation | [NRLC](../nrlc/) — full series | [NR2DT](../nr2dt/) references NRLC at each step | NRLC for depth; NR2DT for procedural sequencing |
-| NR procedural runbook | [NR2DT](../nr2dt/) — 9-step runbook | (none) | NR2DT is the only procedural source |
-| NRQL → DQL translation | [NRLC](../nrlc/) — notebook 02 | [NR2DT](../nr2dt/) — notebook 04 (translate) | NRLC-02 for the mappings; NR2DT-04 for engagement-level translation work |
-| Splunk SPL → DQL | [S2D](../s2d/) — notebook 03 | (none) | S2D-03 only |
-| SumoQL → DQL | [SL2DT](../sl2dt/) — notebook 04 | (none) | SL2DT-04 only |
-| Logs migration architecture | [OPLOGS](../oplogs/) — notebooks 02 (migration), 03 (pipeline); [OPIPE](../opipe/) — notebook 01 | [S2D](../s2d/) — notebook 02 (Splunk locating); [SL2DT](../sl2dt/) — notebook 03 (Sumo ingest) | Source-tool series first for inventory; OPLOGS for ingestion design |
-| Classic Logs → OpenPipeline | [OPMIG](../opmig/) — full series | [OPLOGS](../oplogs/) — notebook 02 (migration) | OPMIG for migration-specific; OPLOGS-02 if general |
-| Static-threshold to anomaly detection | [AIOPS](../aiops/) — notebook 02 (anomaly detection) | [S2D](../s2d/) — notebook 04 (anomaly detectors); [SL2DT](../sl2dt/) — notebook 05 | AIOPS-02 for the framework; S2D and SL2DT for tool-specific translation patterns |
+| NR component-level translation | [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) — full series | [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) references NRLC at each step | NRLC for depth; NR2DT for procedural sequencing |
+| NR procedural runbook | [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) — 9-step runbook | (none) | NR2DT is the only procedural source |
+| NRQL → DQL translation | [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) — notebook 02 | [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) — notebook 04 (translate) | NRLC-02 for the mappings; NR2DT-04 for engagement-level translation work |
+| Splunk SPL → DQL | [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) — notebook 03 | (none) | S2D-03 only |
+| SumoQL → DQL | [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) — notebook 04 | (none) | SL2DT-04 only |
+| Logs migration architecture | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) — notebooks 02 (migration), 03 (pipeline); [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 01 | [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) — notebook 02 (Splunk locating); [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) — notebook 03 (Sumo ingest) | Source-tool series first for inventory; OPLOGS for ingestion design |
+| Classic Logs → OpenPipeline | [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) — full series | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) — notebook 02 (migration) | OPMIG for migration-specific; OPLOGS-02 if general |
+| Static-threshold to anomaly detection | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 02 (anomaly detection) | [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) — notebook 04 (anomaly detectors); [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) — notebook 05 | AIOPS-02 for the framework; S2D and SL2DT for tool-specific translation patterns |
 
 ---
 
@@ -64,12 +64,12 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| OTel collector deployment | [OTEL](../otel/) — notebooks 02 (architecture), 03 (deployment) | [K8S](../k8s/) — chapters in 04, 05; [CLOUD](../cloud/) — chapters in cloud-specific notebooks | OTEL-02..03 first; domain-specific chapters for context |
-| OTel trace instrumentation | [OTEL](../otel/) — notebook 04 | [SPANS](../spans/) — notebook 01 mentions OTel; [NRLC](../nrlc/) — for migration context | OTEL-04 always; SPANS-01 for the data model afterwards |
-| Log pipeline processing | [OPLOGS](../oplogs/) — notebook 03 | [OPMIG](../opmig/) — notebook 06 (processing/parsing); [OPIPE](../opipe/) — notebook 01 | OPLOGS-03 first; OPMIG-06 for migration-specific transformations |
-| Bucket-routing decisions | [ORGNZ](../orgnz/) — notebooks 02, 03 | [OPLOGS](../oplogs/) — notebook 04 (buckets governance); [OPMIG](../opmig/) — notebook 05 (routing buckets) | ORGNZ-02..03 first; OPLOGS-04 / OPMIG-05 for ingestion-specific routing |
-| Cardinality management | [OPIPE](../opipe/) — notebook 04 | [SPANS](../spans/) — notebook 08 (cost optimization) | OPIPE-04 for the mechanism; SPANS-08 for span-specific cost work |
-| Span pipelines | [OPIPE](../opipe/) — notebook 02 | [SPANS](../spans/) — notebook 07 (buckets and pipeline) | OPIPE-02 first; SPANS-07 for span-specific patterns |
+| OTel collector deployment | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) — notebooks 02 (architecture), 03 (deployment) | [K8S](../K8S%20-%20Kubernetes%20Monitoring/) — chapters in 04, 05; [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) — chapters in cloud-specific notebooks | OTEL-02..03 first; domain-specific chapters for context |
+| OTel trace instrumentation | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) — notebook 04 | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 01 mentions OTel; [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) — for migration context | OTEL-04 always; SPANS-01 for the data model afterwards |
+| Log pipeline processing | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) — notebook 03 | [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) — notebook 06 (processing/parsing); [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 01 | OPLOGS-03 first; OPMIG-06 for migration-specific transformations |
+| Bucket-routing decisions | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebooks 02, 03 | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) — notebook 04 (buckets governance); [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) — notebook 05 (routing buckets) | ORGNZ-02..03 first; OPLOGS-04 / OPMIG-05 for ingestion-specific routing |
+| Cardinality management | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 04 | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 08 (cost optimization) | OPIPE-04 for the mechanism; SPANS-08 for span-specific cost work |
+| Span pipelines | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 02 | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 07 (buckets and pipeline) | OPIPE-02 first; SPANS-07 for span-specific patterns |
 
 ---
 
@@ -77,12 +77,12 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| Davis problems and root cause | [AIOPS](../aiops/) — notebook 03 | [WFLOW](../wflow/) — notebook 04 (alert routing on problems) | AIOPS-03 first; WFLOW-04 for routing |
-| Anomaly detection | [AIOPS](../aiops/) — notebook 02 | [SYNTH](../synth/) — notebook 02 (anomaly on synthetics); [DBMON](../dbmon/) — notebook 06 (anomaly on DB metrics) | AIOPS-02 for the model; domain series for domain-specific applications |
-| Workflow as code | [WFLOW](../wflow/) — full series for concepts | [AUTOM](../autom/) — notebook 05 (workflows-as-code) | WFLOW for design; AUTOM-05 for IaC delivery |
-| Dashboard automation | [DASH](../dash/) — notebook 07 (sharing and reporting) | [AUTOM](../autom/) — notebooks 02–04 (Settings API, Monaco, Terraform with dashboard examples) | DASH first; AUTOM-02..04 once dashboards stabilize |
-| Settings API | [AUTOM](../autom/) — notebook 02 | [IAM](../iam/) — notebook 12 (API provisioning) | AUTOM-02 for general; IAM-12 for IAM-specific |
-| GitOps for Dynatrace | [AUTOM](../autom/) — notebooks 03 (Monaco), 04 (Terraform), 07 (CI/CD) | [K8S](../k8s/) — notebook 03 (GitOps DynaKube) | AUTOM for general patterns; K8S-03 for DynaKube-specific |
+| Davis problems and root cause | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 03 | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 (alert routing on problems) | AIOPS-03 first; WFLOW-04 for routing |
+| Anomaly detection | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 02 | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — notebook 02 (anomaly on synthetics); [DBMON](../DBMON%20-%20Database%20Monitoring/) — notebook 06 (anomaly on DB metrics) | AIOPS-02 for the model; domain series for domain-specific applications |
+| Workflow as code | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — full series for concepts | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebook 05 (workflows-as-code) | WFLOW for design; AUTOM-05 for IaC delivery |
+| Dashboard automation | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — notebook 07 (sharing and reporting) | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 02–04 (Settings API, Monaco, Terraform with dashboard examples) | DASH first; AUTOM-02..04 once dashboards stabilize |
+| Settings API | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebook 02 | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 12 (API provisioning) | AUTOM-02 for general; IAM-12 for IAM-specific |
+| GitOps for Dynatrace | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 03 (Monaco), 04 (Terraform), 07 (CI/CD) | [K8S](../K8S%20-%20Kubernetes%20Monitoring/) — notebook 03 (GitOps DynaKube) | AUTOM for general patterns; K8S-03 for DynaKube-specific |
 
 ---
 
@@ -90,12 +90,12 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| Frontend-to-backend tracing | [SPANS](../spans/) — full series for span concepts | [WEBRUM](../webrum/) — notebook 04 (session analysis); [MOBL](../mobl/) — notebook 07 (network requests) | SPANS-01..02 first; frontend domain for domain-specific |
-| K8s logs | [K8S](../k8s/) — notebook 07 (events and logs) | [OPLOGS](../oplogs/) — for log processing | K8S-07 for K8s-specific; OPLOGS for ingestion patterns |
-| Kubernetes monitoring | [K8S](../k8s/) — full series | [CLOUD](../cloud/) — notebook 03 (AWS EKS) | K8S full series first; CLOUD-03 for managed-K8s context |
-| Database call tracing | [DBMON](../dbmon/) — notebook 05 (query analysis) | [SPANS](../spans/) — notebook 02 (querying) | DBMON-05 for DB-specific; SPANS-02 for the underlying span queries |
-| Synthetic alerting | [WFLOW](../wflow/) — notebook 04 | [SYNTH](../synth/) — notebook 02 (browser monitors) and 06 (analytics) | SYNTH for what to alert on; WFLOW for routing |
-| RUM dashboards | [DASH](../dash/) — notebook 04 (operations) | [WEBRUM](../webrum/) — notebook 08 (dashboards and alerting) | DASH for general dashboard design; WEBRUM-08 for RUM-specific layouts |
+| Frontend-to-backend tracing | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — full series for span concepts | [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) — notebook 04 (session analysis); [MOBL](../MOBL%20-%20Mobile%20Monitoring/) — notebook 07 (network requests) | SPANS-01..02 first; frontend domain for domain-specific |
+| K8s logs | [K8S](../K8S%20-%20Kubernetes%20Monitoring/) — notebook 07 (events and logs) | [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) — for log processing | K8S-07 for K8s-specific; OPLOGS for ingestion patterns |
+| Kubernetes monitoring | [K8S](../K8S%20-%20Kubernetes%20Monitoring/) — full series | [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) — notebook 03 (AWS EKS) | K8S full series first; CLOUD-03 for managed-K8s context |
+| Database call tracing | [DBMON](../DBMON%20-%20Database%20Monitoring/) — notebook 05 (query analysis) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 02 (querying) | DBMON-05 for DB-specific; SPANS-02 for the underlying span queries |
+| Synthetic alerting | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — notebook 02 (browser monitors) and 06 (analytics) | SYNTH for what to alert on; WFLOW for routing |
+| RUM dashboards | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — notebook 04 (operations) | [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) — notebook 08 (dashboards and alerting) | DASH for general dashboard design; WEBRUM-08 for RUM-specific layouts |
 
 ---
 
@@ -103,11 +103,11 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| Cost optimization | [ADOPT](../adopt/) — notebook 05 (optimization roadmap) for the framework | [SPANS](../spans/) — notebook 08 (span cost); [ORGNZ](../orgnz/) — notebooks 02, 03 (bucket strategy affects cost); [OPIPE](../opipe/) — notebook 04 (cardinality) | ADOPT-05 for framework; signal-specific series for tactics |
-| Tagging governance | [FAQ](../faq/) — entry 02 (tagging sources, standards, strategy) | [ORGNZ](../orgnz/) — notebook 01 (introduction); [ONBRD](../onbrd/) — notebook 06 | FAQ-02 first for the framework; ORGNZ-01 for organizational concepts |
-| Multi-tenant patterns | [IAM](../iam/) — notebook 08 (multi-environment) | [ORGNZ](../orgnz/) — notebook 09 (enterprise patterns) | IAM-08 for access; ORGNZ-09 for organizational |
-| FinOps and cost allocation | [ADOPT](../adopt/) — notebook 05 (optimization roadmap) | [ORGNZ](../orgnz/) — notebook 09 (enterprise patterns) | ADOPT-05 first; ORGNZ-09 for tagging that supports cost allocation |
-| Migration validation | [NRLC](../nrlc/) — notebook 08; [NR2DT](../nr2dt/) — notebook 08 (validate) | [SL2DT](../sl2dt/) — notebook 09 (cutover validation); [S2D](../s2d/) — implicit in notebook 09 | Tool-specific validation per migration series |
+| Cost optimization | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — notebook 05 (optimization roadmap) for the framework | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 08 (span cost); [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebooks 02, 03 (bucket strategy affects cost); [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 04 (cardinality) | ADOPT-05 for framework; signal-specific series for tactics |
+| Tagging governance | [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) — entry 02 (tagging sources, standards, strategy) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 01 (introduction); [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — notebook 06 | FAQ-02 first for the framework; ORGNZ-01 for organizational concepts |
+| Multi-tenant patterns | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 08 (multi-environment) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 09 (enterprise patterns) | IAM-08 for access; ORGNZ-09 for organizational |
+| FinOps and cost allocation | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — notebook 05 (optimization roadmap) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 09 (enterprise patterns) | ADOPT-05 first; ORGNZ-09 for tagging that supports cost allocation |
+| Migration validation | [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) — notebook 08; [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) — notebook 08 (validate) | [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) — notebook 09 (cutover validation); [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) — implicit in notebook 09 | Tool-specific validation per migration series |
 
 ---
 
@@ -115,12 +115,12 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Anti-Pattern | What's wrong | What to do instead |
 |---|---|---|
-| Reading [ONBRD](../onbrd/) notebook 09 (alerts) AND [WFLOW](../wflow/) full series | ONBRD-09 is an intro that doesn't add to WFLOW | Skip ONBRD-09 if you'll read WFLOW |
-| Reading [ONBRD](../onbrd/) notebook 10 (dashboards) AND [DASH](../dash/) full series | ONBRD-10 is an intro that doesn't add to DASH | Skip ONBRD-10 if you'll read DASH |
+| Reading [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebook 09 (alerts) AND [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) full series | ONBRD-09 is an intro that doesn't add to WFLOW | Skip ONBRD-09 if you'll read WFLOW |
+| Reading [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebook 10 (dashboards) AND [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) full series | ONBRD-10 is an intro that doesn't add to DASH | Skip ONBRD-10 if you'll read DASH |
 | Treating bucket-level access control as the default | Buckets are immutable, capped at 80, not universal — they're for specific scenarios | Default to security_context (ORGNZ-06); use buckets only for compliance, retention, or hard cost separation |
-| Reading [NRLC](../nrlc/) and [NR2DT](../nr2dt/) sequentially as if they're a single series | They're paired references — NRLC for component depth, NR2DT for procedural sequencing | Read in parallel: open NR2DT for the step you're on, dive into NRLC for the components touched in that step |
+| Reading [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) and [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) sequentially as if they're a single series | They're paired references — NRLC for component depth, NR2DT for procedural sequencing | Read in parallel: open NR2DT for the step you're on, dive into NRLC for the components touched in that step |
 | Migrating multiple source tools simultaneously | Halves your team's focus, doubles the risk of either failing | Migrate in waves; one source tool at a time |
-| Using [ONBRD](../onbrd/) as the definitive source for IAM, tagging, or buckets | ONBRD's coverage is intentionally light to keep the onboarding scope narrow | Use ONBRD for orientation; dive into IAM, ORGNZ, or FAQ for depth |
+| Using [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) as the definitive source for IAM, tagging, or buckets | ONBRD's coverage is intentionally light to keep the onboarding scope narrow | Use ONBRD for orientation; dive into IAM, ORGNZ, or FAQ for depth |
 
 ---
 
