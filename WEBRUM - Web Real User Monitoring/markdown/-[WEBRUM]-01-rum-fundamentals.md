@@ -144,7 +144,7 @@ Understanding how long sessions last helps identify engagement patterns:
 // Session duration distribution — bucket sessions by duration range
 fetch user.sessions, from:-24h
 | filter userType == "REAL_USER"
-| fieldsAdd duration_sec = toDouble(duration) / 1000000000.0
+| fieldsAdd duration_sec = duration / 1s
 | fieldsAdd duration_bucket = if(duration_sec < 10, "< 10s",
     else: if(duration_sec < 30, "10-30s",
     else: if(duration_sec < 60, "30-60s",

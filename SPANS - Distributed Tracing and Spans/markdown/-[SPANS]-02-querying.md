@@ -42,7 +42,7 @@ Before starting this notebook, ensure you have:
 |-----------|---------|---------|
 | fetch | Retrieve data source | fetch spans |
 | filter | Narrow down records | filter span.kind == "server" |
-| fieldsAdd | Compute new fields | fieldsAdd duration_ms = duration / 1000000 |
+| fieldsAdd | Compute new fields | fieldsAdd duration_ms = duration / 1ms |
 | summarize | Aggregate data | summarize count(), by:{service.name} |
 | sort | Order results | sort duration desc |
 | limit | Restrict output | limit 100 |
@@ -328,7 +328,7 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter isNotNull(db.system) 
       and duration > 100ms
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          service.name,
          db.system,
@@ -345,7 +345,7 @@ fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize {
     db_span_count = count(),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by: {db.system, db.name}
 | sort db_span_count desc
 ```
@@ -398,7 +398,7 @@ fetch spans, from:-1h
 | filter service.name == "checkout"
       and span.kind == "server"
       and duration > 500ms
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          span.name,
          duration_ms,
@@ -413,7 +413,7 @@ fetch spans, from:-1h
 | filter span.status_code == "error"
       and in(service.name, {"payment", "checkout"})
       and span.kind == "server"
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          service.name,
          span.name,
@@ -431,7 +431,7 @@ fetch spans, from:-1h
       or (http.response.status_code >= 200 
           and http.response.status_code < 300 
           and duration > 1s)
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          service.name,
          http.request.method,

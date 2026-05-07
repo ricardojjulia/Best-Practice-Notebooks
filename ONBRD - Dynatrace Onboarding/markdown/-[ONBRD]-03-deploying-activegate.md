@@ -1,6 +1,6 @@
 # ONBRD-03: Deploying ActiveGate
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 04/03/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Your Network Gateway to Dynatrace
 ActiveGate is a lightweight component that routes traffic between your infrastructure and Dynatrace. This notebook covers when you need ActiveGate, how many to deploy, where to place them, and installation steps - including comprehensive Kubernetes deployment options.
@@ -15,13 +15,10 @@ ActiveGate is a lightweight component that routes traffic between your infrastru
 4. [Where to Deploy?](#where-to-deploy)
 5. [Generating Tokens](#generating-tokens)
 6. [Installation Methods](#installation-methods)
-7. [6a. Kubernetes Deployment (Detailed)](#6a-kubernetes-deployment-detailed)
+7. [Kubernetes Deployment (Detailed)](#6a-kubernetes-deployment-detailed)
 8. [Verifying Deployment](#verifying-deployment)
 9. [Troubleshooting](#troubleshooting)
-6a. Kubernetes Deployment (Detailed)
-7. Verifying Deployment
-8. Troubleshooting
-9. Next Steps
+10. [Next Steps](#next-steps)
 
 ---
 
@@ -43,7 +40,7 @@ ActiveGate is a proxy and routing component that connects your environment to Dy
 
 > **Note:** This notebook covers Environment ActiveGate for Dynatrace SaaS.
 
-![ActiveGate Architecture](images/activegate-architecture.png)
+![ActiveGate Architecture](images/03-activegate-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Zone | Component | Connection |
 |------|-----------|------------|
@@ -97,11 +94,19 @@ Dynatrace continues to support monitoring a third-party technology for **6 month
 | **Network-restricted hosts** | OneAgents can't reach internet directly |
 | **Private synthetic monitors** | Test internal applications |
 | **Extensions 2.0** | Custom data sources (SNMP, databases, etc.) |
-| **AWS/Azure/GCP monitoring** | Pull cloud metrics via API |
+| **AWS / Azure / GCP monitoring** | See Clouds app status below — AG still required for GCP and for environments without Clouds app |
 | **VMware monitoring** | vCenter integration |
-
-> **Update — Clouds App (2025):** The **Clouds app** now supports direct cloud connections **without ActiveGate** for AWS (GA), Azure (preview), and GCP (preview). If your environment has the Clouds app, you can configure cloud integrations without deploying an ActiveGate. ActiveGate is still required for **Extensions 2.0**, **private synthetic locations**, and environments without Clouds app access. See [Clouds app documentation](https://docs.dynatrace.com/docs/platform-modules/infrastructure-monitoring/cloud-platform-monitoring).
 | **Kubernetes full-stack** | Cluster API access for events, metrics |
+
+> **Update — Clouds App (status as of 2026-05):** The **Clouds app** supports direct cloud connections **without ActiveGate** — but coverage varies per cloud:
+>
+> | Cloud | Clouds-app Status | AG Required? |
+> |-------|-------------------|--------------|
+> | **AWS** | GA — direct connection supported | No (when using Clouds app) |
+> | **Azure** | Preview — direct connection supported | No (when using Clouds app preview) |
+> | **GCP** | Not yet available in Clouds app | **Yes — AG-based polling** |
+>
+> ActiveGate is still required for **Extensions 2.0**, **private synthetic locations**, **GCP monitoring**, and any environment without Clouds app access. See [Clouds app documentation](https://docs.dynatrace.com/docs/platform-modules/infrastructure-monitoring/cloud-platform-monitoring) and the **CLOUD series** for per-provider deep dives.
 
 ### Optional but Recommended
 
@@ -114,14 +119,16 @@ Dynatrace continues to support monitoring a third-party technology for **6 month
 
 ### Decision Tree
 
-![ActiveGate Decision Tree](images/activegate-decision-tree.png)
+![ActiveGate Decision Tree](images/03-activegate-decision-tree.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Question | Yes → | No → |
 |----------|-------|------|
 | Can all hosts reach Dynatrace directly? | AG optional | AG required |
 | Need private synthetic monitoring? | AG required | Continue |
 | Using Extensions 2.0? | AG required | Continue |
-| Monitoring AWS/Azure/GCP? | AG required (or use Clouds app) | Continue |
+| Monitoring AWS (Clouds app GA)? | AG optional | AG required |
+| Monitoring Azure (Clouds app preview)? | AG optional | AG required |
+| Monitoring GCP? | AG required (Clouds app not yet available) | Continue |
 | More than 500 hosts? | AG recommended | AG optional |
 -->
 
@@ -209,7 +216,7 @@ For production environments, deploy **at least 2 ActiveGates per network zone**:
 
 Deploy ActiveGates based on network segmentation:
 
-![ActiveGate Placement](images/activegate-placement.png)
+![ActiveGate Placement](images/03-activegate-placement.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Zone Type | ActiveGate Location | OneAgent Connection |
 |-----------|--------------------|-----------------|
@@ -298,7 +305,7 @@ docker run -d --name dynatrace-activegate \
   -e DT_TENANT="{tenant-id}" \
   -e DT_API_TOKEN="{paas-token}" \
   -p 9999:9999 \
-  dynatrace/activegate:latest
+  dynatrace/dynatrace-activegate:latest
 ```
 
 ### Installation Parameters
@@ -336,7 +343,7 @@ Deploying ActiveGate in Kubernetes requires careful consideration of where, how,
 
 ### Deployment Architecture
 
-![ActiveGate Kubernetes Deployment](images/activegate-k8s-deployment.png)
+![ActiveGate Kubernetes Deployment](images/03-activegate-k8s-deployment.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Purpose |
 |-----------|----------|---------|
@@ -549,7 +556,7 @@ spec:
       serviceAccountName: dynatrace-activegate
       containers:
         - name: activegate
-          image: dynatrace/activegate:latest
+          image: dynatrace/dynatrace-activegate:latest
           imagePullPolicy: Always
           env:
             - name: DT_TENANT
@@ -855,14 +862,22 @@ curl -k https://{activegate-ip}:9999/communication/health
 | **Linux** | `/var/log/dynatrace/gateway/` |
 | **Windows** | `C:\ProgramData\dynatrace\gateway\log\` |
 
+<a id="next-steps"></a>
 ## 9. Next Steps
 
 With ActiveGate deployed:
 
-1. **ONBRD-04: Deploying OneAgent** - Now deploy agents that route through ActiveGate
-2. Configure network zones if using multiple ActiveGates
-3. Enable additional modules (synthetic, extensions) as needed
-4. Set up monitoring for ActiveGate itself
+1. **ONBRD-04: Cloud & SaaS Integrations** — Connect AWS / Azure / GCP through your AG (or skip AG via the Clouds app where supported)
+2. **ONBRD-05: Deploying OneAgent** — Now deploy agents that route through ActiveGate
+3. Configure network zones if using multiple ActiveGates
+4. Enable additional modules (synthetic, extensions) as needed
+5. Set up monitoring for ActiveGate itself
+
+### Where to Go Deeper
+
+- **K8S series** (15 notebooks) — Cluster monitoring, DynaKube depth, GitOps for K8s deployments
+- **CLOUD series** (9 notebooks) — Per-cloud integration deep dives (AWS, Azure, GCP)
+- **AUTOM series** — Configuration automation for ActiveGate deployment at scale
 
 ### Deployment Checklist
 
@@ -909,6 +924,7 @@ In this notebook, you learned:
 - [Network Zones](https://docs.dynatrace.com/docs/manage/network-zones)
 - [ActiveGate Sizing](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate/activegate-sizing)
 - [Private Synthetic Locations](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/private-synthetic-locations)
+- [Clouds App](https://docs.dynatrace.com/docs/platform-modules/infrastructure-monitoring/cloud-platform-monitoring)
 
 ### Kubernetes
 - [Dynatrace Operator](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/installation)

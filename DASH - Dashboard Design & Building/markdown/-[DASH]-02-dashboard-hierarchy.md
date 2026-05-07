@@ -166,7 +166,7 @@ Engineering dashboards answer: **"Why is this happening and where exactly?"**
 fetch spans, from:-1h
 | filter span.kind == "server"
 | filter isNotNull(http.route)
-| summarize p95_ms = percentile(duration, 95) / 1000000, request_count = count(), by:{http.route, dt.entity.service}
+| summarize p95_ms = percentile(duration, 95) / 1ms, request_count = count(), by:{http.route, dt.entity.service}
 | sort p95_ms desc
 | limit 10
 ```
@@ -177,7 +177,7 @@ fetch spans, from:-1h
 // Database response time by system — engineering detail table
 fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(db.system)
-| summarize avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, query_count = count(), by:{db.system, db.namespace}
+| summarize avg_ms = avg(duration) / 1ms, p95_ms = percentile(duration, 95) / 1ms, query_count = count(), by:{db.system, db.namespace}
 | sort p95_ms desc
 ```
 

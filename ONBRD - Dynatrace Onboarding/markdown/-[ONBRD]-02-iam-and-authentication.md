@@ -1,6 +1,6 @@
 # ONBRD-02: IAM and Authentication
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 01/28/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Setting Up Secure Access
 Before inviting your team, configure authentication and permissions properly. This notebook covers SAML/SSO setup, API tokens, and the modern permission model.
@@ -36,14 +36,14 @@ Setting up IAM before deploying OneAgent or inviting users ensures:
 | **Offboarding** | Disabling IdP account revokes Dynatrace access |
 | **Compliance** | Meet security requirements from the start |
 
-![Recommended Onboarding Order](images/onboarding-order.png)
+![Recommended Onboarding Order](images/02-onboarding-order.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Description |
 |------|-------------|
 | 1. First Steps | Account access (ONBRD-01) |
 | 2. IAM Setup | Security configuration (ONBRD-02) |
 | 3. Deploy ActiveGate | Network routing (ONBRD-03) |
-| 4. Deploy OneAgent | Start monitoring (ONBRD-04) |
+| 4. Deploy OneAgent | Start monitoring (ONBRD-05) |
 | 5. Invite Team | Users join with proper access via IdP |
 -->
 
@@ -59,7 +59,7 @@ Dynatrace supports multiple authentication methods:
 
 ### Authentication Flow
 
-![SAML Authentication Flow](images/saml-auth-flow.png)
+![SAML Authentication Flow](images/02-saml-auth-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Step | Description |
 |------|-------------|
@@ -134,7 +134,7 @@ Before enabling SSO for all users:
 
 Dynatrace uses a policy-based access control model with the following permission levels:
 
-![Permission Hierarchy](images/permission-hierarchy.png)
+![Permission Hierarchy](images/02-permission-hierarchy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Level | Access |
 |-------|--------|
@@ -171,55 +171,106 @@ The modern platform uses **policies** to control what users can access:
 |-------------|--------|
 | **Environment policies** | Access to specific environments |
 | **Account policies** | Account-level management |
-| **Data policies** | Access to specific data (via segments) |
+| **Data policies** | Access to specific data (via segments + `dt.security_context`) |
 
-> **Note:** For data filtering, use **Segments** (covered in ONBRD-05) rather than the legacy Management Zones.
+### Parameterized Policies (Strongly Recommended)
+
+Prefer **one parameterized policy bound to multiple groups via binding parameters** over many copies of the same policy with hardcoded scope values:
+
+```text
+ALLOW storage:logs:read WHERE storage:dt.security_context = $bindingParameter("team")
+```
+
+Bind the policy to `team-payments`, `team-checkout`, `team-fraud`, etc., varying only the `team` parameter — one policy, N bindings. The parameter shape is load-bearing: design once, change rarely.
+
+The **`dt.security_context`** field is the standardized boundary for Gen3 IAM scoping across both data and configurations. Without it, cross-entity-type policies cannot be written. Decide your `dt.security_context` value space before tagging anything (covered in **ONBRD-06**).
+
+### Where to Go Deeper
+
+- **IAM-04 / IAM-05** — Designing effective policies and boundary conditions
+- **IAM-11 (WORKSHOP)** — Hands-on policy and persona design
+- **IAM-99** — IAM best-practice summary and DQL reference
+- **FAQ-02** — Tagging sources, standards, and strategy (`dt.security_context` design)
+- **ORGNZ-06 / ORGNZ-07** — Security context for data and configuration scoping
+
+> **Note:** For data filtering, use **Segments + `dt.security_context`** (covered in ONBRD-06) rather than the legacy Management Zones.
 
 <a id="api-token-and-oauth-management"></a>
 ## 5. API Token and OAuth Management
-The modern platform supports two authentication methods for API access:
 
-### API Tokens (for OneAgent, legacy integrations)
+The modern platform supports three credential types — pick based on the integration:
 
-**Location:** Account Management → Access tokens
+![Token Type Decision](images/02-token-types-decision.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Token Type | Prefix | Auth Scheme | When to Use |
+|------------|--------|-------------|-------------|
+| Platform Token (recommended default, sprint-1.337+) | dt0s16 / dt0s01 | Authorization: Bearer | New automation, Workflows, MCP, OpenPipeline, Settings v2 |
+| OAuth Client | client ID + secret | Authorization: Bearer | External SaaS integrations, account-admin automation |
+| Classic API Token (legacy phase-out) | dt0c01 | Authorization: Api-Token | Existing scripts; OneAgent installer (PaaS); migrate to Platform Token |
+For environments where SVG doesn't render
+-->
 
-| Purpose | Required Scopes |
-|---------|----------------|
-| **OneAgent Deployment** | `InstallerDownload` |
-| **Metric Ingestion** | `metrics.ingest` |
-| **Log Ingestion** | `logs.ingest` |
-| **Read Entities** | `entities.read` |
+| Credential | Prefix / Form | When to Use |
+|------------|---------------|-------------|
+| **Platform Token** *(recommended default for new automation)* | `dt0s16` / `dt0s01` | New automation, Workflows, MCP integrations, OpenPipeline configuration, Settings v2 |
+| **OAuth 2.0 Client** | client ID + secret | External SaaS integrations, account-admin automation |
+| **Classic API Token** *(legacy phase-out)* | `dt0c01` | Existing scripts; migrate to Platform Token where possible |
 
-### OAuth 2.0 Clients (recommended for new integrations)
+### Platform Tokens (Recommended Default — Sprint 1.337+)
+
+Platform Tokens are the standard for new automation as of sprint-337. They:
+
+- Use **policy-based permissions** (same Gen3 model as user groups) — no scope-list to maintain per token
+- Are bound to a single user identity (or service identity) for traceability
+- Should be the default unless you have a specific reason to choose OAuth or Classic
+
+**Location:** Account Management → Access tokens → "Generate Platform Token"
+
+```bash
+# Authorization scheme by token prefix:
+#   dt0s16 / dt0s01  →  Authorization: Bearer <token>
+#   dt0c01           →  Authorization: Api-Token <token>
+# Wrong scheme returns 401 even with correct scopes/policies.
+```
+
+### OAuth 2.0 Clients
+
+Use for **external system integrations** or **account-admin automation** that operates above the tenant level.
 
 **Location:** Account Management → OAuth clients
-
-OAuth 2.0 is the modern authentication method:
 
 1. Create an OAuth client
 2. Use client credentials flow to obtain bearer tokens
 3. Tokens are short-lived and automatically rotated
 
+### Classic API Tokens (Legacy)
+
+Existing scripts and OneAgent installer downloads still use Classic API tokens. Migrate to Platform Tokens during routine refresh cycles. Classic tokens use the `Api-Token` Authorization scheme (not `Bearer`).
+
+**Location:** Account Management → Access tokens
+
+| Common Use | Required Scope |
+|------------|---------------|
+| **OneAgent Installer Download** | `InstallerDownload` |
+| **Metric Ingestion** | `metrics.ingest` |
+| **Log Ingestion** | `logs.ingest` |
+
+> **Sprint 1.338 ActiveGate token note:** ActiveGate token schema changed in sprint-338 — review the upgrade-notes for any AG-token-issuing automation before upgrading.
+
 ### Token Best Practices
 
 | Practice | Why |
 |----------|-----|
-| **Minimal scope** | Limit blast radius if compromised |
+| **Minimal scope / least-privilege policy** | Limit blast radius if compromised |
 | **Descriptive names** | Know what each token is for |
 | **Expiration dates** | Force rotation, reduce risk |
 | **Separate tokens per use** | Revoke one without affecting others |
 | **Never commit to code** | Use environment variables or secrets managers |
-| **Prefer OAuth for new work** | Modern, short-lived tokens |
+| **Prefer Platform Tokens for new work** | Aligned with the Gen3 IAM model |
 
-### Creating an API Token
+### Where to Go Deeper
 
-1. Go to Account Management → Access tokens
-2. Click "Generate new token"
-3. Enter a descriptive name (e.g., "prod-oneagent-deployment")
-4. Select required scopes
-5. Set expiration (consider 90-365 days)
-6. Click "Generate token"
-7. **Copy the token immediately** - it won't be shown again
+- **IAM series** — Token management, lifecycle, audit patterns
 
 <a id="verification-queries"></a>
 ## 6. Verification Queries
@@ -257,18 +308,29 @@ fetch logs, from: now() - 7d
 
 With IAM configured, you're ready to:
 
-1. **ONBRD-03: Deploying ActiveGate** - Set up network routing (if needed for restricted networks)
-2. **ONBRD-04: Deploying OneAgent** - Start collecting infrastructure data
-3. Invite team members via your IdP
-4. Create additional API tokens or OAuth clients as needed
+1. **ONBRD-03: Deploying ActiveGate** — Set up network routing (if needed for restricted networks)
+2. **ONBRD-04: Cloud & SaaS Integrations** — Connect AWS / Azure / GCP and SaaS sources
+3. **ONBRD-05: Deploying OneAgent** — Start collecting infrastructure and application data
+4. **ONBRD-06: Organizing Your Environment** — Set up tags, segments, and `dt.security_context`
+5. Invite team members via your IdP
+6. Create additional Platform Tokens or OAuth clients as needed
 
 ### IAM Tasks Before Moving On
 
 - [ ] SAML/SSO configured and tested
 - [ ] Break-glass local admin account documented
 - [ ] User groups created for major roles
-- [ ] OneAgent deployment token generated
+- [ ] Parameterized policy shape decided; group → policy bindings drafted
+- [ ] `dt.security_context` value space planned (deeper in ONBRD-06 / FAQ-02)
+- [ ] Platform Token issued for migration / automation tooling
+- [ ] OneAgent installer (PaaS) token generated
 - [ ] Token naming conventions established
+
+### Where to Go Deeper
+
+- **IAM series** (13 notebooks) — full IAM administration depth
+- **FAQ-02** — Tagging sources, standards, and strategy
+- **ORGNZ series** — Bucket strategy, segments, security context
 
 ---
 
@@ -279,8 +341,9 @@ In this notebook, you learned:
 - Why IAM should be configured before deploying agents
 - Authentication options (Local, SAML, OIDC)
 - How to configure SAML SSO
-- Permission levels and group structure
-- API token and OAuth best practices
+- Permission levels, group structure, and parameterized policies
+- The three credential types (Platform Token, OAuth, Classic API Token) and when to use each
+- `dt.security_context` as the standardized boundary field for Gen3 IAM
 - How to verify IAM configuration
 
 ---
@@ -288,6 +351,7 @@ In this notebook, you learned:
 ## References
 
 - [Identity and Access Management](https://docs.dynatrace.com/docs/manage/identity-access-management)
+- [Platform Tokens](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens)
 - [SAML Configuration](https://docs.dynatrace.com/docs/manage/identity-access-management/single-sign-on/saml-configuration)
 - [OIDC Configuration](https://docs.dynatrace.com/docs/manage/identity-access-management/single-sign-on/configure-oidc)
 - [Access Tokens](https://docs.dynatrace.com/docs/manage/access-control/access-tokens)

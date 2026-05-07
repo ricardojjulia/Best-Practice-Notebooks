@@ -1,6 +1,6 @@
 # ONBRD-01: Getting Started: Your First Steps in Dynatrace
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 04/26/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Finding Your Way Around
 Welcome to Dynatrace. This notebook helps you get oriented in your new environment—where to find things, how to navigate, and what to do first.
@@ -63,7 +63,7 @@ Your tenant ID is the first part of your Dynatrace URL. For example:
 ## 2. Understanding the Navigation
 Dynatrace uses a left-hand navigation menu organized by function. The platform is built around **Apps**—each capability is an app you can launch.
 
-![Navigation Structure](images/navigation-structure.png)
+![Navigation Structure](images/01-navigation-structure.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Area | Description |
 |------|-------------|
@@ -134,17 +134,19 @@ Several URLs are important to bookmark:
 |---------|-------------|
 | **Main UI** | `https://{tenant-id}.apps.dynatrace.com` |
 | **Platform API** | `https://{tenant-id}.apps.dynatrace.com/platform/` |
-| **OAuth Clients** | Account Management → OAuth clients |
+| **Account Management** | `https://account.dynatrace.com` |
 
 ### API Access
 
-The modern Dynatrace platform uses OAuth 2.0 for API authentication:
+Modern Dynatrace platform access uses three credential types — choose based on the integration:
 
-1. Create an OAuth client in Account Management
-2. Use the client credentials flow to obtain tokens
-3. Include the bearer token in API requests
+| Token Type | Prefix | When to Use |
+|------------|--------|-------------|
+| **Platform Token** *(recommended default)* | `dt0s16` / `dt0s01` | New automation, Workflows, MCP integrations, OpenPipeline configuration |
+| **OAuth Client** | (client ID + secret) | External SaaS integrations, account-admin automation |
+| **Classic API Token** *(legacy phase-out)* | `dt0c01` | Existing scripts; migrate to Platform Token where possible |
 
-For OneAgent deployment, you'll still use API tokens (covered in ONBRD-04).
+For OneAgent and ActiveGate deployment, installer downloads use a **PaaS / installer token** generated in Account Management. Token management depth lives in **ONBRD-02**.
 
 <a id="checking-whats-already-there"></a>
 ## 5. Checking What's Already There
@@ -193,7 +195,7 @@ fetch logs, from: now() - 1h
 ```dql
 // Check for recent problems
 fetch dt.davis.problems, from: now() - 7d
-| fields timestamp, display_id, title, status
+| fields timestamp, display_id, title, event.status
 | sort timestamp desc
 | limit 10
 ```
@@ -203,7 +205,7 @@ fetch dt.davis.problems, from: now() - 7d
 | Result | What It Means | Next Step |
 |--------|--------------|----------|
 | **Hosts found** | OneAgent or cloud integration active | Explore the Hosts app |
-| **No hosts** | No monitoring deployed yet | Deploy OneAgent (ONBRD-04) |
+| **No hosts** | No monitoring deployed yet | Deploy OneAgent (ONBRD-05) |
 | **Services found** | Application-level monitoring working | Review service mapping |
 | **Logs found** | Log ingestion configured | Explore Logs & Events app |
 | **Problems found** | DAVIS is detecting issues | Review problem details |
@@ -214,21 +216,22 @@ Now that you're oriented in the Dynatrace UI, proceed based on your priorities:
 
 ### Recommended Path
 
-1. **ONBRD-02: IAM and Authentication** - Set up SAML/SSO and user permissions before inviting your team
+1. **ONBRD-02: IAM and Authentication** - Set up SAML/SSO, Platform Tokens, and user permissions before inviting your team
 2. **ONBRD-03: Deploying ActiveGate** - Set up network routing (if needed)
-3. **ONBRD-04: Deploying OneAgent** - Start getting infrastructure data
-4. **ONBRD-05: Organizing Your Environment** - Set up tags, segments, and naming conventions
+3. **ONBRD-04: Cloud & SaaS Integrations** - Connect AWS / Azure / GCP and SaaS data sources
+4. **ONBRD-05: Deploying OneAgent** - Start getting infrastructure and application data
+5. **ONBRD-06: Organizing Your Environment** - Set up tags, segments, and naming conventions
 
 ### Migrating from Another Platform?
 
-If you're migrating from New Relic, Datadog, or another APM tool, check out the **USFOODS** series which provides:
+If you're migrating from another APM tool, the deep-dive translation series cover concept mapping, query translation, and cutover patterns:
 
-- Concept mapping from your previous platform to Dynatrace
-- Query translation guides (e.g., NRQL → DQL)
-- Integration patterns for your existing tools
-- A recommended learning path that interleaves ONBRD fundamentals with migration-specific content
+- **NRLC** (NR → Dynatrace component deep dives) + **NR2DT** (procedural runbook) for New Relic
+- **SL2DT** for Sumo Logic logs/dashboards/monitors
+- **S2D** for Splunk
+- **M2S** for Managed-to-SaaS Dynatrace migrations
 
-> **See USFOODS-01** for a complete learning path that combines ONBRD foundation with migration-focused deep dives.
+Pair the migration series with this **ONBRD** series for the platform-fundamentals foundation.
 
 ### Key Tasks Before Moving On
 

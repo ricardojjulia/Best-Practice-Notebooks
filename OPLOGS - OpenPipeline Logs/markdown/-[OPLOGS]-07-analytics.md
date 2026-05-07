@@ -170,8 +170,8 @@ fetch logs, from: now() - 24h
     last_seen = max(timestamp)
   }, by: {dt.openpipeline.source}
 | fieldsAdd duration_ns = toLong(last_seen) - toLong(first_seen)
-| fieldsAdd duration_hours = round(duration_ns / 3600000000000.0, decimals: 1)
-| fieldsAdd logs_per_hour = round(total / (duration_ns / 3600000000000.0), decimals: 0)
+| fieldsAdd duration_hours = round(duration_ns / 1h, decimals: 1)
+| fieldsAdd logs_per_hour = round(total / (duration_ns / 1h), decimals: 0)
 | sort total desc
 ```
 

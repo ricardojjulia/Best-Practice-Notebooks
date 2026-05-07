@@ -158,7 +158,7 @@ fetch dt.entity.kubernetes_cluster
 // detected problems from the last 7 days across all infrastructure
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| summarize problem_count = count(), avg_duration_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0), by:{event.category}
+| summarize problem_count = count(), avg_duration_hours = avg(resolved_problem_duration / 1h), by:{event.category}
 | sort problem_count desc
 ```
 

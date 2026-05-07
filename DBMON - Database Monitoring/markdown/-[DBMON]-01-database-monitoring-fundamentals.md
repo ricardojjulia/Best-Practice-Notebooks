@@ -111,7 +111,7 @@ You can also discover databases through the spans themselves, which is useful wh
 fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize call_count = count(),
-           avg_duration_ms = avg(duration) / 1000000.0,
+           avg_duration_ms = avg(duration) / 1ms,
            distinct_statements = countDistinct(db.statement),
            by:{db.system, db.namespace, server.address}
 | sort call_count desc
@@ -129,9 +129,9 @@ Understanding the distribution of database calls helps identify which databases 
 fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize total_calls = count(),
-           avg_duration_ms = avg(duration) / 1000000.0,
-           p95_duration_ms = percentile(duration, 95) / 1000000.0,
-           max_duration_ms = max(duration) / 1000000.0,
+           avg_duration_ms = avg(duration) / 1ms,
+           p95_duration_ms = percentile(duration, 95) / 1ms,
+           max_duration_ms = max(duration) / 1ms,
            by:{db.system}
 | sort total_calls desc
 ```
@@ -229,9 +229,9 @@ Establishing a performance baseline is essential for detecting anomalies. The fo
 // Database response time baseline — hourly P50, P95, P99 over the last 24 hours
 fetch spans, from:-24h
 | filter isNotNull(db.system)
-| makeTimeseries p50_ms = percentile(duration, 50) / 1000000.0,
-                 p95_ms = percentile(duration, 95) / 1000000.0,
-                 p99_ms = percentile(duration, 99) / 1000000.0,
+| makeTimeseries p50_ms = percentile(duration, 50) / 1ms,
+                 p95_ms = percentile(duration, 95) / 1ms,
+                 p99_ms = percentile(duration, 99) / 1ms,
                  interval:1h
 ```
 

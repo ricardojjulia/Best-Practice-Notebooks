@@ -52,8 +52,8 @@ Let's start by identifying which SQL databases are active in your environment.
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | summarize call_count = count(),
-           avg_duration_ms = avg(duration) / 1000000.0,
-           p95_duration_ms = percentile(duration, 95) / 1000000.0,
+           avg_duration_ms = avg(duration) / 1ms,
+           p95_duration_ms = percentile(duration, 95) / 1ms,
            unique_queries = countDistinct(db.statement),
            by:{db.system, db.namespace, server.address}
 | sort call_count desc
@@ -70,10 +70,10 @@ The most important aspect of SQL database monitoring is understanding query perf
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | filter isNotNull(db.statement)
-| summarize total_time_ms = sum(duration) / 1000000.0,
+| summarize total_time_ms = sum(duration) / 1ms,
            call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            by:{db.system, db.statement}
 | sort total_time_ms desc
 | limit 20
@@ -99,7 +99,7 @@ fetch spans, from:-1h
 | filter duration > 500000000
 | fields timestamp, db.system, db.namespace, db.operation,
         db.statement, server.address,
-        duration_ms = duration / 1000000.0,
+        duration_ms = duration / 1ms,
         dt.entity.service
 | sort duration_ms desc
 | limit 25
@@ -120,9 +120,9 @@ fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | filter isNotNull(db.statement)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
-           max_ms = max(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
+           max_ms = max(duration) / 1ms,
            by:{db.statement, db.system}
 | filter call_count >= 10
 | sort p95_ms desc
@@ -151,8 +151,8 @@ fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | filter isNotNull(db.operation)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            by:{db.operation, db.system}
 | sort db.system asc, avg_ms desc
 ```
@@ -168,7 +168,7 @@ Connection pool exhaustion is a common source of application errors. While Dynat
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
            error_count = countIf(otel.status_code == "ERROR"),
            by:{dt.entity.service, db.system, server.address}
 | fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")
@@ -202,8 +202,8 @@ PostgreSQL is commonly used in cloud-native applications. Key concerns: vacuum o
 fetch spans, from:-1h
 | filter db.system == "postgresql"
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            errors = countIf(otel.status_code == "ERROR"),
            by:{db.namespace, db.operation}
 | sort call_count desc
@@ -217,8 +217,8 @@ MySQL monitoring focuses on query cache effectiveness, InnoDB buffer pool usage,
 // MySQL — response time trend over 6 hours
 fetch spans, from:-6h
 | filter db.system == "mysql"
-| makeTimeseries avg_ms = avg(duration) / 1000000.0,
-                 p95_ms = percentile(duration, 95) / 1000000.0,
+| makeTimeseries avg_ms = avg(duration) / 1ms,
+                 p95_ms = percentile(duration, 95) / 1ms,
                  call_count = count(),
                  interval:10m
 ```
@@ -233,7 +233,7 @@ Understanding the distribution of response times helps set realistic SLOs and id
 // Response time distribution buckets — group queries into latency tiers
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
-| fieldsAdd duration_ms = duration / 1000000.0
+| fieldsAdd duration_ms = duration / 1ms
 | fieldsAdd latency_tier = if(duration_ms < 1, then:"<1ms",
     else:if(duration_ms < 10, then:"1-10ms",
     else:if(duration_ms < 100, then:"10-100ms",
@@ -247,11 +247,11 @@ fetch spans, from:-1h
 // Percentile summary across all SQL databases
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
-| summarize p50_ms = percentile(duration, 50) / 1000000.0,
-           p90_ms = percentile(duration, 90) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
-           p99_ms = percentile(duration, 99) / 1000000.0,
-           max_ms = max(duration) / 1000000.0,
+| summarize p50_ms = percentile(duration, 50) / 1ms,
+           p90_ms = percentile(duration, 90) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
+           p99_ms = percentile(duration, 99) / 1ms,
+           max_ms = max(duration) / 1ms,
            total_calls = count(),
            by:{db.system}
 | sort total_calls desc

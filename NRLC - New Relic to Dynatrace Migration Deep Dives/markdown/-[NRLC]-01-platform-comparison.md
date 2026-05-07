@@ -107,7 +107,7 @@ For environments where SVG doesn't render
 - OpenPipeline performs parse, mask, enrich, route, and metric extraction *before* storage
 - Per-bucket pricing: "Retain with Included Queries" or "Usage-based"
 
-**Migration implication:** New Relic's flat retention maps poorly to Dynatrace's tiered buckets. Plan retention per data class during migration design (see **USFOODS-G.02 Grail Buckets** for the recommended bucket strategy template).
+**Migration implication:** New Relic's flat retention maps poorly to Dynatrace's tiered buckets. Plan retention per data class during migration design (see **ORGNZ-02 — Understanding Grail Buckets** and **ORGNZ-99 — Best Practice Summary** for the recommended bucket strategy template).
 
 <a id="queries"></a>
 ## 3. Query Languages: NRQL vs. DQL
@@ -186,7 +186,7 @@ Plus: Service → Service Group, Application → Application Group, custom entit
 | Restricted User | Policy with bucket scope + DQL-attribute conditions | Fine-grained per-resource (Gen3 pattern) |
 | Admin role | Tenant admin policy | Full tenant access |
 
-**Migration implication:** A NR multi-account setup typically becomes a single DT tenant + an attribute taxonomy applied via OpenPipeline enrichment + bucket-scoped IAM policies. See **USFOODS-G.01 Host Grouping** and **USFOODS-G.02 Grail Buckets** for the design patterns.
+**Migration implication:** A NR multi-account setup typically becomes a single DT tenant + an attribute taxonomy applied via OpenPipeline enrichment + bucket-scoped IAM policies. See **FAQ-01 — Host Group Naming Strategy**, **ORGNZ-02 / ORGNZ-99** (Grail bucket strategy), and the **IAM** series (especially IAM-04 / IAM-05 / IAM-11 WORKSHOP) for the design patterns.
 
 <a id="pricing"></a>
 ## 6. Pricing Models

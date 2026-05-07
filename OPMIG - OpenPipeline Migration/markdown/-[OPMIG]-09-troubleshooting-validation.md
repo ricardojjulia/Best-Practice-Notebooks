@@ -539,7 +539,7 @@ fetch logs
 // Original query (commented out):
 // fetch logs
 // | filter timestamp > now() - 15m
-// | fieldsAdd lag_seconds = (dt.system.ingestion_time - timestamp) / 1000000000
+// | fieldsAdd lag_seconds = (dt.system.ingestion_time - timestamp) / 1s
 // | summarize
 //     avg_lag = avg(lag_seconds),
 //     p95_lag = percentile(lag_seconds, 95),
@@ -833,7 +833,7 @@ fetch logs, from: now() - 1h
     log_count = count(),
     last_seen = max(timestamp)
   }, by: {log.source}
-| fieldsAdd minutes_since_last = (now() - last_seen) / 60000000000
+| fieldsAdd minutes_since_last = (now() - last_seen) / 1m
 | sort minutes_since_last desc
 ```
 

@@ -52,8 +52,8 @@ Let's discover which NoSQL databases are active in your environment.
 fetch spans, from:-1h
 | filter in(db.system, {"mongodb", "dynamodb", "cassandra", "cosmosdb", "couchbase", "hbase"})
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            unique_operations = countDistinct(db.operation),
            by:{db.system, server.address}
 | sort call_count desc
@@ -81,8 +81,8 @@ fetch spans, from:-1h
 | filter db.system == "mongodb"
 | filter isNotNull(db.operation)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            by:{db.namespace, db.mongodb.collection, db.operation}
 | sort call_count desc
 | limit 25
@@ -94,7 +94,7 @@ fetch spans, from:-1h
 | filter db.system == "mongodb"
 | filter duration > 100000000
 | fields timestamp, db.namespace, db.mongodb.collection, db.operation,
-        db.statement, duration_ms = duration / 1000000.0
+        db.statement, duration_ms = duration / 1ms
 | sort duration_ms desc
 | limit 20
 ```
@@ -119,8 +119,8 @@ fetch spans, from:-1h
 | filter db.system == "dynamodb"
 | filter isNotNull(db.operation)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            errors = countIf(otel.status_code == "ERROR"),
            by:{db.namespace, db.operation}
 | sort call_count desc
@@ -132,7 +132,7 @@ fetch spans, from:-1h
 | filter db.system == "dynamodb"
 | filter in(db.operation, {"Query", "Scan"})
 | summarize op_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
            by:{db.operation}
 | sort op_count desc
 ```
@@ -151,8 +151,8 @@ fetch spans, from:-1h
 | filter db.system == "cassandra"
 | filter isNotNull(db.operation)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p99_ms = percentile(duration, 99) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p99_ms = percentile(duration, 99) / 1ms,
            by:{db.namespace, db.operation}
 | sort call_count desc
 ```
@@ -178,8 +178,8 @@ fetch spans, from:-1h
 | filter db.system == "cosmosdb"
 | filter isNotNull(db.operation)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            errors = countIf(otel.status_code == "ERROR"),
            by:{db.namespace, db.operation}
 | sort call_count desc
@@ -201,7 +201,7 @@ fetch spans, from:-1h
     then:"READ",
     else:"WRITE")
 | summarize op_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
            by:{db.system, rw_type}
 | sort db.system asc, rw_type asc
 ```
@@ -229,8 +229,8 @@ When your environment uses multiple NoSQL databases, comparing their performance
 fetch spans, from:-1h
 | filter in(db.system, {"mongodb", "dynamodb", "cassandra", "cosmosdb", "couchbase"})
 | summarize total_calls = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            error_count = countIf(otel.status_code == "ERROR"),
            unique_namespaces = countDistinct(db.namespace),
            by:{db.system}

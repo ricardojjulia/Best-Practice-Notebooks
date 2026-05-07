@@ -1,6 +1,6 @@
 # ONBRD-05: Deploying OneAgent
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 5 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Getting Data Into Dynatrace
 OneAgent is the foundation of Dynatrace monitoring. This notebook covers deployment strategies, installation methods, and verification steps to ensure your infrastructure is reporting data.
@@ -39,7 +39,7 @@ OneAgent is Dynatrace's unified monitoring agent that:
 | **Distributed tracing** | End-to-end transaction visibility |
 | **Log collection** | Collects and forwards log data |
 
-![OneAgent Architecture](images/oneagent-architecture.png)
+![OneAgent Architecture](images/05-oneagent-architecture.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Component | Location | Function |
 |-----------|----------|----------|
@@ -55,6 +55,16 @@ OneAgent is Dynatrace's unified monitoring agent that:
 ### Phased Rollout (Recommended)
 
 Don't deploy everywhere at once. Use a phased approach:
+
+![OneAgent Phased Rollout](images/05-phased-rollout-timeline.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Phase | Window | Scope | Validation Focus |
+|-------|--------|-------|------------------|
+| 1 Pilot | Week 1–2 | 2–5 non-critical hosts | Hosts appear; Smartscape populates; primary tags emit |
+| 2 Expand | Week 3–4 | One application tier or team | Service baseline; DPS pattern; alerting volume sane |
+| 3 Production | Week 5+ | Full production fleet | Workflows alerting live; SLOs/Davis tuned; IAM scoping confirmed |
+For environments where SVG doesn't render
+-->
 
 | Phase | Scope | Purpose |
 |-------|-------|--------|
@@ -130,6 +140,24 @@ Invoke-WebRequest -Uri "https://{tenant-id}.apps.dynatrace.com/api/v1/deployment
 .\Dynatrace-OneAgent.exe
 ```
 
+> **Sprint 1.338 Windows network insight (Npcap):** new OneAgent Windows builds use **Npcap** for network-monitoring capture (replacing legacy WinPcap). Plan an Npcap install / redistribution into your Windows golden image when rolling out OneAgent on hosts that need network insight. See the OneAgent release notes for the affected version range.
+
+### Setting Primary Tags at Install Time (Sprint 1.337+)
+
+Set `dt.security_context`, environment, team, cost-center, and other primary tags at OneAgent install time using `oneagentctl --set-host-tag`. Primary tags emit at the source on every signal (metrics, spans, logs, events) and feed directly into OpenPipeline routing, bucket assignment, and IAM scoping — more efficient than view-time auto-tagging.
+
+```bash
+# Set primary tags after install (Linux)
+sudo /opt/dynatrace/oneagent/agent/tools/oneagentctl --set-host-tag environment=prod
+sudo /opt/dynatrace/oneagent/agent/tools/oneagentctl --set-host-tag team=payments
+sudo /opt/dynatrace/oneagent/agent/tools/oneagentctl --set-host-tag dt.security_context=team-payments
+
+# Set host group at install time (preferred — avoid renaming later)
+sudo /bin/sh Dynatrace-OneAgent.sh --set-host-group=prod-app-payments
+```
+
+Decide your primary-tag and host-group taxonomy *before* the first install — retrofitting breaks history-based thresholds, IAM scoping, and any automation keyed on those values. See **FAQ-01 (host group naming strategy)** and **FAQ-02 (tagging sources, standards, strategy)** for the canonical guidance.
+
 ### Configuration Management
 
 For Ansible, Puppet, Chef, or other tools, see:
@@ -145,7 +173,7 @@ For Kubernetes environments, use the Dynatrace Operator—the recommended approa
 
 The Dynatrace Operator supports multiple deployment modes. Choose based on your requirements:
 
-![OneAgent Deployment Modes](images/oneagent-deployment-modes.png)
+![OneAgent Deployment Modes](images/05-oneagent-deployment-modes.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Mode | Description | Use Case |
 |------|-------------|----------|
@@ -312,7 +340,7 @@ spec:
   activeGate:
     capabilities:
       - kubernetes-monitoring
-    image: my-registry.example.com/dynatrace/activegate:latest
+    image: my-registry.example.com/dynatrace/dynatrace-activegate:latest
 ```
 
 **Image Mirroring Script:**
@@ -501,10 +529,16 @@ For deep code-level visibility, restart:
 
 With OneAgent deployed and verified:
 
-1. **ONBRD-06: Organizing Your Environment** - Set up tags, segments, and naming conventions
+1. **ONBRD-06: Organizing Your Environment** — Set up tags, segments, naming conventions, and `dt.security_context`
 2. Wait 15-30 minutes for full topology discovery
 3. Check Smartscape for service dependencies
 4. Plan broader rollout based on pilot results
+
+### Where to Go Deeper
+
+- **K8S series** (15 notebooks) — Cluster monitoring, DynaKube depth, GitOps for K8s deployments
+- **FAQ-01** — Host group naming strategy (decide before first install)
+- **FAQ-02** — Tagging sources, standards, and strategy (primary tags vs auto-tags vs cloud tags)
 
 ### Deployment Checklist
 
@@ -514,6 +548,9 @@ With OneAgent deployed and verified:
 - [ ] Services being discovered
 - [ ] Connection check passing
 - [ ] Smartscape showing topology
+- [ ] Host groups set at install time (not retrofitted later)
+- [ ] Primary tags (environment, team, `dt.security_context`) emitted at source
+- [ ] Windows hosts: Npcap install path planned (sprint-1.338 dependency)
 
 ---
 
@@ -525,6 +562,8 @@ In this notebook, you learned:
 - Phased deployment strategy
 - How to generate deployment tokens
 - Installation methods for Linux, Windows, and Kubernetes
+- Setting primary tags and host groups at install time (sprint-1.337+ pattern)
+- Windows Npcap requirement (sprint-1.338)
 - How to verify successful deployment
 - Common troubleshooting steps
 
@@ -537,6 +576,7 @@ In this notebook, you learned:
 - [Windows Installation](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent/installation-and-operation/windows/installation/install-oneagent-on-windows)
 - [Kubernetes Operator](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 - [Deployment API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/deployment)
+- [OneAgent Attribute Enrichment](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment)
 
 ---
 

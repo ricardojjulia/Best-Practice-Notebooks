@@ -363,7 +363,7 @@ fetch logs, from: now() - 7d
     latest = max(timestamp),
     total_logs = count()
   }, by: {dt.system.bucket}
-| fieldsAdd retention_days = (latest - earliest) / 86400000000000
+| fieldsAdd retention_days = (latest - earliest) / 1d
 ```
 
 ```dql

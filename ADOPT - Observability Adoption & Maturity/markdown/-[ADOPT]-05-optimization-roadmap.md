@@ -336,7 +336,7 @@ The simplest and highest-impact automation is routing noisy alerts. Use this que
 // Problems that auto-resolve within 5 minutes — candidates for suppression
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
-| fieldsAdd duration_minutes = toLong(resolved_problem_duration) / 60000000000.0
+| fieldsAdd duration_minutes = resolved_problem_duration / 1m
 | filter duration_minutes < 5
 | summarize auto_resolve_count = count(), by:{event.name}
 | sort auto_resolve_count desc

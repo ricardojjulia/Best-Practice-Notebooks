@@ -176,7 +176,7 @@ fetch spans, from:-1h
 | Action | Purpose | Example Config |
 |--------|---------|----------------|
 | drop | Remove spans | condition: span.name == "/health" |
-| transform | Modify fields | duration_ms: duration / 1000000 |
+| transform | Modify fields | duration_ms: duration / 1ms |
 | route | Send to bucket | bucket: spans_prod |
 | sample | Keep percentage | rate: 0.1 |
 -->
@@ -254,7 +254,7 @@ stages:
     rules:
       - transform:
           fields:
-            duration_ms: duration / 1000000
+            duration_ms: duration / 1ms
             is_slow: duration > 1000000000
 ```
 
@@ -281,7 +281,7 @@ stages:
 // Example: Fields you might want to pre-compute
 fetch spans, from:-1h
 | fieldsAdd 
-    duration_ms = duration / 1000000,
+    duration_ms = duration / 1ms,
     is_error = span.status_code == "error",
     latency_bucket = if(
         duration < 100ms, "fast",
@@ -508,7 +508,7 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | summarize {
     span_count = count(),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by:{dt.entity.service}
 | sort span_count desc
 | limit 30

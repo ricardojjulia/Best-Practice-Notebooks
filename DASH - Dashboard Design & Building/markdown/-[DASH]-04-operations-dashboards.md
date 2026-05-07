@@ -42,7 +42,7 @@ Response time is the most watched metric on an operations dashboard. Show it as 
 // Service response time trend — p50, p90, p95 over last 2 hours
 fetch spans, from:-2h
 | filter span.kind == "server"
-| makeTimeseries p50_ms = percentile(duration, 50) / 1000000, p90_ms = percentile(duration, 90) / 1000000, p95_ms = percentile(duration, 95) / 1000000, interval:5m
+| makeTimeseries p50_ms = percentile(duration, 50) / 1ms, p90_ms = percentile(duration, 90) / 1ms, p95_ms = percentile(duration, 95) / 1ms, interval:5m
 ```
 
 ### Response Time by Service (Top 10 Slowest)
@@ -51,7 +51,7 @@ fetch spans, from:-2h
 // Top 10 slowest services by average response time
 fetch spans, from:-1h
 | filter span.kind == "server"
-| summarize avg_ms = avg(duration) / 1000000, p95_ms = percentile(duration, 95) / 1000000, request_count = count(), by:{dt.entity.service}
+| summarize avg_ms = avg(duration) / 1ms, p95_ms = percentile(duration, 95) / 1ms, request_count = count(), by:{dt.entity.service}
 | sort p95_ms desc
 | limit 10
 ```
@@ -137,7 +137,7 @@ Active problems should be front and center on every operations dashboard. Show b
 fetch dt.davis.problems, from:-24h
 | filter event.status == "ACTIVE"
 | filter dt.davis.is_duplicate == false
-| fieldsAdd duration_min = (toLong(now()) - toLong(event.start)) / 60000000000.0
+| fieldsAdd duration_min = (now() - event.start) / 1m
 | fieldsKeep display_id, event.name, event.category, duration_min
 | sort duration_min desc
 ```

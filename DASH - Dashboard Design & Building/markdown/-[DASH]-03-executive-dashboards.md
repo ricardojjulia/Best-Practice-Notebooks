@@ -105,7 +105,7 @@ fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false
 | filter dt.davis.is_duplicate == false
-| summarize mttr_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0)
+| summarize mttr_hours = avg(resolved_problem_duration / 1h)
 ```
 
 ### MTTR Trend Over Time
@@ -117,7 +117,7 @@ Show MTTR as a daily trend to highlight improvement or degradation.
 fetch dt.davis.problems, from:-30d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
-| makeTimeseries mttr_hours = avg(toLong(resolved_problem_duration) / 3600000000000.0), interval:1d, time:event.end
+| makeTimeseries mttr_hours = avg(resolved_problem_duration / 1h), interval:1d, time:event.end
 ```
 
 <a id="problem-trends"></a>
@@ -168,7 +168,7 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize total = count(), errors = countIf(otel.status_code == "ERROR"), p95_ns = percentile(duration, 95), by:{dt.entity.service}
 | fieldsAdd error_rate = 100.0 * errors / total
-| fieldsAdd p95_ms = p95_ns / 1000000
+| fieldsAdd p95_ms = p95_ns / 1ms
 | fieldsAdd error_penalty = if(error_rate > 5, then: 50, else: if(error_rate > 1, then: 20, else: 0))
 | fieldsAdd latency_penalty = if(p95_ms > 3000, then: 35, else: if(p95_ms > 1000, then: 15, else: 0))
 | fieldsAdd health_score = 100 - error_penalty - latency_penalty
@@ -198,7 +198,7 @@ fetch dt.davis.problems, from:-30d
 | filter event.status == "CLOSED"
 | filter event.category == "AVAILABILITY"
 | filter dt.davis.is_duplicate == false
-| summarize total_downtime_min = sum(toLong(resolved_problem_duration)) / 60000000000.0
+| summarize total_downtime_min = sum(resolved_problem_duration) / 1m
 | fieldsAdd budget_total_min = 43.2
 | fieldsAdd budget_remaining_min = budget_total_min - total_downtime_min
 | fieldsAdd budget_remaining_pct = round(100.0 * budget_remaining_min / budget_total_min, decimals: 1)

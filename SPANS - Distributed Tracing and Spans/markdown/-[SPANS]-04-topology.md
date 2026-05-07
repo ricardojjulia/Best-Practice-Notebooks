@@ -112,7 +112,7 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     request_count = count(),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by: {service.name, span.name}
 | sort service.name asc, request_count desc
 | limit 50
@@ -139,7 +139,7 @@ fetch spans, from:-1h
 | filter span.kind == "client"
 | summarize {
     call_count = count(),
-    avg_latency_ms = avg(duration) / 1000000,
+    avg_latency_ms = avg(duration) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by: {service.name, span.name}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / call_count
@@ -154,7 +154,7 @@ fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(peer.service)
 | summarize {
     call_count = count(),
-    avg_latency_ms = avg(duration) / 1000000
+    avg_latency_ms = avg(duration) / 1ms
   }, by: {service.name, peer.service}
 | sort call_count desc
 | limit 30
@@ -166,7 +166,7 @@ fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(server.address)
 | summarize {
     call_count = count(),
-    avg_latency_ms = avg(duration) / 1000000,
+    avg_latency_ms = avg(duration) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by: {service.name, server.address}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / call_count
@@ -186,8 +186,8 @@ fetch spans, from:-1h
 | filter span.kind == "client"
 | summarize {
     outbound_calls = count(),
-    avg_latency_ms = avg(duration) / 1000000,
-    p99_latency_ms = percentile(duration, 99) / 1000000,
+    avg_latency_ms = avg(duration) / 1ms,
+    p99_latency_ms = percentile(duration, 99) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by: {service.name}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / outbound_calls
@@ -201,8 +201,8 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     inbound_requests = count(),
-    avg_latency_ms = avg(duration) / 1000000,
-    p99_latency_ms = percentile(duration, 99) / 1000000,
+    avg_latency_ms = avg(duration) / 1ms,
+    p99_latency_ms = percentile(duration, 99) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by: {service.name}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / inbound_requests
@@ -253,7 +253,7 @@ fetch spans, from:-1h
 | filter span.kind == "producer"
 | summarize {
     messages_sent = count(),
-    avg_duration_ms = avg(duration) / 1000000,
+    avg_duration_ms = avg(duration) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by: {service.name, span.name}
 | sort messages_sent desc
@@ -266,7 +266,7 @@ fetch spans, from:-1h
 | filter span.kind == "consumer"
 | summarize {
     messages_received = count(),
-    avg_processing_ms = avg(duration) / 1000000,
+    avg_processing_ms = avg(duration) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by: {service.name, span.name}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / messages_received
@@ -312,7 +312,7 @@ fetch spans, from:-1h
 | summarize {
     span_count = count(),
     services_involved = countDistinct(service.name),
-    total_duration_ms = sum(duration) / 1000000
+    total_duration_ms = sum(duration) / 1ms
   }, by: {trace.id}
 | sort span_count desc
 | limit 25
@@ -323,7 +323,7 @@ fetch spans, from:-1h
 // Replace YOUR_TRACE_ID with an actual trace ID from above
 fetch spans, from:-1h
 // | filter trace.id == "YOUR_TRACE_ID"
-| fieldsAdd duration_ms = duration / 1000000
+| fieldsAdd duration_ms = duration / 1ms
 | fields start_time,
          span.id,
          span.parent_id,
@@ -341,7 +341,7 @@ fetch spans, from:-1h
 | filter isNull(span.parent_id)
 | summarize {
     entry_count = count(),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by: {service.name, span.name}
 | sort entry_count desc
 | limit 20
@@ -359,9 +359,9 @@ fetch spans, from:-1h
 | filter span.kind == "client" and isNotNull(server.address)
 | summarize {
     call_count = count(),
-    avg_ms = avg(duration) / 1000000,
-    p95_ms = percentile(duration, 95) / 1000000,
-    p99_ms = percentile(duration, 99) / 1000000
+    avg_ms = avg(duration) / 1ms,
+    p95_ms = percentile(duration, 95) / 1ms,
+    p99_ms = percentile(duration, 99) / 1ms
   }, by: {service.name, server.address}
 | sort p95_ms desc
 | limit 20
@@ -371,9 +371,9 @@ fetch spans, from:-1h
 // Time spent per service in traces
 fetch spans, from:-1h
 | summarize {
-    total_time_ms = sum(duration) / 1000000,
+    total_time_ms = sum(duration) / 1ms,
     span_count = count(),
-    avg_per_span_ms = avg(duration) / 1000000
+    avg_per_span_ms = avg(duration) / 1ms
   }, by: {service.name}
 | sort total_time_ms desc
 | limit 20
@@ -386,8 +386,8 @@ fetch spans, from:-1h
 | filter duration > 500ms
 | summarize {
     slow_call_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    max_duration_ms = max(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    max_duration_ms = max(duration) / 1ms
   }, by: {service.name, span.name}
 | sort avg_duration_ms desc
 | limit 20
@@ -414,10 +414,10 @@ Identify the services and operations that contribute most to end-to-end latency:
 // Find services contributing most to total trace time
 fetch spans, from:-1h
 | summarize {
-    total_self_time_ms = sum(duration) / 1000000,
+    total_self_time_ms = sum(duration) / 1ms,
     span_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    max_duration_ms = max(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    max_duration_ms = max(duration) / 1ms
   }, by: {service.name}
 | sort total_self_time_ms desc
 | limit 15
@@ -429,9 +429,9 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     call_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    p99_duration_ms = percentile(duration, 99) / 1000000,
-    total_time_ms = sum(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    p99_duration_ms = percentile(duration, 99) / 1ms,
+    total_time_ms = sum(duration) / 1ms
   }, by: {service.name, span.name}
 | filter call_count > 10
 | sort p99_duration_ms desc
@@ -445,8 +445,8 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     call_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    total_time_ms = sum(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    total_time_ms = sum(duration) / 1ms
   }, by: {service.name, span.name}
 | filter call_count > 50
 | fieldsAdd impact_score = call_count * avg_duration_ms

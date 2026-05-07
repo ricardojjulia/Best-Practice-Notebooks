@@ -186,6 +186,7 @@ Tools and guidance for migrating from Management Zones to Policy-based access co
 
 ### [NR2DT - New Relic to Dynatrace Migration Steps](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/README.md)
 Step-by-step migration path from New Relic to Dynatrace, from discovery through cutover and decommission.
+- [NR2DT-00: Step 0 — Tenant Prerequisites](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/markdown/-%5BNR2DT%5D-00-step-0-prerequisites.md) — Readiness gate confirming the target Dynatrace tenant is fit to receive a New Relic migration
 - [NR2DT-01: Step 1 — Discover](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/markdown/-%5BNR2DT%5D-01-step-1-discover.md) — Inventorying the New Relic environment and understanding migration scope
 - [NR2DT-02: Step 2 — Strategize](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/markdown/-%5BNR2DT%5D-02-step-2-strategize.md) — Planning the migration strategy, phasing, and execution approach
 - [NR2DT-03: Step 3 — Design](NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/markdown/-%5BNR2DT%5D-03-step-3-design.md) — Designing the target Dynatrace architecture and configuration

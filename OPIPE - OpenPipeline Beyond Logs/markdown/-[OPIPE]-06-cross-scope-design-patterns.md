@@ -136,7 +136,7 @@ Span → generates Event → Event triggers Metric → Metric drives SLO
 // Identify slow transactions that could trigger a cascade
 fetch spans, from:-1h
 | filter span.kind == "server" and duration > 5000000000
-| summarize slow_count = count(), avg_duration_ms = avg(toDouble(duration) / 1000000),
+| summarize slow_count = count(), avg_duration_ms = avg(duration / 1ms),
     by:{service.name}
 | sort slow_count desc
 | limit 10

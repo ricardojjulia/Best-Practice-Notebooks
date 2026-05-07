@@ -121,7 +121,7 @@ This query would be used in a Workflow DQL action for a weekly executive report.
 // Weekly problem summary — suitable for automated report
 fetch dt.davis.problems, from:-7d
 | filter dt.davis.is_duplicate == false
-| summarize total = count(), active = countIf(event.status == "ACTIVE"), closed = countIf(event.status == "CLOSED"), avg_mttr_hours = avg(if(event.status == "CLOSED", then: toLong(resolved_problem_duration) / 3600000000000.0, else: 0))
+| summarize total = count(), active = countIf(event.status == "ACTIVE"), closed = countIf(event.status == "CLOSED"), avg_mttr_hours = avg(if(event.status == "CLOSED", then: resolved_problem_duration / 1h, else: 0))
 | fieldsAdd report_period = "Last 7 days"
 ```
 

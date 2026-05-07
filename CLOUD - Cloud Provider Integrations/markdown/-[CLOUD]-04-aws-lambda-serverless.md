@@ -131,7 +131,7 @@ fetch spans, from:-6h
 | filter contains(span.name, "lambda") and isNotNull(faas.coldstart)
 | fieldsKeep timestamp, span.name, duration, faas.coldstart, faas.invocation_id
 | filter faas.coldstart == true
-| summarize cold_start_count = count(), avg_duration_ms = avg(duration) / 1000000.0
+| summarize cold_start_count = count(), avg_duration_ms = avg(duration) / 1ms
 
 ```
 
@@ -295,7 +295,7 @@ DynamoDB is frequently used with Lambda for serverless data storage. Key monitor
 fetch spans, from:-6h
 | filter span.kind == "client" and isNotNull(db.system)
 | filter db.system == "dynamodb"
-| summarize avg_duration_ms = avg(duration) / 1000000.0, call_count = count(), by:{db.namespace, db.operation}
+| summarize avg_duration_ms = avg(duration) / 1ms, call_count = count(), by:{db.namespace, db.operation}
 | sort avg_duration_ms desc
 | limit 15
 ```

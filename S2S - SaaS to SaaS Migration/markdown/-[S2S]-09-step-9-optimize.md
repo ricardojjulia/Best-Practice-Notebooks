@@ -213,7 +213,7 @@ fetch dt.davis.problems, from:-24h
 fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_frequent_event == false and dt.davis.is_duplicate == false
-| fieldsAdd duration_hours = toLong(resolved_problem_duration) / 3600000000000.0
+| fieldsAdd duration_hours = resolved_problem_duration / 1h
 | summarize
     avg_mttr_hours = avg(duration_hours),
     median_mttr_hours = median(duration_hours),

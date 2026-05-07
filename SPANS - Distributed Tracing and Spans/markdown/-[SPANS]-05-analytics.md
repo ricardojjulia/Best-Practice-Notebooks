@@ -72,7 +72,7 @@ fetch spans, from:-1h
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | summarize {
     request_count = count(),
-    p95_duration_ms = percentile(duration, 95) / 1000000,
+    p95_duration_ms = percentile(duration, 95) / 1ms,
     error_count = countIf(span.status_code == "error")
   }, by:{time_bucket, service.name}
 | sort time_bucket asc
@@ -106,8 +106,8 @@ fetch spans, from:-1h
 | fieldsAdd time_bucket = bin(start_time, 10m)
 | summarize {
     request_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    p90_duration_ms = percentile(duration, 90) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    p90_duration_ms = percentile(duration, 90) / 1ms
   }, by:{time_bucket, service.name}
 | sort time_bucket asc, service.name
 | limit 300
@@ -120,7 +120,7 @@ fetch spans, from:-1h
 | fieldsAdd time_bucket = bin(start_time, 30m)
 | summarize {
     request_count = count(),
-    p95_ms = percentile(duration, 95) / 1000000
+    p95_ms = percentile(duration, 95) / 1ms
   }, by:{time_bucket, service.name}
 | filter p95_ms > 500
 | sort time_bucket desc, p95_ms desc
@@ -140,11 +140,11 @@ fetch spans, from:-1h
 | summarize {
     total_requests = count(),
     error_count = countIf(span.status_code == "error"),
-    avg_duration_ms = avg(duration) / 1000000,
-    p50_duration_ms = percentile(duration, 50) / 1000000,
-    p95_duration_ms = percentile(duration, 95) / 1000000,
-    p99_duration_ms = percentile(duration, 99) / 1000000,
-    max_duration_ms = max(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    p50_duration_ms = percentile(duration, 50) / 1ms,
+    p95_duration_ms = percentile(duration, 95) / 1ms,
+    p99_duration_ms = percentile(duration, 99) / 1ms,
+    max_duration_ms = max(duration) / 1ms
   }, by:{service.name}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / total_requests
 | fieldsAdd health_score = if(error_rate_pct > 5, "Critical", 
@@ -162,8 +162,8 @@ fetch spans, from:-1h
     request_count = count(),
     error_count = countIf(span.status_code == "error"),
     slow_count = countIf(duration > 1000000000),  // > 1 second
-    avg_duration_ms = avg(duration) / 1000000,
-    p95_duration_ms = percentile(duration, 95) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    p95_duration_ms = percentile(duration, 95) / 1ms
   }, by:{service.name, span.name}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / request_count
 | fieldsAdd slow_rate_pct = (slow_count * 100.0) / request_count
@@ -179,7 +179,7 @@ fetch spans, from:-1h
 | summarize {
     request_count = count(),
     error_count = countIf(span.status_code == "error"),
-    avg_duration_ms = avg(duration) / 1000000
+    avg_duration_ms = avg(duration) / 1ms
   }, by:{http.request.method, service.name}
 | sort request_count desc
 | limit 30
@@ -198,8 +198,8 @@ fetch spans, from:-1h
 | summarize {
     span_count = count(),
     error_count = countIf(span.status_code == "error"),
-    avg_duration_ms = avg(duration) / 1000000,
-    p95_duration_ms = percentile(duration, 95) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    p95_duration_ms = percentile(duration, 95) / 1ms
   }, by:{span.kind}
 | fieldsAdd error_rate_pct = (error_count * 100.0) / span_count
 ```
@@ -210,8 +210,8 @@ fetch spans, from:-1h
 | filter span.kind == "server"
 | summarize {
     span_count = count(),
-    avg_duration_ms = avg(duration) / 1000000,
-    p95_duration_ms = percentile(duration, 95) / 1000000
+    avg_duration_ms = avg(duration) / 1ms,
+    p95_duration_ms = percentile(duration, 95) / 1ms
   }, by:{span.status_code, service.name}
 | sort service.name, span.status_code
 | limit 50
@@ -255,7 +255,7 @@ fetch spans, from:-1h
     total_requests = count(),
     total_errors = countIf(span.status_code == "error"),
     unique_services = countDistinct(service.name),
-    avg_latency_ms = avg(duration) / 1000000
+    avg_latency_ms = avg(duration) / 1ms
   }
 | fieldsAdd overall_error_rate_pct = (total_errors * 100.0) / total_requests
 ```
@@ -267,7 +267,7 @@ fetch spans, from:-1h
 | summarize {
     requests = count(),
     errors = countIf(span.status_code == "error"),
-    p95_ms = percentile(duration, 95) / 1000000
+    p95_ms = percentile(duration, 95) / 1ms
   }, by:{service.name}
 | fieldsAdd error_rate = (errors * 100.0) / requests
 | sort requests desc

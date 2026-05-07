@@ -57,8 +57,8 @@ The health overview provides a single-pane summary of all database systems. Use 
 fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize total_calls = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
            error_count = countIf(otel.status_code == "ERROR"),
            slow_count = countIf(duration > 500000000),
            unique_databases = countDistinct(db.namespace),
@@ -80,7 +80,7 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter isNotNull(db.system)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
            error_count = countIf(otel.status_code == "ERROR"),
            by:{dt.entity.service}
 | fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")
@@ -98,7 +98,7 @@ Response time monitoring is the most critical aspect of database dashboards. The
 // Dashboard tile: Database response time trend by system (6-hour view)
 fetch spans, from:-6h
 | filter isNotNull(db.system)
-| makeTimeseries p95_ms = percentile(duration, 95) / 1000000.0,
+| makeTimeseries p95_ms = percentile(duration, 95) / 1ms,
                  by:{db.system},
                  interval:5m
 ```
@@ -108,9 +108,9 @@ fetch spans, from:-6h
 fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(server.address)
 | summarize call_count = count(),
-           avg_ms = avg(duration) / 1000000.0,
-           p95_ms = percentile(duration, 95) / 1000000.0,
-           p99_ms = percentile(duration, 99) / 1000000.0,
+           avg_ms = avg(duration) / 1ms,
+           p95_ms = percentile(duration, 95) / 1ms,
+           p99_ms = percentile(duration, 99) / 1ms,
            by:{db.system, server.address, db.namespace}
 | sort p95_ms desc
 | limit 15
@@ -120,9 +120,9 @@ fetch spans, from:-1h
 // Dashboard tile: P50 vs P95 vs P99 comparison — all databases combined
 fetch spans, from:-6h
 | filter isNotNull(db.system)
-| makeTimeseries p50_ms = percentile(duration, 50) / 1000000.0,
-                 p95_ms = percentile(duration, 95) / 1000000.0,
-                 p99_ms = percentile(duration, 99) / 1000000.0,
+| makeTimeseries p50_ms = percentile(duration, 50) / 1ms,
+                 p95_ms = percentile(duration, 95) / 1ms,
+                 p99_ms = percentile(duration, 99) / 1ms,
                  interval:5m
 ```
 
@@ -227,7 +227,7 @@ fetch spans, from:-15m
 | filter duration > 500000000
 | fields timestamp, db.system, db.namespace, db.operation,
         db.statement, server.address,
-        duration_ms = duration / 1000000.0,
+        duration_ms = duration / 1ms,
         dt.entity.service
 | fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")
 | sort duration_ms desc
@@ -238,7 +238,7 @@ fetch spans, from:-15m
 // Alert query: P95 response time exceeding SLO threshold
 fetch spans, from:-6h
 | filter isNotNull(db.system)
-| makeTimeseries p95_ms = percentile(duration, 95) / 1000000.0,
+| makeTimeseries p95_ms = percentile(duration, 95) / 1ms,
                  by:{db.system, server.address},
                  interval:5m
 ```

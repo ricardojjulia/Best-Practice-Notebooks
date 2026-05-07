@@ -1,6 +1,6 @@
 # IAM-05: Boundary Design Patterns
 
-> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 04/27/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 04/30/2026
 
 ## Controlling Data Visibility with Boundaries
 Boundaries determine **what data** users can see. While policies control actions, boundaries filter visibility. This notebook covers boundary syntax, patterns, and implementation strategies.
@@ -227,6 +227,8 @@ ALLOW environment:roles:manage-settings, environment:roles:viewer;
 ## 4. Security Context and Data Partitioning Strategy
 Security contexts and Grail buckets form the foundation of boundary filtering and data partitioning. Plan your strategy carefully.
 
+> **Boundary design vs policy parameterization (read first).** This notebook covers **standalone Boundary resources** — separate IAM objects applied to groups for defense-in-depth scoping. Standalone boundaries are typically per-team with hardcoded scope (one boundary per team), distinct from the **policy WHERE clauses** in IAM-04 which ARE parameterizable via `${bindParam:NAME}` and bound per group. The two layer together: a parameterized policy (the "what" — bound per team) plus a per-team standalone boundary (the "where" — hardcoded per team) gives both scaling and defense-in-depth. See **IAM REFERENCE.md § Policy Parameterization and Boundary Standardization** for the canonical pattern; standardize the boundary FIELD on `dt.security_context` (Gen3) or management zone (Classic) regardless of which layer you're scoping.
+
 ### What is a Security Context?
 
 A **security context** is a label applied to:
@@ -303,47 +305,93 @@ These fields are automatically enriched from infrastructure metadata and provide
 
 ### Bucket + Boundary Integration
 
-Use `storage:bucket-name` in boundaries to restrict team access to their data:
+> **When this combo fits:** the policy + standalone boundary pattern below is well-suited to scenarios where bucket-based scoping is already the right tool — compliance separation (PCI/HIPAA), retention isolation, or hard cost attribution. For general team-scoped data access without one of those reasons, a parameterized policy on `dt.security_context` alone (no bucket-name condition, no standalone boundary) is usually simpler. See **IAM REFERENCE.md § Bucket-Match Overlay** for scenario gating.
+
+When the scenario does fit, the policy carries the **parameterized scope** and the boundary carries the **per-team hardcoded scope** for defense-in-depth. Pair them on the same group.
+
+**Policy (parameterized — one template, bound per team):**
 
 ```
-// Policy: Grant read access to team's bucket
-ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
-ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans"
+// Recommended: parameterized policy template
+ALLOW storage:logs:read  WHERE storage:bucket-name = "${bindParam:log-bucket}";
+ALLOW storage:spans:read WHERE storage:bucket-name = "${bindParam:span-bucket}";
 ```
+
+**Resolved when bound to the checkout group with `{"parameters": {"log-bucket": "checkout_logs", "span-bucket": "checkout_spans"}}`:**
+
+```
+ALLOW storage:logs:read  WHERE storage:bucket-name = "checkout_logs";
+ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans";
+```
+
+**Standalone Gen3 boundary (per-team — hardcoded scope is intentional here):**
 
 ```
 # Gen3 boundary — pair with a Gen3 policy (storage:*, settings:*)
+# One boundary per team; standardize on dt.security_context as the universal field.
 storage:bucket-name IN ("checkout_logs", "checkout_spans");
 storage:dt.security_context IN ("checkout");
 settings:dt.security_context IN ("checkout");
 ```
 
+**Standalone Gen2 boundary (Classic — pair with a Gen2 policy, transitional):**
+
 ```
-# Gen2 boundary — pair with a Gen2 policy (environment:*), transitional
+# Gen2 boundary — management-zone is the Classic universal scoping field
 environment:management-zone IN ("Checkout");
 ```
 
+> **Why the policy is parameterized but the standalone boundary isn't:** policy WHERE clauses support `${bindParam:NAME}` and are bound per group at policy-binding time. Standalone Boundary resources are independent IAM objects — typically one boundary per team with hardcoded scope, attached to the group separately. See **IAM-10** for policy-binding mechanics; see **IAM REFERENCE.md § Anti-patterns** for why parameterizing on entity-type-specific fields (e.g., `host.name`) is the "dead in water" failure mode.
+
 ### Using Buckets for Team Isolation
 
-For team-level data access control:
+> **When this approach fits:** bucket-based team isolation is well-suited to scenarios where the bucket already exists for a specific reason — compliance separation (PCI/HIPAA), retention isolation, hard cost attribution, or hostile multi-tenancy. For general team-scoped access without one of those reasons, a parameterized policy on `dt.security_context` (no buckets, no standalone boundary) is usually simpler. The pattern below applies once you've decided buckets are the right tool. See **IAM REFERENCE.md § Bucket-Match Overlay** for scenario gating.
+
+For team-level data access control (when the bucket scenario fits):
 
 1. **Create team-specific buckets** - `teamA_logs`, `teamA_spans`, etc.
 2. **Configure pipeline routing** - Route data to buckets based on primary Grail fields
-3. **Create bucket-based policies** - Grant access to specific buckets
-4. **Apply boundaries** - Combine bucket + security context restrictions
+3. **Create one parameterized policy** — bound to each team's group with different bucket parameters
+4. **Create one standalone boundary per team** — hardcoded scope, applied per group
+
+**Recommended (parameterized policy + per-team standalone boundary):**
 
 ```
-// Complete team isolation example
+// One parameterized policy template — bound per team
+Policy: tpl-team-data-access (parameterized)
+├── ALLOW storage:logs:read    WHERE storage:bucket-name = "${bindParam:log-bucket}"
+├── ALLOW storage:spans:read   WHERE storage:bucket-name = "${bindParam:span-bucket}"
+└── ALLOW storage:metrics:read WHERE storage:bucket-name = "${bindParam:metric-bucket}"
+
+// One standalone boundary per team — hardcoded scope (defense-in-depth)
+Boundary: bnd-team-checkout
+    storage:bucket-name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
+    storage:dt.security_context IN ("checkout");
+    environment:management-zone IN ("Checkout");
+
+// Group: bind both — policy with team-specific parameters, boundary as-is
 Group: Checkout-Team
-├── Policy: Checkout Data Access
-│   ├── ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
-│   ├── ALLOW storage:spans:read WHERE storage:bucket-name = "checkout_spans"
+├── Policy binding: tpl-team-data-access
+│     parameters: {log-bucket: "checkout_logs", span-bucket: "checkout_spans",
+│                  metric-bucket: "checkout_metrics"}
+└── Boundary attachment: bnd-team-checkout
+```
+
+**Resolved view (what the policy evaluates to for the Checkout-Team group):**
+
+```
+Group: Checkout-Team
+├── Policy: tpl-team-data-access (resolved for this group)
+│   ├── ALLOW storage:logs:read    WHERE storage:bucket-name = "checkout_logs"
+│   ├── ALLOW storage:spans:read   WHERE storage:bucket-name = "checkout_spans"
 │   └── ALLOW storage:metrics:read WHERE storage:bucket-name = "checkout_metrics"
-└── Boundary:
+└── Boundary: bnd-team-checkout (unchanged — per-team hardcoded scope)
     storage:bucket-name IN ("checkout_logs", "checkout_spans", "checkout_metrics");
     storage:dt.security_context IN ("checkout");
     environment:management-zone IN ("Checkout");
 ```
+
+Adding a new team is one boundary YAML + one binding YAML — the policy stays unchanged. See **IAM-10: Templated Policy-Group Assignments** for binding mechanics and **IAM REFERENCE.md § Change-Management Caveat** for why parameter-shape decisions matter at design time.
 
 > **For comprehensive bucket guidance**, see **ORGNZ-03: Bucket Strategy and Design** which covers naming conventions, retention planning, and cost attribution patterns.
 

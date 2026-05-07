@@ -105,7 +105,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 | 39 | Use `spread:` for concurrent problem timelines | `makeTimeseries count = count(), spread: timeframe(from: event.start, to: coalesce(event.end, now()))` | Recommended | DQL Pattern |
 | 40 | Compare incident periods against baselines | Compare same hour yesterday or same day last week using `bin(now(), 24h)` offsets | Critical | Incident Impact |
 | 41 | Filter to business hours for impact assessment | `getDayOfWeek(timestamp) >= 1 AND getDayOfWeek(timestamp) <= 5 AND getHour(timestamp) >= 9 AND getHour(timestamp) < 17` | Recommended | Context |
-| 42 | Convert Dynatrace Intelligence `resolved_problem_duration` from nanoseconds to hours | `toLong(resolved_problem_duration) / 3600000000000.0` — the field is in nanoseconds, not milliseconds | Critical | Data Conversion |
+| 42 | Convert Dynatrace Intelligence `resolved_problem_duration` from nanoseconds to hours | `resolved_problem_duration / 1h` — the field is in nanoseconds, not milliseconds | Critical | Data Conversion |
 | 43 | Exclude duplicate and frequent problems from impact analysis | `filter dt.davis.is_duplicate == false AND dt.davis.is_frequent_event == false` | Critical | Data Quality |
 | 44 | Exclude maintenance windows from SLA calculations | `filter maintenance.is_under_maintenance == false` | Recommended | Data Quality |
 | 45 | Use `sum(toDouble(amount))` for revenue calculations | Always cast `amount` to double before aggregation | Critical | DQL Pattern |

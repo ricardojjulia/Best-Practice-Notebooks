@@ -135,8 +135,8 @@ This notebook consolidates every actionable best practice from the DASH series (
 | 52 | Always specify a time range on fetch | `fetch logs, from:-1h`. Never use bare `fetch logs` | Critical | DASH-01, all |
 | 53 | Filter before aggregating | Place `filter` immediately after `fetch`, never after `sort` or `summarize` | Critical | DASH-01 |
 | 54 | Alias all aggregation results | `summarize c = count()` not `summarize count()`. Required for sort/fieldsAdd references | Critical | All |
-| 55 | Convert span duration to milliseconds | `duration / 1000000` for display. Duration is stored in nanoseconds | Critical | DASH-04, DASH-05 |
-| 56 | Convert detected problem duration to hours | `toLong(resolved_problem_duration) / 3600000000000.0`. Duration is in nanoseconds | Critical | DASH-03 |
+| 55 | Convert span duration to milliseconds | `duration / 1ms` for display. Duration is stored in nanoseconds | Critical | DASH-04, DASH-05 |
+| 56 | Convert detected problem duration to hours | `resolved_problem_duration / 1h`. Duration is in nanoseconds | Critical | DASH-03 |
 | 57 | Use `arrayAvg()` on timeseries results before filter/sort | Timeseries returns arrays, not scalars. Use `fieldsAdd val = arrayAvg(ts)` then `filter val > X` | Critical | DASH-04 |
 | 58 | Use `countIf()` for conditional counts | `errors = countIf(otel.status_code == "ERROR")` instead of separate filter + count | Recommended | DASH-03 |
 | 59 | Calculate error rate as percentage | `100.0 * errors / total`. Always multiply by 100.0 (float), not 100 (int) | Recommended | DASH-04 |

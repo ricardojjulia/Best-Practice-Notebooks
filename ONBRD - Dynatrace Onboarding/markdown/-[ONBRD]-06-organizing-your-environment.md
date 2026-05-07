@@ -1,6 +1,6 @@
 # ONBRD-06: Organizing Your Environment
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 04/04/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
 
 ## Tags, Segments, and Naming Conventions
 As your Dynatrace environment grows, organization becomes critical. This notebook covers how to structure your environment with tags, segments, and naming conventions for maintainability and access control.
@@ -80,7 +80,7 @@ Without organization, Dynatrace environments become difficult to manage:
 
 ### Modern Organization Building Blocks
 
-![Organization Hierarchy](images/organization-hierarchy.png)
+![Organization Hierarchy](images/06-organization-hierarchy.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Layer | Purpose |
 |-------|---------|
@@ -108,7 +108,7 @@ The modern Dynatrace platform (Gen3/Grail) uses a "tag at source" approach rathe
 
 ### The "Enrich at Source" Philosophy
 
-![Modern Tagging Flow](images/tagging-flow.png)
+![Modern Tagging Flow](images/06-tagging-flow.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
 | Stage | Description |
 |-------|-------------|
@@ -212,9 +212,9 @@ Segments are reusable DQL filters that:
 
 1. Go to Observe and explore → Segments
 2. Click "Create segment"
-3. Define your DQL filter:
+3. Define your DQL filter (using current Smartscape/property syntax — `dt.entity.*` is deprecated):
    ```dql
-   dt.entity.host.properties.env == "production"
+   properties.env == "production"
    ```
 4. Name your segment (e.g., "Production Environment")
 5. Save
@@ -225,8 +225,10 @@ Segments are reusable DQL filters that:
 |----------|---------------|---------|
 | **Environment** | `properties.env == "prod"` | Focus on production |
 | **Team** | `properties.team == "checkout"` | Team-specific view |
-| **Application** | `service.name contains "payment"` | Application focus |
+| **Application** | `contains(service.name, "payment")` | Application focus |
 | **Region** | `aws.tag.Region == "us-east-1"` | Geographic filtering |
+
+> **DQL syntax note:** `contains` is a function call — `contains(service.name, "payment")` — not a SQL-style infix operator. The pattern `service.name contains "payment"` is invalid DQL.
 
 ### Segments vs Legacy Management Zones
 
@@ -235,14 +237,16 @@ Segments are reusable DQL filters that:
 | **Filter basis** | DQL expressions | Rule-based matching |
 | **Data types** | All Grail data | Entities only |
 | **Flexibility** | Highly flexible | Limited rule types |
-| **Access control** | Use Policies instead | Built-in |
-| **Modern platform** | ✅ Recommended | ⚠️ Being deprecated |
+| **Access control** | Use Policies + `dt.security_context` instead | Built-in |
+| **Modern platform** | ✅ Recommended | ⚠️ Being phased out — MZ-on-calculated-metrics is on the May-2026 deprecation list |
+
+> **Where to go deeper:** the **ORGNZ series** (11 notebooks) covers segments, buckets, and `dt.security_context` design in depth. The **IAM series** (especially IAM-04, IAM-05, IAM-11 WORKSHOP) covers how policies use `dt.security_context` to scope access. **MZ2POL** (10 notebooks) covers Management Zone → Policy migration if you have legacy MZs to retire.
 
 ### Segment Best Practices
 
 | Practice | Why |
 |----------|-----|
-| **Use host properties** | Consistent filtering |
+| **Use host properties / `dt.security_context`** | Consistent filtering; aligns with IAM scoping |
 | **Name clearly** | `Prod-Checkout-Team` not `Segment1` |
 | **Document purpose** | Add description |
 | **Test filters** | Verify expected data |
@@ -363,19 +367,29 @@ fetch dt.entity.host
 
 With organization in place:
 
-1. **ONBRD-07: Understanding Your Data** - Explore what Dynatrace discovered
+1. **ONBRD-07: Understanding Your Data** — Explore what Dynatrace discovered
 2. Define host properties for your environment
 3. Create segments for team-specific views
 4. Document your naming conventions
+5. Decide your `dt.security_context` value space (and bind IAM policies to it)
+
+### Where to Go Deeper
+
+- **ORGNZ series** (11 notebooks) — Bucket strategy, segments, security context, the full data-organization model
+- **FAQ-01** — Host group naming strategy
+- **FAQ-02** — Tagging sources, standards, and strategy (primary tags vs cloud tags vs auto-tags)
+- **IAM series** (especially IAM-04, IAM-05, IAM-11 WORKSHOP) — Policy design that consumes `dt.security_context`
+- **MZ2POL series** (10 notebooks) — Management Zone → Policy migration for legacy MZ retirement
 
 ### Organization Checklist
 
 - [ ] Host property strategy documented
-- [ ] Properties set on OneAgent installations
-- [ ] Cloud tags verified (if using cloud providers)
+- [ ] Properties + primary tags set at OneAgent install (sprint-1.337+ pattern, see ONBRD-05)
+- [ ] Cloud tags verified (if using cloud providers; see FAQ-02 for cloud-tag normalization)
+- [ ] `dt.security_context` value space decided
 - [ ] Segments created for common filters
-- [ ] Naming conventions established
-- [ ] Access control configured via Policies (see ONBRD-02)
+- [ ] Naming conventions established (FAQ-01 for host groups)
+- [ ] Access control configured via Policies (see ONBRD-02 + IAM series)
 
 ---
 
@@ -384,10 +398,11 @@ With organization in place:
 In this notebook, you learned:
 
 - Why organization matters for scalability
-- The modern "tag at source" approach
+- The modern "tag at source" approach (primary fields + primary tags via OneAgent)
 - How to use host properties and cloud tags
-- How to create and use Segments for filtering
+- How to create and use Segments for DQL-based filtering
 - Naming convention best practices
+- How `dt.security_context` standardizes the boundary field for Gen3 IAM
 - How to query by properties and attributes
 
 ---
@@ -399,6 +414,7 @@ In this notebook, you learned:
 - [Cloud Tags](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-cloud-platforms)
 - [Kubernetes Labels](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 - [DQL Reference](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language)
+- [OneAgent Attribute Enrichment](https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oneagent-attribute-enrichment)
 
 ---
 
