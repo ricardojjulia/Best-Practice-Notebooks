@@ -1,6 +1,6 @@
 # FAQ-02: Tagging — Sources, Standards, and Strategy
 
-> **Series:** FAQ — Frequently Asked Questions | **Reference:** 02 — Tagging Sources, Standards, and Strategy | **Created:** May 2026 | **Last Updated:** 05/06/2026
+> **Series:** FAQ — Frequently Asked Questions | **Reference:** 02 — Tagging Sources, Standards, and Strategy | **Created:** May 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -22,6 +22,7 @@ If you read only one section, read **§5 (Standards)** and **§6 (Strategy)** �
 6. [Strategy Themes](#strategy)
 7. [Anti-Patterns](#anti-patterns)
 8. [Final Recommendation](#final-recommendation)
+9. [Sources and References](#sources)
 
 ---
 
@@ -61,10 +62,12 @@ Inside the OneAgent surface, several distinct concepts share "tag"-adjacent voca
 
 | Concept | Field shape | Example | Set how | Notes |
 |---------|------------|---------|---------|-------|
-| **Primary fields** *(sprint-1.337+)* | Reserved Dynatrace key (`dt.*`) | `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product` | OneAgent install / `oneagentctl --set-host-tag=dt.security_context=value`; or via OpenPipeline enrichment for non-OneAgent sources | Top-level attributes on every signal at ingest. The recommended Gen3-first surface for boundary, cost, and ownership. Ride into Smartscape, IAM, and OpenPipeline routing without parse processors. |
-| **Primary tags** *(sprint-1.337+)* | Customer-defined namespace (`primary_tags.<key>`) | `primary_tags.team`, `primary_tags.environment`, `primary_tags.app` | OneAgent install / `oneagentctl --set-host-tag=primary_tags.team=value` | Also top-level on every signal. Use for dimensions that don't fit a reserved `dt.*` key. |
-| **Custom host tags** *(legacy at-source tag)* | Plain key/value on the host | `Environment:prod`, `Owner:platform-team` | OneAgent install / `oneagentctl --set-host-tag` (no namespace prefix) | Pre-1.337 surface. Still works but lacks the primary-fields propagation guarantees; for new work prefer primary fields/tags. |
+| **Primary fields** *(sprint-1.337+)* | Reserved Dynatrace key (`dt.*`) | `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product` | OneAgent install / `oneagentctl --set-host-property=dt.security_context=<value>` (the documented primary-field assignment form); or via OpenPipeline enrichment for non-OneAgent sources | Top-level attributes on every signal at ingest. The recommended Gen3-first surface for boundary, cost, and ownership. Ride into Smartscape, IAM, and OpenPipeline routing without parse processors. |
+| **Primary tags** *(sprint-1.337+)* | Customer-defined namespace (`primary_tags.<key>`) | `primary_tags.team`, `primary_tags.environment`, `primary_tags.app` | OneAgent install / `oneagentctl --set-host-tag=<value>` for free-form host tags; primary-tag namespace propagation is a Dynatrace convention layered on top | Also top-level on every signal. Use for dimensions that don't fit a reserved `dt.*` key. |
+| **Custom host tags** *(legacy at-source tag)* | Plain key/value on the host | `Environment:prod`, `Owner:platform-team` | OneAgent install / `oneagentctl --set-host-tag=<value>` (no namespace prefix) | Pre-1.337 surface. Still works but lacks the primary-fields propagation guarantees; for new work prefer primary fields/tags. |
 | **Auto-tagging rules** *(legacy, view-time)* | Tag conditions on entities (`Settings → Tags → Automatically applied tags`) | Rule: "if `host.name` matches `^prod-` then tag `Environment=prod`" | Settings 2.0 schema or legacy Configuration API | Computed when an entity is viewed; not present on ingest. **Avoid for new work** — see §7 for why. |
+
+> **`oneagentctl` syntax — primary fields vs tags:** The Dynatrace [oneagentctl reference](https://docs.dynatrace.com/docs/shortlink/oneagentctl) distinguishes between `--set-host-tag=<value>` (free-form host tags, including the `primary_tags.<key>` namespace by convention) and `--set-host-property=<key>=<value>` (reserved Dynatrace properties). The documented example is `oneagentctl --set-host-property=dt.security_context=easytrade_sec`. Use `--set-host-property` for `dt.*` reserved keys; use `--set-host-tag` for ordinary host tags and customer-defined `primary_tags.<key>` values.
 
 ### Why primary fields/tags are the recommended Gen3-first default
 
@@ -93,7 +96,7 @@ Tags arrive in Dynatrace from four sources. Each source is appropriate for some 
 
 | Source | Where set | Field surface in DQL | Best for |
 |--------|-----------|---------------------|----------|
-| **OneAgent — primary fields/tags** | Host install / `oneagentctl --set-host-tag` | `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product`, `primary_tags.<key>` | Stable, host-level dimensions: security boundary, cost center, environment, team, app — anything that should ride on every signal at source |
+| **OneAgent — primary fields/tags** | Host install / `oneagentctl --set-host-property=` (for `dt.*` reserved keys) and `oneagentctl --set-host-tag=` (for free-form tags including `primary_tags.<key>`) | `dt.security_context`, `dt.cost.costcenter`, `dt.cost.product`, `primary_tags.<key>` | Stable, host-level dimensions: security boundary, cost center, environment, team, app — anything that should ride on every signal at source |
 | **Kubernetes labels and annotations** | K8s manifests / Helm / GitOps | `k8s.<resource>.label.<key>` (e.g., `k8s.pod.label.app`, `k8s.namespace.label.team`); annotations available as custom metadata at the process level | Dimensions that vary at the pod / workload / namespace level (more granular than the host) — application name, version, environment within a shared cluster |
 | **Cloud-provider tags** | AWS / Azure / GCP console / IaC tooling | `aws.tag.<key>`, `azure.tag.<key>`, `gcp.label.<key>` plus provider attributes | The **source of record** for cost-allocation and compliance data when the cloud provider is the canonical owner of that information; useful as input to OpenPipeline enrichment that normalizes them into `dt.*` primary fields |
 | **Auto-tagging rules** *(legacy)* | Settings 2.0 schema | View-time tag conditions on entities | Avoid for new work; acceptable only as a stop-gap on legacy tenants pending migration to primary fields |
@@ -357,6 +360,40 @@ Tagging in Dynatrace draws from four sources (OneAgent, Kubernetes, cloud-provid
 - Define the seven-dimension standard (or your organization's adapted version) before the next host onboarding wave
 - Plan the OpenPipeline enrichment processors that normalize cross-cloud tags into `dt.*` canonical fields
 - Cross-reference with FAQ-01 (host group naming strategy) and the IAM / ORGNZ / OPIPE topic series for the consuming patterns
+
+<a id="sources"></a>
+## 9. Sources and References
+
+**Dynatrace official documentation:**
+
+- [oneagentctl reference (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/oneagentctl) — `--set-host-tag` for free-form host tags and `--set-host-property` for reserved Dynatrace properties. The documented primary-field example is `oneagentctl --set-host-property=dt.security_context=easytrade_sec`. Cited in §2 and §3 for the correct syntax distinction
+- [Tags and metadata (Dynatrace docs)](https://docs.dynatrace.com/docs/manage/tags-and-metadata) — the four sources of tags (manual, automated, cloud-imported, K8s-imported) and the distinction between tags and metadata. Cited in §1
+- [Host groups (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — host group concept and the relationship between host-group context and propagation; relevant to where host tags ride through topology. See FAQ-01 for the deep dive
+- [Dynatrace Clouds app (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/clouds-app) — GA / preview status for AWS (GA — both new and classic connections), Azure (classic GA, new connections preview), GCP (classic GA, new connections planned). Cited in §4
+- [Dynatrace OpenTelemetry on AWS Lambda (Dynatrace docs)](https://www.dynatrace.com/support/help/shortlink/opentel-lambda) — AWS Lambda instrumentation and the `DT_TAGS` environment variable surface for primary-tag propagation into Lambda logs and spans
+
+**Cloud-provider tagging best practices (cited inline in §5):**
+
+- [AWS Well-Architected — Tagging Best Practices](https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html) — taxonomy guidance and the canonical seven-dimension tagging surface
+- [Azure — Develop your naming and tagging strategy](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging) — Microsoft's cloud-adoption-framework tagging recommendations
+- [Google Cloud — Best practices for resource labels](https://cloud.google.com/resource-manager/docs/labels-overview) — GCP label naming rules (lowercase, hyphens) and recommended dimensions
+- [FinOps Foundation — Tagging best practices](https://www.finops.org/) — cost-attribution dimensions and tagging governance for FinOps maturity
+
+**Related topic series in this notebook collection (the consuming patterns):**
+
+- **OPIPE series** (`topics/opipe/`) — OpenPipeline enrichment processors for cross-cloud tag normalization and primary-field assignment at ingest
+- **CLOUD series** (`topics/cloud/`) — per-provider integration deep dives (AWS, Azure, GCP) and field mapping reference
+- **IAM series** (`topics/iam/`) — `MATCH(dt.security_context)` boundary patterns; the canonical Gen3 ABAC surface for record-level access
+- **AUTOM series** (`topics/autom/`) — config-as-code for any remaining tag rules (Terraform / Monaco / GitOps)
+- **K8S series** (`topics/k8s/`) — Kubernetes label propagation through DynaKube and OneAgent metadata enrichment
+- **ORGNZ series** (`topics/orgnz/`) — segments and bucket strategy that consume tags as scoping inputs
+
+**Related FAQ entries:**
+
+- [FAQ-01: Why you need a good Host Group naming strategy](-[FAQ]-01-host-group-naming-strategy.ipynb) — the companion question on host-group boundaries; tagging-source-of-truth and host-group naming are decided together
+- [FAQ-03: OneAgent vs OpenTelemetry for Java/Scala](-[FAQ]-03-oneagent-vs-otel-java-scala.ipynb) — primary-field tagging assumes OneAgent presence; FAQ-03 covers when OneAgent is and is not the right tool
+
+**Source currency:** Dynatrace doc shortlinks verified against the live `docs.dynatrace.com` site at the date in the metadata header. Sprint-1.337 / sprint-1.338 claims (primary fields, AWS Lambda `DT_TAGS`, Azure region programmatic naming) are based on Dynatrace SaaS sprint-release notes and the `oneagentctl` command surface; verify against the latest release notes if the tenant is on an older sprint. Cloud-provider best-practice URLs confirmed live.
 
 ---
 
