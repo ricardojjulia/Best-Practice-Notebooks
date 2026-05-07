@@ -21,7 +21,7 @@
 
 ## Why This Module Exists
 
-Three series cover the universal foundation: [ONBRD](../onbrd/), [ORGNZ](../orgnz/), and [IAM](../iam/). They overlap in places — ONBRD has its own basic IAM and basic data-org coverage; the dedicated IAM and ORGNZ series go deeper. This module provides a sequenced reading order so you don't read overlapping content twice and so you know which dedicated series to dive into when ONBRD's coverage isn't sufficient.
+Three series cover the universal foundation: [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/), and [IAM](../IAM%20-%20IAM%20Administration/). They overlap in places — ONBRD has its own basic IAM and basic data-org coverage; the dedicated IAM and ORGNZ series go deeper. This module provides a sequenced reading order so you don't read overlapping content twice and so you know which dedicated series to dive into when ONBRD's coverage isn't sufficient.
 
 Total time for the full Foundation reading: 2–3 weeks for a small to mid-sized team, often run in parallel with first-domain work.
 
@@ -33,9 +33,9 @@ The three series can — and should — be read in parallel rather than strictly
 
 | Week | Reading |
 |---|---|
-| Week 1 | [ONBRD](../onbrd/) notebooks 01–04 + [ORGNZ](../orgnz/) notebooks 01–02 + [IAM](../iam/) notebooks 01–02 |
-| Week 2 | [ONBRD](../onbrd/) notebooks 05–07 + [ORGNZ](../orgnz/) notebooks 03–06 + [IAM](../iam/) notebooks 03–05 |
-| Week 3 | [ONBRD](../onbrd/) notebooks 08–10 + [ORGNZ](../orgnz/) notebook 08 + [IAM](../iam/) notebooks 06–07, 10–11 |
+| Week 1 | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebooks 01–04 + [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebooks 01–02 + [IAM](../IAM%20-%20IAM%20Administration/) notebooks 01–02 |
+| Week 2 | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebooks 05–07 + [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebooks 03–06 + [IAM](../IAM%20-%20IAM%20Administration/) notebooks 03–05 |
+| Week 3 | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebooks 08–10 + [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebook 08 + [IAM](../IAM%20-%20IAM%20Administration/) notebooks 06–07, 10–11 |
 
 Most teams won't read every notebook. The mandatory/recommended/optional flags below let you build a custom reading list.
 
@@ -43,29 +43,29 @@ Most teams won't read every notebook. The mandatory/recommended/optional flags b
 
 ## ONBRD — Onboarding Reading Order
 
-11 notebooks in [ONBRD](../onbrd/). Coverage: tenant orientation, OneAgent and ActiveGate deployment, basic IAM, basic data org, intro DQL, intro alerts, intro dashboards.
+11 notebooks in [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/). Coverage: tenant orientation, OneAgent and ActiveGate deployment, basic IAM, basic data org, intro DQL, intro alerts, intro dashboards.
 
 | # | Notebook | Priority | Notes |
 |---|---|---|---|
 | 01 | First Steps | Mandatory | Tenant orientation, navigation |
-| 02 | IAM and Authentication | Mandatory | Initial users and basic policies; [IAM](../iam/) goes deeper |
+| 02 | IAM and Authentication | Mandatory | Initial users and basic policies; [IAM](../IAM%20-%20IAM%20Administration/) goes deeper |
 | 03 | Deploying ActiveGate | Mandatory | If hybrid or cloud (most customers); skip if pure SaaS-only with no on-prem footprint |
 | 04 | Cloud SaaS Integrations | Recommended | If using AWS, Azure, GCP, or other cloud SaaS sources |
 | 05 | Deploying OneAgent | Mandatory | Core agent deployment |
-| 06 | Organizing Your Environment | Recommended | Tags, host groups, naming; [ORGNZ](../orgnz/) and [FAQ](../faq/) go deeper |
+| 06 | Organizing Your Environment | Recommended | Tags, host groups, naming; [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) and [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) go deeper |
 | 07 | Understanding Your Data | Recommended | Data model orientation: spans, logs, metrics, events |
-| 08 | Your First Queries | Recommended | DQL primer; [SPANS](../spans/), [ORGNZ](../orgnz/), and series-specific docs go deeper |
-| 09 | Setting Up Alerts | Optional | Intro to alerting; [WFLOW](../wflow/) is the canonical series |
-| 10 | Building Dashboards | Optional | Intro to dashboards; [DASH](../dash/) is the canonical series |
+| 08 | Your First Queries | Recommended | DQL primer; [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/), and series-specific docs go deeper |
+| 09 | Setting Up Alerts | Optional | Intro to alerting; [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) is the canonical series |
+| 10 | Building Dashboards | Optional | Intro to dashboards; [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) is the canonical series |
 | 99 | Best Practice Summary | Reference | One-page synthesis |
 
-**Skip-if-already-have:** ONBRD-09 and 10 if you plan to read [WFLOW](../wflow/) and [DASH](../dash/) anyway — they cover the same ground in greater depth.
+**Skip-if-already-have:** ONBRD-09 and 10 if you plan to read [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) and [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) anyway — they cover the same ground in greater depth.
 
 ---
 
 ## ORGNZ — Organize Data Reading Order
 
-11 notebooks in [ORGNZ](../orgnz/). Coverage: Grail buckets, security_context, permissions, segments, enterprise patterns.
+11 notebooks in [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/). Coverage: Grail buckets, security_context, permissions, segments, enterprise patterns.
 
 | # | Notebook | Priority | Notes |
 |---|---|---|---|
@@ -87,7 +87,7 @@ Most teams won't read every notebook. The mandatory/recommended/optional flags b
 
 ## IAM — IAM Administration Reading Order
 
-13 notebooks in [IAM](../iam/). Coverage: governance, SSO, groups, policies, boundaries, lifecycle, audit, multi-environment, parameterized assignments.
+13 notebooks in [IAM](../IAM%20-%20IAM%20Administration/). Coverage: governance, SSO, groups, policies, boundaries, lifecycle, audit, multi-environment, parameterized assignments.
 
 | # | Notebook | Priority | Notes |
 |---|---|---|---|
@@ -102,7 +102,7 @@ Most teams won't read every notebook. The mandatory/recommended/optional flags b
 | 09 | Troubleshooting | Reference | Lookup when something doesn't work |
 | 10 | Templated Policy Assignments | Recommended | Parameterized policies — one policy with binding parameters, not N copies. Strong best practice. |
 | 11 | [WORKSHOP] Policy Persona | Recommended | Hands-on planning exercise |
-| 12 | API Provisioning and Validation | Optional | For automation; tied to [AUTOM](../autom/) |
+| 12 | API Provisioning and Validation | Optional | For automation; tied to [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) |
 | 99 | Best Practice Summary | Reference | One-page synthesis |
 
 **Critical sidebar — parameterized policies:** Notebook 10 introduces a strong best practice: prefer one parameterized policy with binding parameters over N copies of a similar policy with hardcoded scope. Most engagements should adopt this pattern from the start; retrofitting later is painful.
@@ -113,12 +113,12 @@ Most teams won't read every notebook. The mandatory/recommended/optional flags b
 
 | Topic | Light coverage in… | Canonical in… |
 |---|---|---|
-| Initial users and authentication | [ONBRD](../onbrd/) notebook 02 | [IAM](../iam/) notebooks 02–03 |
-| Tags and host groups | [ONBRD](../onbrd/) notebook 06; [FAQ](../faq/) entry 01 | [ORGNZ](../orgnz/) notebook 01; [FAQ](../faq/) entry 02 |
-| Bucket basics | [ONBRD](../onbrd/) notebook 06 | [ORGNZ](../orgnz/) notebooks 02–03 |
-| security_context | (mentioned in IAM-04, 05) | [ORGNZ](../orgnz/) notebook 06 |
-| Policy authoring | [ONBRD](../onbrd/) notebook 02 | [IAM](../iam/) notebooks 04–05 |
-| Gen2 → Gen3 access control | (overview in [ONBRD](../onbrd/)) | [MZ2POL](../mz2pol/) full series |
+| Initial users and authentication | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebook 02 | [IAM](../IAM%20-%20IAM%20Administration/) notebooks 02–03 |
+| Tags and host groups | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebook 06; [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) entry 01 | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebook 01; [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) entry 02 |
+| Bucket basics | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebook 06 | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebooks 02–03 |
+| security_context | (mentioned in IAM-04, 05) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) notebook 06 |
+| Policy authoring | [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) notebook 02 | [IAM](../IAM%20-%20IAM%20Administration/) notebooks 04–05 |
+| Gen2 → Gen3 access control | (overview in [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/)) | [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) full series |
 
 If a topic appears in ONBRD with light coverage and you need depth, dive into the canonical series.
 

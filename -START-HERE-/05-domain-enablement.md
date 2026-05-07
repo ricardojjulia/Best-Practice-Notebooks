@@ -29,12 +29,12 @@ This module is referenced from each of the three doorways. Read it after [Founda
 
 If you plan to enable several domains over a few months, this is a sensible order:
 
-1. **Infrastructure baseline** — [K8S](../k8s/) (if Kubernetes is in scope) or [CLOUD](../cloud/) (AWS / Azure / GCP). One of these is almost always first.
-2. **Distributed tracing** — [SPANS](../spans/). Most modern apps need this next.
-3. **Frontend experience** — [WEBRUM](../webrum/) (web) and/or [MOBL](../mobl/) (mobile).
-4. **Database** — [DBMON](../dbmon/). Often depends on [SPANS](../spans/) for context.
-5. **Synthetic** — [SYNTH](../synth/). Proactive monitoring.
-6. **Business events** — [BIZEV](../bizev/). Revenue and conversion analytics.
+1. **Infrastructure baseline** — [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (if Kubernetes is in scope) or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (AWS / Azure / GCP). One of these is almost always first.
+2. **Distributed tracing** — [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/). Most modern apps need this next.
+3. **Frontend experience** — [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) (web) and/or [MOBL](../MOBL%20-%20Mobile%20Monitoring/) (mobile).
+4. **Database** — [DBMON](../DBMON%20-%20Database%20Monitoring/). Often depends on [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for context.
+5. **Synthetic** — [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/). Proactive monitoring.
+6. **Business events** — [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/). Revenue and conversion analytics.
 
 The order is a guideline, not a rule. Skip what doesn't apply; reorder based on business priority.
 
@@ -42,7 +42,7 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 
 ## Domain Pick-List
 
-### [K8S — Kubernetes Monitoring](../k8s/)
+### [K8S — Kubernetes Monitoring](../K8S%20-%20Kubernetes%20Monitoring/)
 
 15 notebooks. Largest of the domain series.
 
@@ -54,9 +54,9 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Recommended next | 04 (cluster monitoring), 05 (workload monitoring), 06 (namespace organization) |
 | Optional / advanced | 03 (GitOps), 07 (events and logs), 09 (troubleshooting), 11 (multi-tool coexistence), 13 (Kafka monitoring) |
 | Hands-on | Notebook 14 ([LAB] deployment guide) |
-| Cross-references | [OTEL](../otel/) for collector deployment; [CLOUD](../cloud/) for managed K8s; [AUTOM](../autom/) for GitOps |
+| Cross-references | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) for collector deployment; [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) for managed K8s; [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) for GitOps |
 
-### [CLOUD — Cloud Provider Integrations](../cloud/)
+### [CLOUD — Cloud Provider Integrations](../CLOUD%20-%20Cloud%20Provider%20Integrations/)
 
 9 notebooks covering AWS, Azure, and GCP.
 
@@ -67,9 +67,9 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Mandatory entry | Notebook 01 (cloud integration fundamentals) |
 | Recommended next | The provider-specific notebooks for what you have: 02 (AWS), 05 (Azure), 06 (GCP) |
 | Specific use cases | 03 (AWS EKS), 04 (AWS Lambda serverless), 07 (CloudWatch log ingestion), 08 (multi-cloud patterns) |
-| Cross-references | [OTEL](../otel/) for collectors; [K8S](../k8s/) for managed K8s; [OPLOGS](../oplogs/) for cloud log ingestion |
+| Cross-references | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) for collectors; [K8S](../K8S%20-%20Kubernetes%20Monitoring/) for managed K8s; [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) for cloud log ingestion |
 
-### [SPANS — Distributed Tracing and Spans](../spans/)
+### [SPANS — Distributed Tracing and Spans](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/)
 
 9 notebooks.
 
@@ -80,9 +80,9 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Mandatory entry | Notebooks 01 (fundamentals), 02 (querying) |
 | Recommended next | 03 (troubleshooting), 04 (topology), 05 (analytics) |
 | Cost-aware | 07 (buckets and pipeline), 08 (cost optimization) — read once you have meaningful span volume |
-| Cross-references | [OTEL](../otel/), [OPIPE](../opipe/) for span pipelines, [DBMON](../dbmon/) for database call tracing |
+| Cross-references | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) for span pipelines, [DBMON](../DBMON%20-%20Database%20Monitoring/) for database call tracing |
 
-### [WEBRUM — Web Real User Monitoring](../webrum/)
+### [WEBRUM — Web Real User Monitoring](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/)
 
 9 notebooks.
 
@@ -93,9 +93,9 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Mandatory entry | Notebooks 01 (RUM fundamentals), 02 (SPA instrumentation if applicable) |
 | Recommended next | 03 (Core Web Vitals), 04 (session analysis), 06 (performance analysis) |
 | Optional | 05 (error analysis), 07 (session replay), 08 (dashboards and alerting) |
-| Cross-references | [SPANS](../spans/) for frontend-to-backend tracing; [BIZEV](../bizev/); [DASH](../dash/) |
+| Cross-references | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for frontend-to-backend tracing; [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/); [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) |
 
-### [MOBL — Mobile Monitoring](../mobl/)
+### [MOBL — Mobile Monitoring](../MOBL%20-%20Mobile%20Monitoring/)
 
 13 notebooks.
 
@@ -106,22 +106,22 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Mandatory entry | Notebook 01 (fundamentals); platform-specific 02 (iOS) or 03 (Android) or 04 (cross-platform) |
 | Recommended next | 05 (user action tracking), 06 (crash reporting), 07 (network requests) |
 | Optional | 08 (session replay), 09 (privacy), 10 (DQL for mobile), 12 (advanced instrumentation) |
-| Cross-references | [SPANS](../spans/) for mobile-to-backend tracing |
+| Cross-references | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for mobile-to-backend tracing |
 
-### [DBMON — Database Monitoring](../dbmon/)
+### [DBMON — Database Monitoring](../DBMON%20-%20Database%20Monitoring/)
 
 7 notebooks.
 
 | Aspect | Detail |
 |---|---|
-| Prerequisites | OneAgent on database hosts; [SPANS](../spans/) helpful for context |
+| Prerequisites | OneAgent on database hosts; [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) helpful for context |
 | Time | 1–2 weeks |
 | Mandatory entry | Notebook 01 (database monitoring fundamentals) |
 | Recommended next | 02 (SQL databases) or 03 (NoSQL) based on your stack; 05 (query analysis) |
 | Optional | 04 (cache and messaging), 06 (dashboards and alerting) |
-| Cross-references | [SPANS](../spans/) for database call tracing |
+| Cross-references | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for database call tracing |
 
-### [BIZEV — Business Events and Funnel Analysis](../bizev/)
+### [BIZEV — Business Events and Funnel Analysis](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/)
 
 7 notebooks.
 
@@ -132,9 +132,9 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Mandatory entry | Notebooks 01 (business events fundamentals), 02 (instrumentation) |
 | Recommended next | 03 (funnel analysis), 04 (revenue impact), 05 (KPIs and metrics) |
 | Optional | 06 (executive reporting) |
-| Cross-references | [OPIPE](../opipe/) for event pipelines; [DASH](../dash/) for executive reporting; [WEBRUM](../webrum/) for frontend events |
+| Cross-references | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) for event pipelines; [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) for executive reporting; [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) for frontend events |
 
-### [SYNTH — Synthetic Monitoring](../synth/)
+### [SYNTH — Synthetic Monitoring](../SYNTH%20-%20Synthetic%20Monitoring/)
 
 7 notebooks.
 
@@ -145,7 +145,7 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Mandatory entry | Notebook 01 (synthetic fundamentals) |
 | Recommended next | 02 (browser monitors) and/or 03 (HTTP monitors) based on what you check |
 | Optional | 04 (private locations), 05 (network monitoring), 06 (analytics) |
-| Cross-references | [DASH](../dash/) for synthetic dashboards; [WFLOW](../wflow/) for alerting on synthetic failures |
+| Cross-references | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) for synthetic dashboards; [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) for alerting on synthetic failures |
 
 ---
 
@@ -153,7 +153,7 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 
 These three series aren't domains themselves — they're ingestion mechanisms that touch multiple domains. Read them when ingestion design becomes the focus.
 
-### [OTEL — OpenTelemetry Integration](../otel/)
+### [OTEL — OpenTelemetry Integration](../OTEL%20-%20OpenTelemetry%20Integration/)
 
 9 notebooks. Read first if any domain will use OTel collectors (which is most: K8S, CLOUD, custom apps, NR migration).
 
@@ -163,7 +163,7 @@ These three series aren't domains themselves — they're ingestion mechanisms th
 | Recommended next | 04 (trace instrumentation) and/or 05 (metrics) and/or 06 (logs) based on signal type |
 | Reference | 07 (Dynatrace integration), 08 (troubleshooting) |
 
-### [OPLOGS — OpenPipeline Logs](../oplogs/)
+### [OPLOGS — OpenPipeline Logs](../OPLOGS%20-%20OpenPipeline%20Logs/)
 
 9 notebooks. Read when designing log ingestion at scale.
 
@@ -171,10 +171,10 @@ These three series aren't domains themselves — they're ingestion mechanisms th
 |---|---|
 | Mandatory entry | Notebooks 01 (fundamentals), 03 (pipeline processing), 04 (buckets governance) |
 | Recommended next | 05 (querying and parsing), 06 (topology) |
-| Migration | Notebook 02 — if migrating from Classic Logs, also see [OPMIG](../opmig/) full series |
+| Migration | Notebook 02 — if migrating from Classic Logs, also see [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) full series |
 | Optional | 07 (analytics), 08 (security) |
 
-### [OPIPE — OpenPipeline Beyond Logs](../opipe/)
+### [OPIPE — OpenPipeline Beyond Logs](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/)
 
 7 notebooks. Read after OPLOGS when you need to process spans, metrics, or business/security events through OpenPipeline.
 
