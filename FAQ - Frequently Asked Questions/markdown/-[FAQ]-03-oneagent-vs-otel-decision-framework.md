@@ -6,13 +6,15 @@
 
 **The recurring question:**
 
-Teams already running OpenTelemetry on their backends frequently ask two related questions: *Is it worth the effort to convert our existing OTel-instrumented services to Dynatrace OneAgent?* And the sharper version: *If our OTel implementation is working today, do we need OneAgent at all?*
+Three related questions show up repeatedly. Teams already running OpenTelemetry ask: *Is it worth the effort to convert our existing OTel-instrumented services to Dynatrace OneAgent?* And the sharper version: *If our OTel implementation is working today, do we need OneAgent at all?* And from teams starting fresh with nothing instrumented yet: *We have a clean slate — which should we install first, OneAgent or OpenTelemetry?*
 
-Both come down to a level-of-effort versus capability-gain trade-off, and both deserve a frank answer. The answer is the same across every runtime Dynatrace supports — Java, Kotlin, Scala, Groovy, .NET, Node.js, Python, Go, PHP, Ruby — though a handful of runtimes have edge cases (covered in §7 and §14).
+All three come down to a level-of-effort versus capability-gain trade-off, and all three deserve a frank answer. The answer is the same across every runtime Dynatrace supports — Java, Kotlin, Scala, Groovy, .NET, Node.js, Python, Go, PHP, Ruby — though a handful of runtimes have edge cases (covered in §7 and §14).
 
 **Short answer (effort-vs-conversion):** If an application is already emitting OpenTelemetry data and is not running on serverless, **the most cost-effective path is almost always to keep OTel for application instrumentation and add OneAgent alongside it for host, runtime, and infrastructure coverage** — not to convert. The two are complementary, not competing. A wholesale conversion is usually a *deletion* exercise, not a re-instrumentation exercise — and even then, the gain is rarely worth the disruption unless a specific Dynatrace capability is needed that OTel cannot provide on its own.
 
 **Short answer (is OneAgent required at all):** No, not strictly. OTel alone can fully instrument an application and ship to Dynatrace via OTLP — Davis AI works on that data, traces correlate via W3C `traceparent`, and metrics/logs land in Grail. **But OTel-only leaves real gaps** in host metrics, runtime internals (heap / GC / threads / event loop), Smartscape topology, code-level method tracing, and RUM-to-backend stitching. Whether those gaps matter depends on the workload — see §2 for the side-by-side capability table.
+
+**Short answer (greenfield — which one first?):** For a new deployment on a standard OneAgent-supported runtime (Java / .NET / Node.js / Python / PHP) running on long-lived hosts or containers, **install OneAgent first** — time-to-first-trace is measured in minutes, with zero code change, and Smartscape + Davis + framework auto-instrumentation work at full fidelity from day one. Layer OTel in later (or in parallel) when you need custom business spans or vendor-neutral telemetry; the two are designed to coexist (see §8). The exceptions where OTel comes first: **serverless** workloads (OneAgent can't run there), **Go or Ruby** application code (no OneAgent SDK exists), **async-fragmenting runtimes** like Scala effect systems (otel4s / zio-telemetry are technically required — see §7), and any **vendor-portability or multi-backend mandate** (OTel as source of truth, OneAgent as enrichment).
 
 This FAQ frames the trade-offs, the hidden costs, and the workload-specific edge cases — including **async-fragmenting runtimes** (effect systems, coroutines, async/await without explicit context propagation) where the choice has a clear technical answer rather than a preference.
 
@@ -121,7 +123,19 @@ Why Path C (rip-and-replace) is impossible for Python, Go, PHP, Ruby: no OneAgen
 | PHP | `opentelemetry` PECL extension + auto-instrumentation Composer packages | `open-telemetry/api` Composer package |
 | Ruby | `opentelemetry-instrumentation-all` gem | `opentelemetry-api` / `opentelemetry-sdk` |
 
-These two OTel modes are independent — you can use either, both, or neither. "Already instrumented with OTel" usually means a mix: the auto-instrumentation for HTTP/DB plus some manual SDK calls for business logic.
+These OTel modes are independent — you can use any combination, or none. "Already instrumented with OTel" usually means a mix: the auto-instrumentation for HTTP/DB plus some manual SDK calls for business logic.
+
+**JVM has a third delivery model — and it is the one most production teams should prefer.** The auto-instrumentation column above shows the static `-javaagent:` flag, but for JVM workloads there are actually three distinct OTel delivery options, with materially different operational risk profiles:
+
+| Mode | How it loads | Operational characteristics |
+|------|--------------|------------------------------|
+| 1. **SDK in code** | OTel dependencies in `pom.xml` / `build.gradle`; explicit `Tracer` calls in source | Tied to the application build; redeploy needed for instrumentation changes; full control over what is captured |
+| 2. **Static `-javaagent`** | JVM startup flag points at `opentelemetry-javaagent.jar` — auto-instrumentation kicks in before `main()` | Coupled to the JVM start command; if the agent JAR fails to load (bad version, classpath conflict, missing file), the JVM may fail to start, taking the line-of-business application down with it |
+| 3. **Dynamic attach** | A separate process attaches the OTel agent to a running JVM via the JVM `com.sun.tools.attach.VirtualMachine` API after the application has started | Decoupled from application startup — if the instrumentation phase fails, the JVM keeps running and serving traffic. Updates and rollbacks are reversible without touching the application |
+
+**Recommended for production: Option 3 (dynamic attach).** Option 2 places the OTel agent on the critical path of JVM startup — a failed agent load can prevent the JVM from starting and take the workload offline. Option 3 attaches *after* the JVM is live, so a failed instrumentation phase leaves the application running unaffected. The trade-off is operational complexity: you need a sidecar, init container, or platform mechanism that performs the attach.
+
+This is the same model **Dynatrace OneAgent** uses by design — OneAgent's Java code module injects via JVMTI and platform-level hooks against an already-running JVM, never via boot-time `-javaagent`. It is also why OneAgent updates do not require application redeploys: a new agent version attaches at the next workload restart (or via runtime hot-attach in some configurations) without touching the application's start command.
 
 **Dynatrace OneAgent SDKs** (separate, narrow libraries — *not* OneAgent itself) exist per language for adding custom traces inside an application that is *already running under OneAgent*. With no OneAgent attached, the SDK calls become no-ops.
 
