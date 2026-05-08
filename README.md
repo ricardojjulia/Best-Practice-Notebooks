@@ -116,7 +116,7 @@ End-to-end monitoring of SQL, NoSQL, cache, and messaging database platforms.
 Frequently asked questions and answers across the Dynatrace Best-Practice Notebooks series.
 - [FAQ-01: Why you need a good Host Group naming strategy](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-01-host-group-naming-strategy.md) — How host group naming influences access control, alerting, automation, and tenant maintainability
 - [FAQ-02: Tagging — Sources, Standards, and Strategy](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-02-tagging-sources-standards-strategy.md) — The four tag sources, primary tags vs. ordinary tags, and the standards that turn tag sprawl into a managed asset
-- [FAQ-03: OneAgent vs OpenTelemetry for Java/Scala — Convert, Layer, or Leave Alone?](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-03-oneagent-vs-otel-java-scala.md) — Effort-vs-capability trade-offs for OTel-instrumented Java/Scala/Kotlin/Groovy backends, with side-by-side capability gaps and a layering recommendation
+- [FAQ-03: OneAgent vs OpenTelemetry — A Decision Framework](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-03-oneagent-vs-otel-decision-framework.md) — Cross-runtime decision framework for convert vs. layer vs. leave-alone, covering Java, .NET, Node.js, Python, Go, PHP, Ruby, with async context propagation edge cases
 
 ### [IAM - IAM Administration](IAM%20-%20IAM%20Administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
