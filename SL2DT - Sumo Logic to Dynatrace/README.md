@@ -2,11 +2,11 @@
 
 Step-by-step migration path from Sumo Logic to Dynatrace, from strategy and inventory through cutover and decommission.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 ## Structure
-- NOTEBOOKS/ — Dynatrace notebook JSON files
-- PDFs/ — Printable versions of each notebook
+- notebooks/ — Dynatrace notebook JSON files
+- pdfs/ — Printable versions of each notebook
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
@@ -22,7 +22,7 @@ Step-by-step migration path from Sumo Logic to Dynatrace, from strategy and inve
 99. [Summary & Runbook Index](markdown/-[SL2DT]-99-summary-and-runbook-index.md) — Single-page index and reference card for the entire SL2DT series
 
 ## Usage
-1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
+1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
 2. Follow the numbered sequence for a complete migration journey.
 
 ---

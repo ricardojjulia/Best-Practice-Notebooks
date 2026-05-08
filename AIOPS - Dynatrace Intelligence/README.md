@@ -2,11 +2,11 @@
 
 Comprehensive guide to AIOps and Dynatrace Intelligence — Causal AI, Predictive AI, and Generative AI capabilities across the platform.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 ## Structure
-- NOTEBOOKS/ — Dynatrace notebook JSON files
-- PDFs/ — Printable versions of each notebook
+- notebooks/ — Dynatrace notebook JSON files
+- pdfs/ — Printable versions of each notebook
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
@@ -20,7 +20,7 @@ Comprehensive guide to AIOps and Dynatrace Intelligence — Causal AI, Predictiv
 99. [Series Summary](markdown/-[AIOPS]-99-series-summary.md) — DQL query index, cross-series pointers, and next steps for an AIOps initiative
 
 ## Usage
-1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
+1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
 2. Start with the Overview for orientation, then follow the numbered sequence or jump to the topic most relevant to your role.
 
 ---

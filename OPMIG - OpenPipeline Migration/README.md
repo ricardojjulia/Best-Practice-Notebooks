@@ -2,11 +2,11 @@
 
 Structured migration path to Dynatrace OpenPipeline.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 ## Structure
-- NOTEBOOKS/ — Dynatrace notebook JSON files for migration steps
-- PDFs/ — Printable versions of each notebook
+- notebooks/ — Dynatrace notebook JSON files for migration steps
+- pdfs/ — Printable versions of each notebook
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
@@ -22,7 +22,7 @@ Structured migration path to Dynatrace OpenPipeline.
 99. [Best Practice Summary](markdown/-[OPMIG]-99-best-practice-summary.md) — Consolidated best practices from the OPMIG series
 
 ## Usage
-1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
+1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
 2. Follow the numbered order for a complete migration journey.
 
 ---

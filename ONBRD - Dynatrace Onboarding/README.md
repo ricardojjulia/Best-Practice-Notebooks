@@ -2,11 +2,11 @@
 
 Step-by-step onboarding series for new Dynatrace users, from initial setup to dashboards.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 ## Structure
-- NOTEBOOKS/ — Dynatrace notebook JSON files for hands-on walkthroughs
-- PDFs/ — Printable versions of each notebook
+- notebooks/ — Dynatrace notebook JSON files for hands-on walkthroughs
+- pdfs/ — Printable versions of each notebook
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
@@ -23,7 +23,7 @@ Step-by-step onboarding series for new Dynatrace users, from initial setup to da
 99. [Best Practice Summary](markdown/-[ONBRD]-99-best-practice-summary.md) — Consolidated best practices from the ONBRD series
 
 ## Usage
-1. Pick a format: import JSON from NOTEBOOKS/ into Dynatrace, read PDFs/ for print, or open markdown/ for lightweight viewing.
+1. Pick a format: import JSON from notebooks/ into Dynatrace, read pdfs/ for print, or open markdown/ for lightweight viewing.
 2. Follow the numbered order for the recommended learning path.
 
 ---

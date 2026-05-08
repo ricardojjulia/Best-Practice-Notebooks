@@ -2,7 +2,7 @@
 
 Dynatrace best-practice notebooks with matching PDF and Markdown exports. These assets are not officially supported by Dynatrace.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 
 
@@ -15,8 +15,8 @@ Dynatrace best-practice notebooks with matching PDF and Markdown exports. These 
 ## Layout
 
 Each topic follows the same structure:
-- NOTEBOOKS/ — Dynatrace notebook JSON files (import into Dynatrace)
-- PDFs/ — Printable/exported versions of the notebooks
+- notebooks/ — Dynatrace notebook JSON files (import into Dynatrace)
+- pdfs/ — Printable/exported versions of the notebooks
 - markdown/ — Markdown exports of the same content
 - README.md — Topic overview and usage guide
 
@@ -385,8 +385,8 @@ Automating workflows and configuring alert notifications in Dynatrace.
 
 1. Open a topic README for context and prerequisites.
 2. Choose your format:
-	- Import JSON from NOTEBOOKS/ into Dynatrace Notebooks for interactive use.
-	- Read PDFs/ for printable versions.
+	- Import JSON from notebooks/ into Dynatrace Notebooks for interactive use.
+	- Read pdfs/ for printable versions.
 	- Use markdown/ for lightweight viewing or diffs.
 3. Follow the numbered sequence to progress through each series.
 

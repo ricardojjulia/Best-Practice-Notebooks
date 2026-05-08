@@ -2,11 +2,11 @@
 
 Monitoring cloud infrastructure and services across AWS, Azure, and GCP with Dynatrace.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 ## Structure
-- NOTEBOOKS/ — Dynatrace notebook JSON files
-- PDFs/ — Printable versions of each notebook
+- notebooks/ — Dynatrace notebook JSON files
+- pdfs/ — Printable versions of each notebook
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
@@ -21,7 +21,7 @@ Monitoring cloud infrastructure and services across AWS, Azure, and GCP with Dyn
 99. [Best Practice Summary](markdown/-[CLOUD]-99-best-practice-summary.md) — Consolidated best practices from the CLOUD series
 
 ## Usage
-1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
+1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
 2. Start with Cloud Integration Fundamentals to understand the architecture and integration models.
 3. Follow the cloud-specific notebooks to connect your AWS, Azure, or GCP environments.
 4. Explore multi-cloud patterns to coordinate observability across your cloud estate.

@@ -2,11 +2,11 @@
 
 Client-side monitoring and observability for web applications with session replay and performance metrics.
 
-> **Recommended:** Import the JSON files from NOTEBOOKS/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
+> **Recommended:** Import the JSON files from notebooks/ into a Dynatrace tenant for the best experience. These notebooks contain interactive DQL queries that execute against your environment's data.
 
 ## Structure
-- NOTEBOOKS/ — Dynatrace notebook JSON files
-- PDFs/ — Printable versions of each notebook
+- notebooks/ — Dynatrace notebook JSON files
+- pdfs/ — Printable versions of each notebook
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
@@ -21,7 +21,7 @@ Client-side monitoring and observability for web applications with session repla
 99. [Best Practice Summary](markdown/-[WEBRUM]-99-best-practice-summary.md) — Consolidated best practices from the WEBRUM series
 
 ## Usage
-1. Choose a format: import JSON from NOTEBOOKS/, read PDFs/ for print, or view markdown/ for lightweight browsing.
+1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
 2. Start with Web RUM Fundamentals to understand how client-side monitoring works.
 3. Instrument your web applications and explore the data model with DQL queries.
 4. Create dashboards for end-user experience monitoring and set up alerts for performance degradation.
