@@ -13,6 +13,8 @@ Frequently asked questions and answers across the Dynatrace Best-Practice Notebo
 1. [Why you need a good Host Group naming strategy](markdown/-[FAQ]-01-host-group-naming-strategy.md) — How host group naming influences access control, alerting, automation, and tenant maintainability
 2. [Tagging — Sources, Standards, and Strategy](markdown/-[FAQ]-02-tagging-sources-standards-strategy.md) — The four tag sources, primary tags vs. ordinary tags, and the standards that turn tag sprawl into a managed asset
 3. [OneAgent vs OpenTelemetry — A Decision Framework](markdown/-[FAQ]-03-oneagent-vs-otel-decision-framework.md) — Cross-runtime decision framework for convert vs. layer vs. leave-alone vs. greenfield, covering Java, .NET, Node.js, Python, Go, PHP, Ruby, with async context propagation edge cases and JVM dynamic-attach guidance
+4. [Managing OneAgent Updates on SaaS](markdown/-[FAQ]-04-managing-oneagent-updates-saas.md) — Update mechanism, the three modes, tenant/host-group/host precedence, update vs. maintenance windows, the DynaKube `autoUpdate` deprecation, validation, rollback, and common pitfalls
+5. [Managing ActiveGate Updates on SaaS](markdown/-[FAQ]-05-managing-activegate-updates-saas.md) — Auto-update vs manual decision, ActiveGates-before-OneAgents sequencing, HA-pair rolling updates, role-specific considerations (routing, synthetic, EF 2.0, cloud), validation, rollback, and common pitfalls
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.

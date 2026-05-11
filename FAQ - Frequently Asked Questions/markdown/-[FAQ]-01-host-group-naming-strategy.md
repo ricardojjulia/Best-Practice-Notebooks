@@ -1,6 +1,6 @@
 # FAQ-01: Why you need a good Host Group naming strategy
 
-> **Series:** FAQ — Frequently Asked Questions | **Reference:** 01 — Host Group Naming Strategy | **Created:** May 2026 | **Last Updated:** 05/07/2026
+> **Series:** FAQ — Frequently Asked Questions | **Reference:** 01 — Host Group Naming Strategy | **Created:** May 2026 | **Last Updated:** 05/09/2026
 
 ## Overview
 
@@ -26,7 +26,6 @@ This FAQ entry consolidates the case for taking host group naming seriously, the
 10. [How a Strong Strategy Compounds as Your Environment Grows](#scaling)
 11. [Recommended Design Principles](#design-principles)
 12. [Final Recommendation](#final-recommendation)
-13. [Sources and References](#sources)
 
 ---
 
@@ -105,7 +104,12 @@ For environments where SVG doesn't render
 For environments where SVG doesn't render
 -->
 
-This rollup is also why retroactive restructuring is disruptive: changing a host's group recomputes topology context for every process group, service, and SLO downstream of it. Defining good host groups up front means the entire entity tree is correctly scoped from day one.
+This rollup is also why retroactive restructuring is disruptive: changing a host's group recomputes topology context for every process group, service, and SLO downstream of it. The concrete cost — per the `oneagentctl` reference, *"Using `--set-host-group` requires restart of OneAgent, as well as restart of all the monitored services"* — means moving a host between groups is not just a metadata change; the agent and every monitored service on that host restart. Defining good host groups up front means the entire entity tree is correctly scoped from day one.
+
+> <sub>**Sources:**</sub>
+> - <sub>[Host groups (DT docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — *"When the same process is running in two different host groups, Dynatrace will create one process group for each host group"*; basis for per-host-group thresholds, alerting overrides, OneAgent update settings, and management-zone integration</sub>
+> - <sub>[Process groups and process group instances (DT docs)](https://docs.dynatrace.com/docs/shortlink/process-groups) — PG / PGI distinction; default detection rules</sub>
+> - <sub>[oneagentctl (DT docs)](https://docs.dynatrace.com/docs/shortlink/oneagentctl) — *"Using `--set-host-group` requires restart of OneAgent, as well as restart of all the monitored services"*</sub>
 
 <a id="ownership"></a>
 ## 2. Consideration #1: Clear Ownership and Operational Accountability
@@ -122,7 +126,9 @@ This rollup is also why retroactive restructuring is disruptive: changing a host
 - Teams can quickly identify "their" hosts
 - Operational accountability becomes clear and auditable
 
-**Impact:** Faster incident triage and fewer ownership disputes.
+**Impact:** In community practice, the most consistent benefit teams report after moving off a single host group is faster incident triage and fewer ownership disputes — verify against your own MTTR data.
+
+> <sub>**Sources:** [Host groups (DT docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — host-group as the documented boundary for ownership and operational scoping.</sub>
 
 <a id="access-control"></a>
 ## 3. Consideration #2: Access Control and Visibility Boundaries
@@ -145,6 +151,10 @@ Dynatrace supports role-based visibility controls, but those controls require **
 
 > **Note on scoping mechanism choice:** For data-access ABAC, modern Gen3 Dynatrace tenants standardize on `dt.security_context` as the primary boundary field (see the IAM topic series). Host groups are still load-bearing for *operational* scoping — process detection, threshold tuning, alert routing, automation blast radius — even when `dt.security_context` is the boundary used for record-level data access. The two work together rather than competing.
 
+> <sub>**Sources:**</sub>
+> - <sub>[Identity & access management (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management) — IAM umbrella; subpages for individual policy / permission topics</sub>
+> - <sub>[Permission management — management zones (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/management-zones) — host-group-driven management zones as IAM scope</sub>
+
 <a id="alerting"></a>
 ## 4. Consideration #3: Alerting Accuracy and Notification Routing
 
@@ -158,9 +168,11 @@ Alerting effectiveness depends on correctly scoping **who owns what**.
 
 **With a strong naming strategy:**
 
-- Alerts can be associated with responsible teams or services
+- Alerts can be routed to responsible teams via management zones built on top of the host-group structure
 - Notification logic is simpler and more reliable
 - Alert fatigue is reduced
+
+**Mechanic clarification:** Alerting profiles scope on management zone filters and severity-rule tag matching, *not* directly on host groups. Per-host-group routing is achieved by building management zones on top of the host-group structure — the host group provides the boundary; the management zone exposes it to alerting profiles, dashboards, and IAM policies.
 
 **Impact:** Better signal-to-noise ratio and faster response times.
 
@@ -173,6 +185,10 @@ Alerting effectiveness depends on correctly scoping **who owns what**.
 | Host groups | Owning team only (e.g., `app-pci` → app team) |
 For environments where SVG doesn't render
 -->
+
+> <sub>**Sources:**</sub>
+> - <sub>[Alerting profiles (DT docs)](https://docs.dynatrace.com/docs/shortlink/alerting-profiles) — alerting profile scope is management-zone filter + severity-rule tag matching</sub>
+> - <sub>[Host groups (DT docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — host-group structure underlying management-zone definitions</sub>
 
 <a id="operations"></a>
 ## 5. Consideration #4: Operational Efficiency and Troubleshooting
@@ -191,7 +207,7 @@ As environments grow, simplicity becomes critical.
 - Views and dashboards remain readable and purposeful
 - New team members orient faster
 
-**Impact:** Lower operational overhead and reduced cognitive load.
+**Impact:** In community practice, lower operational overhead and reduced cognitive load — the magnitude depends heavily on host count, team count, and how tightly dashboards are scoped today.
 
 <a id="automation"></a>
 ## 6. Consideration #5: Automation Scope and Risk Containment
@@ -221,6 +237,8 @@ Dynatrace automation and integrations assume **controlled targeting**.
 | Host groups | Bounded per group | Incremental: nonprod → prod → regulated last |
 For environments where SVG doesn't render
 -->
+
+> <sub>**Sources:** [Host groups (DT docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — host-group as scoping boundary for automation rules, anomaly detection, and Dynatrace Configuration as Code targets.</sub>
 
 <a id="scalability"></a>
 ## 7. Consideration #6: Tenant Scalability and Long-Term Maintainability
@@ -252,7 +270,7 @@ If the tenant remains on a single host group or relies on ad-hoc naming:
 - Operational complexity will grow with scale
 - Structural remediation will eventually be required — and painful
 
-These issues grow **linearly with host count and team count**.
+In community practice, these issues compound roughly with host count and team count — verify the slope in your own environment, since it depends on how many automation rules, alerting profiles, and policies the tenant carries.
 
 <a id="benefits-strong"></a>
 ## 9. Benefits of a Strong Naming Strategy
@@ -324,6 +342,10 @@ Exact naming conventions are less critical than **consistency and intent**. A fe
 - **Naming by hardware traits** (e.g., `4cpu-hosts`) — encodes a property that changes; rename burden as workloads scale
 - **Naming by datacenter/region only** — usually too coarse for ownership; combine with env or app
 - **Naming by individual or short-lived team name** — tied to org churn, not to the workload
+- **Names starting with `dt.`** — reserved for Dynatrace-internal properties; explicitly forbidden by the host-groups documentation
+- **Names exceeding 100 characters** — exceeds the documented host-name maximum
+
+> <sub>**Sources:** [Host groups (DT docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — naming constraints (alphanumeric, hyphens, underscores, periods; cannot start with `dt.`; 100-character maximum); assignment via `oneagentctl --set-host-group=<name>`.</sub>
 
 <a id="final-recommendation"></a>
 ## 12. Final Recommendation
@@ -354,30 +376,6 @@ Host groups are the root of context for everything Dynatrace observes — proces
 - Define the naming convention before the next host onboarding wave
 - Document the convention alongside your IAM policy patterns (see IAM topic series) and bucket strategy (see ORGNZ topic series)
 - Pilot any structural changes in nonprod groups first
-
-<a id="sources"></a>
-## 13. Sources and References
-
-**Dynatrace official documentation:**
-
-- [Host groups (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/host-groups) — host group concept, naming constraints (alphanumeric, hyphens, underscores, periods; cannot start with `dt.`; 100-character maximum), assignment via `oneagentctl --set-host-group=<name>`. The doc explicitly states *"when identical processes run in different host groups, Dynatrace will create one process group for each host group"* — this is the authoritative basis for per-host-group thresholds, alerting overrides, OneAgent update settings, and management-zone integration described in §1
-- [Process groups and process group instances (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/process-groups) — PG / PGI distinction; default detection rules; reference to host groups as a means to separate clusters into different process groups
-- [oneagentctl reference (Dynatrace docs)](https://docs.dynatrace.com/docs/shortlink/oneagentctl) — `--set-host-group`, `--set-host-tag`, and `--set-host-property` post-install commands. The `--set-host-property=dt.security_context=<value>` form is the documented primary-field assignment surface referenced in §3
-- [Tags and metadata (Dynatrace docs)](https://docs.dynatrace.com/docs/manage/tags-and-metadata) — sources of tags in Dynatrace and how they relate to host groups for downstream consumption
-
-**Related topic series in this notebook collection (the consuming patterns):**
-
-- **ORGNZ series** (`topics/orgnz/`) — bucket strategy, segments, and the `dt.security_context` ABAC boundary; see ORGNZ-99 for the consolidated DQL reference
-- **IAM series** (`topics/iam/`) — IAM policies, `MATCH`-clause boundary patterns, persona/policy mapping, host-group-aware access scoping
-- **ONBRD series** (`topics/onbrd/`) — Dynatrace onboarding fundamentals and tenant standup checklist; host-group naming is part of standup
-- **K8S series** (`topics/k8s/`) — Kubernetes monitoring with DynaKube; how K8s context interacts with host-group context for hybrid VM/pod environments
-
-**Related FAQ entries:**
-
-- [FAQ-02: Tagging — Sources, Standards, and Strategy](-[FAQ]-02-tagging-sources-standards-strategy.ipynb) — companion question on tagging dimensions; host-group naming and tag-source-of-truth are decided together
-- [FAQ-03: OneAgent vs OpenTelemetry for Java/Scala](-[FAQ]-03-oneagent-vs-otel-java-scala.ipynb) — host-group-driven topology depends on OneAgent presence; FAQ-03 covers when OneAgent is and is not the right tool
-
-**Source currency:** Dynatrace doc shortlinks verified against the live `docs.dynatrace.com` site at the date in the metadata header. Specific claims about per-host-group threshold scoping, OneAgent update settings, and management-zone integration are taken directly from the host-groups documentation. The IAM `dt.security_context` boundary and `--set-host-property` syntax are taken directly from the oneagentctl reference.
 
 ---
 
