@@ -1,6 +1,6 @@
 # AUTOM-03: Monaco Configuration-as-Code
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 05/11/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
 
 Monaco (Monitoring as Code) is Dynatrace's official CLI tool for configuration management. It uses YAML files to define configurations and supports version control, CI/CD integration, and multi-environment deployments.
 
@@ -484,21 +484,38 @@ monaco deploy manifest.yaml --group web-application
 <a id="next-steps"></a>
 ## 7. Next Steps
 
-### When to Consider Terraform
+### Monaco in a CI/CD Pipeline (the most common next step)
 
-| Scenario | Tool Choice |
-|----------|-------------|
-| Config-only management | Monaco |
-| Part of larger IaC stack | Terraform |
-| Need state file management | Terraform |
-| Drift detection required | Terraform |
-| Simple GitOps workflow | Monaco |
+Monaco itself is a CLI — to make it part of a GitOps flow, wire it into your CI/CD platform of choice. **AUTOM-07: CI/CD Integration** has the recipe per platform:
+
+| Platform | AUTOM-07 section |
+|---|---|
+| GitHub Actions | §3 GitHub Actions |
+| GitLab CI/CD | §4 GitLab CI/CD |
+| Bitbucket Pipelines | §5.1 Bitbucket Pipelines — Monaco Deploy |
+| Atlassian Bamboo | §6 Atlassian Bamboo — adapt the Plan Specs YAML to call `monaco deploy` |
+| Azure DevOps | §7 Azure DevOps Pipelines — adapt the Pipeline YAML to call `monaco deploy` |
+
+For the **full sequenced path** from zero to a working pipeline, see **AUTOM-01 §6 First-Time Setup Path — Path B (Monaco target)**.
+
+### When to Consider Adding Terraform
+
+| Scenario | Why Terraform wins |
+|----------|--------------------|
+| Cross-system orchestration (cloud + Dynatrace + Git in one apply) | Monaco is Dynatrace-only |
+| State management + drift detection on critical resources | Monaco has no state file; drift detection happens via plan-reapply rather than state diffing |
+| Part of larger IaC stack | Existing Terraform workflows extend naturally to Dynatrace |
+| Lifecycle protections (`prevent_destroy`, `ignore_changes`) | Monaco has no per-resource lifecycle policy |
+
+For the framing of when a Terraform shop should *also* adopt Monaco (the reverse direction), see **AUTOM-01 §5: When a Terraform Shop Should Add Monaco**.
 
 ### Continue the Series
 
 | Next Notebook | Focus |
 |---------------|-------|
-| **AUTOM-04: Terraform Provider** | Infrastructure-as-code approach |
+| **AUTOM-04: Terraform Provider** | Infrastructure-as-code approach to Dynatrace configuration |
+| **AUTOM-07: CI/CD Integration** | GitOps patterns for both Monaco and Terraform |
+| **AUTOM-08: Migration Automation** | Tenant-to-tenant migration including `monaco download` |
 
 ### Additional Resources
 
@@ -517,11 +534,11 @@ In this notebook, you learned:
 - Creating and deploying configurations via YAML
 - Advanced features like dependencies, overrides, and groups
 
-> **Key Takeaway:** Monaco is ideal for teams wanting GitOps-style configuration management. It provides the right balance of simplicity and power for most Dynatrace automation needs.
+> **Key Takeaway:** Monaco is ideal for teams wanting GitOps-style configuration management. It provides the right balance of simplicity and power for most Dynatrace automation needs. For the from-zero-to-pipeline sequence, see **AUTOM-01 §6** Path B.
 
 ---
 
-*Continue to **AUTOM-04: Terraform Provider** to learn infrastructure-as-code patterns.*
+*Continue to **AUTOM-04: Terraform Provider** to learn infrastructure-as-code patterns, or jump to **AUTOM-07: CI/CD Integration** to wire Monaco into a pipeline now.*
 
 ## Community Resources & Examples
 

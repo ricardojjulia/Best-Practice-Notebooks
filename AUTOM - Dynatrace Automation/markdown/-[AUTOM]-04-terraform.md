@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/11/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -1015,33 +1015,72 @@ These approaches **do not** overcome the v1 API limitation:
 <a id="next-steps"></a>
 ## 8. Next Steps
 
-### Terraform Export Utility
+### Terraform Export Utility — the canonical "bulk-import existing tenant config" path
 
-The provider binary itself can export existing Dynatrace configuration to HCL `.tf` files:
+The provider binary itself can export existing Dynatrace configuration directly to HCL `.tf` files. **This is different from `terraform import`** (the Terraform CLI feature, which is per-resource and requires you to author matching HCL skeleton first). The provider's `-export` produces ready-to-use HCL in one command:
 
 ```bash
-# Download the provider binary and use it as an export tool
-# See: https://dt-url.net/h203qmc
+# Linux
+./terraform-provider-dynatrace -export [options] [resourcename[=id]]
 
-# Export all configurations
-terraform-provider-dynatrace \
-  -export \
-  -id all \
-  -target-folder ./exported-config
+# Windows
+terraform-provider-dynatrace.exe -export [options] [resourcename[=id]]
 ```
 
-> **Environment variables required:** Set `DYNATRACE_ENV_URL` and `DYNATRACE_API_TOKEN` (and optionally `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` for Gen3/IAM resources) before running the export.
+Executable typically lives at `.terraform/providers/registry.terraform.io/dynatrace-oss/dynatrace/{version}/{os}/terraform-provider-dynatrace_x.y.z/` after `terraform init`.
+
+**Required env vars:**
+
+- `DYNATRACE_TENANT` — environment identifier
+- **Auth:** Platform Token or OAuth client. For Gen3/IAM resources, set `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID`.
+- `DYNATRACE_TARGET_FOLDER` (optional) — output directory; defaults to `.configuration/`
+
+**Output structure:**
+
+- Default: module structure (one directory per resource family)
+- `-flat` flag: single-directory HCL
+- `.flawed/` — deprecated configs requiring modification
+- `.required_attention/` — items missing essentials (e.g., credential payloads the API can't return); triage before committing
+
+**Caveats:**
+
+- **Dashboards excluded by default** — opt in by naming the resource explicitly, or use `-list-exclusions` to see the full opt-in list
+- Sensitive data (e.g., `dynatrace_credentials` confidential strings) lands in `.required_attention/`
+
+See [Terraform CLI commands (DT docs)](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/terraform-cli-commands) for the full reference.
+
+### From Export to GitOps Pipeline — the sequence
+
+Running `-export` is step 3 of the full setup path. The remaining steps:
+
+1. ✅ Install Terraform CLI (this notebook §2)
+2. ✅ Configure provider + combined auth (this notebook §3)
+3. ✅ Run `terraform-provider-dynatrace -export` (above) → triage `.flawed/` + `.required_attention/`
+4. **Stand up the repo layout** — see **AUTOM-09 §2 Opinionated Repo Layout** (single-repo or two-repo model)
+5. **Configure the state backend** — see **AUTOM-09 §3 State Backend Setup** (S3+DynamoDB / GCS / Azure / HCP)
+6. **Add lifecycle protections** on critical resources — see **AUTOM-09 §9 Lifecycle Protections**
+7. **Wire up CI/CD** — pick your platform from **AUTOM-07**: §3 GitHub Actions · §4 GitLab CI/CD · §5 Bitbucket Pipelines · §6 Atlassian Bamboo · §7 Azure DevOps Pipelines
+8. **Onboard app teams** — see **AUTOM-09 §10 Onboarding New App Teams**
+
+For the full sequenced path from "no automation today" to "PR-driven plan-then-apply pipeline," see **AUTOM-01 §6 First-Time Setup Path — Path A (Terraform target)**.
+
+### When Monaco Belongs Alongside Terraform
+
+A Terraform shop doesn't need Monaco for most use cases, but five specific patterns make Monaco worth adding. See **AUTOM-01 §5: When a Terraform Shop Should Add Monaco**.
 
 ### Continue the Series
 
 | Next Notebook | Focus |
 |---------------|-------|
-| **AUTOM-05: Dynatrace Workflows** | Event-driven automation |
+| **AUTOM-09: Terraform GitOps Setup Recipe** | Repo layout, state backends, modules, multi-env, lifecycle, onboarding, operational realities |
+| **AUTOM-07: CI/CD Integration** | GitOps patterns for both Monaco and Terraform across 5 CI/CD platforms |
+| **AUTOM-05: Dynatrace Workflows** | Event-driven automation (different concern; complementary, not alternative) |
 
 ### Additional Resources
 
-- [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) (v1.93.0, March 2026)
+- [Terraform Provider Documentation](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs) (v1.96.0, May 2026)
 - [Provider GitHub Repository](https://github.com/dynatrace-oss/terraform-provider-dynatrace)
+- [Terraform CLI commands (DT docs)](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/terraform-cli-commands) — `-export` utility reference
 - [Terraform Style Guide](https://developer.hashicorp.com/terraform/language/style)
 - [Dynatrace OAuth Client Guide](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/guides/create-oauth-client)
 
@@ -1058,12 +1097,13 @@ In this notebook, you learned:
 - Why Synthetic monitors require classic API tokens (v1 API limitation) and workaround patterns
 - IAM policy management for schema-level access restrictions
 - Brokered self-service as the recommended pattern for governed Synthetic access
+- The provider's built-in `-export` utility for bulk-importing an existing tenant's configuration
 
-> **Key Takeaway:** Use Service User + OAuth for Gen3 resources where IAM provides real scoped access. For Synthetic monitors (v1 API), use brokered self-service with compensating controls — never distribute environment-wide write tokens directly to teams.
+> **Key Takeaway:** Use Service User + OAuth for Gen3 resources where IAM provides real scoped access. For Synthetic monitors (v1 API), use brokered self-service with compensating controls — never distribute environment-wide write tokens directly to teams. For first-time setup, see **AUTOM-01 §6 Path A** for the sequenced from-zero-to-pipeline path.
 
 ---
 
-*Continue to **AUTOM-05: Dynatrace Workflows** to learn event-driven automation.*
+*Continue to **AUTOM-09: Terraform GitOps Setup Recipe** for the repo layout + state backend + lifecycle protections + team onboarding, or jump to **AUTOM-07: CI/CD Integration** to wire Terraform into a pipeline.*
 
 ## Community Resources & Examples
 
