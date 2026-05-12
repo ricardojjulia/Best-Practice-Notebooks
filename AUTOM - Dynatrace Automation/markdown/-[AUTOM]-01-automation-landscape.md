@@ -1,6 +1,6 @@
 # AUTOM-01: Automation Landscape
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 05/11/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
 
 Dynatrace provides multiple ways to automate configuration management and operational tasks. This series covers all major automation options, helping you choose the right approach for your needs.
 
@@ -183,12 +183,12 @@ Official client libraries for programmatic access to Dynatrace APIs.
 
 | Use Case | Recommended Tool | Why |
 |----------|------------------|-----|
-| One-off configuration change | Settings API | Simple, direct |
-| Repeatable deployments | Monaco | Version-controlled YAML |
-| Full environment provisioning | Terraform | State management, drift detection |
-| Auto-remediation | Workflows | Event-driven, built-in |
-| Custom application | SDK | Type-safe, maintainable |
-| Tenant migration | Monaco | Download/deploy pattern |
+| One-off configuration change | Settings API | No setup overhead — just a curl. Other tools require authoring + state |
+| Repeatable deployments | Monaco | One manifest → N tenants, no per-env state. Terraform can do this via directory-per-env (see AUTOM-09 §6) but with more setup |
+| Full environment provisioning | Terraform | Cross-system orchestration — cloud (AWS/Azure/GCP) + Dynatrace + Git in one apply. Monaco is Dynatrace-only |
+| Auto-remediation | Workflows | Built-in event triggers (problem detected → action). Settings API / SDK require building event subscription yourself |
+| Custom application | SDK | Programmatic access — Monaco/Terraform are declarative-config tools, not application frameworks |
+| Tenant migration | Monaco | `monaco download` pulls every config in one command. `terraform import` is per-resource and requires authoring matching HCL first |
 | GitOps pipeline | Monaco or Terraform | CI/CD integration |
 
 ### Team Skill Considerations
