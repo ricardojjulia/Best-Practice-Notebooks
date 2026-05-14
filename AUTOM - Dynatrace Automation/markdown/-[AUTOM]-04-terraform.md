@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/13/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -322,6 +322,205 @@ To manage **all** resources that require OAuth authentication, create an OAuth c
 > **Security:** Never commit OAuth client secrets or API tokens to version control. Use environment variables, HashiCorp Vault, AWS Secrets Manager, or your CI/CD platform's secret store.
 
 > **Note on scope formats:** API token scopes use dot notation (`settings.read`, `settings.write`). OAuth scopes and IAM policy actions use colon notation (`settings:objects:read`, `settings:objects:write`). These are different identifiers for the same capability in different auth contexts.
+
+<a id="service-user-credentials"></a>
+### Service User Credentials for Terraform — Platform Token vs Classic API Token
+
+A common enterprise pattern: run Terraform as a **Service User** so the automation is not tied to any individual human. Two questions follow:
+
+1. Which token type does the Service User hold — Platform Token, classic API Token, or both?
+2. What permissions need to align for it to work?
+
+#### The three-things-align model (Platform Token on a Service User)
+
+When a Platform Token is created **on behalf of** a Service User, three independent things must line up — granting just one is the common mistake:
+
+| # | What | Who grants it | Why it's needed |
+|---|------|---------------|-----------------|
+| 1 | **Service User's IAM permissions** | Account admin (group/policy) | The bearer can only do what the assigned user is permitted to do. |
+| 2 | **Creator's `iam:service-users:use`** (optionally `iam:service-user-email`) | Account admin | The human creating the token must be allowed to mint one *on behalf of* that service user. |
+| 3 | **Token scope selection at creation time** | Token creator | Effective permission = token scopes ∩ assigned user's IAM permissions. Missing the right scope at creation produces silent permission denials. |
+
+Verbatim from the [Platform Tokens docs (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens): *"A platform token will only work within the limits of the assigned user's permissions. This means that a selected scope is only granting access if that user has the respective permissions."*
+
+#### Decision: Which token does the Service User need for your Terraform resources?
+
+Map your resource mix to the token type the Service User should hold:
+
+| Resource the Service User manages | Service User token to issue | Why |
+|-----------------------------------|------------------------------|-----|
+| Settings 2.0 (management zones, auto-tags, alerting, SLO v2) | Platform Token (`dt0s16`) | Platform Token service catalog includes `settings`. |
+| Gen3 Platform (workflows, documents, segments, OpenPipeline) | Platform Token (`dt0s16`) with `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` | Platform Token service catalog includes `automation`, `document`, `storage`. |
+| Synthetic monitors, SLO v1, legacy config APIs | Classic API Token (`dt0c01`) | Provider v1.88.0+ requires classic API Token for these resources. |
+| **Access Tokens (the `dynatrace_api_token` resource itself)** | **Classic API Token (`dt0c01`) — see disclaimer below** | Documented requirement: `apiTokens.read` + `apiTokens.write` scopes, which are classic-API-Token scopes. |
+| Account Management / IAM (policies, groups, service users) | OAuth Client + `DT_ACCOUNT_ID` | IAM resources are account-level; Platform Token cannot manage them. |
+
+#### Special case — Terraform minting Access Tokens (`dynatrace_api_token`)
+
+If your Terraform automation needs to **mint or rotate Access Tokens** (for example, generating per-team OneAgent install tokens or per-pipeline ingest tokens), you are managing the [`dynatrace_api_token` provider resource](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/api_token.md), which requires the API Token scopes `apiTokens.read` and `apiTokens.write` (also confirmed at the underlying API: [POST /api/v2/apiTokens (DT docs)](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/tokens-v2/api-tokens/post-token) requires `apiTokens.write`).
+
+> **Disclaimer (verified 2026-05-13):** As of this notebook's Last Updated date, Dynatrace docs **do not state** that a Platform Token can drive the Access Tokens API or the `dynatrace_api_token` Terraform resource. The Platform Token service catalog as documented on the [Platform Tokens page (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens) is `app-engine, automation, notification, davis, davis-copilot, document, email, iam, platform-management, storage, settings, app-settings, state, state-management` — `apiTokens` is **not** in this list. The provider resource and the underlying API explicitly name **classic API Token scopes**. Practical guidance until Dynatrace docs say otherwise: **the Service User holds a classic API Token (`dt0c01`) with `apiTokens.read` + `apiTokens.write` for this specific use case.** Verify in your own tenant before relying on a Platform Token here.
+
+#### What IAM permission the Service User needs (for managing Access Tokens)
+
+On the IAM side, community guidance is that the **"Change monitoring settings"** permission (IAM statement: `ALLOW environment:roles:manage-settings;`) is what gates the ability to manage Access Tokens — there is no dedicated "manage access tokens" IAM action documented in the [IAM policy statements reference (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policystatements). Membership in the **Monitoring Admin** group is the group-level equivalent.
+
+> **Derived:** The link between `environment:roles:manage-settings` and Access Token management is community-asserted, not stated verbatim in the primary IAM docs. The IAM reference confirms the statement exists and is described as "Change monitoring settings." Validate by attempting an Access Token mint in a non-production tenant before relying on this pattern.
+
+> <sub>**Sources:** [Platform tokens (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens), [IAM policy statements reference (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/iam-policystatements), [POST /api/v2/apiTokens (DT docs)](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/tokens-v2/api-tokens/post-token), [dynatrace_api_token resource (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/api_token.md). **Derived:** the `manage-settings → Access Token management` linkage is community-asserted; primary IAM docs confirm the statement exists but do not name it as the gating permission for Access Tokens. The Platform-Token-cannot-mint-Access-Tokens conclusion is strongly implied by the Platform Token service catalog not listing `apiTokens` and by the provider/API both naming classic-API-Token scopes — but not explicitly stated in current docs.</sub>
+
+<a id="service-user-state-leakage"></a>
+### Operational Safety — State File Leakage When Minting Tokens
+
+Even when the IAM and scope plumbing is correct, minting tokens via Terraform introduces a separate problem: the generated token value lands **in plaintext inside the Terraform state file**, regardless of `sensitive = true`.
+
+#### What the provider docs say
+
+Verbatim from the [`dynatrace_api_token` resource docs (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/api_token.md): *"The usage of `dynatrace_api_token` will introduce sensitive data within your Terraform state. The `token` property is flagged as `sensitive`, but the field will be stored as plain-text."*
+
+HashiCorp's own guidance on [sensitive data in state (Terraform docs)](https://developer.hashicorp.com/terraform/language/state/sensitive-data) is explicit about why: *"Terraform stores values with the `sensitive` argument in both state and plan files, and anyone who can access those files can access your sensitive values."* The `sensitive` flag redacts values from CLI plan/apply output and from HCP Terraform's UI — it does **not** encrypt them at rest in state.
+
+#### Implications — state security is mandatory, not optional
+
+When a pipeline manages `dynatrace_api_token`, state hygiene becomes part of the token's security perimeter. State exfiltration equals token compromise.
+
+| Practice | Status when minting tokens |
+|----------|----------------------------|
+| Commit `terraform.tfstate` to source control | **Forbidden** |
+| Local state file on a shared workstation | **Forbidden** |
+| Remote backend with at-rest encryption (S3+SSE-KMS, GCS+CMEK, Azure SSE, HCP Terraform native) | **Required** |
+| IAM-restricted backend access (least-privilege state read/write) | **Required** |
+| Audit logging on state access | **Recommended** |
+| State backups with the same encryption and access controls | **Required** |
+
+Backend hardening details for each option (S3+DynamoDB IAM scopes, GCS service-account bindings, Azure storage account network rules, HCP Terraform workspace ACLs) are covered in **AUTOM-09 §3 State Backend Setup**. End-to-end secrets handling — including `sensitive = true` semantics, plan-output discipline, and at-rest encryption per backend — is in **AUTOM-09 §8 Secrets Handling End-to-End**.
+
+#### Recommended architectural pattern — mint out-of-band, deliver in-band
+
+Because state security is always a concern when Terraform mints secrets, the recommended pattern is to **not mint the long-lived token from Terraform at all**:
+
+1. **Generate the Access Token out-of-band** — Dynatrace Access Tokens UI, an admin-run one-shot script against `POST /api/v2/apiTokens`, or a Dynatrace-side workflow that mints the token on demand.
+2. **Deposit the token into your downstream secret store** via that platform's own API — GitHub Actions repo/org secrets, GitLab CI/CD variables, Bitbucket workspace variables, Bamboo encrypted plan variables, Azure DevOps variable groups (optionally Key Vault-linked), AWS Secrets Manager, HashiCorp Vault, etc.
+3. **Terraform consumes the token** via a data source (e.g. `vault_kv_secret_v2`, `aws_secretsmanager_secret_version`) or a pipeline-injected environment variable — Terraform never *creates* the token, so state never contains it.
+
+This pattern decouples three concerns: who *creates* the long-lived secret (an admin, infrequently), where it *lives* (a hardened secret store), and how the pipeline *consumes* it (at apply time, ephemerally). State files contain only references — not values.
+
+#### When you must mint tokens from Terraform
+
+Legitimate use cases for `dynatrace_api_token` exist — for example, per-team or per-application tokens whose lifecycle should track the Terraform-managed resource that owns them, or short-lived tokens rotated on every apply. In those cases:
+
+- Use a remote encrypted backend, not local state — non-negotiable.
+- Mark every output that references the token with `sensitive = true` so it doesn't leak into CLI logs (the value is still in state, but at least it isn't in stdout).
+- Treat state-backend permissions as token permissions — anyone with `s3:GetObject` on the state bucket effectively has the token.
+- Rotate the bootstrap credential (the one Terraform itself uses) on a schedule and on any state-backend permission change.
+
+> <sub>**Sources:** [`dynatrace_api_token` resource (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/api_token.md) — verbatim *plain-text in state* warning, [Sensitive data in state (Terraform docs)](https://developer.hashicorp.com/terraform/language/state/sensitive-data) — verbatim *anyone who can access those files can access your sensitive values* + the recommendation to exclude state from Git. **Derived:** the *mint-out-of-band, deliver-in-band* pattern is a synthesis from the two cited warnings — neither source recommends it by name, but both make it the only practice consistent with their stated risks when state hygiene is uncertain.</sub>
+
+<a id="service-user-bridging-trust-boundary"></a>
+### Bridging the Trust Boundary — How the Token Actually Crosses
+
+The previous subsection recommended *minting out-of-band, delivering in-band* — generate the Access Token in the Dynatrace UI (or via an admin one-shot script), then deposit it into the pipeline's secret store. This subsection answers the operational question that pattern leaves open: **how does the token get from the Dynatrace side to the GitHub side?**
+
+![Mint Out-of-Band, Deliver In-Band — Token Lifecycle Across Dynatrace and GitHub](images/04-mint-out-of-band-provision-flow_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Step | Zone | Action |
+|------|------|--------|
+| 1 | Dynatrace | DT Admin opens the Access Tokens app (or runs an admin one-shot script) |
+| 2 | Dynatrace | Token lands in the DT-side Credential Vault |
+| 3 | Boundary | **Provision** — the token crosses from DT to GitHub. THIS is the question. |
+| 4 | GitHub | GitHub User triggers a workflow |
+| 5 | GitHub | GitHub Action invokes Terraform |
+| 6 | GitHub | Terraform reads the token (from GitHub Secrets, or an external secret manager at runtime) |
+| 7 | Boundary | Terraform presents the token to Dynatrace Auth |
+| 8 | Dynatrace | Auth validates and authorizes the request against Synthetics / API |
+Step 3 is the gap this subsection bridges.
+-->
+
+#### Five mechanisms — choose by trust model and rotation cadence
+
+| Mechanism | Where the token lives at rest | Rotation effort | When to use |
+|-----------|-------------------------------|-----------------|-------------|
+| **Admin pastes into GitHub Secrets UI** | GitHub Secrets | Manual every rotation | Small team, infrequent rotation, no existing secret manager |
+| **`gh secret set` from admin workstation or CI** | GitHub Secrets | Scriptable, still manually triggered | Same as above plus you want repeatable scripting |
+| **External secret manager + runtime fetch via GitHub Action** (Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager) | Secret manager only — **GitHub Secrets is bypassed** | Centralized in the secret manager; pipelines auto-pick up rotations | **Recommended default for any team with a secret manager already in place** |
+| **OIDC federation → cloud secret manager** | Secret manager only; the GitHub side holds **no** long-lived credential | Centralized + short-lived federated access | Strongest posture; requires cloud-IdP trust setup |
+| **Dynatrace-side workflow pushes to GitHub API** | Both GitHub Secrets and DT side (the workflow needs a GitHub PAT) | Triggerable from DT side | Niche — only when DT-side automation owns the rotation event |
+
+Mechanisms 3 and 4 are the strong defaults: they **eliminate the long-lived secret from GitHub Secrets entirely** and concentrate rotation in one system (the secret manager) that's purpose-built for it. The token still crosses the boundary at step 3 of the diagram, but it does so *ephemerally at workflow runtime* — not at rest.
+
+#### Recommended pattern — runtime fetch via Vault with GitHub OIDC
+
+The cleanest version of mechanism 3 uses GitHub Actions' built-in OIDC identity to authenticate to Vault (no static Vault token in GitHub Secrets either), and pulls the Dynatrace token at workflow runtime:
+
+```yaml
+# .github/workflows/terraform-apply.yml
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write   # required for GitHub OIDC → Vault JWT auth
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Fetch Dynatrace token from Vault
+        id: secrets
+        uses: hashicorp/vault-action@v4
+        with:
+          url: https://vault.example.com:8200
+          method: jwt
+          role: dynatrace-terraform-apply
+          secrets: |
+            secret/data/dynatrace/terraform dt_api_token | DT_API_TOKEN
+            secret/data/dynatrace/terraform dt_env_url   | DT_ENV_URL
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: latest
+
+      - name: Terraform Apply
+        env:
+          DYNATRACE_API_TOKEN: ${{ steps.secrets.outputs.DT_API_TOKEN }}
+          DYNATRACE_ENV_URL:   ${{ steps.secrets.outputs.DT_ENV_URL }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
+```
+
+Key properties of this pattern:
+
+- **The Dynatrace token never appears in GitHub Secrets** — it lives in Vault, and the workflow fetches it at runtime into the runner's process memory only.
+- **No static Vault credential in GitHub either** — GitHub's OIDC identity (`id-token: write`) authenticates to Vault via the `jwt` auth method bound to the `dynatrace-terraform-apply` role; Vault returns a short-lived response. Rotating the Dynatrace token = update one secret path in Vault; no GitHub change.
+- **Log masking is automatic.** Per the [`hashicorp/vault-action` README (HashiCorp GitHub)](https://github.com/hashicorp/vault-action): *"This action uses GitHub Action's built-in masking, so all variables will automatically be masked (aka hidden) if printed to the console or to logs."*
+- **Vault role + policy bind which workflow can read which secret path** — the same Vault-side authorization model that gates every other secret in your org. Audit log is one place.
+
+#### Same shape, other secret managers
+
+The pattern transposes cleanly to other secret managers — pick whichever your org already operates:
+
+| Secret manager | GitHub Action | Auth to secret manager |
+|----------------|---------------|------------------------|
+| HashiCorp Vault | `hashicorp/vault-action` | JWT via GitHub OIDC (above) |
+| AWS Secrets Manager | `aws-actions/aws-secretsmanager-get-secrets` (pair with `aws-actions/configure-aws-credentials` for OIDC) | OIDC → IAM role |
+| Azure Key Vault | `Azure/get-keyvault-secrets` (pair with `azure/login` for OIDC) | OIDC → Azure AD service principal |
+| GCP Secret Manager | `google-github-actions/get-secretmanager-secrets` (pair with `google-github-actions/auth` for OIDC) | OIDC → Workload Identity Federation |
+
+All four follow the same shape as the Vault example: federated identity in step 1, fetch secrets in step 2, consume in `env:` in step 3. None of them require a long-lived credential in GitHub Secrets.
+
+#### Cross-CI-platform note
+
+The mechanisms table generalizes to other CI/CD platforms — GitLab CI variables, Bitbucket workspace variables, Bamboo encrypted plan variables, and Azure DevOps variable groups (optionally Key Vault‐linked) all play the role of "GitHub Secrets" in this discussion. Platform-specific worked examples for those platforms are in **AUTOM-07** (§3 GitHub Actions, §4 GitLab, §5 Bitbucket Pipelines, §6 Atlassian Bamboo, §7 Azure DevOps). The architectural pattern — mint out-of-band, fetch at runtime from an external secret manager via federated identity, never let the long-lived token sit at rest in the CI platform — applies identically.
+
+> <sub>**Sources:** [`hashicorp/vault-action` (HashiCorp GitHub)](https://github.com/hashicorp/vault-action) — current major version v4 (May 2026), JWT/OIDC method, automatic log masking; [Using secrets in GitHub Actions (GitHub docs)](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) — log redaction behavior, OIDC alternative to long-lived credentials. **Derived:** the five-mechanism comparison table is a synthesis — each row maps to a documented GitHub Actions integration pattern but no primary source ranks them against one another. The recommendation of mechanisms 3 and 4 follows from combining the prior subsection's state-security mandate with each mechanism's at-rest exposure surface.</sub>
 
 ### Initialize and Validate
 
