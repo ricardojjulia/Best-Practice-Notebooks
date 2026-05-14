@@ -1,6 +1,6 @@
 # DBMON-04: Cache and Messaging Monitoring
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -46,14 +46,25 @@ Caches and message brokers serve fundamentally different purposes from databases
 
 > **Note:** Cache and messaging systems often have sub-millisecond latency. Even small increases in response time can indicate significant issues (memory pressure, network problems, or hot keys).
 
+![Cache & Messaging Span Flow](images/04-cache-messaging-span-flow.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Layer | Producer span | Broker | Consumer span |
+|-------|---------------|--------|---------------|
+| Messaging (Kafka/RabbitMQ) | messaging.operation = publish | No span on broker; trace context flows via headers | messaging.operation = process; consumer.group |
+| Cache (Redis/Memcached) | db.system = redis; span.kind = client; db.operation = GET/SET | Sub-millisecond responses; compare in microseconds; slow > 5ms | (request-response, no separate consumer) |
+Note: messaging.system is canonical OTel; db.system == "kafka" is legacy compat
+For environments where SVG doesn't render
+-->
+
 ```dql
 // Discover active cache and messaging systems
 fetch spans, from:-1h
 | filter in(db.system, {"redis", "memcached", "kafka", "rabbitmq", "elasticsearch", "opensearch"})
-| summarize call_count = count(),
-           avg_us = avg(duration) / 1000.0,
-           p95_us = percentile(duration, 95) / 1000.0,
-           by:{db.system, server.address}
+| summarize {
+|     call_count = count(),
+|     avg_us = avg(duration) / 1000.0,
+|     p95_us = percentile(duration, 95) / 1000.0
+| }, by:{db.system, server.address}
 | sort call_count desc
 ```
 
@@ -68,11 +79,12 @@ Redis is the most commonly used in-memory data store. Monitoring Redis involves 
 fetch spans, from:-1h
 | filter db.system == "redis"
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_us = avg(duration) / 1000.0,
-           p95_us = percentile(duration, 95) / 1000.0,
-           max_us = max(duration) / 1000.0,
-           by:{db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_us = avg(duration) / 1000.0,
+|     p95_us = percentile(duration, 95) / 1000.0,
+|     max_us = max(duration) / 1000.0
+| }, by:{db.operation}
 | sort call_count desc
 ```
 
@@ -106,7 +118,7 @@ fetch spans, from:-6h
 // Redis slow commands — operations exceeding 5ms (abnormal for Redis)
 fetch spans, from:-1h
 | filter db.system == "redis"
-| filter duration > 5000000
+| filter duration > 5ms
 | fields timestamp, db.operation, db.statement, server.address,
         duration_ms = duration / 1ms, dt.entity.service
 | sort duration_ms desc
@@ -123,9 +135,11 @@ Apache Kafka monitoring through spans captures both producer (publish) and consu
 
 ### Kafka Span Attributes
 
+Per the OTel semantic conventions, **`messaging.system`** is the canonical field for Kafka and other message brokers — not `db.system`. Older OneAgent/legacy instrumentation may set `db.system == "kafka"` for backward compatibility; queries below filter both for hybrid-tenant compatibility, but new instrumentation should rely on `messaging.system` only.
+
 | Attribute | Description | Example |
 |-----------|-------------|---------|
-| `messaging.system` | Always `kafka` | `kafka` |
+| `messaging.system` | Always `kafka` (canonical OTel field) | `kafka` |
 | `messaging.operation` | `publish` or `process` | `process` |
 | `messaging.destination.name` | Topic name | `orders.created` |
 | `messaging.kafka.consumer.group` | Consumer group ID | `order-processor-group` |
@@ -136,9 +150,10 @@ Apache Kafka monitoring through spans captures both producer (publish) and consu
 fetch spans, from:-1h
 | filter db.system == "kafka" or messaging.system == "kafka"
 | filter isNotNull(messaging.destination.name)
-| summarize msg_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           by:{messaging.destination.name, messaging.operation}
+| summarize {
+|     msg_count = count(),
+|     avg_ms = avg(duration) / 1ms
+| }, by:{messaging.destination.name, messaging.operation}
 | sort msg_count desc
 ```
 
@@ -158,11 +173,12 @@ fetch spans, from:-6h
 fetch spans, from:-1h
 | filter messaging.system == "kafka" and messaging.operation == "process"
 | filter isNotNull(messaging.kafka.consumer.group)
-| summarize msg_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           errors = countIf(otel.status_code == "ERROR"),
-           by:{messaging.kafka.consumer.group, messaging.destination.name}
+| summarize {
+|     msg_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     errors = countIf(otel.status_code == "ERROR")
+| }, by:{messaging.kafka.consumer.group, messaging.destination.name}
 | sort msg_count desc
 ```
 
@@ -177,10 +193,11 @@ RabbitMQ monitoring focuses on message publish/consume rates, queue depth, and c
 fetch spans, from:-1h
 | filter db.system == "rabbitmq" or messaging.system == "rabbitmq"
 | filter isNotNull(messaging.destination.name)
-| summarize msg_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           errors = countIf(otel.status_code == "ERROR"),
-           by:{messaging.destination.name, messaging.operation}
+| summarize {
+|     msg_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     errors = countIf(otel.status_code == "ERROR")
+| }, by:{messaging.destination.name, messaging.operation}
 | sort msg_count desc
 ```
 
@@ -203,10 +220,11 @@ Elasticsearch is used for full-text search, log aggregation, and analytics. Moni
 fetch spans, from:-1h
 | filter in(db.system, {"elasticsearch", "opensearch"})
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           by:{db.system, db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms
+| }, by:{db.system, db.operation}
 | sort call_count desc
 ```
 
@@ -214,7 +232,7 @@ fetch spans, from:-1h
 // Elasticsearch slow queries — search operations exceeding 200ms
 fetch spans, from:-1h
 | filter in(db.system, {"elasticsearch", "opensearch"})
-| filter duration > 200000000
+| filter duration > 200ms
 | fields timestamp, db.operation, db.statement, server.address,
         duration_ms = duration / 1ms
 | sort duration_ms desc
@@ -233,11 +251,12 @@ fetch spans, from:-1h
 | filter in(db.system, {"redis", "memcached", "kafka", "rabbitmq", "elasticsearch", "opensearch"})
         or in(messaging.system, {"kafka", "rabbitmq"})
 | fieldsAdd system = coalesce(db.system, messaging.system)
-| summarize total_ops = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           error_count = countIf(otel.status_code == "ERROR"),
-           by:{system}
+| summarize {
+|     total_ops = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     error_count = countIf(otel.status_code == "ERROR")
+| }, by:{system}
 | fieldsAdd error_rate_pct = round((toDouble(error_count) / toDouble(total_ops)) * 100, decimals:2)
 | sort total_ops desc
 ```
@@ -249,7 +268,7 @@ fetch spans, from:-1h
 In this notebook you learned:
 
 - Redis operation analysis: command breakdown, read/write ratios, and slow command detection
-- Kafka monitoring: producer/consumer throughput, consumer group latency, and topic-level analysis
+- Kafka monitoring: producer/consumer throughput, consumer group latency, and topic-level analysis (with canonical `messaging.system` and backward-compat `db.system == "kafka"`)
 - RabbitMQ queue monitoring: publish/consume rates and message flow
 - Elasticsearch query performance: operation breakdown and slow query detection
 - Cross-system performance comparison for cache and messaging infrastructure
@@ -258,6 +277,13 @@ In this notebook you learned:
 
 - **DBMON-05: Query Analysis** — Deep query analysis including N+1 detection and optimization patterns
 - **DBMON-06: Dashboards and Alerting** — Building database monitoring dashboards and alerting rules
+
+### Where to Go Deeper
+
+- **OTEL series** (9 notebooks) — OTel-instrumented Kafka/RabbitMQ producers and consumers, semantic-convention reference
+- **OPIPE series** (7 notebooks) — OpenPipeline-derived metrics from messaging spans (e.g., per-topic throughput as a metric)
+- **OPLOGS series** — When Elasticsearch is used as a log destination upstream of Dynatrace
+- **AIOPS series** — Davis anomaly detection on consumer-lag and broker-health metrics
 
 ---
 

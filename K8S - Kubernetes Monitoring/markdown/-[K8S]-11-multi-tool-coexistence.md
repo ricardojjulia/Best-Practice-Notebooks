@@ -1,6 +1,6 @@
 # K8S-11: Multi-Tool Coexistence & Advanced Configuration
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 04/26/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 11 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Running Dynatrace Alongside Other Monitoring Tools
 Many organizations run multiple monitoring tools during migrations or for specialized use cases. This notebook covers patterns for running Dynatrace alongside tools like New Relic, Datadog, or Prometheus without conflicts.
@@ -511,9 +511,11 @@ In this notebook, you learned:
 
 ## References
 
-- [DynaKube Feature Flags](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-feature-flags)
-- [Namespace Selector Configuration](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/deployment-and-configuration/monitoring-and-instrumentation/annotate)
-- [Kubernetes Recommended Labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
+- [DynaKube feature flags (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-feature-flags)
+- [Annotate pods + namespaces (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/deployment-and-configuration/monitoring-and-instrumentation/annotate)
+- [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
+- [Kubernetes recommended labels (kubernetes.io)](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/)
+- [Operator + DynaKube troubleshooting (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/troubleshooting)
 
 ---
 

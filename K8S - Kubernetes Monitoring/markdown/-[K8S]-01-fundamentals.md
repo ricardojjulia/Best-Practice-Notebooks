@@ -1,6 +1,6 @@
 # K8S-01: Kubernetes Monitoring Fundamentals
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 1 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Introduction to Kubernetes Observability with Dynatrace
 Kubernetes introduces unique observability challenges: ephemeral workloads, dynamic scaling, complex networking, and multi-layer abstractions. Dynatrace provides comprehensive Kubernetes monitoring through the DynaKube operator, which deploys and manages monitoring components automatically.
@@ -186,48 +186,48 @@ Dynatrace collects multiple signal types from Kubernetes:
 | `builtin:kubernetes.node.memory_available` | Available memory on nodes | Bytes |
 | `builtin:kubernetes.pods` | Pod count by state | Count |
 
+<a id="your-first-kubernetes-queries"></a>
+## 6. Your First Kubernetes Queries
+Let's explore common queries for Kubernetes monitoring.
+
 ```dql
-// List all monitored Kubernetes clusters
-fetch dt.entity.kubernetes_cluster
-| fields entity.name, tags
+// Verify Kubernetes clusters are reporting (smartscape topology)
+smartscapeNodes "K8S_CLUSTER"
+| fields entity.name = name, tags
 | sort entity.name asc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_CLUSTER
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.kubernetes_cluster
+// | fields entity.name, tags
+// | sort entity.name asc
 
 ```
 
 ```dql
-// Count all Kubernetes nodes
-fetch dt.entity.kubernetes_node
+// Count Kubernetes nodes
+smartscapeNodes "K8S_NODE"
 | summarize nodeCount = count()
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_NODE
+// Legacy alternative:
+// fetch dt.entity.kubernetes_node
 // | summarize nodeCount = count()
 
 ```
 
 ```dql
-// List namespaces
-fetch dt.entity.cloud_application_namespace
-| fields entity.name, tags
+// List Kubernetes namespaces
+smartscapeNodes "K8S_NAMESPACE"
+| fields entity.name = name, tags
 | sort entity.name asc
 | limit 50
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_NAMESPACE
-// | fields name, tags
-// | sort name asc
+// Legacy alternative:
+// fetch dt.entity.cloud_application_namespace
+// | fields entity.name, tags
+// | sort entity.name asc
 // | limit 50
 
 ```
-
-<a id="your-first-kubernetes-queries"></a>
-## 6. Your First Kubernetes Queries
-Let's explore common queries for Kubernetes monitoring.
 
 ```dql
 // Container CPU usage - find highest consumers
@@ -282,15 +282,17 @@ In this notebook, you learned:
 - Entity model for Kubernetes resources
 - Data sources: metrics, logs, and traces
 - Key metrics for container and cluster monitoring
-- Basic DQL queries for Kubernetes data
+- Basic DQL queries for Kubernetes data using `smartscapeNodes` (modern) with `dt.entity.*` legacy alternatives shown as comments
 
 ---
 
 ## References
 
-- [Kubernetes Monitoring Overview](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring)
-- [DynaKube Operator](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment)
-- [Kubernetes Metrics](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-cluster-monitoring)
+- [Setup on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s) — top-level entry point for all K8s monitoring docs
+- [How it works (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/how-it-works) — architecture, components, and data flow
+- [Quickstart (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/quickstart) — minimum viable deployment
+- [Reference (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference) — DynaKube parameters, feature flags, network, security, storage, workload mutation
+- [Dynatrace Operator (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator) — source, releases, and Helm chart
 
 ---
 

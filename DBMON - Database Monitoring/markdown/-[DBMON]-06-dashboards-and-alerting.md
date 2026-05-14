@@ -1,10 +1,10 @@
 # DBMON-06: Dashboards and Alerting
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
-This notebook covers building database monitoring dashboards and configuring alerting for database health. You will learn dashboard design patterns for database KPIs, how to create alert-ready queries for slow query detection, connection pool thresholds, error rate monitoring, and database-specific SLO definitions. These queries are designed to be directly usable in Dynatrace dashboards and metric events.
+This notebook covers building database monitoring dashboards and configuring alerting for database health. You will learn dashboard design patterns for database KPIs, how to create alert-ready queries for slow query detection, connection pool thresholds, error rate monitoring, and database-specific SLO definitions. These queries are designed to be directly usable in **Dashboards (new)** tiles, **Davis Anomaly Detectors** in Workflows (the modern alerting path), and legacy metric events.
 
 ---
 
@@ -56,13 +56,14 @@ The health overview provides a single-pane summary of all database systems. Use 
 // Dashboard tile: Database health summary — one row per database system
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| summarize total_calls = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           error_count = countIf(otel.status_code == "ERROR"),
-           slow_count = countIf(duration > 500000000),
-           unique_databases = countDistinct(db.namespace),
-           by:{db.system}
+| summarize {
+|     total_calls = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     error_count = countIf(otel.status_code == "ERROR"),
+|     slow_count = countIf(duration > 500ms),
+|     unique_databases = countDistinct(db.namespace)
+| }, by:{db.system}
 | fieldsAdd error_rate_pct = round((toDouble(error_count) / toDouble(total_calls)) * 100, decimals:2)
 | fieldsAdd slow_rate_pct = round((toDouble(slow_count) / toDouble(total_calls)) * 100, decimals:2)
 | sort total_calls desc
@@ -79,10 +80,11 @@ fetch spans, from:-1h
 // Dashboard tile: Database calls per service — identify heaviest consumers
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           error_count = countIf(otel.status_code == "ERROR"),
-           by:{dt.entity.service}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     error_count = countIf(otel.status_code == "ERROR")
+| }, by:{dt.entity.service}
 | fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")
 | sort call_count desc
 | limit 10
@@ -107,11 +109,12 @@ fetch spans, from:-6h
 // Dashboard tile: Response time by database instance (server.address)
 fetch spans, from:-1h
 | filter isNotNull(db.system) and isNotNull(server.address)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           p99_ms = percentile(duration, 99) / 1ms,
-           by:{db.system, server.address, db.namespace}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     p99_ms = percentile(duration, 99) / 1ms
+| }, by:{db.system, server.address, db.namespace}
 | sort p95_ms desc
 | limit 15
 ```
@@ -196,27 +199,35 @@ fetch spans, from:-6h
 
 ```dql
 // Dashboard tile: Hourly query volume comparison — today vs yesterday
+// (Restructured for clean 2-row output: each row has 'period' label + 'count')
 fetch spans, from:-24h
 | filter isNotNull(db.system)
-| summarize today_count = count()
+| summarize count = count()
+| fieldsAdd period = "today"
 | append [
     fetch spans, from:-48h, to:-24h
     | filter isNotNull(db.system)
-    | summarize yesterday_count = count()
+    | summarize count = count()
+    | fieldsAdd period = "yesterday"
   ]
+| fields period, count
 ```
 
 <a id="slow-query-alerting"></a>
 
 ## 6. Slow Query Alerting
 
-Slow query alerts detect when query performance degrades beyond acceptable thresholds. Configure these as metric events in Dynatrace.
+Slow query alerts detect when query performance degrades beyond acceptable thresholds.
+
+**Modern path (recommended for new alerting):** wire these queries into a **Davis Anomaly Detector** (configured in **Workflows**) so Davis can apply adaptive baselines, multi-dimensional analysis, and seasonal pattern detection — far more accurate than fixed thresholds for slow-query detection. See the **AIOPS** series for anomaly-detection mechanisms and the **WFLOW** series for Workflow-driven alert routing.
+
+**Legacy path (still supported for fixed-threshold cases):** the queries below are also directly usable as **metric events** in Settings → Anomaly detection → Metric events when you want a fixed threshold instead of an adaptive baseline.
 
 ```dql
 // Alert query: Slow query count per 5-minute window (> 500ms threshold)
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| filter duration > 500000000
+| filter duration > 500ms
 | makeTimeseries slow_count = count(), by:{db.system}, interval:5m
 ```
 
@@ -224,7 +235,7 @@ fetch spans, from:-1h
 // Alert query: Current slow query detail — for investigation
 fetch spans, from:-15m
 | filter isNotNull(db.system)
-| filter duration > 500000000
+| filter duration > 500ms
 | fields timestamp, db.system, db.namespace, db.operation,
         db.statement, server.address,
         duration_ms = duration / 1ms,
@@ -270,9 +281,10 @@ Service Level Objectives (SLOs) for databases define the expected performance co
 // SLO measurement: Database availability — success rate over 24 hours
 fetch spans, from:-24h
 | filter isNotNull(db.system)
-| summarize total = count(),
-           successful = countIf(otel.status_code != "ERROR"),
-           by:{db.system}
+| summarize {
+|     total = count(),
+|     successful = countIf(otel.status_code != "ERROR")
+| }, by:{db.system}
 | fieldsAdd availability_pct = round((toDouble(successful) / toDouble(total)) * 100, decimals:3)
 | sort availability_pct asc
 ```
@@ -281,9 +293,10 @@ fetch spans, from:-24h
 // SLO measurement: Latency compliance — percentage of calls under threshold
 fetch spans, from:-24h
 | filter isNotNull(db.system)
-| summarize total = count(),
-           under_threshold = countIf(duration < 500000000),
-           by:{db.system}
+| summarize {
+|     total = count(),
+|     under_threshold = countIf(duration < 500ms)
+| }, by:{db.system}
 | fieldsAdd latency_slo_pct = round((toDouble(under_threshold) / toDouble(total)) * 100, decimals:2)
 | sort latency_slo_pct asc
 ```
@@ -309,12 +322,14 @@ In this notebook you learned:
 - Response time monitoring with P50/P95/P99 trend analysis
 - Error rate alerting queries and recommended thresholds
 - Throughput monitoring including read/write ratio trends and day-over-day comparison
-- Slow query alerting with vendor-specific thresholds
+- Slow query alerting with vendor-specific thresholds (with Davis Anomaly Detectors as the modern path + metric events as the legacy fallback)
 - Database SLO definitions and compliance measurement queries
 
 ### Series Complete
 
-This is the final notebook in the DBMON series. For a complete database monitoring implementation:
+This is the final substantive notebook in the DBMON series. DBMON-99 is the consolidated best-practice summary.
+
+For a complete database monitoring implementation:
 
 1. **DBMON-01** — Understand fundamentals and establish baselines
 2. **DBMON-02** — Deep dive into SQL database monitoring
@@ -322,6 +337,14 @@ This is the final notebook in the DBMON series. For a complete database monitori
 4. **DBMON-04** — Cache and messaging system monitoring
 5. **DBMON-05** — Advanced query analysis and optimization
 6. **DBMON-06** — (This notebook) Dashboards, alerting, and SLOs
+7. **DBMON-99** — Best Practice Summary
+
+### Where to Go Deeper
+
+- **AIOPS series** (8 notebooks) — Davis AI: anomaly detection mechanisms (static / auto-adaptive / seasonal / multi-dimensional baseline / novelty/forecast), Davis problems & RCA, Davis CoPilot
+- **WFLOW series** (10 notebooks) — Workflow-driven alert routing, AI tasks, MCP server integration
+- **DASH series** (8 notebooks) — Dashboard strategy, executive reporting, tile-design patterns
+- **FAQ-02** — Tagging strategy for ownership routing in alerts
 
 ---
 

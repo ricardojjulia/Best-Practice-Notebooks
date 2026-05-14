@@ -10,6 +10,7 @@ Step-by-step onboarding series for new Dynatrace users, from initial setup to da
 - markdown/ — Markdown exports of the notebooks
 
 ## Notebook Lineup
+0. [Architect's Sequence & Dependency Runbook](markdown/-[ONBRD]-00-architect-sequence.md) — Sequence, dependencies, and decisions for architects onboarding a new tenant
 1. [First Steps](markdown/-[ONBRD]-01-first-steps.md) — Getting started with Dynatrace
 2. [IAM and Authentication](markdown/-[ONBRD]-02-iam-and-authentication.md) — Identity and access management
 3. [Deploying ActiveGate](markdown/-[ONBRD]-03-deploying-activegate.md) — Installing and configuring ActiveGate

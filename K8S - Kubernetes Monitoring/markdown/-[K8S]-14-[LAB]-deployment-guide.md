@@ -1,6 +1,6 @@
 # K8S-14: Kubernetes Deployment Guide
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 14 of 14 | **Type:** LAB | **Created:** April 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 14 of 14 | **Type:** LAB | **Created:** April 2026 | **Last Updated:** 05/09/2026
 
 ## Overview
 
@@ -619,12 +619,15 @@ With the base deployment complete, these additional configurations maximize the 
 
 ## Additional Resources
 
-- [Dynatrace Operator Helm Chart](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/installation/helm-chart)
-- [DynaKube Custom Resource Reference](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/installation/dynakube)
-- [Kubernetes Monitoring Overview](https://docs.dynatrace.com/docs/observe/infrastructure-observability/container-platform-monitoring/kubernetes-monitoring)
-- [Metadata Enrichment Guide](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/metadata-automation/k8s-metadata-telemetry-enrichment)
-- [Release Inventory](https://docs.dynatrace.com/docs/deliver/release-inventory)
-- [Segments Documentation](https://docs.dynatrace.com/docs/manage/segments)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [Quickstart for K8s setup (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/quickstart)
+- [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
+- [Dynatrace Operator Helm chart (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
+- [Dynatrace Operator releases (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/releases)
+- [Kubernetes monitoring overview (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/container-platform-monitoring/kubernetes-monitoring)
+- [Metadata enrichment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/metadata-automation/k8s-metadata-telemetry-enrichment)
+- [Operator + DynaKube troubleshooting (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/troubleshooting)
+- [Segments (DT docs)](https://docs.dynatrace.com/docs/manage/segments)
 
 ---
 

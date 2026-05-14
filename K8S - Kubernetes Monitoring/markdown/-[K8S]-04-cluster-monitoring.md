@@ -1,6 +1,6 @@
 # K8S-04: Cluster Health Monitoring
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 4 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Deep-Dive into Kubernetes Cluster Metrics
 Cluster health monitoring provides visibility into the infrastructure layer of Kubernetes: nodes, control plane, and cluster-wide resources. This notebook covers key metrics, thresholds, and DQL queries for proactive cluster management.
@@ -50,15 +50,15 @@ The built-in Kubernetes dashboard provides:
 Navigate to: **Infrastructure > Kubernetes**
 
 ```dql
-// List all monitored Kubernetes clusters
-fetch dt.entity.kubernetes_cluster
-| fields entity.name, tags
+// List all monitored Kubernetes clusters (smartscape topology)
+smartscapeNodes "K8S_CLUSTER"
+| fields entity.name = name, tags
 | sort entity.name asc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_CLUSTER
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.kubernetes_cluster
+// | fields entity.name, tags
+// | sort entity.name asc
 
 ```
 
@@ -75,15 +75,15 @@ fetch dt.entity.kubernetes_cluster
 | **NetworkUnavailable** | Network not configured | True |
 
 ```dql
-// List all Kubernetes nodes
-fetch dt.entity.kubernetes_node
-| fields entity.name, tags
+// List all Kubernetes nodes (smartscape topology)
+smartscapeNodes "K8S_NODE"
+| fields entity.name = name, tags
 | sort entity.name asc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_NODE
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.kubernetes_node
+// | fields entity.name, tags
+// | sort entity.name asc
 
 ```
 
@@ -369,9 +369,12 @@ In this notebook, you learned:
 
 ## References
 
-- [Kubernetes Cluster Monitoring](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-cluster-monitoring)
-- [Kubernetes Metrics](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-workload-and-node-monitoring)
-- [Kubernetes Anomaly Detection](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-anomaly-detection)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [How K8s monitoring works (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/how-it-works)
+- [Full observability deployment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/full-stack-observability)
+- [Kubernetes app — clusters and workloads view (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/kubernetes-app)
+- [Davis Problems app (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/problems-app)
+- [smartscapeNodes command (DT docs)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-query-language)
 
 ---
 

@@ -1,6 +1,6 @@
 # DASH-01: Dashboard Fundamentals
 
-> **Series:** DASH — Dashboard Design & Building | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 04/26/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -79,6 +79,21 @@ Dynatrace provides two primary visualization tools, each designed for different 
 <a id="dashboard-architecture"></a>
 
 ## 2. Dashboard Architecture
+
+![Tile Type Decision Guide](images/01-tile-type-decision.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Question | Tile Type |
+|----------|-----------|
+| What's the current value? | Single Value |
+| How is it trending? | Line Chart |
+| How do categories compare? | Bar Chart |
+| Show me detailed rows | Table |
+| What share of the total? | Pie / Donut |
+| Health of many entities? | Honeycomb |
+| Static context / divider? | Markdown |
+| Anything else | DQL / Custom Tile |
+For environments where SVG doesn't render
+-->
 
 A Dynatrace dashboard is composed of three core building blocks:
 

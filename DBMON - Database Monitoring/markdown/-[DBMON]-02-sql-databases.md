@@ -1,6 +1,6 @@
 # DBMON-02: SQL Database Monitoring
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -51,11 +51,12 @@ Let's start by identifying which SQL databases are active in your environment.
 // Discover active SQL databases in the environment
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
-| summarize call_count = count(),
-           avg_duration_ms = avg(duration) / 1ms,
-           p95_duration_ms = percentile(duration, 95) / 1ms,
-           unique_queries = countDistinct(db.statement),
-           by:{db.system, db.namespace, server.address}
+| summarize {
+|     call_count = count(),
+|     avg_duration_ms = avg(duration) / 1ms,
+|     p95_duration_ms = percentile(duration, 95) / 1ms,
+|     unique_queries = countDistinct(db.statement)
+| }, by:{db.system, db.namespace, server.address}
 | sort call_count desc
 ```
 
@@ -70,11 +71,12 @@ The most important aspect of SQL database monitoring is understanding query perf
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | filter isNotNull(db.statement)
-| summarize total_time_ms = sum(duration) / 1ms,
-           call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           by:{db.system, db.statement}
+| summarize {
+|     total_time_ms = sum(duration) / 1ms,
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms
+| }, by:{db.system, db.statement}
 | sort total_time_ms desc
 | limit 20
 ```
@@ -96,7 +98,7 @@ Slow queries are the most common cause of database-related performance problems.
 // Detect slow queries — calls exceeding 500ms
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
-| filter duration > 500000000
+| filter duration > 500ms
 | fields timestamp, db.system, db.namespace, db.operation,
         db.statement, server.address,
         duration_ms = duration / 1ms,
@@ -110,7 +112,7 @@ fetch spans, from:-1h
 fetch spans, from:-6h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | makeTimeseries total = count(),
-                 slow = countIf(duration > 500000000),
+                 slow = countIf(duration > 500ms),
                  interval:10m
 ```
 
@@ -119,11 +121,12 @@ fetch spans, from:-6h
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | filter isNotNull(db.statement)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           max_ms = max(duration) / 1ms,
-           by:{db.statement, db.system}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     max_ms = max(duration) / 1ms
+| }, by:{db.statement, db.system}
 | filter call_count >= 10
 | sort p95_ms desc
 | limit 15
@@ -150,10 +153,11 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           by:{db.operation, db.system}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms
+| }, by:{db.operation, db.system}
 | sort db.system asc, avg_ms desc
 ```
 
@@ -167,10 +171,11 @@ Connection pool exhaustion is a common source of application errors. While Dynat
 // Database calls per service — identify which services make the most DB calls
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           error_count = countIf(otel.status_code == "ERROR"),
-           by:{dt.entity.service, db.system, server.address}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     error_count = countIf(otel.status_code == "ERROR")
+| }, by:{dt.entity.service, db.system, server.address}
 | fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")
 | sort call_count desc
 | limit 20
@@ -201,11 +206,12 @@ PostgreSQL is commonly used in cloud-native applications. Key concerns: vacuum o
 // PostgreSQL — query performance breakdown by database
 fetch spans, from:-1h
 | filter db.system == "postgresql"
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           errors = countIf(otel.status_code == "ERROR"),
-           by:{db.namespace, db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     errors = countIf(otel.status_code == "ERROR")
+| }, by:{db.namespace, db.operation}
 | sort call_count desc
 ```
 
@@ -247,13 +253,14 @@ fetch spans, from:-1h
 // Percentile summary across all SQL databases
 fetch spans, from:-1h
 | filter in(db.system, {"postgresql", "mysql", "mssql", "oracle", "db2"})
-| summarize p50_ms = percentile(duration, 50) / 1ms,
-           p90_ms = percentile(duration, 90) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           p99_ms = percentile(duration, 99) / 1ms,
-           max_ms = max(duration) / 1ms,
-           total_calls = count(),
-           by:{db.system}
+| summarize {
+|     p50_ms = percentile(duration, 50) / 1ms,
+|     p90_ms = percentile(duration, 90) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     p99_ms = percentile(duration, 99) / 1ms,
+|     max_ms = max(duration) / 1ms,
+|     total_calls = count()
+| }, by:{db.system}
 | sort total_calls desc
 ```
 
@@ -274,6 +281,12 @@ In this notebook you learned:
 
 - **DBMON-03: NoSQL Database Monitoring** — MongoDB, Cassandra, DynamoDB, and Cosmos DB analysis
 - **DBMON-05: Query Analysis** — Deep dive into N+1 detection, query frequency patterns, and optimization
+
+### Where to Go Deeper
+
+- **AIOPS series** — Davis anomaly detection on DB connection-pool exhaustion, error rate spikes, and slow-query rate anomalies
+- **AUTOM series** — Monaco / Terraform automation for vendor-specific extension deployment at scale
+- **DBMON-05** — Deep query analysis (N+1 detection, optimization prioritization)
 
 ---
 

@@ -1,6 +1,6 @@
 # DBMON-99: Best Practice Summary
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 7 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -23,6 +23,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 11. [Alerting Thresholds](#alerting-thresholds)
 12. [SLO Definitions](#slo-definitions)
 13. [DQL Query Standards](#dql-query-standards)
+14. [Where to Go Deeper — Topic Series Map](#see-also)
 
 ---
 
@@ -55,7 +56,9 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
-| 7 | Use host-based ActiveGate for Extensions 2.0 | Must be host-based, not Kubernetes-based — K8s-based AG does not support Extensions 2.0 | **Critical** | Deployment |
+| 7 | Prefer Extensions 3rd-gen for new database integrations | Sprint-1.337+ default for net-new; Extensions 2.0 still supported for existing installs. Extensions 2.0 require **host-based ActiveGate** (K8s-based AG not supported); 3rd-gen K8s support is evolving — check Dynatrace docs | **Critical** | Deployment |
+| 7b | Extensions are YAML-defined with optional Python data sources | YAML package executed by EEC; built-in SQL/Prometheus/SNMP data sources cover most cases; Python data source is for custom logic only — not required by default | **Recommended** | Architecture |
+| 7c | Route extension logs to the `default_database_monitoring` bucket | Default destination for extension log output; reference this bucket name in IAM policies for DB-team access scoping (see ORGNZ-02 + IAM-04/05) | **Recommended** | IAM/Bucket |
 | 8 | Install PostgreSQL extension | Captures: connections, transactions/sec, tuple operations, table/index sizes, lock waits, replication lag | **Recommended** | Extension |
 | 9 | Install MySQL extension | Captures: connections, queries/sec, buffer pool hit ratio, InnoDB row ops, slow queries | **Recommended** | Extension |
 | 10 | Install MS SQL Server extension | Captures: batch requests/sec, page life expectancy, buffer cache hit ratio, deadlocks, wait stats | **Recommended** | Extension |
@@ -81,13 +84,20 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
-| 19 | Set slow query threshold for SQL databases | **500ms** — any SQL query exceeding `duration > 500000000` (500ms in nanoseconds) is classified as slow | **Critical** | Threshold |
+| 19 | Set slow query threshold for SQL databases | **500ms** — any SQL query exceeding `duration > 500ms` (500ms in nanoseconds) is classified as slow | **Critical** | Threshold |
 | 20 | Track read/write ratio | Classify operations: `SELECT` = READ, `INSERT/UPDATE/DELETE` = WRITE; monitor ratio shifts over time | **Recommended** | Analysis |
 | 21 | Rank queries by total execution time, not average | Sort by `total_time_ms = sum(duration)` to find highest-impact patterns regardless of individual speed | **Critical** | Optimization |
 | 22 | Monitor response time distribution using latency tiers | Bucket into: `<1ms`, `1-10ms`, `10-100ms`, `100ms-1s`, `>1s` — track tier distribution over time | **Recommended** | Analysis |
 | 23 | Baseline P50, P95, P99 over 24 hours | Run hourly percentile query on `duration` for each `db.system`; this is your performance reference point | **Critical** | Baseline |
 | 24 | Monitor vendor-specific patterns | PostgreSQL: vacuum/lock contention; MySQL: buffer pool/replication lag; MSSQL: page life expectancy/deadlocks; Oracle: tablespace/SGA | **Recommended** | Vendor |
 | 25 | Track errors by `otel.status_message` | Group `otel.status_code == "ERROR"` by `otel.status_message` to distinguish connection timeouts, deadlocks, and constraint violations | **Critical** | Error Handling |
+
+
+### Sprint-1.338 Update (May 2026)
+
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
+|---|--------------|----------------|----------|----------|
+| 25b | Use DQL `timeseries` for table/index metrics — classic Metrics API v2 path is blocked | The `postgres.tables.*`, `postgres.indexes.*`, `mysql.tables.*`, `mysql.indexes.*` metric keys are blocked from the classic Metrics API v2 path as of sprint-1.338 (May 2026). Query via DQL `timeseries` against Grail instead. | **Critical** | API/Migration |
 
 <a id="nosql-database-monitoring"></a>
 
@@ -98,7 +108,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 | 26 | Set slow query threshold for NoSQL databases | **100ms** for MongoDB; **300ms** critical threshold for all NoSQL | **Critical** | Threshold |
 | 27 | Monitor MongoDB by collection | Group by `db.mongodb.collection` in addition to `db.namespace` — collection-level granularity reveals hot spots | **Critical** | MongoDB |
 | 28 | Track DynamoDB Scan-to-Query ratio | `Scan` operations read every item in the table; ratio must be Query-dominated; any high Scan count signals missing Global Secondary Indexes | **Critical** | DynamoDB |
-| 29 | Set Cassandra slow threshold at 200ms | `filter duration > 200000000` — Cassandra operations exceeding 200ms indicate partition hotspots or cross-DC reads | **Recommended** | Cassandra |
+| 29 | Set Cassandra slow threshold at 200ms | `filter duration > 200ms` — Cassandra operations exceeding 200ms indicate partition hotspots or cross-DC reads | **Recommended** | Cassandra |
 | 30 | Monitor Cosmos DB by operation and error rate | Track `ReadItem`, `CreateItem`, `Query`, `ReplaceItem` separately; errors indicate RU throttling (HTTP 429) | **Recommended** | Cosmos DB |
 | 31 | Classify NoSQL read/write operations correctly | READ: `find`, `Query`, `GetItem`, `SELECT`, `ReadItem`, `get`, `search`; everything else: WRITE | **Recommended** | Analysis |
 | 32 | Run cross-database comparison | Compare `total_calls`, `avg_ms`, `p95_ms`, `error_rate_pct` across all NoSQL systems in a single query for unified health view | **Recommended** | Analysis |
@@ -109,11 +119,18 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
-| 33 | Set Redis slow command threshold at 5ms | `filter duration > 5000000` — Redis operations should complete in microseconds; anything over 5ms is abnormal | **Critical** | Threshold |
+| 33 | Set Redis slow command threshold at 5ms | `filter duration > 5ms` — Redis operations should complete in microseconds; anything over 5ms is abnormal | **Critical** | Threshold |
 | 34 | Monitor Redis read/write balance | READ: `GET`, `MGET`, `HGET`, `HGETALL`, `LRANGE`, `SMEMBERS`, `ZRANGE`; WRITE: `SET`, `MSET`, `HSET`, `LPUSH`, `RPUSH`, `SADD`, `ZADD`, `DEL` | **Recommended** | Analysis |
 | 35 | Alert on Redis latency spikes | Track `p95_us` (microseconds) over time at 5m intervals; any sustained increase above 5000us (5ms) triggers investigation | **Critical** | Alerting |
 | 36 | Watch for expensive Redis commands | `KEYS *`, `SMEMBERS` on large sets, `LRANGE` with large ranges cause latency spikes — flag any occurrence | **Critical** | Anti-Pattern |
 | 37 | Report cache metrics in microseconds, not milliseconds | Redis and Memcached latency is sub-millisecond; use `avg(duration) / 1000.0` for microsecond precision | **Recommended** | Reporting |
+
+
+### Sprint-1.337 Update — .NET Redis coverage
+
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
+|---|--------------|----------------|----------|----------|
+| 37b | Confirm StackExchange.Redis instrumentation on .NET workloads | OneAgent 1.337 added StackExchange.Redis coverage for .NET applications. Verify your .NET services produce `db.system == "redis"` spans. | **Recommended** | Coverage |
 
 <a id="message-broker-monitoring"></a>
 
@@ -133,7 +150,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|--------------|----------------|----------|----------|
-| 43 | Set Elasticsearch slow query threshold at 200ms | `filter duration > 200000000` for search operations; indexing operations use a separate threshold | **Recommended** | Threshold |
+| 43 | Set Elasticsearch slow query threshold at 200ms | `filter duration > 200ms` for search operations; indexing operations use a separate threshold | **Recommended** | Threshold |
 | 44 | Break down Elasticsearch operations by type | Track `db.operation` (search, index, bulk, delete) separately; search latency and indexing throughput have different SLOs | **Recommended** | Analysis |
 | 45 | Include OpenSearch in all Elasticsearch queries | Always filter `in(db.system, {"elasticsearch", "opensearch"})` — treat both identically | **Recommended** | Compatibility |
 
@@ -166,7 +183,7 @@ This notebook consolidates every actionable best practice for Dynatrace database
 | 59 | Add read vs write ratio trend tile | Classify operations into READ/WRITE; 6h timeseries at 5m intervals | **Recommended** | Dashboard |
 | 60 | Add queries-per-minute trend by db.system | 6h timeseries at 1m intervals; used for throughput anomaly detection | **Recommended** | Dashboard |
 | 61 | Add today-vs-yesterday volume comparison | Use `append` pattern: `from:-24h` for today, `from:-48h, to:-24h` for yesterday | **Recommended** | Dashboard |
-| 62 | Include slow query detail table | Last 15m, `duration > 500000000`, fields: timestamp, db.system, db.namespace, db.statement, duration_ms, service_name | **Critical** | Dashboard |
+| 62 | Include slow query detail table | Last 15m, `duration > 500ms`, fields: timestamp, db.system, db.namespace, db.statement, duration_ms, service_name | **Critical** | Dashboard |
 
 <a id="alerting-thresholds"></a>
 
@@ -223,11 +240,40 @@ This notebook consolidates every actionable best practice for Dynatrace database
 | 83 | Filter on `isNotNull(db.system)` first | This is the primary filter to isolate database spans; apply immediately after `fetch` | **Critical** | DQL |
 | 84 | Use named parameters in functions | `round(value, decimals: 2)`, `if(cond, then: "x", else: "y")` — positional parameters cause errors | **Critical** | DQL |
 | 85 | Alias all aggregations | `summarize c = count()`, not `summarize count()` — unaliased aggregations cannot be used in `sort` or `fieldsAdd` | **Critical** | DQL |
-| 86 | Convert duration to human-readable units | Span `duration` is in nanoseconds; divide by `1000.0` for microseconds, `1000000.0` for milliseconds | **Critical** | DQL |
-| 87 | Use `entityName()` to resolve service IDs | `fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")` — never show raw entity IDs in dashboards | **Recommended** | DQL |
+| 86 | Use duration arithmetic (NOT nanosecond constants) | Write `duration / 1ms`, `duration / 1s`, `(t2-t1) / 1m` — divide a duration by another duration to get a unitless number. Never `duration / 1000000.0`; never `toLong(duration) / 1ms` (long/duration fails type-check). Per `dt-dql-essentials`. | **Critical** | DQL |
+| 87 | Use `entityName()` (or `getNodeName()` on smartscape) to resolve service IDs | `fieldsAdd service_name = entityName(dt.entity.service, type:"dt.entity.service")` for the legacy form; `fieldsAdd service_name = getNodeName(dt.smartscape.service)` for the modern Smartscape form. Never show raw entity IDs in dashboards. | **Recommended** | DQL |
 | 88 | Filter early, sort last | Apply `filter` immediately after `fetch`; apply `sort` only after `summarize`; never `sort` right after `fetch` | **Critical** | DQL |
 | 89 | Use `countIf()` for conditional aggregation | `errors = countIf(otel.status_code == "ERROR")` inside `summarize` — do not use separate filter + count | **Recommended** | DQL |
 | 90 | Calculate error rate with safe division | `error_rate_pct = round((toDouble(error_count) / toDouble(total_calls)) * 100, decimals: 2)` — use `toDouble()` to avoid integer truncation | **Recommended** | DQL |
+
+
+### Modern DQL standards (added 2026-05-07)
+
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
+|---|--------------|----------------|----------|----------|
+| 91 | Use `event.status` / `event.start` / `event.end` on `dt.davis.problems` | NOT `status` / `end_time` (recurring authoring bug). Status values are `"ACTIVE"` and `"CLOSED"` (not `"OPEN"`). For duration: `(event.end - event.start) / 1m` (NOT `event.end - timestamp` — `timestamp` is record-write time, not problem-open time). | **Critical** | DQL |
+| 92 | Prefer `smartscapeNodes "<TYPE>"` for new entity queries | Modern Smartscape topology query: `smartscapeNodes "SERVICE"`, `smartscapeNodes "HOST"`, etc. Legacy `fetch dt.entity.<type>` still works on hybrid tenants but is deprecated. | **Recommended** | DQL |
+| 93 | Wrap multiple `summarize` aggregations in `{}` | When summarizing 2+ aggregations, wrap them: `summarize { a = count(), b = avg(x) }, by: {field}`. Tenant emits `PARAMETERS_SHOULD_BE_GROUPED` INFO if not wrapped (query still runs but is non-canonical). | **Recommended** | DQL |
+
+<a id="see-also"></a>
+
+
+DBMON covers database monitoring foundations. These topic series cover adjacent domains in depth:
+
+| Domain | Topic Series | Notebooks |
+|--------|--------------|-----------|
+| **Distributed tracing & spans** (DB spans live here) | SPANS | 9 |
+| **OpenPipeline log processing** | OPLOGS | 9 |
+| **OpenPipeline beyond logs (metrics from spans)** | OPIPE | 7 |
+| **Dynatrace Intelligence (Davis anomaly detection on DB metrics)** | AIOPS | 8 |
+| **Workflows & alert notifications** (DB alert routing) | WFLOW | 10 |
+| **Dashboard strategy & executive reporting** | DASH | 8 |
+| **Bucket strategy** (`default_database_monitoring` and custom DB buckets) | ORGNZ | 11 |
+| **IAM administration** (bucket-scoped policies for DB-team access) | IAM | 13 |
+| **Tagging strategy** (host-group + ownership tagging for DBs) | FAQ-01, FAQ-02 | 2+ |
+| **Configuration automation** (Monaco/Terraform for extension deployment) | AUTOM | 11 |
+| **OpenTelemetry integration** (OTel-instrumented DBs) | OTEL | 9 |
+| **Cloud DB integrations** (RDS, Aurora, Cosmos DB, Cloud SQL) | CLOUD | 9 |
 
 ---
 

@@ -1,6 +1,6 @@
 # DASH-02: Dashboard Hierarchy
 
-> **Series:** DASH — Dashboard Design & Building | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -31,6 +31,17 @@ Not every stakeholder needs the same view. A well-designed dashboard strategy us
 <a id="three-tier-model"></a>
 
 ## 1. The Three-Tier Model
+
+![Three-Tier Dashboard Hierarchy](images/02-three-tier-hierarchy.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Tier | Audience | Tile Count | Refresh | Question Answered |
+|------|----------|------------|---------|-------------------|
+| Executive | VPs / Directors / C-suite | 4-6 | 5-15 min | Is the business healthy? |
+| Operations | SREs / Platform / NOC | 8-12 | 1-5 min | What's degraded right now? |
+| Engineering | Developers / DBAs / Perf | 10-15 | on-demand | Why is X slow? |
+Drill-down by design — link tiers via markdown tile dashboard links.
+For environments where SVG doesn't render
+-->
 
 The three-tier hierarchy ensures every stakeholder gets the right information at the right level of detail.
 

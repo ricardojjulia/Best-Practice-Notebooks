@@ -1,6 +1,6 @@
 # K8S-02: DynaKube Operator Deployment
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 2 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Installing and Configuring the Dynatrace Operator
 The DynaKube operator is the recommended way to deploy Dynatrace monitoring in Kubernetes. This notebook covers installation via Helm, configuration options, and deployment modes for different use cases.
@@ -27,9 +27,11 @@ The DynaKube operator is the recommended way to deploy Dynatrace monitoring in K
 | **Kubernetes Cluster** | v1.24+ with admin access |
 | **Helm** | v3.x installed |
 | **kubectl** | Configured for your cluster |
-| **API Tokens** | Operator token + Data ingest token |
+| **API Tokens** | Operator token (Platform Token recommended) + Data ingest token |
 
-> **Version Support Policy:** OneAgent and ActiveGate versions are supported for **9 months (Standard)** or **12 months (Enterprise)**. Third-party technologies are supported for 6 months beyond vendor EOL. See [Support Policy](https://www.dynatrace.com/company/trust-center/support-policy/).
+> **Sprint-1.337+ token recommendation:** new automation should use **Platform Tokens** (`dt0s16` / `dt0s01`) with `Authorization: Bearer` for the Operator token. The OneAgent installer download path still uses Classic API Tokens (`dt0c01` with `Authorization: Api-Token`); this is expected and supported. See the [IAM series](../../iam/) for parameterized policy patterns and the ONBRD-99 Recommended Defaults card for the canonical token / configuration / extension stack.
+
+> **Version Support Policy:** OneAgent and ActiveGate versions are supported for **9 months (Standard)** or **12 months (Enterprise)**. Third-party technologies are supported for 6 months beyond vendor EOL. See [Support Policy (Dynatrace)](https://www.dynatrace.com/company/trust-center/support-policy/).
 
 ## 1. Operator Overview
 
@@ -361,10 +363,12 @@ Configure OTel Collector and Log Monitoring via `spec.templates`:
 spec:
   templates:
     otelCollector:
-      # ⚠️ Always pin to specific version - avoid 'latest'
+      # ⚠️ Always pin to specific version - avoid 'latest'.
+      # Current latest as of May 2026 is v0.48.0; verify against the live releases:
+      # https://github.com/Dynatrace/dynatrace-otel-collector/releases
       imageRef:
         repository: public.ecr.aws/dynatrace/dynatrace-otel-collector
-        tag: "0.16.0"  # Check releases for current version
+        tag: "0.48.0"
       resources:
         requests:
           cpu: 100m
@@ -484,9 +488,11 @@ helm upgrade dynatrace-operator dynatrace/dynatrace-operator \
 
 | Operator Version | Min K8s | Max K8s | Notes |
 |------------------|---------|---------|-------|
-| 1.6.x | 1.21 | 1.28 | Supported |
-| 1.7.x | 1.23 | 1.29 | Supported |
-| 1.8.x | 1.24 | 1.30 | Latest (v1.8.1, Feb 2026) |
+| 1.7.x | 1.23 | 1.29 | Supported (verify against your environment) |
+| 1.8.x | 1.24 | 1.30 | Supported |
+| 1.9.x | 1.25 | 1.31 | **Latest** (v1.9.0, April 2026) — verify min/max ranges in the [release notes](https://github.com/Dynatrace/dynatrace-operator/releases) for your specific tag |
+
+> **Operator support window:** the Standard 9-month / Enterprise 12-month support policy means versions older than v1.7 are likely past EOL. Plan upgrades accordingly. Older versions may still function but will not receive security or compatibility fixes.
 
 ### Rollback if Needed
 
@@ -527,9 +533,11 @@ In this notebook, you learned:
 
 ## References
 
-- [Dynatrace Operator](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment)
-- [DynaKube CRD Reference](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-crd)
-- [Helm Chart Values](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
+- [Setup on Kubernetes — deployment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment) — application-observability, full-stack-observability, platform-observability deployment paths
+- [DynaKube parameters reference (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters) — full CRD spec (renamed from `dynakube-crd`)
+- [DynaKube feature flags (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-feature-flags) — reference list of supported feature-flag annotations
+- [Helm chart values.yaml (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml) — every Helm install option
+- [Dynatrace Operator releases (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/releases) — current latest is v1.9.0 (April 2026); check before each install
 
 ---
 

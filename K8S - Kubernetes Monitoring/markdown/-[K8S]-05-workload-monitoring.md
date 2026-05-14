@@ -1,6 +1,6 @@
 # K8S-05: Workload Monitoring
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 5 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 5 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Application-Level Observability in Kubernetes
 Workload monitoring focuses on the application layer: deployments, pods, containers, and the services they provide. This notebook covers monitoring Kubernetes workloads from deployment health to service performance.
@@ -50,16 +50,20 @@ Workload monitoring focuses on the application layer: deployments, pods, contain
 | `SERVICE` | Service (detected) | Endpoints, traffic |
 
 ```dql
-// List all workloads (deployments, statefulsets)
-fetch dt.entity.cloud_application
-| fields entity.name, tags
+// List Kubernetes workloads (Deployments) via smartscape topology
+smartscapeNodes "K8S_DEPLOYMENT"
+| fields entity.name = name, tags
 | sort entity.name asc
 | limit 50
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_DEPLOYMENT
-// | fields name, tags
-// | sort name asc
+// For StatefulSets, DaemonSets, etc., substitute the type:
+// smartscapeNodes "K8S_STATEFULSET"
+// smartscapeNodes "K8S_DAEMONSET"
+
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.cloud_application
+// | fields entity.name, tags
+// | sort entity.name asc
 // | limit 50
 
 ```
@@ -338,9 +342,13 @@ In this notebook, you learned:
 
 ## References
 
-- [Kubernetes Workload Monitoring](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-workload-and-node-monitoring)
-- [Container Monitoring](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/container-platform-monitoring)
-- [Service Monitoring](https://docs.dynatrace.com/docs/observe/applications-and-microservices/services)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [Full observability deployment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/full-stack-observability)
+- [Application observability deployment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/application-observability)
+- [Kubernetes app — workloads view (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/kubernetes-app)
+- [Container platform monitoring (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/container-platform-monitoring)
+- [Service monitoring (DT docs)](https://docs.dynatrace.com/docs/observe/applications-and-microservices/services)
+- [smartscapeNodes command (DT docs)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-query-language)
 
 ---
 
