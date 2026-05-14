@@ -1,6 +1,6 @@
-# AUTOM-03 LAB: Monaco Configuration as Code
+# AUTOM-97 LAB: Monaco Configuration as Code
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 9 (LAB) | **Created:** April 2026 | **Last Updated:** 05/11/2026
+> **Series:** AUTOM — Dynatrace Automation | **Reference:** 97 — Monaco Hands-On LAB | **Created:** April 2026 | **Last Updated:** 05/13/2026
 
 ## Overview
 
@@ -189,10 +189,10 @@ monaco download manifest.yaml --environment dev --output-folder downloaded
 ### Download Specific Configuration Types
 
 ```shellscript
-# Download only alerting profiles and management zones
+# Download only alerting profiles and management zones (Settings 2.0 schemas)
 cd dynatrace-config
 monaco download manifest.yaml --environment dev --output-folder downloaded \
-  --api builtin:alerting.profile,builtin:management-zones
+  --settings-schema builtin:alerting.profile,builtin:management-zones
 ```
 
 ### What Gets Downloaded
@@ -469,8 +469,9 @@ delete:
 
 ```shellscript
 # Delete configurations listed in delete.yaml
+# Note: the manifest is passed via --manifest, not as a positional argument
 cd dynatrace-config
-monaco delete manifest.yaml --file delete.yaml --environment dev
+monaco delete --manifest manifest.yaml --file delete.yaml --environment dev
 ```
 
 ### Delete Behavior
@@ -754,7 +755,7 @@ After completing the hands-on steps above, these repositories provide deeper exa
 
 | Repository | Description |
 |------------|-------------|
-| [dynatrace-configuration-as-code](https://github.com/Dynatrace/dynatrace-configuration-as-code) | Official Monaco CLI (v2.28.5) — Go binary, Apache-2.0 |
+| [dynatrace-configuration-as-code](https://github.com/Dynatrace/dynatrace-configuration-as-code) | Official Monaco CLI (v2.28.x) — Go binary, Apache-2.0 |
 | [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | Official samples repo with 9 Monaco starter templates in `basic-templates-monaco` |
 | [easytrade](https://github.com/Dynatrace/easytrade) | Demo microservices app with a working `monaco/` directory (manifest.yaml, detection rules, workflows) |
 | [Dynatrace-Config-Manager](https://github.com/Dynatrace/Dynatrace-Config-Manager) | GUI tool for tenant-to-tenant config migration; complements Monaco for brownfield scenarios |
@@ -777,7 +778,7 @@ Monaco configurations for ingesting CI/CD pipeline events via OpenPipeline:
 | `azure_devops_observability` | Azure DevOps |
 | `argocd_observability` | ArgoCD |
 
-> **Note:** Monaco v1 (`dynatrace-oss/dynatrace-monitoring-as-code`) is deprecated. Use `monaco convert` to migrate v1 projects to v2.
+> **Note:** Monaco v1 (`dynatrace-oss/dynatrace-monitoring-as-code`) is no longer supported. Migrate v1 projects to v2 by re-running `monaco download` against the source tenant — there is no automated v1→v2 conversion subcommand.
 
 ---
 

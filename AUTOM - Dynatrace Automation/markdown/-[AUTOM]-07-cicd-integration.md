@@ -1,6 +1,6 @@
 # AUTOM-07: CI/CD Integration
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 05/13/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -2089,15 +2089,16 @@ In practice, the two-pipeline architecture produces a clear operational rule: **
 
 Teams build and validate configuration in a **dev/test tenant** where they have UI write access. Once tested, the provisioning pipeline — running as the single SA (service account) — promotes that configuration to production. No human ClickOps in prod, and a single auditable write path.
 
-```
-Dev Tenant                              Prod Tenant
-──────────                              ───────────
-Humans: read + write (UI)               Humans: read-only
-  ↓                                       ↑
-Teams build & test config               Pipeline promotes tested config
-  ↓                                       ↑
-Pipeline B validates    ──────────────→ SA user writes (only writer)
-```
+![Single SA Writer — Promotion Across Tenants](images/07-single-sa-writer-flow_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Tenant | Human access | Flow |
+|--------|--------------|------|
+| Dev | read + write (UI) | Humans iterate freely → build and test config → Pipeline B validates and approves the artifact for promotion |
+| Prod | read-only | Pipeline promotes the tested config → SA user is the only writer (credentials in Vault); humans observe but cannot write |
+| Boundary | — | Promote arrow is audited (Sentinel / OPA / approval gate); same artifact moves from dev to prod |
+Single-SA-writer rule: humans never have prod write access. One auditable identity, one credential to rotate, one change trail to review.
+-->
 
 This model works with or without Sentinel. It directly addresses the access scoping challenge: within a single tenant, you cannot easily separate write access between teams for v1 resources. By splitting dev (where humans create) from prod (where only the pipeline writes), you get isolation through environment boundaries rather than token scoping. The SA's credentials live in Vault or HCP Terraform — never in human hands.
 

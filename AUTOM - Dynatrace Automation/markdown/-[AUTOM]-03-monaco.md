@@ -1,6 +1,6 @@
 # AUTOM-03: Monaco Configuration-as-Code
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 3 of 9 | **Created:** January 2026 | **Last Updated:** 05/13/2026
 
 Monaco (Monitoring as Code) is Dynatrace's official CLI tool for configuration management. It uses YAML files to define configurations and supports version control, CI/CD integration, and multi-environment deployments.
 
@@ -323,16 +323,18 @@ monaco deploy manifest.yaml --dry-run
 
 ### Validate Configurations
 
-Check YAML syntax and schema validity:
+Monaco does **not** ship a standalone `monaco validate` subcommand. Validation runs as part of `monaco deploy --dry-run`, which loads the manifest, parses every project, resolves cross-references, and contacts the target environment to confirm reachability and token scopes — all without making changes:
+
 ```bash
-monaco validate manifest.yaml
+monaco deploy manifest.yaml --dry-run
 ```
 
 ### Delete Configurations
 
-Remove configurations not in your project (orphans):
+Remove configurations not in your project (orphans). The manifest is passed via `--manifest`, not as a positional argument:
+
 ```bash
-monaco delete manifest.yaml --file delete.yaml
+monaco delete --manifest manifest.yaml --file delete.yaml
 ```
 
 **delete.yaml:**
@@ -351,7 +353,7 @@ delete:
 |------|---------|----------|
 | 1 | monaco download | Export current config |
 | 2 | Edit YAML files | Make changes |
-| 3 | monaco validate | Check for errors |
+| 3 | monaco deploy --dry-run | Check for errors |
 | 4 | Git commit | Version control |
 | 5 | monaco deploy --dry-run | Preview changes |
 | 6 | monaco deploy | Apply changes |
@@ -548,7 +550,7 @@ The following GitHub repositories provide starter templates, real-world examples
 
 | Repository | Description |
 |------------|-------------|
-| [dynatrace-configuration-as-code](https://github.com/Dynatrace/dynatrace-configuration-as-code) | Official Monaco CLI (v2.28.5) -- Go binary, Apache-2.0 |
+| [dynatrace-configuration-as-code](https://github.com/Dynatrace/dynatrace-configuration-as-code) | Official Monaco CLI (v2.28.x) -- Go binary, Apache-2.0 |
 | [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | Official samples repo with 9 Monaco starter templates in `basic-templates-monaco` |
 | [easytrade](https://github.com/Dynatrace/easytrade) | Demo microservices app with a working `monaco/` directory (manifest.yaml, detection rules, workflows) |
 | [Dynatrace-Config-Manager](https://github.com/Dynatrace/Dynatrace-Config-Manager) | GUI tool for tenant-to-tenant config migration; complements Monaco for brownfield scenarios |
@@ -579,7 +581,7 @@ Monaco configurations for ingesting CI/CD pipeline events via OpenPipeline:
 | [monaco-self-paced-exercises](https://github.com/dynatrace-ace/monaco-self-paced-exercises) | 6 structured exercises: install, auto-tag, download, variables, delete/restore, linking configs |
 | [monaco-demo](https://github.com/dt-demos/monaco-demo) | Working GitHub Actions workflow for Monaco deploy with "crawl-walk-run" adoption methodology |
 
-> **Note:** Monaco v1 (`dynatrace-oss/dynatrace-monitoring-as-code`) is deprecated. Use `monaco convert` to migrate v1 projects to v2.
+> **Note:** Monaco v1 (`dynatrace-oss/dynatrace-monitoring-as-code`) is no longer supported. Migrate v1 projects to v2 by re-running `monaco download` against the source tenant — there is no automated v1→v2 conversion subcommand.
 
 ---
 

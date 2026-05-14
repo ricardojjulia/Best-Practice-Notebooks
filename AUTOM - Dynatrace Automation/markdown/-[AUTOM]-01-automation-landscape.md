@@ -1,6 +1,6 @@
 # AUTOM-01: Automation Landscape
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 05/12/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 1 of 9 | **Created:** January 2026 | **Last Updated:** 05/13/2026
 
 Dynatrace provides multiple ways to automate configuration management and operational tasks. This series covers all major automation options, helping you choose the right approach for your needs.
 
@@ -58,6 +58,9 @@ By the end of this notebook, you will:
 | **AUTOM-07** | CI/CD Integration - GitOps patterns |
 | **AUTOM-08** | Migration Automation - Bulk configuration transfer |
 | **AUTOM-09** | Terraform GitOps Setup Recipe - Repo layout, state backends, lifecycle protections, team onboarding |
+| **AUTOM-96 LAB** | GitHub Actions CI/CD for Dynatrace Terraform - Hands-on: OIDC → Vault → Platform Token, environment-gated apply |
+| **AUTOM-97 LAB** | Monaco Configuration-as-Code - Hands-on: install, download, validate, deploy, multi-env, GitHub Actions |
+| **AUTOM-98 LAB** | Terraform for Dynatrace - Hands-on: provider config, mixed-auth, Settings 2.0, IAM, import, state, drift |
 
 ### Why Automate?
 

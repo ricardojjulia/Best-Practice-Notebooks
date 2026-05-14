@@ -1,6 +1,6 @@
-# AUTOM-04 LAB: Terraform for Dynatrace
+# AUTOM-98 LAB: Terraform for Dynatrace
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 (LAB) | **Created:** April 2026 | **Last Updated:** 05/11/2026
+> **Series:** AUTOM — Dynatrace Automation | **Reference:** 98 — Terraform Hands-On LAB | **Created:** April 2026 | **Last Updated:** 05/13/2026
 
 ## Overview
 
@@ -89,44 +89,59 @@ terraform {
   required_providers {
     dynatrace = {
       source  = "dynatrace-oss/dynatrace"
-      version = "~> 1.93"
+      version = "~> 1.96"
     }
   }
 }
 ```
 
-### Authentication Method 1: API Token (Simplest)
+> **Token-type decision (read first):** The provider has a **mixed-auth model** — some resources need a Platform Token (`dt0s16`), others need a classic API Token (`dt0c01`), and IAM resources need OAuth. For the full per-resource decision matrix, see **AUTOM-04 § 3 "Service User Credentials for Terraform — Platform Token vs Classic API Token"**. The methods below cover the three credential types you will configure; the lecture explains *which one each resource needs*.
 
-Best for getting started. The API Token covers Settings 2.0, Synthetics, and SLOs.
+### Authentication Method 1: Platform Token (default for most new resources)
+
+Best for Settings 2.0, Gen3 resources (workflows, documents, segments, buckets, OpenPipeline). Mint in the Dynatrace UI under **Account Management > Identity & access management > Platform tokens** with the scopes the resource requires.
 
 ```hcl
 provider "dynatrace" {
-  dt_env_url   = "https://<env-id>.live.dynatrace.com"
-  dt_api_token = var.dt_api_token
+  dt_env_url       = "https://<env-id>.apps.dynatrace.com"
+  platform_token   = var.dt_platform_token
 }
 ```
 
-### Authentication Method 2: OAuth Client Credentials (Recommended for Automation)
+### Authentication Method 2: Classic API Token (legacy + a few specific resources)
 
-Required for IAM resources and Gen3 platform resources (workflows, documents, segments).
+Required for Synthetic monitors, SLO v1, and the `dynatrace_api_token` resource itself. Often configured **alongside** a Platform Token in the same provider block.
 
 ```hcl
 provider "dynatrace" {
   dt_env_url       = "https://<env-id>.live.dynatrace.com"
+  dt_api_token     = var.dt_api_token
+  platform_token   = var.dt_platform_token
+}
+```
+
+> **Important (v1.88.0+):** The OAuth functionality was removed from ~16 provider resources in v1.88.0. Synthetic monitors, SLO v1, and `dynatrace_api_token` no longer accept OAuth — they need a classic API Token. See AUTOM-04 § 3 for the full list.
+
+### Authentication Method 3: OAuth Client Credentials (IAM resources only)
+
+Required for `dynatrace_iam_*` resources (groups, policies, bindings).
+
+```hcl
+provider "dynatrace" {
+  dt_env_url       = "https://<env-id>.apps.dynatrace.com"
   dt_client_id     = var.dt_client_id
   dt_client_secret = var.dt_client_secret
   dt_account_id    = var.dt_account_id
 }
 ```
 
-> **Important (v1.88.0):** OAuth-based authentication **cannot manage synthetic monitors or SLO definitions** as of provider v1.88.0. Use an API Token for those resources, or configure both tokens together.
-
-### Authentication Method 3: Environment Variables
+### Authentication Method 4: Environment Variables
 
 Keep credentials out of `.tf` files entirely:
 
 ```bash
-export DYNATRACE_ENV_URL="https://<env-id>.live.dynatrace.com"
+export DYNATRACE_ENV_URL="https://<env-id>.apps.dynatrace.com"
+export DT_PLATFORM_TOKEN="dt0s16.xxx..."
 export DYNATRACE_API_TOKEN="dt0c01.xxx..."
 ```
 
@@ -136,6 +151,8 @@ With environment variables set, the provider block needs no arguments:
 provider "dynatrace" {}
 ```
 
+> **Production callout — run Terraform as a Service User.** Outside this LAB, mint the Platform Token (and any classic API Token) on a **Service User**, not on a human's account. Three things must align: the Service User's IAM permissions, the creator's `iam:service-users:use` permission, and the token scopes at creation time. The `dynatrace_api_token` resource also stores its minted token plain-text in state — see **AUTOM-04 § 3 "Operational Safety — State File Leakage"** and the **"Bridging the Trust Boundary"** subsection for the recommended *mint-out-of-band, deliver-in-band* pattern.
+
 ### Initialize the Provider
 
 Run `terraform init` to download the provider plugin:
@@ -143,7 +160,7 @@ Run `terraform init` to download the provider plugin:
 ```bash
 terraform init
 # Initializing provider plugins...
-# - Installing dynatrace-oss/dynatrace v1.93.x...
+# - Installing dynatrace-oss/dynatrace v1.96.x...
 # Terraform has been successfully initialized!
 ```
 
@@ -315,6 +332,8 @@ terraform apply
 
 If you already have Dynatrace resources configured manually, you can bring them under Terraform management without recreating them.
 
+> **Bootstrapping from an existing tenant in bulk?** Use the provider's built-in **`-export` utility** rather than running `terraform import` per-resource. From a downloaded provider binary: `./terraform-provider-dynatrace -export -env <url> -token <token>` generates `.tf` files for the entire tenant. The per-resource flow below is right when you only need to onboard a few specific resources.
+
 ### Step 1: Add a Resource Block
 
 Create an empty resource block in your `.tf` file:
@@ -457,6 +476,8 @@ Each environment directory runs independently with its own state and variables.
 
 Terraform state tracks the mapping between your `.tf` files and real Dynatrace resources. By default, state is stored locally in `terraform.tfstate`.
 
+> **State-file leakage warning.** If your Terraform manages the **`dynatrace_api_token`** resource, the minted token value is written **plain-text** to state regardless of `sensitive = true`. The same risk applies to any provider that produces a credential at apply time. Mitigate with backend encryption + restricted access — see **AUTOM-04 § 3 "Operational Safety — State File Leakage When Minting Tokens"** for the full pattern, and **AUTOM-09 § 3** (state backends) and **§ 8** (secrets handling) for the bootstrap recipe.
+
 ### Local State (Default)
 
 Works for single-operator setups. The state file is created automatically after `terraform apply`.
@@ -465,16 +486,16 @@ Works for single-operator setups. The state file is created automatically after 
 
 ### Remote State — S3 Backend
 
-For team use, store state in a shared remote backend:
+For team use, store state in a shared remote backend. The S3 backend has supported **native locking via S3 conditional writes** since Terraform 1.10 — no DynamoDB table required:
 
 ```hcl
 terraform {
   backend "s3" {
-    bucket         = "my-terraform-state"
-    key            = "dynatrace/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-locks"
-    encrypt        = true
+    bucket       = "my-terraform-state"
+    key          = "dynatrace/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true   # native S3 locking (Terraform 1.10+); DynamoDB no longer required
   }
 }
 ```
@@ -483,8 +504,10 @@ terraform {
 |-----------|----------|
 | `bucket` | S3 bucket for state storage |
 | `key` | Path within the bucket |
-| `dynamodb_table` | DynamoDB table for state locking (prevents concurrent modifications) |
-| `encrypt` | Encrypt state at rest |
+| `use_lockfile` | Native S3 lockfile-based concurrency control (Terraform 1.10+); replaces DynamoDB-based locking |
+| `encrypt` | Encrypt state at rest (use SSE-KMS with a customer-managed key for production) |
+
+> **Migrating from DynamoDB?** Set `use_lockfile = true` alongside the existing `dynamodb_table` attribute, run `terraform init -reconfigure`, verify lock acquisition succeeds, then remove `dynamodb_table` on a follow-up apply. See AUTOM-09 § 3 for the full migration recipe.
 
 ### Remote State — Azure Blob
 
@@ -499,7 +522,7 @@ terraform {
 }
 ```
 
-### Remote State — Terraform Cloud
+### Remote State — Terraform Cloud / HCP Terraform
 
 ```hcl
 terraform {
@@ -530,14 +553,22 @@ terraform state rm dynatrace_alerting.production
 <a id="github-actions"></a>
 ## 9. GitHub Actions CI/CD Pipeline
 
-Automate Terraform deployments with GitHub Actions. The workflow runs `plan` on pull requests and `apply` on merge to main.
+This section is a **minimal starter** to confirm the basics work end-to-end with static GitHub Secrets. For production CI/CD — OIDC-federated secret retrieval, multi-environment promotion, plan-comments on PRs, manual-approval gates, and patterns for GitLab / Bitbucket / Bamboo / Jenkins / Azure DevOps — go to:
 
-### Workflow File
+| Where | What it covers |
+|---|---|
+| **AUTOM-96 LAB: GitHub Actions CI/CD for Dynatrace Terraform** | Full hands-on: OIDC → Vault → Platform Token, plan-comment via `actions/github-script`, environment-gated apply, validation walkthrough. The recommended-default end state. |
+| **AUTOM-07: CI/CD Integration** | Conceptual coverage of GitHub Actions, GitLab CI, Bitbucket Pipelines, Atlassian Bamboo, Jenkins, Azure DevOps. |
+| **AUTOM-04 § 3 "Bridging the Trust Boundary"** | Why static GitHub Secrets is no longer the recommended default, and the five mechanisms for getting tokens to the runner. |
+
+The starter below uses a static `secrets.DT_API_TOKEN` and is intentionally kept simple — do **not** ship this pattern to production.
+
+### Starter Workflow (static secrets — not for production)
 
 Create `.github/workflows/terraform-deploy.yml`:
 
 ```yaml
-name: Deploy Dynatrace Terraform
+name: Deploy Dynatrace Terraform (starter)
 
 on:
   pull_request:
@@ -584,7 +615,7 @@ jobs:
           DYNATRACE_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
 ```
 
-### GitHub Secrets
+### GitHub Secrets (starter only)
 
 Store credentials in GitHub repository secrets (**Settings > Secrets and variables > Actions**):
 
@@ -593,20 +624,7 @@ Store credentials in GitHub repository secrets (**Settings > Secrets and variabl
 | `DT_ENV_URL` | `https://<env-id>.live.dynatrace.com` |
 | `DT_API_TOKEN` | Your Dynatrace API token |
 
-### Adding Approval Gates
-
-For production deployments, require manual approval before `terraform apply`:
-
-1. Create a GitHub Environment named `production` under **Settings > Environments**
-2. Enable **Required reviewers** and add approvers
-3. Reference the environment in the `apply` job:
-
-```yaml
-  apply:
-    environment: production   # Requires approval
-    needs: plan
-    # ...
-```
+> **Production migration path:** Once the starter runs cleanly, walk through **AUTOM-96 LAB** to replace these static secrets with OIDC-federated runtime credential fetch from Vault (or AWS Secrets Manager / Azure Key Vault / GCP Secret Manager). The end state has zero long-lived Dynatrace credentials in GitHub Secrets.
 
 ---
 
@@ -674,32 +692,35 @@ jobs:
 
 ### Deployment Checklist
 
-- [ ] Terraform 1.0+ installed and verified
-- [ ] Provider configured with correct authentication
-- [ ] `terraform init` downloads the Dynatrace provider
+- [ ] Terraform 1.0+ installed and verified (1.10+ recommended for native S3 backend locking)
+- [ ] Provider configured with the **right token type per resource** (Platform / classic API / OAuth — see AUTOM-04 § 3)
+- [ ] `terraform init` downloads the Dynatrace provider (v1.96.x or later)
 - [ ] Resources defined in `.tf` files, not configured manually
 - [ ] `terraform.tfvars` and `terraform.tfstate` in `.gitignore`
-- [ ] Remote state backend configured for team use
-- [ ] CI/CD pipeline runs `plan` on PRs, `apply` on merge
+- [ ] Remote state backend configured for team use, with encryption at rest
+- [ ] **Production:** token holder is a Service User, not a human account (see AUTOM-04 § 3)
+- [ ] **Production:** no `dynatrace_api_token` minted in this state file (or backend access is locked down — state stores the token plain-text)
+- [ ] CI/CD pipeline runs `plan` on PRs, `apply` on merge — production uses OIDC-federated secret fetch (see AUTOM-96)
 - [ ] Drift detection scheduled
 
 ### Key Takeaways
 
 | Concept | Key Point |
 |---------|----------|
-| **Provider Setup** | Pin version with `~> 1.93`, configure authentication |
-| **Authentication** | API Token for Synthetics/SLOs, OAuth for IAM and Gen3 |
+| **Provider Setup** | Pin version with `~> 1.96`; v1.88.0+ uses a mixed-auth model |
+| **Authentication** | Platform Token (default) + classic API Token (Synthetics, SLO v1, `dynatrace_api_token`) + OAuth (IAM only) — see AUTOM-04 § 3 |
+| **Service User** | Production token holder is a Service User; three things must align (perms, creator scope, token scope) |
 | **Plan Before Apply** | Always review `terraform plan` output before applying |
-| **State Management** | Use remote backends for team collaboration |
-| **Import** | Bring existing resources under Terraform control without recreation |
-| **CI/CD** | Automate with GitHub Actions; plan on PR, apply on merge |
+| **State Management** | Use remote backends with encryption; `dynatrace_api_token` stores its value plain-text in state regardless of `sensitive` |
+| **Import** | Use `-export` utility for bulk bootstrap; `terraform import` for individual resources |
+| **CI/CD** | Static GitHub Secrets is a starter; production uses OIDC → Vault (or cloud-native secret manager) — see AUTOM-96 |
 | **Drift Detection** | Schedule regular checks with `plan -detailed-exitcode` |
 
 ### Monaco vs Terraform — When to Use Which
 
 | Scenario | Recommended Tool |
 |----------|------------------|
-| Quick config export/import | Monaco |
+| Quick config export/import | Either (Monaco UI flow, or Terraform `-export` utility) |
 | Multi-environment promotion | Either |
 | IAM policy management | Terraform (OAuth required) |
 | Multi-cloud infrastructure + Dynatrace | Terraform |
@@ -719,21 +740,21 @@ jobs:
 
 ---
 
-*Return to **AUTOM-04: Terraform Provider** for conceptual coverage, or continue to **AUTOM-05: Dynatrace Workflows** for event-driven automation.*
+*Continue to **AUTOM-09: Terraform GitOps Setup Recipe** for state backends, lifecycle protections, and multi-environment promotion; then **AUTOM-07: CI/CD Integration** for production pipeline patterns (and the **AUTOM-96 LAB** for the GitHub Actions hands-on); or jump to **AUTOM-05: Dynatrace Workflows** for event-driven automation.*
 
 
 ### Community Resources
 
 | Repository | Description |
 |------------|-------------|
-| [terraform-provider-dynatrace](https://github.com/dynatrace-oss/terraform-provider-dynatrace) | Official provider (v1.93.0, 180 releases) with export capability |
+| [terraform-provider-dynatrace](https://github.com/dynatrace-oss/terraform-provider-dynatrace) | Official provider (v1.96.x) with built-in `-export` utility |
 | [dynatrace-configuration-as-code-samples](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples) | 10 starter templates in `basic-templates-terraform`, plus modules, IAM, and DQL examples |
 | [terraform_modules](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples/tree/main/terraform_modules) | Reusable module pattern for synthetic monitors |
 | [terraform_dql_example](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples/tree/main/terraform_dql_example) | DQL as a Terraform data source for dynamic config generation |
 | [terraform_team_onboarding](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples/tree/main/terraform_team_onboarding) | IAM policies, groups, and Azure Entra ID for team provisioning |
 | [iam_tf_sample](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples/tree/main/iam_tf_sample) | IAM policies, Grail buckets, OpenPipelines, and segments |
 
-> **Tip:** Use the provider export feature (`./terraform-provider-dynatrace -export -env <url> -token <token>`) to generate `.tf` files from an existing tenant -- the fastest path to Terraform-managed configuration.
+> **Tip:** Use the provider export feature (`./terraform-provider-dynatrace -export -env <url> -token <token>`) to generate `.tf` files from an existing tenant — the fastest path to Terraform-managed configuration.
 
 ---
 
