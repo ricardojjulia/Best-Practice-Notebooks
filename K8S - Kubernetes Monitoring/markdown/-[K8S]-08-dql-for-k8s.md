@@ -1,6 +1,6 @@
 # K8S-08: DQL Queries for Kubernetes
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 8 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Advanced Query Patterns for Kubernetes Data
 This notebook provides a comprehensive reference of DQL queries for Kubernetes monitoring. From basic entity queries to complex performance analysis, these patterns help you extract insights from your Kubernetes data.
@@ -43,62 +43,66 @@ This notebook provides a comprehensive reference of DQL queries for Kubernetes m
 | Service | `dt.entity.service` | Detected services |
 
 ```dql
-// List all Kubernetes clusters
-fetch dt.entity.kubernetes_cluster
-| fields entity.name, tags
+// List all Kubernetes clusters (smartscape topology)
+smartscapeNodes "K8S_CLUSTER"
+| fields entity.name = name, tags
 | sort entity.name asc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_CLUSTER
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.kubernetes_cluster
+// | fields entity.name, tags
+// | sort entity.name asc
 
 ```
 
 ```dql
-// List all Kubernetes nodes
-fetch dt.entity.kubernetes_node
-| fields entity.name, tags
+// List all Kubernetes nodes (smartscape topology)
+smartscapeNodes "K8S_NODE"
+| fields entity.name = name, tags
 | sort entity.name asc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_NODE
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.kubernetes_node
+// | fields entity.name, tags
+// | sort entity.name asc
 
 ```
 
 ```dql
-// List all namespaces
-fetch dt.entity.cloud_application_namespace
-| fields entity.name, tags
+// List all namespaces (smartscape topology)
+smartscapeNodes "K8S_NAMESPACE"
+| fields entity.name = name, tags
 | sort entity.name asc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_NAMESPACE
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.cloud_application_namespace
+// | fields entity.name, tags
+// | sort entity.name asc
 
 ```
 
 ```dql
-// List all workloads (deployments, statefulsets)
-fetch dt.entity.cloud_application
-| fields entity.name, tags
+// List all workloads — Deployments (smartscape topology)
+smartscapeNodes "K8S_DEPLOYMENT"
+| fields entity.name = name, tags
 | sort entity.name asc
 | limit 50
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_DEPLOYMENT
-// | fields name, tags
-// | sort name asc
+// For other workload types, substitute:
+// smartscapeNodes "K8S_STATEFULSET"
+// smartscapeNodes "K8S_DAEMONSET"
+
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.cloud_application
+// | fields entity.name, tags
+// | sort entity.name asc
 // | limit 50
 
 ```
 
 ```dql
-// Count Kubernetes nodes
-fetch dt.entity.kubernetes_node
+// Count Kubernetes nodes (smartscape topology)
+smartscapeNodes "K8S_NODE"
 | summarize nodeCount = count()
 ```
 
@@ -289,14 +293,14 @@ timeseries avgNodeCpu = avg(dt.kubernetes.node.cpu_usage), from:-1h, by:{dt.enti
 ### Queries Optimized for Dashboards
 
 ```dql
-// Cluster summary tile
-fetch dt.entity.kubernetes_cluster
+// Cluster summary tile (smartscape topology)
+smartscapeNodes "K8S_CLUSTER"
 | summarize clusterCount = count()
 ```
 
 ```dql
-// Node count tile
-fetch dt.entity.kubernetes_node
+// Node count tile (smartscape topology)
+smartscapeNodes "K8S_NODE"
 | summarize nodeCount = count()
 ```
 
@@ -387,8 +391,11 @@ This notebook provided DQL query patterns for:
 
 ## References
 
-- [DQL Documentation](https://docs.dynatrace.com/docs/observe-and-explore/query-data/dynatrace-query-language)
-- [Kubernetes Metrics Reference](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-metrics)
+- [Dynatrace Query Language (DQL) reference (DT docs)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-query-language)
+- [smartscapeNodes command (DT docs)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-query-language)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [Kubernetes app — workloads + namespaces views (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/kubernetes-app)
+- [Davis Problems app (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/problems-app)
 
 ---
 

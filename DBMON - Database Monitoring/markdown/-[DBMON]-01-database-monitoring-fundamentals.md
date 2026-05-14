@@ -1,6 +1,6 @@
 # DBMON-01: Database Monitoring Fundamentals
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 04/26/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -52,6 +52,15 @@ OneAgent captures every database call as a **span** in the distributed trace. Th
 
 > **Note:** Dynatrace normalizes SQL statements by replacing literal values with `?` placeholders. This groups identical query patterns together regardless of parameter values.
 
+![OneAgent vs ActiveGate Extensions Architecture](images/01-oneagent-vs-extensions-architecture.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Path | Captures | DQL pattern |
+|------|----------|-------------|
+| OneAgent client-side | Span attributes (db.system, db.statement, duration) for every DB call from app | fetch spans \| filter db.system == "..." |
+| ActiveGate Extensions server-side | Server-internal metrics (connections, buffer hit ratio, table sizes, deadlocks) | timeseries on extension-emitted metric keys |
+For environments where SVG doesn't render
+-->
+
 <a id="database-span-anatomy"></a>
 
 ## 2. Database Span Anatomy
@@ -88,20 +97,19 @@ The query above returns the key attributes of each database span:
 Dynatrace automatically creates **database service entities** when it detects database calls. These entities represent the logical database endpoint, not the host. Let's discover what database services exist in your environment.
 
 ```dql
-// Discover all database service entities in the environment
-fetch dt.entity.service
+// Discover all database service entities (modern Smartscape topology query)
+smartscapeNodes "SERVICE"
 | filter serviceType == "DATABASE_SERVICE"
-| fields entity.name, databaseHostNames, databaseVendor, softwareTechnologies
-| sort entity.name asc
+| fields name, databaseHostNames, databaseVendor, softwareTechnologies
+| sort name asc
 | limit 50
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes SERVICE
+// Legacy alternative (deprecated dt.entity.* — still works on hybrid tenants):
+// fetch dt.entity.service
 // | filter serviceType == "DATABASE_SERVICE"
-// | fields name, databaseHostNames, databaseVendor, softwareTechnologies
-// | sort name asc
+// | fields entity.name, databaseHostNames, databaseVendor, softwareTechnologies
+// | sort entity.name asc
 // | limit 50
-
 ```
 
 You can also discover databases through the spans themselves, which is useful when entity detection hasn't yet completed or when you want to see databases called from specific services.
@@ -110,10 +118,11 @@ You can also discover databases through the spans themselves, which is useful wh
 // Discover database technologies from span data
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| summarize call_count = count(),
-           avg_duration_ms = avg(duration) / 1ms,
-           distinct_statements = countDistinct(db.statement),
-           by:{db.system, db.namespace, server.address}
+| summarize {
+|     call_count = count(),
+|     avg_duration_ms = avg(duration) / 1ms,
+|     distinct_statements = countDistinct(db.statement)
+| }, by:{db.system, db.namespace, server.address}
 | sort call_count desc
 | limit 20
 ```
@@ -128,11 +137,12 @@ Understanding the distribution of database calls helps identify which databases 
 // Database call volume by technology over the last hour
 fetch spans, from:-1h
 | filter isNotNull(db.system)
-| summarize total_calls = count(),
-           avg_duration_ms = avg(duration) / 1ms,
-           p95_duration_ms = percentile(duration, 95) / 1ms,
-           max_duration_ms = max(duration) / 1ms,
-           by:{db.system}
+| summarize {
+|     total_calls = count(),
+|     avg_duration_ms = avg(duration) / 1ms,
+|     p95_duration_ms = percentile(duration, 95) / 1ms,
+|     max_duration_ms = max(duration) / 1ms
+| }, by:{db.system}
 | sort total_calls desc
 ```
 
@@ -173,10 +183,11 @@ Dynatrace supports a broad range of database technologies through OneAgent auto-
 // Discover which database technologies are active in your environment
 fetch spans, from:-24h
 | filter isNotNull(db.system)
-| summarize call_count = count(),
-           unique_databases = countDistinct(db.namespace),
-           unique_servers = countDistinct(server.address),
-           by:{db.system}
+| summarize {
+|     call_count = count(),
+|     unique_databases = countDistinct(db.namespace),
+|     unique_servers = countDistinct(server.address)
+| }, by:{db.system}
 | sort call_count desc
 ```
 
@@ -186,13 +197,16 @@ fetch spans, from:-24h
 
 While OneAgent captures database calls from the application side (client spans), ActiveGate extensions monitor the database server itself. This provides internal metrics that are invisible from the application perspective.
 
+> **Recommendation for new customers:** start with **Extensions 3rd-gen** (the current generation, sprint-1.337+). Extensions 2.0 is still supported for existing installs; Extensions 3rd-gen is the default for net-new database monitoring.
+
 ### Extension Architecture
 
 | Component | Role |
 |-----------|------|
-| **ActiveGate** | Hosts the extension runtime; must be host-based (not K8s-based) for Extensions 2.0 |
-| **Extension 2.0** | Python-based plugin that queries database system tables on a schedule |
-| **Monitoring Configuration** | Defines connection string, credentials, and polling interval |
+| **ActiveGate** | Hosts the extension runtime; must be **host-based** (not Kubernetes-based) for Extensions 2.0 — Extensions 3rd-gen support is evolving, check the Dynatrace docs for current K8s status |
+| **Extension Package** | YAML-defined declarative package executed by the Extension Execution Controller (EEC). Most database extensions ship with built-in SQL/Prometheus/SNMP data sources; custom logic can be added via an optional Python data source |
+| **Monitoring Configuration** | Defines connection string, credentials, polling interval, and the destination Grail bucket |
+| **`default_database_monitoring` bucket** | Where extension logs land by default; reference this bucket in IAM policies for DB-team access scoping (see ORGNZ-02 + IAM-04/05) |
 
 ### Available Extensions
 
@@ -205,6 +219,12 @@ While OneAgent captures database calls from the application side (client spans),
 | **MongoDB** | Connections, operations/sec, document metrics, replica set health, storage engine stats |
 
 > **Note:** Extensions 2.0 require a **host-based ActiveGate**, not a Kubernetes-based deployment. See the Dynatrace documentation for extension installation procedures.
+
+### Where to Go Deeper
+
+- **AUTOM series** (11 notebooks) — GitOps / Monaco / Terraform automation for extension deployment at scale
+- **ORGNZ-02** — Bucket strategy (including `default_database_monitoring`)
+- **IAM-04 / IAM-05** — Policy design that scopes extension log access by bucket
 
 ### Where Extension Logs Land in Grail
 

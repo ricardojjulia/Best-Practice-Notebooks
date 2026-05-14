@@ -1,6 +1,6 @@
 # DASH-04: Operations Dashboards
 
-> **Series:** DASH — Dashboard Design & Building | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** DASH — Dashboard Design & Building | **Notebook:** 4 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -200,6 +200,19 @@ fetch events, from:-6h
 <a id="ops-layout"></a>
 
 ## 7. Operations Dashboard Layout
+
+![Operations Dashboard Layout](images/04-operations-dashboard-layout.png)
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Section | Tiles | Reading Order |
+|---------|-------|---------------|
+| 1. Status Bar (top) | Active problems, error rate, log errors | First — always visible |
+| 2. Service Health | Response time trend, error rate by service | Top-left anchor (most actionable) |
+| 3. Log Intelligence | Log volume by level, top error sources | Z-pattern reading |
+| 4. Infrastructure | CPU by host, memory by host | Continue Z-pattern |
+| 5. Change Context | Recent deployments | Bottom-right (correlates with above) |
+Anti-patterns to avoid: spaghetti charts, all-24h tiles, no problem context, missing deploys.
+For environments where SVG doesn't render
+-->
 
 ### Recommended Tile Arrangement
 

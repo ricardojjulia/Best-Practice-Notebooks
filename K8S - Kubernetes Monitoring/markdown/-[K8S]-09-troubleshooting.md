@@ -1,6 +1,6 @@
 # K8S-09: Troubleshooting Kubernetes Monitoring
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 9 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Debugging Dynatrace Monitoring in Kubernetes
 When monitoring doesn't work as expected, systematic troubleshooting is essential. This notebook covers common issues, diagnostic procedures, and resolution steps for Dynatrace Kubernetes monitoring.
@@ -263,14 +263,14 @@ kubectl label namespace <namespace> dynatrace-injection=enabled
 4. Check for filtering issues
 
 ```dql
-// Verify Kubernetes entities are being discovered
-fetch dt.entity.kubernetes_cluster
-| fields entity.name, lifetime
+// Verify Kubernetes entities are being discovered (smartscape topology)
+smartscapeNodes "K8S_CLUSTER"
+| fields entity.name = name, lifetime
 | sort lifetime desc
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_CLUSTER
-// | fields name, lifetime
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.kubernetes_cluster
+// | fields entity.name, lifetime
 // | sort lifetime desc
 
 ```
@@ -487,9 +487,13 @@ In this notebook, you learned:
 
 ## References
 
-- [Dynatrace Operator Troubleshooting](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/troubleshooting)
-- [OneAgent Troubleshooting](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/troubleshooting/oneagent-troubleshooting)
-- [Kubernetes Monitoring FAQ](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-monitoring-faq)
+- [Operator + DynaKube troubleshooting (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/troubleshooting)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [How K8s monitoring works (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/how-it-works)
+- [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
+- [Davis Problems app (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/problems-app)
+- [Kubernetes/OpenShift troubleshooting map (Dynatrace community)](https://community.dynatrace.com/t5/Troubleshooting/Kubernetes-Openshift-troubleshooting-map/ta-p/264113)
+- [Dynatrace Operator releases (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/releases)
 
 ---
 

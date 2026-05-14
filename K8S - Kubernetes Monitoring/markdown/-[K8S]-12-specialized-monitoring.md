@@ -1,6 +1,6 @@
 # K8S-12: Specialized Monitoring Scenarios
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## NGINX Ingress, CSI Driver, Resource Tuning, and StatsD Ingestion
 This notebook covers specialized monitoring scenarios including NGINX Ingress Controller instrumentation, CSI Driver architecture, resource sizing guidelines, and StatsD metric ingestion on Kubernetes.
@@ -541,12 +541,13 @@ In this notebook, you learned:
 
 ## References
 
-- [NGINX Instrumentation](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/deployment-and-configuration/monitoring-and-instrumentation/instrument-nginx)
-- [CSI Driver Configuration](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/csi-driver)
-- [Dynatrace Operator Helm Chart](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
-- [Telemetry Ingest](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-ingest)
-- [Send StatsD Metrics to Dynatrace](https://docs.dynatrace.com/docs/ingest-from/extend-dynatrace/extend-metrics/ingestion-methods/statsd)
-- [Ingest StatsD Data with the OpenTelemetry Collector](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/statsd)
+- [NGINX instrumentation (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/deployment-and-configuration/monitoring-and-instrumentation/instrument-nginx)
+- [Storage / CSI driver (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/storage)
+- [Dynatrace Operator Helm chart (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
+- [Telemetry ingest with OpenTelemetry (DT docs)](https://docs.dynatrace.com/docs/extend-dynatrace/opentelemetry/opentelemetry-ingest)
+- [StatsD ingestion (DT docs)](https://docs.dynatrace.com/docs/ingest-from/extend-dynatrace/extend-metrics/ingestion-methods/statsd)
+- [StatsD via OpenTelemetry Collector (DT docs)](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/statsd)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 
 ---
 

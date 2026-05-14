@@ -222,6 +222,7 @@ Technical deep-dive companion to the NR2DT series — focused reference notebook
 
 ### [ONBRD - Dynatrace Onboarding](ONBRD%20-%20Dynatrace%20Onboarding/README.md)
 Step-by-step onboarding series for new Dynatrace users.
+- [ONBRD-00: Architect's Sequence & Dependency Runbook](ONBRD%20-%20Dynatrace%20Onboarding/markdown/-%5BONBRD%5D-00-architect-sequence.md) — Sequence, dependencies, and decisions for architects onboarding a new tenant
 - [ONBRD-01: First Steps](ONBRD%20-%20Dynatrace%20Onboarding/markdown/-%5BONBRD%5D-01-first-steps.md) — Getting started with Dynatrace
 - [ONBRD-02: IAM and Authentication](ONBRD%20-%20Dynatrace%20Onboarding/markdown/-%5BONBRD%5D-02-iam-and-authentication.md) — Identity and access management
 - [ONBRD-03: Deploying ActiveGate](ONBRD%20-%20Dynatrace%20Onboarding/markdown/-%5BONBRD%5D-03-deploying-activegate.md) — Installing and configuring ActiveGate

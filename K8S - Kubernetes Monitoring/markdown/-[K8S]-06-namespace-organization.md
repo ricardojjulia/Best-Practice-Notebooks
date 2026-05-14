@@ -1,6 +1,6 @@
 # K8S-06: Namespace Organization and Boundaries
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 6 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Organizing Kubernetes Monitoring with Namespaces
 Namespaces provide logical boundaries in Kubernetes for resource isolation, access control, and organizational structure. This notebook covers namespace strategies and how to leverage them in Dynatrace for filtered views, access control, and cost allocation.
@@ -61,16 +61,16 @@ infra-monitoring
 | `default` | Catch-all | Discourage use |
 
 ```dql
-// List all namespaces
-fetch dt.entity.cloud_application_namespace
-| fields entity.name, tags
+// List all Kubernetes namespaces (smartscape topology)
+smartscapeNodes "K8S_NAMESPACE"
+| fields entity.name = name, tags
 | sort entity.name asc
 | limit 50
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_NAMESPACE
-// | fields name, tags
-// | sort name asc
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.cloud_application_namespace
+// | fields entity.name, tags
+// | sort entity.name asc
 // | limit 50
 
 ```
@@ -270,13 +270,18 @@ spec:
 ```
 
 ```dql
-// Workload count by namespace
-fetch dt.entity.cloud_application
+// Workload count via smartscape topology
+smartscapeNodes "K8S_DEPLOYMENT"
 | summarize workloadCount = count()
 | limit 20
 
-// Alternative: Smartscape on Grail (entity.name → name)
-// smartscapeNodes K8S_DEPLOYMENT
+// For StatefulSets / DaemonSets / Pods, substitute the type:
+// smartscapeNodes "K8S_STATEFULSET"
+// smartscapeNodes "K8S_DAEMONSET"
+// smartscapeNodes "K8S_POD"
+
+// Legacy alternative (deprecated for new content):
+// fetch dt.entity.cloud_application
 // | summarize workloadCount = count()
 // | limit 20
 
@@ -377,9 +382,13 @@ In this notebook, you learned:
 
 ## References
 
-- [Kubernetes Namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-- [Resource Quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
-- [Dynatrace Boundaries](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [Kubernetes app — namespaces view (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/kubernetes-app)
+- [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
+- [Manage user permissions / boundaries (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies)
+- [Kubernetes Namespaces (kubernetes.io)](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+- [Resource Quotas (kubernetes.io)](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
+- [smartscapeNodes command (DT docs)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-query-language)
 
 ---
 

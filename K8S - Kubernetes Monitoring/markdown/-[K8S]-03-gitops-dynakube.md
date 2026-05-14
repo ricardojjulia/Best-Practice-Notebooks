@@ -1,6 +1,6 @@
 # K8S-03: GitOps for DynaKube
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 3 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 3 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Managing DynaKube with ArgoCD and Flux
 GitOps enables declarative, version-controlled management of your Dynatrace monitoring configuration. This notebook covers integrating DynaKube with popular GitOps tools: ArgoCD and Flux.
@@ -515,10 +515,14 @@ In this notebook, you learned:
 
 ## References
 
-- [ArgoCD Documentation](https://argo-cd.readthedocs.io/en/stable/)
-- [Flux Documentation](https://fluxcd.io/flux/)
-- [External Secrets Operator](https://external-secrets.io/)
-- [Kustomize](https://kustomize.io/)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
+- [Dynatrace Operator releases (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/releases)
+- [Dynatrace Operator Helm chart (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
+- [ArgoCD documentation (argoproj.io)](https://argo-cd.readthedocs.io/en/stable/)
+- [Flux documentation (fluxcd.io)](https://fluxcd.io/flux/)
+- [External Secrets Operator (external-secrets.io)](https://external-secrets.io/)
+- [Kustomize (kustomize.io)](https://kustomize.io/)
 
 ---
 

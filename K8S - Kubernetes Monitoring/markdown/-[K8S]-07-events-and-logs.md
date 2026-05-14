@@ -1,6 +1,6 @@
 # K8S-07: Kubernetes Events and Log Ingestion
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 7 of 13 | **Created:** January 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 7 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
 
 ## Capturing and Analyzing Kubernetes Events and Logs
 Kubernetes events and container logs provide crucial insights for debugging and operational awareness. This notebook covers event monitoring, log ingestion configuration, and analysis patterns in Dynatrace.
@@ -384,9 +384,13 @@ In this notebook, you learned:
 
 ## References
 
-- [Kubernetes Log Monitoring](https://docs.dynatrace.com/docs/observe/logs-and-events/log-monitoring)
-- [Kubernetes Events](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring/kubernetes-events)
-- [OpenPipeline](https://docs.dynatrace.com/docs/observe/logs-and-events/log-monitoring/log-processing/openpipeline)
+- [Kubernetes log monitoring (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/k8s-log-monitoring)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [Logs (DT docs)](https://docs.dynatrace.com/docs/analyze-explore-automate/logs)
+- [Log processing with OpenPipeline (DT docs)](https://docs.dynatrace.com/docs/analyze-explore-automate/logs/lma-log-processing/lma-openpipeline)
+- [OpenPipeline (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline)
+- [Kubernetes app — events view (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/kubernetes-app)
+- [Dynatrace Operator releases (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/releases)
 
 ---
 

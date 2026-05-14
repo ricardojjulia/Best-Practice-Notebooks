@@ -1,6 +1,6 @@
 # K8S-13: Kafka Monitoring with Kpow
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 13 of 13 | **Created:** February 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 13 of 13 | **Created:** February 2026 | **Last Updated:** 05/09/2026
 
 ## Overview
 
@@ -535,13 +535,14 @@ In this notebook, you learned:
 
 ## References
 
-- [Kpow Documentation](https://docs.factorhouse.io)
-- [Kpow Prometheus Integration](https://docs.factorhouse.io/kpow-ee/features/prometheus/)
-- [Kpow Metrics Glossary](https://docs.factorhouse.io/kpow/integration/prometheus/metrics-glossary)
-- [Kpow Helm Charts](https://charts.factorhouse.io)
-- [Dynatrace: Monitor Prometheus Metrics](https://docs.dynatrace.com/docs/observe/infrastructure-observability/container-platform-monitoring/kubernetes-monitoring/monitor-prometheus-metrics)
-- [Dynatrace Hub: Apache Kafka](https://www.dynatrace.com/hub/detail/apache-kafka/)
-- [Dynatrace Kafka Monitoring Docs](https://docs.dynatrace.com/docs/ingest-from/technology-support/dynatrace-extensions/supported-out-of-the-box/kafka)
+- [Kpow documentation (Factor House)](https://docs.factorhouse.io)
+- [Kpow Prometheus integration (Factor House)](https://docs.factorhouse.io/kpow-ee/features/prometheus/)
+- [Kpow metrics glossary (Factor House)](https://docs.factorhouse.io/kpow/integration/prometheus/metrics-glossary)
+- [Kpow Helm charts (Factor House)](https://charts.factorhouse.io)
+- [Monitor Prometheus metrics on K8s (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/container-platform-monitoring/kubernetes-monitoring/monitor-prometheus-metrics)
+- [Apache Kafka technology support (DT docs)](https://docs.dynatrace.com/docs/ingest-from/technology-support/dynatrace-extensions/supported-out-of-the-box/kafka)
+- [Apache Kafka extension (Dynatrace Hub)](https://www.dynatrace.com/hub/detail/apache-kafka/)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
 
 ---
 

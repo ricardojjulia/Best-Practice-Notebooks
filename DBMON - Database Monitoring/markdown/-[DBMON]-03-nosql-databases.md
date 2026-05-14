@@ -1,6 +1,6 @@
 # DBMON-03: NoSQL Database Monitoring
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 3 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
 
 ## Overview
 
@@ -51,11 +51,12 @@ Let's discover which NoSQL databases are active in your environment.
 // Discover active NoSQL databases
 fetch spans, from:-1h
 | filter in(db.system, {"mongodb", "dynamodb", "cassandra", "cosmosdb", "couchbase", "hbase"})
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           unique_operations = countDistinct(db.operation),
-           by:{db.system, server.address}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     unique_operations = countDistinct(db.operation)
+| }, by:{db.system, server.address}
 | sort call_count desc
 ```
 
@@ -80,10 +81,11 @@ MongoDB is the most widely used document database. Dynatrace captures MongoDB op
 fetch spans, from:-1h
 | filter db.system == "mongodb"
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           by:{db.namespace, db.mongodb.collection, db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms
+| }, by:{db.namespace, db.mongodb.collection, db.operation}
 | sort call_count desc
 | limit 25
 ```
@@ -92,7 +94,7 @@ fetch spans, from:-1h
 // MongoDB slow operations — find operations exceeding 100ms
 fetch spans, from:-1h
 | filter db.system == "mongodb"
-| filter duration > 100000000
+| filter duration > 100ms
 | fields timestamp, db.namespace, db.mongodb.collection, db.operation,
         db.statement, duration_ms = duration / 1ms
 | sort duration_ms desc
@@ -118,11 +120,12 @@ Amazon DynamoDB is a fully managed key-value and document database. Monitoring f
 fetch spans, from:-1h
 | filter db.system == "dynamodb"
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           errors = countIf(otel.status_code == "ERROR"),
-           by:{db.namespace, db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     errors = countIf(otel.status_code == "ERROR")
+| }, by:{db.namespace, db.operation}
 | sort call_count desc
 ```
 
@@ -131,9 +134,10 @@ fetch spans, from:-1h
 fetch spans, from:-1h
 | filter db.system == "dynamodb"
 | filter in(db.operation, {"Query", "Scan"})
-| summarize op_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           by:{db.operation}
+| summarize {
+|     op_count = count(),
+|     avg_ms = avg(duration) / 1ms
+| }, by:{db.operation}
 | sort op_count desc
 ```
 
@@ -150,10 +154,11 @@ Apache Cassandra uses CQL (Cassandra Query Language), which looks similar to SQL
 fetch spans, from:-1h
 | filter db.system == "cassandra"
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p99_ms = percentile(duration, 99) / 1ms,
-           by:{db.namespace, db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p99_ms = percentile(duration, 99) / 1ms
+| }, by:{db.namespace, db.operation}
 | sort call_count desc
 ```
 
@@ -162,7 +167,7 @@ fetch spans, from:-1h
 fetch spans, from:-6h
 | filter db.system == "cassandra"
 | makeTimeseries total = count(),
-                 slow = countIf(duration > 200000000),
+                 slow = countIf(duration > 200ms),
                  interval:10m
 ```
 
@@ -177,11 +182,12 @@ Azure Cosmos DB is a globally distributed multi-model database. Performance is m
 fetch spans, from:-1h
 | filter db.system == "cosmosdb"
 | filter isNotNull(db.operation)
-| summarize call_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           errors = countIf(otel.status_code == "ERROR"),
-           by:{db.namespace, db.operation}
+| summarize {
+|     call_count = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     errors = countIf(otel.status_code == "ERROR")
+| }, by:{db.namespace, db.operation}
 | sort call_count desc
 ```
 
@@ -200,9 +206,10 @@ fetch spans, from:-1h
     in(db.operation, {"find", "Query", "GetItem", "SELECT", "ReadItem", "get", "search"}),
     then:"READ",
     else:"WRITE")
-| summarize op_count = count(),
-           avg_ms = avg(duration) / 1ms,
-           by:{db.system, rw_type}
+| summarize {
+|     op_count = count(),
+|     avg_ms = avg(duration) / 1ms
+| }, by:{db.system, rw_type}
 | sort db.system asc, rw_type asc
 ```
 
@@ -228,12 +235,13 @@ When your environment uses multiple NoSQL databases, comparing their performance
 // Compare NoSQL database performance — volume, latency, and error rates
 fetch spans, from:-1h
 | filter in(db.system, {"mongodb", "dynamodb", "cassandra", "cosmosdb", "couchbase"})
-| summarize total_calls = count(),
-           avg_ms = avg(duration) / 1ms,
-           p95_ms = percentile(duration, 95) / 1ms,
-           error_count = countIf(otel.status_code == "ERROR"),
-           unique_namespaces = countDistinct(db.namespace),
-           by:{db.system}
+| summarize {
+|     total_calls = count(),
+|     avg_ms = avg(duration) / 1ms,
+|     p95_ms = percentile(duration, 95) / 1ms,
+|     error_count = countIf(otel.status_code == "ERROR"),
+|     unique_namespaces = countDistinct(db.namespace)
+| }, by:{db.system}
 | fieldsAdd error_rate_pct = round((toDouble(error_count) / toDouble(total_calls)) * 100, decimals:2)
 | sort total_calls desc
 ```
@@ -256,6 +264,12 @@ In this notebook you learned:
 
 - **DBMON-04: Cache and Messaging Monitoring** — Redis, Kafka, RabbitMQ, and Elasticsearch analysis
 - **DBMON-05: Query Analysis** — Deep query analysis, N+1 detection, and optimization patterns
+
+### Where to Go Deeper
+
+- **CLOUD series** (9 notebooks) — Cloud-DB integration for DynamoDB (CloudWatch RU/throttling), Cosmos DB (Azure native), Cloud SQL / Spanner / Bigtable / Firestore (GCP)
+- **AIOPS series** — Davis anomaly detection on NoSQL throughput, error rate, and per-collection latency
+- **DBMON-05** — Query analysis patterns including N+1 detection across NoSQL
 
 ---
 

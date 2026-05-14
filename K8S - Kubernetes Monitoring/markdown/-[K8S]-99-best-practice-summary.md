@@ -1,12 +1,14 @@
 # K8S-99: Best Practice Summary
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 05/09/2026
 
 ## Overview
 
 This notebook consolidates every actionable best practice for Dynatrace Kubernetes monitoring and DynaKube configuration extracted from the K8S series (notebooks 01-13). Each practice specifies the exact setting, value, priority, and category. Use this as a definitive checklist for new deployments and audits of existing environments.
 
-**Operator Version:** 1.8.1 | **DynaKube API:** `dynatrace.com/v1beta5` (or `v1beta6`) | **Helm:** `oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.8.1`
+**Operator Version:** 1.9.0 | **DynaKube API:** `dynatrace.com/v1beta5` (baseline) or `v1beta6` (newer) | **Helm:** `oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.9.0`
+
+> **Token currency note:** Platform Tokens (`dt0s16`/`dt0s01`) are the recommended choice for new tenants per Dynatrace SaaS sprint-1.337+; Classic API Tokens (`dt0c01`) remain supported for existing deployments. See K8S-02 §Prerequisites.
 
 ---
 
@@ -39,7 +41,7 @@ This notebook consolidates every actionable best practice for Dynatrace Kubernet
 | **Dynatrace Environment** | SaaS with Grail and Kubernetes monitoring enabled |
 | **Kubernetes Cluster** | v1.24+ |
 | **Helm** | v3.x |
-| **Dynatrace Operator** | v1.8.1 via `oci://public.ecr.aws/dynatrace/dynatrace-operator` |
+| **Dynatrace Operator** | v1.9.0 (April 2026) via `oci://public.ecr.aws/dynatrace/dynatrace-operator` |
 | **Knowledge** | K8S-01 through K8S-13 |
 
 <a id="deployment-mode-selection"></a>
@@ -60,7 +62,7 @@ This notebook consolidates every actionable best practice for Dynatrace Kubernet
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
-| 6 | Install operator via Helm OCI | `helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.8.1 --namespace dynatrace --create-namespace --wait` | **Critical** | Installation |
+| 6 | Install operator via Helm OCI | `helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.9.0 --namespace dynatrace --create-namespace --wait` | **Critical** | Installation |
 | 7 | Enable CSI driver | `csidriver.enabled: true` in Helm values | **Critical** | Installation |
 | 8 | Set platform explicitly | `platform: "kubernetes"` or `platform: "openshift"` | Recommended | Installation |
 | 9 | Create dedicated namespace | `kubectl create namespace dynatrace` | **Critical** | Installation |
@@ -190,7 +192,7 @@ spec:
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
-| 51 | Pin OTel Collector image to a specific version | `spec.templates.otelCollector.imageRef.tag: "0.16.0"` | **Critical** | OTel |
+| 51 | Pin OTel Collector image to a specific version (current: `0.48.0`, May 2026) | `spec.templates.otelCollector.imageRef.tag: "0.48.0"` | **Critical** | OTel |
 | 52 | Never use `latest` tag for OTel Collector | Always specify explicit version tag | **Critical** | OTel |
 | 53 | Set OTel Collector resource limits | `limits: {cpu: 500m, memory: 512Mi}` for staging; `{cpu: 1000m, memory: 1Gi}` for production | Recommended | OTel |
 | 54 | Configure `telemetryIngest` with required protocols | `spec.telemetryIngest.protocols: [otlp]` (add `statsd`, `jaeger`, `zipkin` as needed) | Recommended | OTel |
@@ -247,7 +249,7 @@ spec:
 |---|---------------|-----------------|----------|----------|
 | 70 | Manage DynaKube via GitOps (ArgoCD or Flux) | Store DynaKube YAML in Git, apply via GitOps controller | Recommended | Lifecycle |
 | 71 | Use Kustomize overlays for environment-specific config | `base/dynakube.yaml` + `overlays/{dev,staging,prod}/` patches | Recommended | Lifecycle |
-| 72 | Pin operator Helm chart version in ArgoCD/Flux | `targetRevision: 1.8.1` (ArgoCD) or `version: "1.8.x"` (Flux) | **Critical** | Lifecycle |
+| 72 | Pin operator Helm chart version in ArgoCD/Flux | `targetRevision: 1.9.0` (ArgoCD) or `version: "1.9.x"` (Flux) | **Critical** | Lifecycle |
 | 73 | Set `selfHeal: true` in ArgoCD for drift correction | `syncPolicy.automated.selfHeal: true` | Recommended | Lifecycle |
 | 74 | Set `prune: false` for DynaKube in ArgoCD | Prevent accidental DynaKube deletion on Git removal | **Critical** | Lifecycle |
 | 75 | Use Flux `dependsOn` to order operator before DynaKube | `dependsOn: [{name: dynatrace-operator}]` | Recommended | Lifecycle |
@@ -340,12 +342,18 @@ This notebook contains **109 actionable best practices** across 17 categories fo
 
 ## References
 
-- [DynaKube CRD Reference](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-crd)
-- [DynaKube Feature Flags](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-feature-flags)
-- [Kubernetes Monitoring Overview](https://docs.dynatrace.com/docs/observe/infrastructure-monitoring/kubernetes-and-openshift-monitoring)
-- [Metadata Enrichment](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/metadata-automation/k8s-metadata-telemetry-enrichment)
-- [Dynatrace Operator Helm Chart](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
-- [Operator Troubleshooting](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/troubleshooting)
+- [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
+- [DynaKube feature flags (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-feature-flags)
+- [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [How Dynatrace Kubernetes monitoring works (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/how-it-works)
+- [Quickstart for K8s setup (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/quickstart)
+- [Full observability deployment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/full-stack-observability)
+- [Kubernetes log monitoring (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/k8s-log-monitoring)
+- [Metadata enrichment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/metadata-automation/k8s-metadata-telemetry-enrichment)
+- [Kubernetes app (DT docs)](https://docs.dynatrace.com/docs/observe/infrastructure-observability/kubernetes-app)
+- [Operator + DynaKube troubleshooting (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/deployment/troubleshooting)
+- [Dynatrace Operator Helm chart (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/blob/main/config/helm/chart/default/values.yaml)
+- [Dynatrace Operator releases (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator/releases)
 
 ---
 
