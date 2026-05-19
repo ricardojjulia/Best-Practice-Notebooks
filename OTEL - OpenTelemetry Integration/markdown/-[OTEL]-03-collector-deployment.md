@@ -1,6 +1,6 @@
 # OTEL-03: Collector Deployment Patterns
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 05/19/2026
 
 ## Deploying the OpenTelemetry Collector
 The OTel Collector can be deployed in various patterns depending on your infrastructure. This notebook covers deployment modes, Kubernetes configurations, and best practices for production.
@@ -251,6 +251,138 @@ config:
         processors: [memory_limiter, batch]
         exporters: [otlphttp]
 ```
+
+### OpenTelemetry Operator (CRD-managed)
+
+The Helm install above creates a raw `Deployment` that you own and roll over manually. The **OpenTelemetry Operator** introduces a higher-level pattern — install the operator once, then declare collectors as `OpenTelemetryCollector` custom resources. The operator reconciles the `Deployment`, `ConfigMap`, `ServiceAccount`, and the collector's container.
+
+![Operator-managed collector lifecycle](images/03-operator-managed-collector_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Stage | Resource | What it does |
+|-------|----------|--------------|
+| 1 | OpenTelemetry Operator | Installed once per cluster from the Helm chart |
+| 2 | OpenTelemetryCollector CR | You write this — collector config inline |
+| 3 | Operator reconciles | Creates managed Deployment, ConfigMap, ServiceAccount |
+| 4 | ClusterRole + ClusterRoleBinding | Provisioned separately for cross-namespace pod discovery |
+For environments where SVG does not render
+-->
+
+**Two-stage install:**
+
+```bash
+# Stage 1 — install the operator (once per cluster)
+helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+helm repo update
+
+helm install opentelemetry-operator open-telemetry/opentelemetry-operator \
+  --namespace opentelemetry-operator-system \
+  --create-namespace \
+  --set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
+  --set admissionWebhooks.certManager.enabled=false \
+  --set admissionWebhooks.autoGenerateCert.enabled=true \
+  --wait --timeout 5m
+
+# Stage 2 — declare a collector via custom resource
+kubectl apply -f opentelemetry-collector.yaml
+```
+
+**`OpenTelemetryCollector` resource shape:**
+
+```yaml
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector
+  namespace: o11y
+spec:
+  env:
+    - name: DT_ENDPOINT
+      valueFrom:
+        configMapKeyRef:
+          name: otel-collector-config
+          key: DT_ENDPOINT
+    - name: DT_API_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: otel-collector-secret
+          key: DT_API_TOKEN
+  config:
+    receivers:
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: kubernetes-pods
+              # See OTEL-05 §6 for the full receiver + relabel chain
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+    exporters:
+      otlphttp:
+        endpoint: ${env:DT_ENDPOINT}
+        headers:
+          Authorization: Api-Token ${env:DT_API_TOKEN}
+    service:
+      pipelines:
+        metrics:
+          receivers: [prometheus]
+          processors: [memory_limiter, batch]
+          exporters: [otlphttp]
+```
+
+The operator creates the `ServiceAccount` automatically (named `<collectorName>-collector`). For Prometheus pod discovery the collector still needs cluster-scoped read access — provision a `ClusterRole` and bind it separately:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-collector-cluster-role
+rules:
+  - apiGroups: ["", "apps", "batch"]
+    resources:
+      - pods
+      - namespaces
+      - nodes
+      - services
+      - replicasets
+      - deployments
+      - daemonsets
+      - statefulsets
+      - jobs
+      - cronjobs
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-collector-cluster-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: otel-collector-collector   # <collectorName>-collector
+    namespace: o11y
+roleRef:
+  kind: ClusterRole
+  name: otel-collector-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+**When to use which:**
+
+| Choose | When |
+|--------|------|
+| Raw `Deployment` + Helm chart | One or two collectors; team already manages Deployment rollouts; Helm-first workflows |
+| `OpenTelemetryCollector` CRD + Operator | Multiple collectors per cluster; auto-reload on config change; want OTLP auto-instrumentation injection for application pods |
+
+The operator's auto-instrumentation feature is the strongest pull for greenfield Kubernetes deployments — annotate a pod with `instrumentation.opentelemetry.io/inject-python: "true"` and the operator injects an init container that loads the OTel agent, pointed at a `Service` your collector exposes. See **OTEL-04 — Trace Instrumentation** for the application-side pattern.
+
+> <sub>**Sources:**</sub>
+> - <sub>[OpenTelemetry Operator (opentelemetry-operator GitHub)](https://github.com/open-telemetry/opentelemetry-operator)</sub>
+> - <sub>[OpenTelemetryCollector CRD reference (opentelemetry-operator GitHub)](https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/api.md)</sub>
+> - <sub>**Derived:** "when to use which" table combines operator design with operational trade-offs observed in community deployments</sub>
 
 <a id="docker-compose"></a>
 ## 5. Docker Compose
