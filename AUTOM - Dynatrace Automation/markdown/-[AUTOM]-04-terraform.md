@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/13/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/18/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -188,11 +188,15 @@ provider "dynatrace" {
 
 > **How `DYNATRACE_HTTP_OAUTH_PREFERENCE` works:** When set to `true` and OAuth/Platform Token credentials are provided, the provider **prefers REST endpoints that support OAuth** over API Token endpoints. When not set (or `false`), the provider defaults to API Token authentication. Not all resources support OAuth — for example, `dynatrace_json_dashboard` can only be configured using API Tokens regardless of this setting.
 
+> **Owner-empty failure mode (combined auth):** When both API Token and OAuth/Platform Token are configured but `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` is **not** set, the provider routes through API Token endpoints and Dynatrace records the resulting Settings 2.0 objects with an **empty owner field**. The provider docs flag this verbatim across 18+ resource pages ([`generic_setting` (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/generic_setting.md), [`aws_connection`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/aws_connection.md), [`github_connection`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/github_connection.md), and others): *"If a resource is created using an API token or without setting `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` (when both are used), the settings object's owner will remain empty."* Owner-empty settings are harder to audit, can't be filtered by owner in IAM policies, and lose creator attribution in the UI. For any combined-auth pipeline, set `DYNATRACE_HTTP_OAUTH_PREFERENCE=true` even if your immediate use case doesn't seem to need it.
+
 > **Settings object ownership:** When a settings object is created using Platform Token or OAuth credentials, the owner is set to the credential owner. By default, the object is **private** — only the owner can read/modify it. Use the `dynatrace_settings_permissions` resource to manage access modifiers.
 
 ### Method 3: OAuth Client Credentials
 
 **Required** for Automation (Workflows), Document, and Account Management (IAM) resources. The provider exchanges your client ID and secret for short-lived OAuth access tokens automatically.
+
+> **IAM is OAuth-only by construction.** Unlike Workflows and Documents (which support Platform Token via `DYNATRACE_HTTP_OAUTH_PREFERENCE=true`), the IAM Account Management API rejects Platform Tokens and classic API tokens — the [`dynatrace_iam_group` resource (Dynatrace provider docs)](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/iam_group) explicitly requires *"the environment variables `DT_CLIENT_ID`, `DT_CLIENT_SECRET`, `DT_ACCOUNT_ID` with an OAuth client."* The minimum-viable OAuth client for IAM needs four scopes: `account-idm-read`, `account-idm-write`, `iam-policies-management`, `account-env-read`. For the full IAM lifecycle (groups + policies + boundaries + bindings + bulk export + DSL discovery), see **AUTOM-95 LAB: Terraform IAM Management**.
 
 ```hcl
 provider "dynatrace" {
@@ -414,7 +418,9 @@ Legitimate use cases for `dynatrace_api_token` exist — for example, per-team o
 - Treat state-backend permissions as token permissions — anyone with `s3:GetObject` on the state bucket effectively has the token.
 - Rotate the bootstrap credential (the one Terraform itself uses) on a schedule and on any state-backend permission change.
 
-> <sub>**Sources:** [`dynatrace_api_token` resource (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/api_token.md) — verbatim *plain-text in state* warning, [Sensitive data in state (Terraform docs)](https://developer.hashicorp.com/terraform/language/state/sensitive-data) — verbatim *anyone who can access those files can access your sensitive values* + the recommendation to exclude state from Git. **Derived:** the *mint-out-of-band, deliver-in-band* pattern is a synthesis from the two cited warnings — neither source recommends it by name, but both make it the only practice consistent with their stated risks when state hygiene is uncertain.</sub>
+**Worked example — three-workflow ephemeral mint.** A defensible architecture when minting is unavoidable: a separate `environments/<env>/security/` Terraform stack per environment, calling a reusable `modules/dynatrace_api_token` module with a **short `expiration_date` baked into the resource itself** (e.g. a 1-hour `var.dt_esa_api_token_duration` default applied via `timeadd(timestamp(), var.dt_esa_api_token_duration)`). Three composable reusable CI/CD workflows form the lifecycle: `generate_api_token` (runs `terraform apply` on the security stack and persists the token in state), `extract_api_token` (reusable workflow exposing the token as a job output), and `delete_api_token` (invoked with `if: always()` after the consuming job). The deploy and export workflows compose them via `uses:`. This shrinks the leakage window in three ways: (a) the token only lives in state for the pipeline run, (b) it's revoked even on pipeline failure, (c) the bootstrap credential that mints it (a long-lived classic API Token with `apiTokens.write`) is the *only* standing secret — and is itself rotatable without breaking any consumer pipelines. The pattern doesn't make state-leakage safe; it makes it survivable.
+
+> <sub>**Sources:** [`dynatrace_api_token` resource (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/docs/resources/api_token.md) — verbatim *plain-text in state* warning, [Sensitive data in state (Terraform docs)](https://developer.hashicorp.com/terraform/language/state/sensitive-data) — verbatim *anyone who can access those files can access your sensitive values* + the recommendation to exclude state from Git. **Derived:** the *mint-out-of-band, deliver-in-band* pattern and the *three-workflow ephemeral-mint* worked example are syntheses from the two cited warnings — neither source recommends them by name, but both make them the only practices consistent with their stated risks when state hygiene is uncertain.</sub>
 
 <a id="service-user-bridging-trust-boundary"></a>
 ### Bridging the Trust Boundary — How the Token Actually Crosses
@@ -1054,6 +1060,8 @@ The Dynatrace Terraform provider can manage IAM policies, groups, and bindings. 
 
 > **Important:** Managing IAM resources requires OAuth client credentials with `DT_ACCOUNT_ID`. API tokens cannot manage IAM.
 
+> **Hands-on lab:** This subsection covers IAM at lecture depth. For a full hands-on walkthrough — OAuth client setup with the four minimal scopes, DSL discovery (no public catalog), the four IAM resource types (groups + policies + boundaries + bindings_v2), the `bindings_v2` re-assigns-all caveat, deprecated arguments to avoid, bulk export of an existing account, and HTTP 400 troubleshooting with `TF_LOG=DEBUG` — see **AUTOM-95 LAB: Terraform IAM Management**. Note the deprecated-arguments section (LAB-95 §12) flags that `dynatrace_iam_policy.environment` (used in the example below) is deprecated in favor of `account = var.account_uuid` — the example below predates this guidance and should be migrated on next touch.
+
 ```hcl
 # Create a policy that restricts a team to specific settings schemas
 resource "dynatrace_iam_policy" "team_settings" {
@@ -1226,6 +1234,8 @@ The provider binary itself can export existing Dynatrace configuration directly 
 terraform-provider-dynatrace.exe -export [options] [resourcename[=id]]
 ```
 
+**Recommended invocation** (canonical Dynatrace-documented form): `./terraform-provider-dynatrace -export -ref -id`. The `-ref` flag emits inter-resource data-source references instead of hardcoded UUIDs (much more maintainable HCL); `-id` adds commented resource IDs above each block for traceability. Skipping `-ref` leaves you with HCL that hard-codes IDs and is painful to maintain. Source: [Terraform CLI commands (DT docs)](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/terraform-cli-commands) — verbatim: *"Export all configurations with data sources/dependencies and include commented IDs: `./terraform-provider-dynatrace -export -ref -id`"*. Supply credentials via env vars per §3 — never via shell args (visible in process listings).
+
 Executable typically lives at `.terraform/providers/registry.terraform.io/dynatrace-oss/dynatrace/{version}/{os}/terraform-provider-dynatrace_x.y.z/` after `terraform init`.
 
 **Required env vars:**
@@ -1245,6 +1255,18 @@ Executable typically lives at `.terraform/providers/registry.terraform.io/dynatr
 
 - **Dashboards excluded by default** — opt in by naming the resource explicitly, or use `-list-exclusions` to see the full opt-in list
 - Sensitive data (e.g., `dynatrace_credentials` confidential strings) lands in `.required_attention/`
+
+**Flag reference** (verified against [`dynatrace/export/initialize.go`](https://github.com/dynatrace-oss/terraform-provider-dynatrace/blob/main/dynatrace/export/initialize.go)):
+
+| Flag | Effect | When to use |
+|------|--------|-------------|
+| `-ref` | Emits data-source references and inter-resource dependencies instead of hardcoded IDs. Mutually exclusive with `-migrate`. | **Default** for new Terraform-managed environments — produces idiomatic, maintainable HCL. |
+| `-id` | Adds commented resource IDs above each exported HCL block. | **Always** — aids debugging and lineage tracing. |
+| `-migrate` | Like `-ref` but output is geared for moving config between tenants. Mutually exclusive with `-ref`. | Tenant-to-tenant migration (Managed → SaaS, or tenant consolidation). |
+| `-import-state` | After export, auto-runs `terraform init` and imports the resources into state. | When you want a fully bootstrapped Terraform workspace, not just HCL files. |
+| `-flat` | Skip module structure — all resources land in the target folder. | When you don't want per-resource-type submodules. |
+| `-exclude <type>` | Exclude specific resource types from export. | Skip resources you don't want under Terraform control. |
+| `-list-exclusions` | Print the resource types `-export` excludes by default and exit. | Discover what `-export` skips out-of-the-box (e.g., dashboards). |
 
 See [Terraform CLI commands (DT docs)](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/terraform-cli-commands) for the full reference.
 
@@ -1338,8 +1360,11 @@ The following GitHub repositories provide starter templates, reusable modules, a
 The provider binary can export existing Dynatrace configuration to `.tf` files:
 
 ```bash
-# Export all configs from a tenant as HCL
-./terraform-provider-dynatrace -export -env <environment-url> -token <api-token>
+# Export all configs from a tenant as HCL (canonical Dynatrace-recommended form)
+./terraform-provider-dynatrace -export -ref -id
+# Credentials supplied via env vars (DYNATRACE_ENV_URL + Platform/OAuth
+# creds + DYNATRACE_HTTP_OAUTH_PREFERENCE=true) per §3 — never via shell
+# args, which appear in process listings. See §8 for the full flag table.
 ```
 
 This is the fastest path from an existing tenant to Terraform-managed configuration.

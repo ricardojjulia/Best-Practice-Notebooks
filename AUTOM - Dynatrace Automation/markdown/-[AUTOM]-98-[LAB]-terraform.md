@@ -1,6 +1,6 @@
 # AUTOM-98 LAB: Terraform for Dynatrace
 
-> **Series:** AUTOM — Dynatrace Automation | **Reference:** 98 — Terraform Hands-On LAB | **Created:** April 2026 | **Last Updated:** 05/13/2026
+> **Series:** AUTOM — Dynatrace Automation | **Reference:** 98 — Terraform Hands-On LAB | **Created:** April 2026 | **Last Updated:** 05/18/2026
 
 ## Overview
 
@@ -288,6 +288,8 @@ curl -H "Authorization: Api-Token $DT_API_TOKEN" \
 
 IAM resources (groups, policies, bindings) require OAuth client credentials. API tokens cannot manage IAM.
 
+> **Deeper IAM hands-on:** This section gives the minimum viable IAM pattern alongside the main Terraform LAB. For the full IAM lifecycle — OAuth client setup with four minimal scopes, DSL discovery (no public catalog), the four IAM resource types, boundaries, the `bindings_v2` re-assigns-all caveat, deprecated arguments to avoid, bulk export of an existing account, and HTTP 400 troubleshooting — see **AUTOM-95 LAB: Terraform IAM Management**.
+
 ### Create an IAM Group
 
 ```hcl
@@ -332,7 +334,7 @@ terraform apply
 
 If you already have Dynatrace resources configured manually, you can bring them under Terraform management without recreating them.
 
-> **Bootstrapping from an existing tenant in bulk?** Use the provider's built-in **`-export` utility** rather than running `terraform import` per-resource. From a downloaded provider binary: `./terraform-provider-dynatrace -export -env <url> -token <token>` generates `.tf` files for the entire tenant. The per-resource flow below is right when you only need to onboard a few specific resources.
+> **Bootstrapping from an existing tenant in bulk?** Use the provider's built-in **`-export` utility** rather than running `terraform import` per-resource. From a downloaded provider binary: `./terraform-provider-dynatrace -export -ref -id` (canonical form per [Terraform CLI commands (DT docs)](https://docs.dynatrace.com/docs/deliver/configuration-as-code/terraform/terraform-cli-commands) — `-ref` emits inter-resource references rather than hardcoded IDs, `-id` adds commented IDs for traceability; supply credentials via env vars per AUTOM-04 §3). Generates `.tf` files for the entire tenant. The per-resource flow below is right when you only need to onboard a few specific resources.
 
 ### Step 1: Add a Resource Block
 
@@ -754,7 +756,7 @@ jobs:
 | [terraform_team_onboarding](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples/tree/main/terraform_team_onboarding) | IAM policies, groups, and Azure Entra ID for team provisioning |
 | [iam_tf_sample](https://github.com/Dynatrace/dynatrace-configuration-as-code-samples/tree/main/iam_tf_sample) | IAM policies, Grail buckets, OpenPipelines, and segments |
 
-> **Tip:** Use the provider export feature (`./terraform-provider-dynatrace -export -env <url> -token <token>`) to generate `.tf` files from an existing tenant — the fastest path to Terraform-managed configuration.
+> **Tip:** Use the provider export feature (`./terraform-provider-dynatrace -export -ref -id` — canonical Dynatrace-recommended form; supply credentials via env vars per AUTOM-04 §3) to generate `.tf` files from an existing tenant — the fastest path to Terraform-managed configuration. See AUTOM-04 §8 for the full flag reference.
 
 ---
 
