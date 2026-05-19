@@ -1,6 +1,6 @@
 # OTEL-07: Dynatrace OTLP Integration
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 04/03/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 05/19/2026
 
 ## Complete Setup for OpenTelemetry with Dynatrace
 This notebook provides end-to-end configuration for sending OpenTelemetry data to Dynatrace, including authentication, endpoints, and verification.
@@ -17,7 +17,7 @@ This notebook provides end-to-end configuration for sending OpenTelemetry data t
 6. [Span Attributes for Dynatrace](#span-attributes-for-dynatrace)
 7. [OTLP Metric Dimensions](#otlp-metric-dimensions)
 8. [Verification](#verification)
-9. [Hybrid with OneAgent](#hybrid-with-oneagent)
+9. [Coexistence with OneAgent and DynaKube](#hybrid-with-oneagent)
 
 ---
 
@@ -130,6 +130,20 @@ Use the `Api-Token` prefix in the Authorization header:
 ```
 Authorization: Api-Token <your-full-token>
 ```
+
+### Token Type and Auth Scheme
+
+The `Api-Token` scheme above is for **classic API Tokens** (prefix `dt0c01.*`). **Platform Tokens** (prefix `dt0u01.*` for user tokens, `dt0s16.*` for service-user tokens) use `Bearer ${TOKEN}` instead:
+
+```
+# Classic API Token
+Authorization: Api-Token dt0c01.XXXXXXXX...
+
+# Platform Token (Gen3-preferred)
+Authorization: Bearer dt0u01.XXXXXXXX...
+```
+
+Using the wrong scheme returns **401 Unauthorized** even when the token has the correct scopes — a frequent first-deployment failure mode. Platform Tokens are preferred in Gen3 environments because they support fine-grained scopes via IAM policies. For OTLP ingest both token types work; the scope to grant is `metrics.ingest` (Platform Token) or the equivalent classic-token scope from the table above.
 
 <a id="collector-configuration"></a>
 ## 3. Collector Configuration
@@ -460,19 +474,83 @@ fetch spans, from:-1h
 | Partial data | Network timeout | Check batch size, retry config |
 
 <a id="hybrid-with-oneagent"></a>
-## 9. Hybrid with OneAgent
-### Using OTel + OneAgent
+## 9. Coexistence with OneAgent and DynaKube
 
-| Scenario | Recommendation |
-|----------|----------------|
-| OneAgent-supported tech | Let OneAgent auto-instrument |
-| Custom spans needed | Add OTel manual spans |
-| Serverless | Use OTel (no agent) |
-| Unsupported language | Use OTel SDK |
+In Kubernetes you may have three Dynatrace-adjacent data paths active at once:
 
-### Trace Context Propagation
+- **OneAgent** — host-process auto-instrumentation, deployed by the DynaKube operator.
+- **OTel Collector** — your own deployment, scraping Prometheus targets or accepting OTLP from apps.
+- **OTLP auto-config** — DynaKube Operator (v1.8+) can inject OTLP exporter env vars into application pods.
 
-OneAgent and OTel both support W3C Trace Context, enabling unified traces:
+These do not conflict on the wire, but they overlap on what telemetry they produce. The decision is **which agent handles which signal**.
+
+![Collector, DynaKube, and OneAgent coexistence](images/07-collector-dynakube-oneagent-coexistence_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Component | Pod placement | Signals it owns |
+|-----------|---------------|-----------------|
+| OneAgent (DaemonSet) | One per node | Host metrics, process detection, OneAgent-language traces, logs |
+| DynaKube operator | Deployment in dynatrace namespace | Reconciles OneAgent + ActiveGate; injects OTLP env vars (v1.8+) |
+| OTel Collector | Deployment in o11y namespace | Prometheus scrape; OTLP receiver from app SDKs; OTLP export to DT |
+For environments where SVG does not render
+-->
+
+### 9.1. Signal-Routing Decision Table
+
+| Signal type | Preferred path | Why |
+|-------------|----------------|-----|
+| Host CPU / memory / disk / network | OneAgent (DynaKube) | Auto-discovers; tightly integrated with the Smartscape host entity |
+| Process-level metrics, process group detection | OneAgent | SDV2 entity detection requires the agent |
+| Application traces (OneAgent-supported language) | OneAgent | Auto-instrumentation, no code change |
+| Application traces (unsupported language or fine-grained custom) | OTel SDK → Collector → OTLP | OTel covers languages OneAgent does not |
+| Prometheus-exposed metrics from third-party / business apps | OTel Collector `prometheus` receiver → OTLP | OneAgent does not scrape Prometheus |
+| Custom application metrics | OTel SDK → Collector → OTLP | Same as Prometheus path |
+| Logs from OneAgent-instrumented hosts | OneAgent | Auto-detection from log paths |
+| Logs from OTel-only apps | OTel SDK → Collector → OTLP | OneAgent does not pick them up without the agent installed |
+
+### 9.2. Entity Model Joining via `metadata.dynatrace.com/*`
+
+When the OTel Collector scrapes a pod, Dynatrace does not automatically know how to link the resulting metrics to existing entities (the service detected by OneAgent, the K8s deployment in DynaKube's view). The `k8sattributes` processor plus a pod-annotation convention solves this:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  template:
+    metadata:
+      annotations:
+        # Standard Prometheus scrape contract (see OTEL-05 §6.2)
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+
+        # Dynatrace entity-metadata hints — picked up by k8sattributes processor
+        metadata.dynatrace.com/k8s.namespace.label.domain: sandbox
+        metadata.dynatrace.com/k8s.namespace.label.otel.service.name: myapp
+```
+
+The collector's `k8sattributes` processor pulls these annotations into the resource attributes of every scraped metric. A downstream `transform` processor can then merge the JSON blob into top-level attributes. Result: scraped metrics carry `service.name = "myapp"` matching what OneAgent or the OTel SDK produced for the same workload — and Dynatrace's entity model joins them.
+
+### 9.3. Counter Temporality — `cumulativetodelta`
+
+Prometheus emits **cumulative** counters that only ever increase. Dynatrace prefers **delta** temporality — the per-interval change. Without conversion, every counter looks ever-increasing in Dynatrace and `rate()` math is awkward at query time. The collector's `cumulativetodelta` processor performs the conversion in-pipeline:
+
+```yaml
+processors:
+  cumulativetodelta:
+    max_staleness: 3m
+```
+
+For full pipeline shape including this processor see **OTEL-05 §6.5 Full Pipeline**.
+
+### 9.4. Auth Scheme Reminder
+
+OTLP from a Collector uses `Authorization: Api-Token ${TOKEN}` (classic) or `Authorization: Bearer ${TOKEN}` (Platform Token). DynaKube's data-ingest token follows the same rule — match the scheme to the token prefix. See **§2 Authentication Setup → Token Type and Auth Scheme** for the matrix.
+
+### 9.5. Trace Context Propagation
+
+OneAgent and OTel both support W3C Trace Context, so a request that crosses agent boundaries produces a single trace in Dynatrace:
 
 ```
 Service A (OneAgent) → Service B (OTel) → Service C (OneAgent)
@@ -480,12 +558,9 @@ Service A (OneAgent) → Service B (OTel) → Service C (OneAgent)
             Dynatrace traces show complete path
 ```
 
-### Configuration for Hybrid
-
-Ensure both use W3C propagation:
+Configure OTel to use W3C propagation explicitly — some SDKs default to other formats:
 
 ```python
-# Python OTel
 from opentelemetry.propagate import set_global_textmap
 from opentelemetry.propagators.composite import CompositePropagator
 from opentelemetry.propagators.w3c.traceparent import W3CTraceparentPropagator
@@ -497,6 +572,13 @@ set_global_textmap(CompositePropagator([
 ]))
 ```
 
+> <sub>**Sources:**</sub>
+> - <sub>[k8sattributes processor (OpenTelemetry Collector Contrib GitHub)](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/k8sattributesprocessor)</sub>
+> - <sub>[Cumulative to Delta processor (OpenTelemetry Collector Contrib GitHub)](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/cumulativetodeltaprocessor)</sub>
+> - <sub>[Configure OTLP Metrics (DT docs)](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/otlp-api/ingest-otlp-metrics/configure-otlp-metrics)</sub>
+> - <sub>[Dynatrace Operator (Dynatrace GitHub)](https://github.com/Dynatrace/dynatrace-operator)</sub>
+> - <sub>**Derived:** signal-routing table combines OneAgent's coverage capabilities with OTel's gap-filling role; final placement is engagement-specific</sub>
+
 ---
 
 ## Summary
@@ -505,14 +587,14 @@ In this notebook, you learned:
 
 - Dynatrace OTLP endpoints (HTTP only — gRPC requires Collector)
 - Dynatrace OTel Collector distribution for production deployments
-- API token creation with required scopes
+- API token creation with required scopes; classic `Api-Token` vs Platform `Bearer` auth schemes
 - Complete Collector configuration
 - Direct SDK export configuration
 - Entity mapping and resource attributes
 - Span attributes that enhance Dynatrace analysis
 - OTLP metric dimensions changes and auto-configuration
 - Verification and troubleshooting
-- Hybrid deployment with OneAgent
+- Coexistence patterns across OneAgent, DynaKube, and the OTel Collector — signal routing, entity-model joining via `metadata.dynatrace.com/*`, counter temporality
 
 ---
 
