@@ -147,11 +147,16 @@ dynatrace-config/
 
 ### Environment Promotion
 
-```
-feature/* → develop → main
-    ↓          ↓        ↓
-   Dev     Staging   Production
-```
+![Branch-to-Environment Mapping](images/07-gitflow-branch-env-mapping_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Branch     | Merges into | Deploys to  | Notes                          |
+|------------|-------------|-------------|--------------------------------|
+| feature/*  | develop     | Dev         | Per-feature sandbox            |
+| develop    | main        | Staging     | Integration / pre-prod         |
+| main       | —           | Production  | Audited promotion boundary     |
+For environments where SVG doesn't render
+-->
 
 ---
 
