@@ -1,6 +1,6 @@
 # ORGNZ-08: Grail Segments
 
-> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 05/06/2026
+> **Series:** ORGNZ — Organize Data: Buckets, Segments, Security | **Notebook:** 8 of 10 | **Created:** January 2026 | **Last Updated:** 05/26/2026
 
 ## Overview
 
@@ -287,9 +287,9 @@ Continue with the ORGNZ series:
 ## References
 
 - [Grail Segments](https://docs.dynatrace.com/docs/manage/segments)
-- [Entity Model](https://docs.dynatrace.com/docs/platform/entities)
+- [Smartscape topology and entities (DT docs)](https://docs.dynatrace.com/docs/semantic-dictionary/model/smartscape)
 - [Segment Limits](https://docs.dynatrace.com/docs/manage/segments/reference/segments-reference-limits)
-- [Segments blog post](https://www.dynatrace.com/news/blog/segments-empower-centralized-teams-to-dynamically-organize-data-at-petabyte-scale/)
+- [Configure custom filter segments — get started (DT docs)](https://docs.dynatrace.com/docs/manage/segments/getting-started/segments-getting-started-analyze-monitoring-data)
 
 ---
 
@@ -332,10 +332,13 @@ This lets users pick a bucket from a dropdown in Dashboards or Notebooks without
 Simulate a host-group-based segment filter on log data:
 
 ```dql
-// Filter logs by host group — simulates a segment filter condition on log data
+// Filter logs by host group — simulates a segment filter condition on log data.
+// `dt.host_group.id` is a Primary Grail Field that propagates across all signal types,
+// so it is the canonical attribute to anchor a host-group-based segment on.
+// The legacy `host.group` field is not populated on modern OneAgents and returns zero rows.
 fetch logs, from:-1h
-| filter isNotNull(host.group)
-| summarize count = count(), by:{host.group}
+| filter isNotNull(dt.host_group.id)
+| summarize count = count(), by:{dt.host_group.id}
 | sort count desc
 | limit 10
 ```
