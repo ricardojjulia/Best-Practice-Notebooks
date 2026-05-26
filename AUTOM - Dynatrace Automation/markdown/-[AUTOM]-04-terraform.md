@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/18/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 05/26/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -346,6 +346,21 @@ When a Platform Token is created **on behalf of** a Service User, three independ
 | 3 | **Token scope selection at creation time** | Token creator | Effective permission = token scopes ∩ assigned user's IAM permissions. Missing the right scope at creation produces silent permission denials. |
 
 Verbatim from the [Platform Tokens docs (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/access-tokens-and-oauth-clients/platform-tokens): *"A platform token will only work within the limits of the assigned user's permissions. This means that a selected scope is only granting access if that user has the respective permissions."*
+
+#### No `dynatrace_platform_token` Terraform resource exists
+
+The Dynatrace Terraform provider has **no resource for minting Platform Tokens** (verified against provider source 2026-05-22 — the `dynatrace/api/iam/` directory contains `bindings`, `boundaries`, `groups`, `permissions`, `policies`, `serviceusers`, `users`, and `v2bindings`, with no token subdirectory). The provider's v1.88.1 release notes describe Platform Token **consumption** by other resources (`dynatrace_davis_anomaly_detectors`, `dynatrace_generic_setting`, `dynatrace_site_reliability_guardian`, `dynatrace_slack_notification`), not Platform Token creation.
+
+Platform Tokens are minted **out-of-band** via either:
+
+- The DT UI (Account Management → Identity & access management → Service users → *Generate token*), or
+- `POST https://api.dynatrace.com/iam/v1/accounts/{accountUuid}/platform-tokens` ([endpoint docs](https://docs.dynatrace.com/docs/dynatrace-api/account-management-api/platform-tokens-api/post-platform-token)), called by an OAuth client whose scope catalog includes Platform Token minting.
+
+The minted token is then delivered to CI/Terraform via a secret manager or env var. The token value never enters Terraform state (in contrast to `dynatrace_api_token`, which by design persists the minted classic API Token as a plain-text attribute in state — see *Operational Safety* subsection below). For the composed *OAuth client → mints ephemeral Platform Token on behalf of a Service User → Terraform applies* CI/CD pattern, see **AUTOM-07** *(forthcoming)*.
+
+By contrast, the `dynatrace_api_token` resource **does** exist and is the only token-minting resource the provider offers — see the *Special case* subsection below.
+
+> <sub>**Sources:** [`dynatrace_iam_group` (Dynatrace provider docs)](https://registry.terraform.io/providers/dynatrace-oss/dynatrace/latest/docs/resources/iam_group), [Provider release notes v1.88.1 (Dynatrace GitHub)](https://github.com/dynatrace-oss/terraform-provider-dynatrace/releases), [POST /iam/v1/accounts/{accountUuid}/platform-tokens (DT docs)](https://docs.dynatrace.com/docs/dynatrace-api/account-management-api/platform-tokens-api/post-platform-token). **Derived:** the absence of a `dynatrace_platform_token` resource is verified by enumeration of the provider's `dynatrace/api/iam/` directory plus the release-notes search; both checks performed 2026-05-22.</sub>
 
 #### Decision: Which token does the Service User need for your Terraform resources?
 

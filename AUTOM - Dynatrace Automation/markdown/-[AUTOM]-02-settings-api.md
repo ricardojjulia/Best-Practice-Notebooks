@@ -1,6 +1,6 @@
 # AUTOM-02: Settings API
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 05/11/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 2 of 9 | **Created:** January 2026 | **Last Updated:** 05/21/2026
 
 The Settings API (also called Settings 2.0) is Dynatrace's modern REST API for configuration management. It provides a unified way to manage all Dynatrace settings through JSON objects with schema validation.
 
@@ -124,6 +124,7 @@ curl -X GET "https://{tenant}.live.dynatrace.com/api/v2/settings/schemas" \
 | `builtin:anomaly-detection.hosts` | Host anomaly detection |
 | `builtin:anomaly-detection.services` | Service anomaly detection |
 | `builtin:slo` | Service level objectives |
+| `builtin:enhanced-endpoints-for-sdv1` | Service detection v1: auto-detect every endpoint and emit per-endpoint metrics (added v1.329; default on for environments created at v1.333+) |
 
 ---
 
