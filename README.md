@@ -10,7 +10,7 @@ Dynatrace best-practice notebooks with matching PDF and Markdown exports. These 
 
 
 > **👉 New here?** Open [`-START-HERE-/`](-START-HERE-/README.md) — a navigational playbook that picks an entry path based on your situation (net-new, expand/consolidate, deployment migration), then sequences the relevant topic series in order.
-> Already know what you need? Skip the playbook and **[browse all 28 topic series ↓](#all-series-az)**.
+> Already know what you need? Skip the playbook and **[browse all 30 topic series ↓](#all-series-az)**.
 
 ## Layout
 
@@ -24,14 +24,16 @@ Each topic follows the same structure:
 
 Series are grouped into six categories for navigation. An alphabetical index follows below.
 
-- **Foundations & Adoption** — getting started, maturity, access, data organization
-  [ONBRD](#onbrd---dynatrace-onboarding) · [ADOPT](#adopt---observability-adoption--maturity) · [IAM](#iam---iam-administration) · [ORGNZ](#orgnz---organize-data-buckets-segments-security) · [FAQ](#faq---frequently-asked-questions)
+- **Foundations & Adoption** — getting started, maturity, access, data organization, cost management
+  [ONBRD](#onbrd---dynatrace-onboarding) · [ADOPT](#adopt---observability-adoption--maturity) · [IAM](#iam---iam-administration) · [ORGNZ](#orgnz---organize-data-buckets-segments-security) · [FAQ](#faq---frequently-asked-questions) · [FINOPS](#finops---cost-management--finops)
 - **Data Sources & Instrumentation** — what you monitor and how to instrument it
   [K8S](#k8s---kubernetes-monitoring) · [CLOUD](#cloud---cloud-provider-integrations) · [MOBL](#mobl---mobile-monitoring) · [WEBRUM](#webrum---web-real-user-monitoring) · [SYNTH](#synth---synthetic-monitoring) · [DBMON](#dbmon---database-monitoring) · [OTEL](#otel---opentelemetry-integration)
 - **Data Processing & Analytics** — ingestion, shaping, querying, dashboards
   [OPLOGS](#oplogs---openpipeline-logs) · [OPIPE](#opipe---openpipeline-beyond-logs) · [SPANS](#spans---distributed-tracing-and-spans) · [BIZEV](#bizev---business-events--funnel-analysis) · [DASH](#dash---dashboard-design--building)
 - **Automation & Workflows** — configuration-as-code and operational workflows
   [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications) · [AIOPS](#aiops---dynatrace-intelligence)
+- **Security** — runtime vulnerability analytics, application protection, and security posture management
+  [APPSEC](#appsec---application-security)
 - **Migrations** — moving to Dynatrace or between Dynatrace environments
   [M2S](#m2s---managed-to-saas-migration) · [S2S](#s2s---saas-to-saas-migration) · [S2D](#s2d---splunk-to-dynatrace-migration) · [SL2DT](#sl2dt---sumo-logic-to-dynatrace) · [NR2DT](#nr2dt---new-relic-to-dynatrace-migration-steps) · [NRLC](#nrlc---new-relic-to-dynatrace-migration-deep-dives) · [OPMIG](#opmig---openpipeline-migration) · [MZ2POL](#mz2pol---management-zone-to-policy-migration)
 
@@ -56,6 +58,19 @@ Comprehensive guide to AIOps and Dynatrace Intelligence — Causal AI, Predictiv
 - [AIOPS-06: AI Integrations and Agentic Workflows](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-06-ai-integrations-and-agentic-workflows.md) — AI Workflow tasks, Dynatrace MCP server, and external agent integration
 - [AIOPS-07: Putting It Together — Detect, Investigate, Remediate](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-07-putting-it-together.md) — Composing all AI categories into the full operational AIOps pattern
 - [AIOPS-99: Series Summary](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-99-series-summary.md) — DQL query index, cross-series pointers, and next steps for an AIOps initiative
+
+### [APPSEC - Application Security](APPSEC%20%E2%80%94%20Application%20Security/README.md)
+End-to-end application security observability with Dynatrace — covering Runtime Vulnerability Analytics, Runtime Application Protection, Security Posture Management, and the governance patterns to operationalize AppSec at scale.
+- [APPSEC-01: Fundamentals and the Three Pillars of Application Security](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-01-fundamentals.md) — RVA, RAP, and SPM architecture; the Gen3 Grail foundation for security findings
+- [APPSEC-02: Runtime Vulnerability Analytics](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-02-runtime-vulnerability-analytics.md) — Third-party library CVE detection, reachability analysis, and risk prioritization
+- [APPSEC-03: Code-Level Vulnerability Analytics](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-03-code-level-vulnerability-analytics.md) — First-party code vulnerability detection: patterns, taint analysis, and remediation guidance
+- [APPSEC-04: Runtime Application Protection](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-04-runtime-application-protection.md) — Detection-to-blocking promotion, protection rules, and attack class coverage
+- [APPSEC-05: Security Posture Management](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-05-security-posture-management.md) — Compliance baseline evaluation (CIS, PCI, NIST) and misconfiguration findings
+- [APPSEC-06: Kubernetes and Container Security](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-06-kubernetes-and-container-security.md) — Cross-pillar AppSec coverage for Kubernetes workloads and container images
+- [APPSEC-07: Security Investigator and Davis CoPilot for Security](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-07-investigator-and-davis-copilot.md) — Visual entity pivoting and NL-to-DQL for security investigation workflows
+- [APPSEC-08: Workflows, Notifications and Remediation](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-08-workflows-notifications-remediation.md) — Routing findings to SOC, AppDev, and platform teams via Dynatrace Workflows
+- [APPSEC-09: IAM and Gen3 Permissions for AppSec](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-09-iam-and-gen3-permissions.md) — Permission catalog, persona policies, boundary patterns, and sensitive-data access controls
+- [APPSEC-10: Dashboards, Reporting and Governance](APPSEC%20%E2%80%94%20Application%20Security/markdown/-%5BAPPSEC%5D-10-dashboards-reporting-governance.md) — Executive dashboard composition, governance cadence, and FinOps angle for AppSec DPS billing
 
 ### [AUTOM - Dynatrace Automation](AUTOM%20-%20Dynatrace%20Automation/README.md)
 Comprehensive guide to automating Dynatrace configuration and operations.
@@ -118,6 +133,12 @@ Frequently asked questions and answers across the Dynatrace Best-Practice Notebo
 - [FAQ-01: Why you need a good Host Group naming strategy](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-01-host-group-naming-strategy.md) — How host group naming influences access control, alerting, automation, and tenant maintainability
 - [FAQ-02: Tagging — Sources, Standards, and Strategy](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-02-tagging-sources-standards-strategy.md) — The four tag sources, primary tags vs. ordinary tags, and the standards that turn tag sprawl into a managed asset
 - [FAQ-03: OneAgent vs OpenTelemetry — A Decision Framework](FAQ%20-%20Frequently%20Asked%20Questions/markdown/-%5BFAQ%5D-03-oneagent-vs-otel-decision-framework.md) — Cross-runtime decision framework for convert vs. layer vs. leave-alone vs. greenfield, covering Java, .NET, Node.js, Python, Go, PHP, Ruby, with async context propagation edge cases and JVM dynamic-attach guidance
+
+### [FINOPS - Cost Management & FinOps](FINOPS%20-%20Cost%20Management%20%26%20FinOps/README.md)
+Best practices for understanding, forecasting, and optimizing Dynatrace Platform Subscription (DPS) consumption.
+- [FINOPS-01: DPS Capability Units and Querying Consumption with DQL](FINOPS%20-%20Cost%20Management%20%26%20FinOps/markdown/-%5BFINOPS%5D-01-dps-capability-units-querying-consumption.md) — Capability categories, billing event flow, and DQL patterns for consumption queries
+- [FINOPS-02: Forecasting and Anomaly Detection on DPS Consumption](FINOPS%20-%20Cost%20Management%20%26%20FinOps/markdown/-%5BFINOPS%5D-02-forecasting-anomaly-detection-consumption.md) — Burn-rate trajectory, three layers of cost visibility, and anomaly detection architecture
+- [FINOPS-03: DPS Consumption Optimization — When to Cut, Tune, or Filter](FINOPS%20-%20Cost%20Management%20%26%20FinOps/markdown/-%5BFINOPS%5D-03-optimization-decision-framework.md) — Optimization decision tree and cut/tune/filter trade-offs
 
 ### [IAM - IAM Administration](IAM%20-%20IAM%20Administration/README.md)
 Enterprise identity and access management administration for Dynatrace.
