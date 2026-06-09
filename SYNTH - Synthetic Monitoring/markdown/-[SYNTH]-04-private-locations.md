@@ -1,6 +1,6 @@
 # SYNTH-04: Private Synthetic Locations
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 05/05/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 4 of 6 | **Created:** December 2025 | **Last Updated:** 06/09/2026
 
 ## Monitoring Internal Applications from Your Infrastructure
 This notebook covers deploying and managing private synthetic locations (ActiveGates) for monitoring internal applications, APIs, and services not accessible from the public internet.
@@ -134,7 +134,7 @@ services:
       - "9999:9999"
 ```
 
-### Option 3: Kubernetes
+### Option 3: Kubernetes / OpenShift
 
 ```yaml
 # Use Dynatrace Operator with ActiveGate CRD
@@ -151,6 +151,8 @@ spec:
         cpu: "500m"
         memory: "512Mi"
 ```
+
+> **⚠️ Breaking change for "Latest Dynatrace" tenants (Sprint 1.339):** Kubernetes / OpenShift private synthetic-location pod templates now require the environment variable **`METRIC_3RD_GEN_ENABLED`** on the synthetic-location pod. Without it, deployments on Latest tenants fail or run without 3rd-generation metric emission. Re-pull the template from **Settings → Synthetic → Private locations** or add this env var to existing manifests before/concurrent with the Latest Dynatrace transition, and schedule it through change management.
 
 ```dql
 // List all synthetic locations
@@ -200,14 +202,14 @@ For production workloads:
 
 ```dql
 // Monitor executions by location
-// Note: Private locations typically have custom names (not city names like "N. Virginia")
-// Identify your private locations by their naming convention
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
+// Private locations typically have custom names (not city names like "N. Virginia")
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     executions = count(),
-    availability_pct = round(countIf(synthetic.availability == true) * 100.0 / count(), decimals: 2)
-  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
+    availability_pct = round(countIf(result.state == "SUCCESS") * 100.0 / count(), decimals: 2)
+  }, by: {monitor.name, dt.entity.synthetic_location}
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort executions desc
 | limit 30
 ```
@@ -224,31 +226,35 @@ fetch bizevents, from: now() - 24h
 | **Disk** | Storage usage | > 80% |
 | **Queue Depth** | Pending executions | > 100 |
 
+```python
+// Synthetic location health status (1 = healthy)
+// Surfaces location/ActiveGate availability independent of monitor results
+timeseries health = avg(dt.synthetic.location.health_status),
+    from: now() - 24h, interval: 1h, by: {dt.entity.synthetic_location}
+```
+
 ```dql
-// Location availability over time
-// Filter by your private location names using matchesPhrase if needed
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
-| fieldsAdd hour_bucket = bin(timestamp, 1h)
-| summarize {
-    success_count = countIf(synthetic.availability == true),
+// Location availability over time (last 7 days)
+fetch dt.synthetic.events, from: now() - 7d
+| filter endsWith(event.type, "_monitor_execution")
+| makeTimeseries {
+    success_count = countIf(result.state == "SUCCESS"),
     total_count = count()
-  }, by: {dt.entity.synthetic_location, hour_bucket}
-| fieldsAdd availability_pct = round((success_count * 100.0) / total_count, decimals: 2)
-| sort hour_bucket desc
+  }, interval: 1h, by: {dt.entity.synthetic_location}
+| fieldsAdd availability_pct = success_count[] * 100.0 / total_count[]
 ```
 
 ```dql
 // Execution count by location
-// To filter for private locations, use entity.name patterns specific to your naming convention
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     total_executions = count(),
-    failed_executions = countIf(synthetic.availability == false),
-    unique_monitors = countDistinct(dt.entity.synthetic_test)
+    failed_executions = countIf(result.state == "FAIL"),
+    unique_monitors = countDistinct(dt.synthetic.monitor.id)
   }, by: {dt.entity.synthetic_location}
 | fieldsAdd failure_rate = round((failed_executions * 100.0) / total_executions, decimals: 2)
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort total_executions desc
 ```
 
@@ -291,14 +297,15 @@ curl -v https://<tenant>.live.dynatrace.com/api/v1/time
 
 ```dql
 // Identify failing monitors by location
-// To filter for specific private locations, add a filter on dt.entity.synthetic_location
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == false
+// To filter for specific private locations, add: | filter dt.entity.synthetic_location == "SYNTHETIC_LOCATION-..."
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "FAIL"
 | summarize {
     failure_count = count(),
     last_failure = max(timestamp)
-  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
+  }, by: {monitor.name, dt.entity.synthetic_location}
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort failure_count desc
 | limit 20
 ```
@@ -311,9 +318,9 @@ In this notebook, you learned:
 
 ✅ **Why private locations** - Internal apps, security, compliance  
 ✅ **Architecture** - ActiveGate with synthetic engine  
-✅ **Deployment options** - Installer, container, Kubernetes  
+✅ **Deployment options** - Installer, container, Kubernetes (+ `METRIC_3RD_GEN_ENABLED` for Latest tenants)  
 ✅ **Configuration** - Creating and managing locations  
-✅ **Health monitoring** - ActiveGate and execution metrics  
+✅ **Health monitoring** - `dt.synthetic.location.health_status` metric + execution results by location  
 ✅ **Troubleshooting** - Common issues and resolution  
 
 ---
@@ -326,10 +333,10 @@ Continue to **SYNTH-05: Network Monitoring** to learn about synthetic network av
 
 ## References
 
-- [Private Synthetic Locations](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/private-synthetic-locations)
-- [ActiveGate Deployment](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate)
-- [Synthetic-Enabled ActiveGate](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/private-synthetic-locations/create-a-private-synthetic-location)
-- [ActiveGate in Kubernetes](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/guides/activegate-capabilities)
+- [Private synthetic locations (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-monitoring/private-synthetic-locations)
+- [Synthetic architecture and communication (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-architecture)
+- [ActiveGate (DT docs)](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate)
+- [ActiveGate capabilities on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/setup-and-configuration/setup-on-k8s/guides/activegate-capabilities)
 
 ---
 

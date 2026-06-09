@@ -1,6 +1,6 @@
 # SYNTH-99: Best Practice Summary
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 06/09/2026
 
 ## Overview
 
@@ -231,10 +231,10 @@ Set definitive thresholds for synthetic response time and web vitals.
 | Name private locations with a consistent convention that distinguishes them from public locations | Example: `PRIVATE-DC1-US-EAST` | Recommended |
 | Pair every synthetic monitor with a corresponding RUM configuration for the same application | Synthetic = baseline/SLA; RUM = actual user experience | Recommended |
 | Review and disable stale monitors that no longer have valid targets | Audit: quarterly review of all enabled monitors | Recommended |
-| Use the timing breakdown (DNS, connect, SSL, TTFB, download) to isolate root cause of slowness | Query: avg per phase by monitor | Critical |
+| Use the HTTP timing breakdown (DNS, TCP connect, TLS, TTFB) to isolate root cause of slowness | Query: avg per phase by monitor from `http_step_execution` records | Critical |
 | Check ActiveGate logs at `/var/log/dynatrace/gateway/synthetic.log` when private location tests fail | Log: `synthetic.log` for execution errors | Critical |
 | Test network connectivity from ActiveGate to targets with `curl -v` and `nslookup` before configuring monitors | Pre-check: verify DNS resolution and HTTPS connectivity | Critical |
-| Use `bizevents` with `event.provider == "dynatrace.synthetic"` as the primary data source for DQL analysis | Data source: bizevents, not raw metrics | Recommended |
+| Use `fetch dt.synthetic.events` (event.type `*_monitor_execution`, success via `result.state`) as the primary data source for DQL analysis; use `timeseries dt.synthetic.*` metrics for trends | Data source: `dt.synthetic.events` + synthetic metrics, not `bizevents` | Recommended |
 
 ---
 
