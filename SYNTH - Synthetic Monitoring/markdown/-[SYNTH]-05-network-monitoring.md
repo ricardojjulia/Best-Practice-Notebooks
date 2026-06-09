@@ -1,9 +1,9 @@
 # SYNTH-05: Synthetic Network Monitoring
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 5 of 6 | **Created:** December 2025 | **Last Updated:** 06/09/2026
 
 ## Network Availability, DNS, and ICMP Monitoring
-This notebook covers Dynatrace Synthetic Network Availability Monitors, including ICMP (ping), DNS, and TCP port monitoring capabilities introduced in recent Dynatrace releases.
+This notebook covers Dynatrace Synthetic **Network Availability Monitors** (multi-protocol monitors), which test ICMP (ping), DNS, and TCP port reachability.
 
 ---
 
@@ -25,18 +25,28 @@ This notebook covers Dynatrace Synthetic Network Availability Monitors, includin
 - ✅ Completed SYNTH-01 through SYNTH-04
 - ✅ Private synthetic locations (for internal network monitoring)
 
+> **⚠️ Data model — read first:** ICMP, DNS, and TCP checks are **not** separate monitor types in Grail. They are protocols within a single **network availability monitor** (a *multi-protocol monitor*). In the data model:
+> - **Entity:** `dt.entity.multiprotocol_monitor`
+> - **Events:** `fetch dt.synthetic.events | filter event.type == "multiprotocol_monitor_execution"`
+> - **Metric:** `dt.synthetic.multi_protocol.executions` (execution count, by `dt.entity.multiprotocol_monitor`)
+> - **Success/failure:** `result.state` (`SUCCESS`/`FAIL`) / `result.status.code` — same as other monitor types
+>
+> The **protocol-specific measurement fields** (per-protocol latency, packet loss, resolved IP, DNS resolution time) are not published as stable metric keys and their exact `result.statistics.*` names vary by protocol. Run the discovery query in the next cell against your own tenant to see the fields your multi-protocol monitors actually emit before building latency/packet-loss queries.
+
 <a id="network-monitoring-overview"></a>
 ## 1. Network Monitoring Overview
 
 ### Synthetic Network Availability Monitors
 
-Dynatrace provides network-level synthetic monitoring to verify:
+A single **network availability monitor** can verify multiple protocols:
 
 | Protocol | Purpose | Use Case |
 |----------|---------|----------|
 | **ICMP** | Host reachability | Server availability |
 | **DNS** | Name resolution | DNS infrastructure health |
 | **TCP** | Port connectivity | Service port availability |
+
+All of these run inside one multi-protocol monitor and land in Grail as `multiprotocol_monitor_execution` events — see the data-model note above.
 
 ### Why Network Monitoring?
 
@@ -59,6 +69,21 @@ Network monitors complement application-level monitoring by testing at different
 - **DNS Health**: Monitor critical DNS infrastructure
 - **Low Overhead**: Minimal resource consumption
 - **High Frequency**: Run every minute if needed
+
+```python
+// DISCOVERY — list your network availability (multi-protocol) monitors,
+// then inspect the fields a recent execution emits so you know the exact
+// protocol-specific result.statistics.* names available in YOUR tenant.
+fetch dt.entity.multiprotocol_monitor
+| fields id, entity.name
+| sort entity.name asc
+| limit 50
+
+// To inspect execution fields, run separately:
+// fetch dt.synthetic.events, from: now() - 24h
+// | filter event.type == "multiprotocol_monitor_execution"
+// | limit 5
+```
 
 <a id="icmp-ping-monitors"></a>
 ## 2. ICMP (Ping) Monitors
@@ -102,34 +127,35 @@ Network monitors complement application-level monitoring by testing at different
 -->
 
 ```dql
-// ICMP monitor results (last 24h)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") or matchesValue(event.type, "*ping*")
+// Network monitor execution results (last 24h) — multi-protocol events
+// Covers ICMP/DNS/TCP checks; result.state reflects overall execution success
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
 | fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         availability = synthetic.availability,
-         latency_ms = toDouble(synthetic.response_time),
-         packet_loss = toDouble(synthetic.packet_loss_pct)
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         state = result.state,
+         status = result.status.message,
+         duration_ms = result.statistics.duration / 1ms
 | sort timestamp desc
 | limit 100
 ```
 
 ```dql
-// ICMP latency statistics by target
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") or matchesValue(event.type, "*ping*")
-| filter synthetic.availability == true
+// Latency / duration statistics by network monitor (successful executions)
+// duration is the execution time; for protocol-specific latency (e.g. ICMP RTT,
+// packet loss) add the field name found via the discovery query above.
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
+| filter result.state == "SUCCESS"
 | summarize {
-    avg_latency_ms = avg(toDouble(synthetic.response_time)),
-    min_latency_ms = min(toDouble(synthetic.response_time)),
-    max_latency_ms = max(toDouble(synthetic.response_time)),
-    p95_latency_ms = percentile(toDouble(synthetic.response_time), 95),
+    avg_ms = avg(result.statistics.duration / 1ms),
+    min_ms = min(result.statistics.duration / 1ms),
+    max_ms = max(result.statistics.duration / 1ms),
+    p95_ms = percentile(result.statistics.duration / 1ms, 95),
     executions = count()
-  }, by: {dt.entity.synthetic_test}
-| sort avg_latency_ms desc
+  }, by: {monitor.name}
+| sort avg_ms desc
 | limit 20
 ```
 
@@ -166,32 +192,23 @@ fetch bizevents, from: now() - 24h
 | `NS` | Name servers | ns1.example.com |
 
 ```dql
-// DNS monitor results (last 24h)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*dns*")
-| fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         availability = synthetic.availability,
-         response_time_ms = toDouble(synthetic.response_time),
-         resolved_ip = synthetic.dns_resolved_ip
-| sort timestamp desc
-| limit 100
+// Network monitor execution volume by monitor (metric path)
+// Scope to your DNS-checking monitors by filtering dt.entity.multiprotocol_monitor
+timeseries executions = sum(dt.synthetic.multi_protocol.executions),
+    from: now() - 24h, interval: 1h, by: {dt.entity.multiprotocol_monitor}
 ```
 
 ```dql
-// DNS resolution time by location
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*dns*")
-| filter synthetic.availability == true
+// Network monitor availability by monitor and location (events path)
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
 | summarize {
-    avg_resolution_ms = avg(toDouble(synthetic.response_time)),
-    p95_resolution_ms = percentile(toDouble(synthetic.response_time), 95),
-    executions = count()
-  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
-| sort avg_resolution_ms desc
+    total = count(),
+    successful = countIf(result.state == "SUCCESS")
+  }, by: {monitor.name, dt.entity.synthetic_location}
+| fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
+| sort availability_pct asc
 | limit 30
 ```
 
@@ -228,33 +245,23 @@ fetch bizevents, from: now() - 24h
 | **TLS** | Enable TLS check | true/false |
 
 ```dql
-// TCP port monitor results (last 24h)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*tcp*") or matchesValue(event.type, "*port*")
-| fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         availability = synthetic.availability,
-         connect_time_ms = toDouble(synthetic.response_time)
-| sort timestamp desc
-| limit 100
+// Network monitor availability summary by monitor (events path)
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
+| summarize {
+    total = count(),
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
+  }, by: {monitor.name}
+| fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
+| sort availability_pct asc
+| limit 20
 ```
 
 ```dql
-// TCP connection time statistics
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*tcp*") or matchesValue(event.type, "*port*")
-| filter synthetic.availability == true
-| summarize {
-    avg_connect_ms = avg(toDouble(synthetic.response_time)),
-    min_connect_ms = min(toDouble(synthetic.response_time)),
-    max_connect_ms = max(toDouble(synthetic.response_time)),
-    executions = count()
-  }, by: {dt.entity.synthetic_test}
-| sort avg_connect_ms desc
-| limit 20
+// Network monitor execution-volume trend (metric path, last 7 days)
+timeseries executions = sum(dt.synthetic.multi_protocol.executions),
+    from: now() - 7d, interval: 1h
 ```
 
 <a id="multi-protocol-monitors"></a>
@@ -322,18 +329,13 @@ Step 3: TCP Port Check
 -->
 
 ```dql
-// All network monitor types summary
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") 
-        or matchesValue(event.type, "*dns*") 
-        or matchesValue(event.type, "*tcp*")
-        or matchesValue(event.type, "*ping*")
-        or matchesValue(event.type, "*port*")
+// All synthetic monitor types summary (HTTP / browser / network)
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     total_executions = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
   }, by: {event.type}
 | fieldsAdd availability_pct = round((successful * 100.0) / total_executions, decimals: 2)
 | sort total_executions desc
@@ -343,73 +345,52 @@ fetch bizevents, from: now() - 24h
 ## 7. Analyzing Network Results
 
 ```dql
-// Network monitor availability dashboard
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") 
-        or matchesValue(event.type, "*dns*") 
-        or matchesValue(event.type, "*tcp*")
-        or matchesValue(event.type, "*ping*")
-        or matchesValue(event.type, "*port*")
-| fieldsAdd hour_bucket = bin(timestamp, 1h)
-| summarize {
-    success_count = countIf(synthetic.availability == true),
+// Network monitor availability over time (last 7 days)
+fetch dt.synthetic.events, from: now() - 7d
+| filter event.type == "multiprotocol_monitor_execution"
+| makeTimeseries {
+    success_count = countIf(result.state == "SUCCESS"),
     total_count = count()
-  }, by: {event.type, hour_bucket}
-| fieldsAdd availability_pct = round((success_count * 100.0) / total_count, decimals: 2)
-| sort hour_bucket desc
+  }, interval: 1h, by: {monitor.name}
+| fieldsAdd availability_pct = success_count[] * 100.0 / total_count[]
 ```
 
 ```dql
-// Latency trends for network monitors
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
-| filter matchesValue(event.type, "*icmp*") 
-        or matchesValue(event.type, "*dns*") 
-        or matchesValue(event.type, "*tcp*")
-        or matchesValue(event.type, "*ping*")
-        or matchesValue(event.type, "*port*")
+// Duration trend for network monitors (last 24h)
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
+| filter result.state == "SUCCESS"
 | makeTimeseries {
-    avg_latency_ms = avg(toDouble(synthetic.response_time)),
-    p95_latency_ms = percentile(toDouble(synthetic.response_time), 95)
+    avg_ms = avg(result.statistics.duration / 1ms),
+    p95_ms = percentile(result.statistics.duration / 1ms, 95)
   }, interval: 15m
 ```
 
 ```dql
 // Failed network checks with details
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == false
-| filter matchesValue(event.type, "*icmp*") 
-        or matchesValue(event.type, "*dns*") 
-        or matchesValue(event.type, "*tcp*")
-        or matchesValue(event.type, "*ping*")
-        or matchesValue(event.type, "*port*")
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
+| filter result.state == "FAIL"
 | fields timestamp,
-         event.type,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         error = synthetic.error_message
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         status = result.status.message,
+         detail = result.status.details
 | sort timestamp desc
 | limit 50
 ```
 
 ```dql
 // Network health score by monitor
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*icmp*") 
-        or matchesValue(event.type, "*dns*") 
-        or matchesValue(event.type, "*tcp*")
-        or matchesValue(event.type, "*ping*")
-        or matchesValue(event.type, "*port*")
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "multiprotocol_monitor_execution"
 | summarize {
     total = count(),
-    successful = countIf(synthetic.availability == true),
-    avg_latency_ms = avg(toDouble(synthetic.response_time))
-  }, by: {dt.entity.synthetic_test, event.type}
+    successful = countIf(result.state == "SUCCESS"),
+    avg_ms = avg(result.statistics.duration / 1ms)
+  }, by: {monitor.name}
 | fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
+| fieldsAdd avg_ms = round(avg_ms, decimals: 1)
 | fieldsAdd health_status = if(availability_pct >= 99.9, "HEALTHY",
                             else: if(availability_pct >= 99.0, "DEGRADED",
                             else: "CRITICAL"))
@@ -423,13 +404,11 @@ fetch bizevents, from: now() - 24h
 
 In this notebook, you learned:
 
-✅ **Network monitoring types** - ICMP, DNS, TCP  
-✅ **ICMP monitors** - Ping, latency, packet loss  
-✅ **DNS monitors** - Resolution time, record validation  
-✅ **TCP monitors** - Port connectivity checks  
+✅ **Network availability monitors** - ICMP, DNS, and TCP within one multi-protocol monitor  
+✅ **The data model** - `event.type == "multiprotocol_monitor_execution"` on `dt.synthetic.events`; entity `dt.entity.multiprotocol_monitor`; metric `dt.synthetic.multi_protocol.executions`  
+✅ **Discovery first** - confirm protocol-specific `result.statistics.*` fields in your own tenant  
 ✅ **Multi-protocol patterns** - Comprehensive infrastructure monitoring  
-✅ **Use cases** - Infrastructure, DNS, cross-region  
-✅ **Analysis queries** - Availability, latency, failures  
+✅ **Analysis queries** - Availability, duration, executions, failures, health score  
 
 ---
 
@@ -441,10 +420,10 @@ Continue to **SYNTH-06: Analytics & Alerting** to learn about dashboards, SLOs, 
 
 ## References
 
-- [Network Availability Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors)
-- [ICMP Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors/icmp-monitors)
-- [DNS Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors/dns-monitors)
-- [TCP Port Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/network-availability-monitors/tcp-monitors)
+- [Network availability monitoring (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-monitoring/network-availability-monitors/network-availability-monitoring)
+- [NAM monitor metrics in Synthetic on Grail (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-metrics/nam-monitor-metrics-latest)
+- [Synthetic on Grail (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail)
+- [Synthetic app (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-app)
 
 ---
 

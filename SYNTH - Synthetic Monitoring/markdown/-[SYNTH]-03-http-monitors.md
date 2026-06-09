@@ -1,6 +1,6 @@
 # SYNTH-03: HTTP Monitors
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 3 of 6 | **Created:** December 2025 | **Last Updated:** 06/09/2026
 
 ## Lightweight API and Endpoint Monitoring
 This notebook covers HTTP monitors for API health checks, endpoint validation, and multi-step API workflows using the latest Dynatrace platform.
@@ -24,6 +24,8 @@ This notebook covers HTTP monitors for API health checks, endpoint validation, a
 - ✅ Access to a Dynatrace environment with Synthetic Monitoring
 - ✅ Completed SYNTH-01 Fundamentals
 - ✅ API endpoint(s) to monitor
+
+> **Data model:** HTTP results live in `fetch dt.synthetic.events`. Monitor-level rows (`event.type == "http_monitor_execution"`) carry `result.state` and total `result.statistics.duration`; per-request rows (`event.type == "http_step_execution"`) carry the timing breakdown (DNS / TCP / TLS / TTFB) and SSL certificate data.
 
 <a id="http-monitor-overview"></a>
 ## 1. HTTP Monitor Overview
@@ -102,15 +104,14 @@ fetch dt.entity.http_check
 
 ```dql
 // HTTP monitor execution results (last 24h)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_monitor_execution"
 | fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         availability = synthetic.availability,
-         response_time_ms = toDouble(synthetic.response_time),
-         status_code = synthetic.http_status_code
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         state = result.state,
+         status_code = result.statistics.response_status_code,
+         response_ms = result.statistics.duration / 1ms
 | sort timestamp desc
 | limit 100
 ```
@@ -149,16 +150,16 @@ Reference extracted variables in subsequent steps:
 - Body: `{"userId": "${userId}"}`
 
 ```dql
-// Multi-step HTTP monitor step performance
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
-| filter isNotNull(synthetic.step_name)
+// Multi-step HTTP monitor — per-step performance
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_step_execution"
 | summarize {
-    avg_duration_ms = avg(toDouble(synthetic.step_duration)),
-    success_rate = countIf(synthetic.step_success == true) * 100.0 / count(),
+    avg_duration_ms = avg(result.statistics.duration / 1ms),
+    success_rate = countIf(result.status.code == 0) * 100.0 / count(),
     executions = count()
-  }, by: {dt.entity.synthetic_test, synthetic.step_name}
+  }, by: {monitor.name, step.name}
+| fieldsAdd avg_duration_ms = round(avg_duration_ms, decimals: 2)
+| fieldsAdd success_rate = round(success_rate, decimals: 2)
 | sort avg_duration_ms desc
 | limit 30
 ```
@@ -240,27 +241,24 @@ $.data.users[0].name == "John"  // First user name
 
 ```dql
 // HTTP status code distribution
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
-| summarize {
-    count = count()
-  }, by: {dt.entity.synthetic_test, synthetic.http_status_code}
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_monitor_execution"
+| summarize count = count(), by: {monitor.name, result.statistics.response_status_code}
 | sort count desc
 | limit 30
 ```
 
 ```dql
 // Failed HTTP requests with error details
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
-| filter synthetic.availability == false
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_monitor_execution"
+| filter result.state == "FAIL"
 | fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         status_code = synthetic.http_status_code,
-         error = synthetic.error_message
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         status = result.status.message,
+         status_code = result.status.code,
+         detail = result.status.details
 | sort timestamp desc
 | limit 50
 ```
@@ -286,16 +284,13 @@ Configure alerts for certificates expiring within:
 - 7 days (emergency)
 
 ```dql
-// SSL certificate expiration status
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter isNotNull(synthetic.ssl_certificate_expiry)
-| summarize {
-    latest_check = max(timestamp),
-    certificate_expiry = takeFirst(synthetic.ssl_certificate_expiry),
-    days_until_expiry = takeFirst(toDouble(synthetic.ssl_days_until_expiry))
-  }, by: {dt.entity.synthetic_test}
-| filter days_until_expiry < 30
+// SSL certificate expiration status (per monitor)
+// peer_certificate_expiry_date is carried on http_step_execution records for HTTPS targets
+fetch dt.synthetic.events, from: now() - 6h
+| filter event.type == "http_step_execution"
+| filter isNotNull(result.statistics.peer_certificate_expiry_date)
+| summarize { certificate_expiry = takeMax(result.statistics.peer_certificate_expiry_date) }, by: {monitor.name}
+| fieldsAdd days_until_expiry = round((certificate_expiry - now()) / 1h / 24, decimals: 1)
 | sort days_until_expiry asc
 | limit 20
 ```
@@ -304,64 +299,65 @@ fetch bizevents, from: now() - 24h
 ## 7. Analyzing HTTP Results
 
 ```dql
-// HTTP monitor availability summary
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
+// HTTP monitor availability summary (by monitor)
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_monitor_execution"
 | summarize {
     total = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
-  }, by: {dt.entity.synthetic_test}
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
+  }, by: {monitor.name}
 | fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
 | sort availability_pct asc
 | limit 30
 ```
 
 ```dql
-// Response time percentiles by monitor
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
-| filter synthetic.availability == true
+// Response time percentiles by monitor (successful executions)
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_monitor_execution"
+| filter result.state == "SUCCESS"
 | summarize {
-    p50_ms = percentile(toDouble(synthetic.response_time), 50),
-    p95_ms = percentile(toDouble(synthetic.response_time), 95),
-    p99_ms = percentile(toDouble(synthetic.response_time), 99),
-    max_ms = max(toDouble(synthetic.response_time)),
+    p50 = percentile(result.statistics.duration, 50),
+    p95 = percentile(result.statistics.duration, 95),
+    p99 = percentile(result.statistics.duration, 99),
+    max = max(result.statistics.duration),
     executions = count()
-  }, by: {dt.entity.synthetic_test}
+  }, by: {monitor.name}
+| fieldsAdd p50_ms = round(p50 / 1ms, decimals: 1),
+            p95_ms = round(p95 / 1ms, decimals: 1),
+            p99_ms = round(p99 / 1ms, decimals: 1),
+            max_ms = round(max / 1ms, decimals: 1)
+| fieldsRemove p50, p95, p99, max
 | sort p95_ms desc
 | limit 20
 ```
 
 ```dql
-// HTTP timing breakdown (DNS, connect, SSL, TTFB)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
-| filter synthetic.availability == true
+// HTTP timing breakdown (DNS, TCP connect, TLS, TTFB) — from step records
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_step_execution"
+| filter result.status.code == 0
 | summarize {
-    avg_dns_ms = avg(toDouble(synthetic.dns_time)),
-    avg_connect_ms = avg(toDouble(synthetic.connect_time)),
-    avg_ssl_ms = avg(toDouble(synthetic.ssl_time)),
-    avg_ttfb_ms = avg(toDouble(synthetic.time_to_first_byte)),
-    avg_total_ms = avg(toDouble(synthetic.response_time)),
+    avg_dns_ms     = round(avg(result.statistics.host_name_resolution_time) / 1ms, decimals: 2),
+    avg_connect_ms = round(avg(result.statistics.tcp_connect_time) / 1ms, decimals: 2),
+    avg_tls_ms     = round(avg(result.statistics.tls_handshake_time) / 1ms, decimals: 2),
+    avg_ttfb_ms    = round(avg(result.statistics.time_to_first_byte) / 1ms, decimals: 2),
+    avg_total_ms   = round(avg(result.statistics.duration) / 1ms, decimals: 2),
     executions = count()
-  }, by: {dt.entity.synthetic_test}
+  }, by: {monitor.name, step.name}
 | sort avg_total_ms desc
 | limit 20
 ```
 
 ```dql
-// Response time trend over time
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*http*")
-| filter synthetic.availability == true
+// Response time trend over time (last 7 days)
+fetch dt.synthetic.events, from: now() - 7d
+| filter event.type == "http_monitor_execution"
+| filter result.state == "SUCCESS"
 | makeTimeseries {
-    avg_response_ms = avg(toDouble(synthetic.response_time)),
-    p95_response_ms = percentile(toDouble(synthetic.response_time), 95)
+    avg_response_ms = avg(result.statistics.duration / 1ms),
+    p95_response_ms = percentile(result.statistics.duration / 1ms, 95)
   }, interval: 1h
 ```
 
@@ -376,23 +372,23 @@ In this notebook, you learned:
 ✅ **Multi-step workflows** - Variable extraction and chaining  
 ✅ **Authentication** - Basic, Bearer, OAuth2, API keys  
 ✅ **Response validation** - Status codes, content, JSON path  
-✅ **SSL monitoring** - Certificate expiration alerts  
-✅ **Analysis queries** - Availability, timing breakdown  
+✅ **SSL monitoring** - Certificate expiration via `result.statistics.peer_certificate_expiry_date`  
+✅ **Analysis queries** - Availability, percentiles, timing breakdown  
 
 ---
 
 ## Next Steps
 
-Continue to **SYNTH-04: Scripted Monitors** to learn about advanced scripting capabilities.
+Continue to **SYNTH-04: Private Locations** to learn about running monitors from your own infrastructure.
 
 ---
 
 ## References
 
-- [HTTP Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/http-monitors)
-- [Multi-step HTTP Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/http-monitors/create-http-monitor)
-- [Credential Vault](https://docs.dynatrace.com/docs/manage/identity-access-management/credential-vault)
-- [SSL Certificate Monitoring](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/analysis-and-alerting/synthetic-ssl-certificates)
+- [HTTP monitors (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-monitoring/http-monitors)
+- [HTTP monitor metrics in Synthetic on Grail (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-metrics/http-monitor-metrics)
+- [Credential vault (DT docs)](https://docs.dynatrace.com/docs/manage/identity-access-management/credential-vault)
+- [Synthetic app (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-app)
 
 ---
 

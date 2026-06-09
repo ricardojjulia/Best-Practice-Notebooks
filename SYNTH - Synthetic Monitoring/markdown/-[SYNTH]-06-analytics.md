@@ -1,6 +1,6 @@
 # SYNTH-06: Synthetic Analytics & Alerting
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 6 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 6 of 6 | **Created:** December 2025 | **Last Updated:** 06/09/2026
 
 ## Dashboards, SLOs, and Alerting Strategies
 This notebook covers advanced analytics for synthetic monitoring, including building dashboards, configuring SLOs, and implementing effective alerting strategies using the latest Dynatrace platform.
@@ -26,6 +26,8 @@ This notebook covers advanced analytics for synthetic monitoring, including buil
 - ✅ Completed SYNTH-01 through SYNTH-05
 - ✅ Active synthetic monitors generating data
 
+> **Query convention:** These analyses span all monitor types, so they read monitor-level execution events with `filter endsWith(event.type, "_monitor_execution")` and group by `monitor.name`. Success is `result.state == "SUCCESS"`; duration is `result.statistics.duration / 1ms`.
+
 <a id="analytics-overview"></a>
 ## 1. Analytics Overview
 
@@ -42,10 +44,11 @@ This notebook covers advanced analytics for synthetic monitoring, including buil
 
 | Source | Description | Best For |
 |--------|-------------|----------|
-| `bizevents` | Execution results | Real-time analysis |
-| `dt.entity.synthetic_test` | Monitor definitions | Configuration |
+| `dt.synthetic.events` | Execution results (events) | Per-execution analysis, failures, percentiles |
+| `dt.synthetic.detailed_events` | Per-step request detail | Deep-dive on individual steps |
+| `timeseries dt.synthetic.*` | Pre-aggregated metrics | Long-term trends, dashboards |
+| `dt.entity.synthetic_test` / `dt.entity.http_check` / `dt.entity.multiprotocol_monitor` | Monitor definitions | Configuration, name resolution |
 | `dt.entity.synthetic_location` | Location info | Geographic analysis |
-| `metrics` | Aggregated metrics | Long-term trends |
 
 <a id="availability-analysis"></a>
 ## 2. Availability Analysis
@@ -62,12 +65,12 @@ Example SLA Targets:
 
 ```dql
 // Overall synthetic availability (last 7 days)
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 7d
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     total_executions = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
   }
 | fieldsAdd availability_pct = round((successful * 100.0) / total_executions, decimals: 3)
 | fieldsAdd downtime_minutes = round((failed * 5.0), decimals: 0)  // Assuming 5-min frequency
@@ -75,13 +78,13 @@ fetch bizevents, from: now() - 7d
 
 ```dql
 // Availability by monitor (last 7 days)
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 7d
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     total = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
-  }, by: {dt.entity.synthetic_test}
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
+  }, by: {monitor.name}
 | fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 3)
 | sort availability_pct asc
 | limit 30
@@ -89,11 +92,11 @@ fetch bizevents, from: now() - 7d
 
 ```dql
 // Availability trend over time
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 7d
+| filter endsWith(event.type, "_monitor_execution")
 | fieldsAdd hour_bucket = bin(timestamp, 1h)
 | summarize {
-    success_count = countIf(synthetic.availability == true),
+    success_count = countIf(result.state == "SUCCESS"),
     total_count = count()
   }, by: {hour_bucket}
 | fieldsAdd availability_pct = round((success_count * 100.0) / total_count, decimals: 2)
@@ -102,13 +105,13 @@ fetch bizevents, from: now() - 7d
 
 ```dql
 // Daily availability report
-fetch bizevents, from: now() - 30d
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 30d
+| filter endsWith(event.type, "_monitor_execution")
 | fieldsAdd day = formatTimestamp(timestamp, format: "yyyy-MM-dd")
 | summarize {
     total = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
   }, by: {day}
 | fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 3)
 | sort day desc
@@ -128,66 +131,70 @@ fetch bizevents, from: now() - 30d
 
 ```dql
 // Response time percentiles by monitor
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
 | summarize {
-    p50_ms = percentile(toDouble(synthetic.response_time), 50),
-    p75_ms = percentile(toDouble(synthetic.response_time), 75),
-    p90_ms = percentile(toDouble(synthetic.response_time), 90),
-    p95_ms = percentile(toDouble(synthetic.response_time), 95),
-    p99_ms = percentile(toDouble(synthetic.response_time), 99),
+    p50 = percentile(result.statistics.duration, 50),
+    p75 = percentile(result.statistics.duration, 75),
+    p90 = percentile(result.statistics.duration, 90),
+    p95 = percentile(result.statistics.duration, 95),
+    p99 = percentile(result.statistics.duration, 99),
     executions = count()
-  }, by: {dt.entity.synthetic_test}
+  }, by: {monitor.name}
+| fieldsAdd p50_ms = round(p50/1ms, decimals:1), p75_ms = round(p75/1ms, decimals:1),
+            p90_ms = round(p90/1ms, decimals:1), p95_ms = round(p95/1ms, decimals:1),
+            p99_ms = round(p99/1ms, decimals:1)
+| fieldsRemove p50, p75, p90, p95, p99
 | sort p95_ms desc
 | limit 20
 ```
 
 ```dql
 // Performance trend comparison (this week vs last week)
-fetch bizevents, from: now() - 14d
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 14d
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
 | fieldsAdd week = if(timestamp > now() - 7d, "This Week", else: "Last Week")
 | summarize {
-    avg_response_ms = avg(toDouble(synthetic.response_time)),
-    p95_response_ms = percentile(toDouble(synthetic.response_time), 95),
+    avg_response_ms = round(avg(result.statistics.duration / 1ms), decimals: 1),
+    p95 = percentile(result.statistics.duration / 1ms, 95),
     executions = count()
-  }, by: {dt.entity.synthetic_test, week}
-| sort dt.entity.synthetic_test, week
+  }, by: {monitor.name, week}
+| fieldsAdd p95_response_ms = round(p95, decimals: 1)
+| fieldsRemove p95
+| sort monitor.name asc, week asc
 ```
 
 ```dql
-// Timing breakdown analysis
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+// Timing breakdown analysis (HTTP step records)
+// TTFB already includes DNS + TCP + TLS, so these phases overlap — do not sum them.
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "http_step_execution"
+| filter result.status.code == 0
 | summarize {
-    avg_dns_ms = avg(toDouble(synthetic.dns_time)),
-    avg_connect_ms = avg(toDouble(synthetic.connect_time)),
-    avg_ssl_ms = avg(toDouble(synthetic.ssl_time)),
-    avg_ttfb_ms = avg(toDouble(synthetic.time_to_first_byte)),
-    avg_download_ms = avg(toDouble(synthetic.download_time)),
-    avg_total_ms = avg(toDouble(synthetic.response_time))
-  }, by: {dt.entity.synthetic_test}
-| fieldsAdd other_ms = avg_total_ms - avg_dns_ms - avg_connect_ms - avg_ssl_ms - avg_ttfb_ms - avg_download_ms
+    avg_dns_ms     = round(avg(result.statistics.host_name_resolution_time) / 1ms, decimals: 2),
+    avg_connect_ms = round(avg(result.statistics.tcp_connect_time) / 1ms, decimals: 2),
+    avg_tls_ms     = round(avg(result.statistics.tls_handshake_time) / 1ms, decimals: 2),
+    avg_ttfb_ms    = round(avg(result.statistics.time_to_first_byte) / 1ms, decimals: 2),
+    avg_total_ms   = round(avg(result.statistics.duration) / 1ms, decimals: 2)
+  }, by: {monitor.name}
 | sort avg_total_ms desc
 | limit 20
 ```
 
 ```dql
-// Performance anomalies (response time > 2x average)
-// First calculate average per monitor, then find executions above threshold
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
-| fieldsAdd response_ms = toDouble(synthetic.response_time)
+// Performance anomalies (max response time > 2x average per monitor)
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
+| fieldsAdd response_ms = result.statistics.duration / 1ms
 | summarize {
     avg_response = avg(response_ms),
     max_response = max(response_ms),
     min_response = min(response_ms),
     executions = count()
-  }, by: {dt.entity.synthetic_test}
+  }, by: {monitor.name}
 | fieldsAdd deviation_factor = round(max_response / avg_response, decimals: 1)
 | filter deviation_factor > 2
 | sort deviation_factor desc
@@ -206,55 +213,61 @@ Compare synthetic results across locations to:
 
 ```dql
 // Availability by location
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     total = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
   }, by: {dt.entity.synthetic_location}
 | fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort availability_pct asc
 | limit 30
 ```
 
 ```dql
 // Performance by location
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
 | summarize {
-    avg_response_ms = avg(toDouble(synthetic.response_time)),
-    p50_ms = percentile(toDouble(synthetic.response_time), 50),
-    p95_ms = percentile(toDouble(synthetic.response_time), 95),
+    avg_response_ms = round(avg(result.statistics.duration / 1ms), decimals: 1),
+    p50 = percentile(result.statistics.duration, 50),
+    p95 = percentile(result.statistics.duration, 95),
     executions = count()
   }, by: {dt.entity.synthetic_location}
+| fieldsAdd p50_ms = round(p50 / 1ms, decimals: 1), p95_ms = round(p95 / 1ms, decimals: 1)
+| fieldsRemove p50, p95
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort avg_response_ms desc
 | limit 30
 ```
 
 ```dql
 // Location performance heatmap (monitor x location)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
-    avg_response_ms = avg(toDouble(synthetic.response_time)),
-    availability_pct = countIf(synthetic.availability == true) * 100.0 / count()
-  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
-| sort dt.entity.synthetic_test, avg_response_ms desc
+    executions = count(),
+    availability_pct = round(countIf(result.state == "SUCCESS") * 100.0 / count(), decimals: 2),
+    avg_response_ms = round(avg(result.statistics.duration / 1ms), decimals: 1)
+  }, by: {monitor.name, dt.entity.synthetic_location}
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
+| sort monitor.name asc, avg_response_ms desc
 ```
 
 ```dql
 // Location-specific failures
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == false
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "FAIL"
 | summarize {
     failure_count = count(),
-    unique_monitors = countDistinct(dt.entity.synthetic_test),
-    error_types = collectDistinct(synthetic.error_message)
+    unique_monitors = countDistinct(monitor.name),
+    error_types = collectDistinct(result.status.message)
   }, by: {dt.entity.synthetic_location}
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort failure_count desc
 | limit 20
 ```
@@ -279,13 +292,13 @@ fetch bizevents, from: now() - 24h
 
 ```dql
 // SLO calculation - Availability (30-day window)
-fetch bizevents, from: now() - 30d
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 30d
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
     total_executions = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
-  }, by: {dt.entity.synthetic_test}
+    successful = countIf(result.state == "SUCCESS"),
+    failed = countIf(result.state == "FAIL")
+  }, by: {monitor.name}
 | fieldsAdd sli_availability = round((successful * 100.0) / total_executions, decimals: 4)
 | fieldsAdd slo_target = 99.9
 | fieldsAdd error_budget_total = round(total_executions * 0.001, decimals: 0)  // 0.1% budget
@@ -298,14 +311,17 @@ fetch bizevents, from: now() - 30d
 
 ```dql
 // SLO calculation - Performance (P95 < 3000ms)
-fetch bizevents, from: now() - 30d
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 30d
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
+| fieldsAdd response_ms = result.statistics.duration / 1ms
 | summarize {
     executions = count(),
-    p95_response_ms = percentile(toDouble(synthetic.response_time), 95),
-    within_target = countIf(toDouble(synthetic.response_time) < 3000)
-  }, by: {dt.entity.synthetic_test}
+    p95 = percentile(response_ms, 95),
+    within_target = countIf(response_ms < 3000)
+  }, by: {monitor.name}
+| fieldsAdd p95_response_ms = round(p95, decimals: 1)
+| fieldsRemove p95
 | fieldsAdd sli_performance = round((within_target * 100.0) / executions, decimals: 2)
 | fieldsAdd slo_target = 95.0  // 95% of requests < 3s
 | fieldsAdd slo_status = if(sli_performance >= slo_target, "✅ Met", else: "❌ Breached")
@@ -315,16 +331,16 @@ fetch bizevents, from: now() - 30d
 
 ```dql
 // Error budget burn rate (last 7 days)
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 7d
+| filter endsWith(event.type, "_monitor_execution")
 | fieldsAdd day = formatTimestamp(timestamp, format: "yyyy-MM-dd")
 | summarize {
     total = count(),
-    failed = countIf(synthetic.availability == false)
-  }, by: {dt.entity.synthetic_test, day}
+    failed = countIf(result.state == "FAIL")
+  }, by: {monitor.name, day}
 | fieldsAdd daily_error_rate = round((failed * 100.0) / total, decimals: 3)
 | fieldsAdd budget_consumed = round(failed * 100.0 / (total * 0.001), decimals: 1)  // vs 0.1% budget
-| sort dt.entity.synthetic_test, day desc
+| sort monitor.name asc, day desc
 ```
 
 <a id="alerting-strategies"></a>
@@ -349,44 +365,46 @@ fetch bizevents, from: now() - 7d
 
 ```dql
 // Monitors with recent failures (potential outages)
-// Check for monitors that have failed multiple times recently
-fetch bizevents, from: now() - 1h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == false
+fetch dt.synthetic.events, from: now() - 1h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "FAIL"
 | summarize {
     failure_count = count(),
     last_failure = max(timestamp),
     first_failure = min(timestamp)
-  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
+  }, by: {monitor.name, dt.entity.synthetic_location}
 | filter failure_count >= 2
+| fieldsAdd location = entityName(dt.entity.synthetic_location)
 | sort failure_count desc
 | limit 20
 ```
 
 ```dql
 // Performance degradation alerts (P95 > threshold)
-fetch bizevents, from: now() - 1h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 1h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
 | summarize {
-    avg_response_ms = avg(toDouble(synthetic.response_time)),
-    p95_response_ms = percentile(toDouble(synthetic.response_time), 95),
+    avg_response_ms = round(avg(result.statistics.duration / 1ms), decimals: 1),
+    p95 = percentile(result.statistics.duration / 1ms, 95),
     executions = count()
-  }, by: {dt.entity.synthetic_test}
+  }, by: {monitor.name}
+| fieldsAdd p95_response_ms = round(p95, decimals: 1)
+| fieldsRemove p95
 | filter p95_response_ms > 5000  // > 5 seconds threshold
 | sort p95_response_ms desc
 ```
 
 ```dql
 // Multi-location failure detection (global outage indicator)
-fetch bizevents, from: now() - 30m
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == false
+fetch dt.synthetic.events, from: now() - 30m
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "FAIL"
 | summarize {
     failing_locations = countDistinct(dt.entity.synthetic_location),
     failure_count = count(),
     locations = collectDistinct(dt.entity.synthetic_location)
-  }, by: {dt.entity.synthetic_test}
+  }, by: {monitor.name}
 | filter failing_locations >= 2
 | fieldsAdd severity = if(failing_locations >= 3, "CRITICAL", else: "WARNING")
 | sort failing_locations desc
@@ -419,61 +437,65 @@ fetch bizevents, from: now() - 30m
 
 ```dql
 // Dashboard tile: Overall availability (single value)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
-    availability_pct = round(countIf(synthetic.availability == true) * 100.0 / count(), decimals: 2)
+    availability_pct = round(countIf(result.state == "SUCCESS") * 100.0 / count(), decimals: 2)
   }
 ```
 
 ```dql
-// Dashboard tile: Active vs failed monitors
-fetch bizevents, from: now() - 1h
-| filter event.provider == "dynatrace.synthetic"
+// Dashboard tile: Healthy vs failing monitors (last hour)
+fetch dt.synthetic.events, from: now() - 1h
+| filter endsWith(event.type, "_monitor_execution")
 | summarize {
-    latest_status = takeFirst(synthetic.availability)
-  }, by: {dt.entity.synthetic_test}
+    failed_recent = countIf(result.state == "FAIL"),
+    executions = count()
+  }, by: {monitor.name}
 | summarize {
     total_monitors = count(),
-    healthy = countIf(latest_status == true),
-    failing = countIf(latest_status == false)
+    healthy = countIf(failed_recent == 0),
+    failing = countIf(failed_recent > 0)
   }
 ```
 
 ```dql
 // Dashboard tile: Response time by monitor (bar chart)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == true
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "SUCCESS"
 | summarize {
-    p95_response_ms = percentile(toDouble(synthetic.response_time), 95)
-  }, by: {dt.entity.synthetic_test}
+    p95 = percentile(result.statistics.duration / 1ms, 95)
+  }, by: {monitor.name}
+| fieldsAdd p95_response_ms = round(p95, decimals: 1)
+| fieldsRemove p95
 | sort p95_response_ms desc
 | limit 10
 ```
 
 ```dql
 // Dashboard tile: Recent failures table
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter synthetic.availability == false
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
+| filter result.state == "FAIL"
 | fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         error = synthetic.error_message
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         status = result.status.message,
+         detail = result.status.details
 | sort timestamp desc
 | limit 20
 ```
 
 ```dql
 // Dashboard tile: Hourly availability trend (line chart)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
+fetch dt.synthetic.events, from: now() - 24h
+| filter endsWith(event.type, "_monitor_execution")
 | fieldsAdd hour_bucket = bin(timestamp, 1h)
 | summarize {
-    success_count = countIf(synthetic.availability == true),
+    success_count = countIf(result.state == "SUCCESS"),
     total_executions = count(),
-    failures = countIf(synthetic.availability == false)
+    failures = countIf(result.state == "FAIL")
   }, by: {hour_bucket}
 | fieldsAdd availability_pct = round((success_count * 100.0) / total_executions, decimals: 2)
 | sort hour_bucket asc
@@ -485,7 +507,7 @@ fetch bizevents, from: now() - 24h
 
 In this notebook, you learned:
 
-✅ **Availability analysis** - Calculating and trending availability  
+✅ **Availability analysis** - Calculating and trending availability with `result.state`  
 ✅ **Performance analysis** - Percentiles, timing breakdown, anomalies  
 ✅ **Location comparison** - Geographic performance analysis  
 ✅ **SLO configuration** - Service level objectives and error budgets  
@@ -509,11 +531,11 @@ You have completed the Synthetic Monitoring Best Practices series:
 
 ## References
 
-- [Synthetic Monitoring Overview](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring)
-- [Analyze Synthetic Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/analysis-and-alerting/analyze-synthetic-monitors)
-- [Service Level Objectives](https://docs.dynatrace.com/docs/platform-modules/automations/service-level-objectives)
-- [Alerting Profiles](https://docs.dynatrace.com/docs/platform-modules/automations/alerting)
-- [Dashboards](https://docs.dynatrace.com/docs/observe-and-explore/dashboards-and-notebooks/dashboards-new)
+- [Synthetic on Grail (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail)
+- [Synthetic alerting overview (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-alerting-overview)
+- [Synthetic for Workflows (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-for-workflows)
+- [Service-level objectives (DT docs)](https://docs.dynatrace.com/docs/analyze-explore-automate/service-level-objectives)
+- [Dashboards (DT docs)](https://docs.dynatrace.com/docs/analyze-explore-automate/dashboards-and-notebooks/dashboards)
 
 ---
 

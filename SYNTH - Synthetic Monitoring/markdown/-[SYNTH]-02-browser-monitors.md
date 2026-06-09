@@ -1,6 +1,6 @@
 # SYNTH-02: Browser Monitors
 
-> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 04/25/2026
+> **Series:** SYNTH — Synthetic Monitoring | **Notebook:** 2 of 6 | **Created:** December 2025 | **Last Updated:** 06/09/2026
 
 ## Creating and Optimizing Browser-Based Synthetic Tests
 This notebook covers browser monitors in Dynatrace, including single-URL monitors, browser clickpaths, and performance analysis using the latest Dynatrace platform capabilities.
@@ -24,6 +24,8 @@ This notebook covers browser monitors in Dynatrace, including single-URL monitor
 - ✅ Access to a Dynatrace environment with Synthetic Monitoring
 - ✅ Completed SYNTH-01 Fundamentals
 - ✅ Web application URL to monitor
+
+> **How browser data is queried:** Browser monitors are analyzed primarily through the **`dt.synthetic.browser.*` metrics** (`timeseries`) — availability, total duration, and per-step duration. Execution-level browser records appear as `browser_monitor_execution` / `browser_step_execution` events in `fetch dt.synthetic.events` **when the classic browser experience is in use**; with the *new browser monitor experience* activated, detailed actions surface in RUM instead. Confirm which path your tenant populates with a discovery query (`fetch dt.synthetic.events, from:-24h | filter startsWith(event.type, "browser") | limit 5`).
 
 <a id="browser-monitor-types"></a>
 ## 1. Browser Monitor Types
@@ -95,28 +97,21 @@ Multi-step user journey simulation:
 | Mobile | 375x667 | iPhone 8 |
 
 ```dql
-// List all browser monitors
+// List browser/clickpath monitors (these are synthetic_test entities)
 fetch dt.entity.synthetic_test
-| filter isNotNull(browserMonitorSubtype)
-| fields id, entity.name, isEnabled, browserMonitorSubtype
+| fields id, entity.name
 | sort entity.name asc
 | limit 50
-
 
 ```
 
 ```dql
-// Browser monitor execution results (last 24h)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         availability = synthetic.availability,
-         response_time_ms = toDouble(synthetic.response_time)
-| sort timestamp desc
-| limit 100
+// Browser monitor availability + duration (last 24h) — metrics path
+// Metric duration is already in milliseconds
+timeseries {
+    availability_pct = avg(dt.synthetic.browser.availability),
+    duration_ms      = avg(dt.synthetic.browser.duration)
+  }, from: now() - 24h, interval: 1h, by: {dt.entity.synthetic_test}
 ```
 
 <a id="browser-clickpaths"></a>
@@ -155,76 +150,61 @@ Define steps programmatically using the script editor.
 | Data Attribute | `[data-testid='login']` | Test automation |
 
 ```dql
-// Clickpath step performance analysis
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter isNotNull(synthetic.step_name)
-| summarize {
-    avg_duration_ms = avg(toDouble(synthetic.step_duration)),
-    max_duration_ms = max(toDouble(synthetic.step_duration)),
-    executions = count()
-  }, by: {dt.entity.synthetic_test, synthetic.step_name}
-| sort avg_duration_ms desc
-| limit 30
+// Clickpath step performance — per-step duration (metrics path)
+timeseries step_duration_ms = avg(dt.synthetic.browser.step.duration),
+    from: now() - 24h, interval: 1h, by: {dt.entity.synthetic_test, step.name}
 ```
 
 <a id="performance-metrics"></a>
 ## 4. Performance Metrics
-### W3C Navigation Timing
+### Browser timing in Synthetic on Grail
 
-Browser monitors capture detailed timing metrics based on the W3C Navigation Timing API:
+Browser monitors capture full-page render timing. In Grail this is exposed as **synthetic browser metrics**:
+
+| Metric key | Description | Unit |
+|------------|-------------|------|
+| `dt.synthetic.browser.duration` | Total monitor duration (sum of all step durations) | ms |
+| `dt.synthetic.browser.step.duration` | Individual step (action) duration | ms |
+| `dt.synthetic.browser.availability` | Availability rate | % |
+| `dt.synthetic.browser.executions` | Execution count | count |
 
 ![Navigation Timing](images/02-navigation-timing.png)
 <!-- MARKDOWN_TABLE_ALTERNATIVE
-| Phase | Metric | Description |
-|-------|--------|-------------|
-| DNS | dns | DNS lookup time |
-| Connect | tcp | TCP connection time |
-| SSL | ssl | SSL/TLS handshake time |
-| Request | request | Time sending request |
-| Response | ttfb | Time to first byte |
-| DOM | dom | DOM processing time |
-| Load | load | Full page load complete |
+| Phase | Description |
+|-------|-------------|
+| DNS | DNS lookup time |
+| Connect | TCP connection time |
+| SSL | SSL/TLS handshake time |
+| Request | Time sending request |
+| Response | Time to first byte |
+| DOM | DOM processing time |
+| Load | Full page load complete |
 -->
 
-### Key Performance Metrics
+### Core Web Vitals — a note on where they live
 
 | Metric | Description | Good | Needs Work |
 |--------|-------------|------|------------|
 | **First Contentful Paint** | First content rendered | < 1.8s | > 3.0s |
 | **Largest Contentful Paint** | Largest element rendered | < 2.5s | > 4.0s |
-| **Time to Interactive** | Page fully interactive | < 3.8s | > 7.3s |
-| **Total Blocking Time** | Main thread blocked | < 200ms | > 600ms |
 | **Cumulative Layout Shift** | Visual stability | < 0.1 | > 0.25 |
 
-> **Note:** Targets based on Google's Core Web Vitals. Actual acceptable thresholds vary by application type and user expectations. Set baselines based on your own monitoring data.
+> **Important:** Core Web Vitals (LCP, FCP, CLS) are **Real User Monitoring** measurements, not synthetic browser metric keys. The Synthetic on Grail browser metrics expose **availability**, **total duration**, and **per-step duration** — not the individual W3C navigation-timing phases or Web Vitals. For Web Vitals analysis, see the WEBRUM series. Targets above are Google's thresholds; set your own baselines from observed data.
 
 ```dql
-// Browser monitor performance breakdown
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| summarize {
-    avg_dns_ms = avg(toDouble(synthetic.dns_time)),
-    avg_connect_ms = avg(toDouble(synthetic.connect_time)),
-    avg_ssl_ms = avg(toDouble(synthetic.ssl_time)),
-    avg_ttfb_ms = avg(toDouble(synthetic.time_to_first_byte)),
-    avg_load_ms = avg(toDouble(synthetic.response_time)),
-    executions = count()
-  }, by: {dt.entity.synthetic_test}
-| sort avg_load_ms desc
-| limit 20
+// Browser duration — average and worst-case per monitor (metrics path)
+timeseries {
+    avg_duration_ms = avg(dt.synthetic.browser.duration),
+    max_duration_ms = max(dt.synthetic.browser.duration)
+  }, from: now() - 24h, interval: 1h, by: {dt.entity.synthetic_test}
 ```
 
 ```dql
-// Performance trend over time
-fetch bizevents, from: now() - 7d
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| makeTimeseries {
-    avg_response_time = avg(toDouble(synthetic.response_time)),
-    p95_response_time = percentile(toDouble(synthetic.response_time), 95)
-  }, interval: 1h
+// Performance trend over time (last 7 days) — metrics path
+timeseries {
+    avg_duration_ms = avg(dt.synthetic.browser.duration),
+    max_duration_ms = max(dt.synthetic.browser.duration)
+  }, from: now() - 7d, interval: 1h
 ```
 
 <a id="validation-and-assertions"></a>
@@ -256,15 +236,18 @@ fetch bizevents, from: now() - 7d
 - Layout validation
 
 ```dql
-// Failed browser monitor executions
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| filter synthetic.availability == false
+// Failed browser executions with detail — events path
+// Requires classic browser execution events (browser_monitor_execution) in dt.synthetic.events.
+// If your tenant uses the new browser experience, this returns no rows — analyze failures via
+// the dt.synthetic.browser.availability metric (dips below 100) instead.
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "browser_monitor_execution"
+| filter result.state == "FAIL"
 | fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         error = synthetic.error_message
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         status = result.status.message,
+         detail = result.status.details
 | sort timestamp desc
 | limit 50
 ```
@@ -273,50 +256,32 @@ fetch bizevents, from: now() - 24h
 ## 6. Analyzing Browser Results
 
 ```dql
-// Browser monitor availability by location
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| summarize {
-    total = count(),
-    successful = countIf(synthetic.availability == true),
-    failed = countIf(synthetic.availability == false)
-  }, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
-| fieldsAdd availability_pct = round((successful * 100.0) / total, decimals: 2)
-| sort availability_pct asc
-| limit 30
+// Browser availability by location (metrics path)
+timeseries availability_pct = avg(dt.synthetic.browser.availability),
+    from: now() - 24h, interval: 1h, by: {dt.entity.synthetic_test, dt.entity.synthetic_location}
 ```
 
 ```dql
-// Response time distribution by location
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| filter synthetic.availability == true
-| summarize {
-    min_ms = min(toDouble(synthetic.response_time)),
-    avg_ms = avg(toDouble(synthetic.response_time)),
-    p50_ms = percentile(toDouble(synthetic.response_time), 50),
-    p95_ms = percentile(toDouble(synthetic.response_time), 95),
-    max_ms = max(toDouble(synthetic.response_time)),
-    executions = count()
-  }, by: {dt.entity.synthetic_location}
-| sort avg_ms desc
-| limit 20
+// Browser duration distribution by location (metrics path)
+timeseries {
+    avg_ms = avg(dt.synthetic.browser.duration),
+    max_ms = max(dt.synthetic.browser.duration)
+  }, from: now() - 24h, interval: 1h, by: {dt.entity.synthetic_location}
 ```
 
 ```dql
-// Slowest page loads (outliers)
-fetch bizevents, from: now() - 24h
-| filter event.provider == "dynatrace.synthetic"
-| filter matchesValue(event.type, "*browser*")
-| filter synthetic.availability == true
-| filter toDouble(synthetic.response_time) > 5000  // > 5 seconds
+// Slowest browser executions (outliers) — events path
+// Classic browser execution events only; see the note on cell above.
+fetch dt.synthetic.events, from: now() - 24h
+| filter event.type == "browser_monitor_execution"
+| filter result.state == "SUCCESS"
+| fieldsAdd duration_ms = result.statistics.duration / 1ms
+| filter duration_ms > 5000  // > 5 seconds
 | fields timestamp,
-         monitor = dt.entity.synthetic_test,
-         location = dt.entity.synthetic_location,
-         response_time_ms = toDouble(synthetic.response_time)
-| sort response_time_ms desc
+         monitor = monitor.name,
+         location = entityName(dt.entity.synthetic_location),
+         duration_ms
+| sort duration_ms desc
 | limit 20
 ```
 
@@ -329,9 +294,9 @@ In this notebook, you learned:
 ✅ **Browser monitor types** - Single-URL vs clickpath monitors  
 ✅ **Creating monitors** - URL configuration, viewports, locations  
 ✅ **Clickpath automation** - Recording, actions, selectors  
-✅ **Performance metrics** - W3C timing, Core Web Vitals  
-✅ **Validation** - Content, HTTP, and visual checks  
-✅ **Analysis queries** - Availability, response times, failures  
+✅ **Performance metrics** - `dt.synthetic.browser.*` metric keys (availability, duration, step duration)  
+✅ **Where Web Vitals live** - RUM, not synthetic browser metrics  
+✅ **Analysis queries** - Availability, duration trends, and failure diagnostics  
 
 ---
 
@@ -343,10 +308,10 @@ Continue to **SYNTH-03: HTTP Monitors** to learn about lightweight API monitorin
 
 ## References
 
-- [Browser Monitors](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/browser-monitors)
-- [Browser Clickpaths](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/browser-monitors/browser-clickpaths)
-- [Synthetic Recorder](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/browser-monitors/record-browser-clickpath)
-- [Performance Metrics](https://docs.dynatrace.com/docs/platform-modules/digital-experience/synthetic-monitoring/analysis-and-alerting/analyze-synthetic-monitors)
+- [Browser monitors (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-monitoring/browser-monitors)
+- [Activate new browser monitor experience (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/activate-new-browser-monitor-experience)
+- [Browser monitor metrics in Synthetic on Grail (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-metrics/browser-monitor-metrics)
+- [Synthetic app (DT docs)](https://docs.dynatrace.com/docs/observe/digital-experience/synthetic-on-grail/synthetic-app)
 
 ---
 
