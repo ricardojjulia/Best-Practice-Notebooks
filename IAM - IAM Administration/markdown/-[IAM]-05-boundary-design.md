@@ -1,6 +1,6 @@
 # IAM-05: Boundary Design Patterns
 
-> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 04/30/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 5 of 12 | **Created:** January 2026 | **Last Updated:** 06/10/2026
 
 ## Controlling Data Visibility with Boundaries
 Boundaries determine **what data** users can see. While policies control actions, boundaries filter visibility. This notebook covers boundary syntax, patterns, and implementation strategies.
@@ -689,11 +689,11 @@ Condition: Host group name contains "tenant-"
 Action: Set dt.security_context = {hostGroup.name}
 ```
 
-Alternatively, use **host properties** to set context at deployment:
+Alternatively, set the context on the OneAgent at deployment. The June-2026 [tags hub](https://docs.dynatrace.com/docs/manage/tags/tags-domain-oneagent) documents the host-tag form for `dt.*` primary fields (the older `--set-host-property` form remains documented in the oneagentctl reference):
 
 ```bash
-# Set via OneAgent installer
---set-host-property=dt.security_context=tenant-a
+# Set via OneAgent installer / oneagentctl (tags-hub form)
+--set-host-tag="dt.security_context=tenant-a"
 ```
 
 <a id="boundary-testing"></a>
@@ -811,7 +811,7 @@ In this notebook, you learned:
 
 - [Permission Boundaries](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/permission-boundaries)
 - [Security Context](https://docs.dynatrace.com/docs/manage/identity-access-management/permission-management/manage-user-permissions-policies/advanced/security-context)
-- [Entity Enrichment](https://docs.dynatrace.com/docs/manage/tags-and-metadata/setup/entity-enrichment)
+- [Primary Tags](https://docs.dynatrace.com/docs/manage/tags/primary-tags)
 - [Host Properties](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent/host-properties)
 
 ---

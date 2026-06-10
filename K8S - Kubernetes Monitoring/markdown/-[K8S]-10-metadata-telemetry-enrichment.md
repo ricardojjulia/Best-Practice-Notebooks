@@ -1,6 +1,6 @@
 # K8S-10: Metadata Telemetry Enrichment
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 10 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 10 of 13 | **Created:** January 2026 | **Last Updated:** 06/10/2026
 
 ## Enriching All Telemetry with Kubernetes Metadata
 Kubernetes metadata enrichment automatically adds labels and annotations from your Kubernetes resources to all telemetry signals. This is the **recommended approach** for adding context to your observability data because it enriches everything: metrics, logs, traces, events, and entities.
@@ -110,6 +110,24 @@ In addition to settings-based enrichment, Dynatrace automatically propagates cer
 | AWS Account | `aws.account.id` | All signals |
 
 **Primary Grail Tags** (prefix `primary_tags.`) extend this concept for custom dimensions like `primary_tags.app` or `primary_tags.team`. Use them when Primary Grail Fields don't align with your organizational structure (e.g., shared infrastructure hosting multiple applications).
+
+#### Setting Primary Tags Directly from Kubernetes (June 2026)
+
+The [Kubernetes tag setup (DT docs)](https://docs.dynatrace.com/docs/manage/tags/tags-domain-k8s) page documents dedicated annotations for emitting primary tags at namespace or pod scope:
+
+```yaml
+metadata:
+  annotations:
+    metadata.dynatrace.com/primary_tags.team: payments
+    metadata.dynatrace.com/primary_tags.environment: production
+```
+
+Primary fields ride the same surface (`metadata.dynatrace.com/dt.security_context`, `metadata.dynatrace.com/dt.cost.costcenter`, `metadata.dynatrace.com/dt.cost.product`). Precedence is documented as pod over namespace: *"When the same key is set at both scopes, the pod-level value wins for that pod."*
+
+Two adoption caveats:
+
+- **Version gates:** *"the at-source and central configuration options require minimum component versions: OneAgent version 1.343+, ActiveGate version 1.341+, Dynatrace Operator version 1.10+"* — ahead of the OneAgent 1.339 rollout current as of June 2026. Treat the annotation surface as a standard to design toward, and verify component versions before relying on it.
+- **Central configuration is coming:** rules that promote existing namespace labels to primary tags without manifest changes (limited to 20 rules per scope) are documented as *"the recommended approach and will be made available mid-summer."* Until then, the settings-based enrichment described in this notebook remains the working path.
 
 **Cost allocation fields** like `dt.cost.costcenter` and `dt.cost.product` also propagate to service metrics, enabling chargeback reporting across teams.
 
@@ -505,6 +523,7 @@ In this notebook, you learned:
 - [Settings API — K8s Telemetry Enrichment schema (DT docs)](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/environment-api/settings/schemas/builtin-kubernetes-generic-metadata-enrichment)
 - [K8s security context Grail permissions (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/k8-security-context)
 - [Set up Dynatrace on Kubernetes (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s)
+- [Kubernetes tag setup (DT docs)](https://docs.dynatrace.com/docs/manage/tags/tags-domain-k8s)
 - [DynaKube parameters (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/reference/dynakube-parameters)
 
 ---

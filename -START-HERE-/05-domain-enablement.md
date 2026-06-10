@@ -19,7 +19,7 @@
 
 ## How to Use This Module
 
-There are nine observability domains and three cross-cutting ingestion series. You don't need all of them — pick based on what you monitor. Each entry below lists prerequisites (what Foundation pieces must be in place first) and recommended starting points.
+There are eight observability domains and three cross-cutting ingestion series. You don't need all of them — pick based on what you monitor. Each entry below lists prerequisites (what Foundation pieces must be in place first) and recommended starting points.
 
 This module is referenced from each of the three doorways. Read it after [Foundation Module](04-foundation.md) is in progress.
 
@@ -35,7 +35,6 @@ If you plan to enable several domains over a few months, this is a sensible orde
 4. **Database** — [DBMON](../DBMON%20-%20Database%20Monitoring/). Often depends on [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for context.
 5. **Synthetic** — [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/). Proactive monitoring.
 6. **Business events** — [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/). Revenue and conversion analytics.
-7. **Application security** — [APPSEC](../APPSEC%20%E2%80%94%20Application%20Security/). Runtime vulnerability analytics, protection, and posture.
 
 The order is a guideline, not a rule. Skip what doesn't apply; reorder based on business priority.
 
@@ -147,20 +146,6 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Recommended next | 02 (browser monitors) and/or 03 (HTTP monitors) based on what you check |
 | Optional | 04 (private locations), 05 (network monitoring), 06 (analytics) |
 | Cross-references | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) for synthetic dashboards; [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) for alerting on synthetic failures |
-
-### [APPSEC — Application Security](../APPSEC%20%E2%80%94%20Application%20Security/)
-
-10 notebooks covering all three AppSec pillars plus governance.
-
-| Aspect | Detail |
-|---|---|
-| Prerequisites | Foundation in progress; OneAgent deployed on monitored services |
-| Time | 2–4 weeks for initial RVA/RAP rollout; SPM and governance phases add time |
-| Mandatory entry | Notebook 01 (fundamentals and the three pillars) |
-| Recommended next | 02 (RVA — library CVE detection), 04 (RAP — runtime protection), 05 (SPM — posture management) |
-| K8s workloads | 06 (Kubernetes and container security) |
-| Governance | 08 (workflows and notifications), 09 (IAM and permissions), 10 (dashboards and reporting) |
-| Cross-references | [IAM](../IAM%20-%20IAM%20Administration/) for AppSec permission design; [K8S](../K8S%20-%20Kubernetes%20Monitoring/) for container security; [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) for security notifications; [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) for security_context |
 
 ---
 
