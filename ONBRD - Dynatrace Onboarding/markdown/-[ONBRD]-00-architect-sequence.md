@@ -1,6 +1,6 @@
 # ONBRD-00: Architect's Sequence & Dependency Runbook
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Reference:** 00 — Architect's Sequence & Dependency Runbook | **Created:** May 2026 | **Last Updated:** 05/08/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Reference:** 00 — Architect's Sequence & Dependency Runbook | **Created:** May 2026 | **Last Updated:** 06/10/2026
 
 ## Overview
 
@@ -91,7 +91,7 @@ For environments where SVG doesn't render
 
 - **Decision:** Deployment method (direct, package manager, Operator for K8s); initial scope (pilot or full); host-tag taxonomy.
 - **Depends on:** Step 02 (Platform Token for installer download).
-- **2026 specifics:** **Set primary fields/tags at install** via `oneagentctl --set-host-tag=<key>=<value>` and `--set-host-property=dt.security_context=<value>` — not retroactively. Primary tags emit on every signal (metrics / spans / logs / events) at ingest. Kubernetes: Dynatrace Operator + **Cloud Native FullStack** mode (Classic FullStack deprecated for new deployments). DynaKube **v1beta5** baseline; **v1beta6** as canary-validated upgrade. Sprint-1.338 Windows OneAgent uses **Npcap** for network insight (replaces WinPcap).
+- **2026 specifics:** **Set primary fields/tags at install** via the single `--set-host-tag` form the June-2026 tags hub documents for both: `oneagentctl --set-host-tag="primary_tags.<key>=<value>"` (prefix written explicitly — it is never added automatically) and `oneagentctl --set-host-tag="dt.security_context=<value>"` — not retroactively. Primary tags emit on every signal (metrics / spans / logs / events) at ingest. Kubernetes: Dynatrace Operator + **Cloud Native FullStack** mode (Classic FullStack deprecated for new deployments). DynaKube **v1beta5** baseline; **v1beta6** as canary-validated upgrade. Sprint-1.338 Windows OneAgent uses **Npcap** for network insight (replaces WinPcap).
 - **Output:** OneAgent installed on at least one host group; primary tags propagating to every signal at ingest.
 - **Deep dive:** [K8S series](../../k8s/) for DynaKube + Cloud Native FullStack; [FAQ-01](../../faq/notebooks/-[FAQ]-01-host-group-naming-strategy.ipynb) for host-group naming; [FAQ-02](../../faq/notebooks/-[FAQ]-02-tagging-sources-standards-strategy.ipynb) for primary-fields strategy; [FAQ-03](../../faq/notebooks/-[FAQ]-03-oneagent-vs-otel-decision-framework.ipynb) for OneAgent vs OTel decision.
 
@@ -102,7 +102,7 @@ For environments where SVG doesn't render
 
 - **Decision:** Tag taxonomy (env / team / app / compliance / cost-center dimensions); host-group naming convention; bucket strategy; segment definitions.
 - **Depends on:** Step 05 (OneAgent hosts reporting); Step 04 (cloud tags arriving) if cross-cloud normalization is needed.
-- **2026 specifics:** Primary fields/tags via `oneagentctl --set-host-tag=primary_tags.<key>=<value>` and `--set-host-property=dt.security_context=<value>`. Use **Segments + `dt.security_context`** for data scoping — *not* legacy Management Zones. **MZ-on-calculated-metrics** is on the May-2026 deprecation list. Bucket strategy: `dt.security_context` is the default for general data access; buckets only for compliance / retention / hard cost / hostile multi-tenancy.
+- **2026 specifics:** Primary fields/tags via `oneagentctl --set-host-tag="primary_tags.<key>=<value>"` and `--set-host-tag="dt.security_context=<value>"` (June-2026 tags-hub form; the oneagentctl reference still documents the older `--set-host-property` form for `dt.*` keys). Use **Segments + `dt.security_context`** for data scoping — *not* legacy Management Zones. **MZ-on-calculated-metrics** is on the May-2026 deprecation list. Bucket strategy: `dt.security_context` is the default for general data access; buckets only for compliance / retention / hard cost / hostile multi-tenancy.
 - **Output:** entities grouped meaningfully; `dt.security_context` populated on signals; segments defined for primary scopes; bucket strategy documented.
 - **Deep dive:** [ORGNZ series](../../orgnz/) — buckets, segments, `dt.security_context` (full depth, 11 notebooks); [IAM series](../../iam/) — parameterized policies bound to `dt.security_context`; [FAQ-01](../../faq/notebooks/-[FAQ]-01-host-group-naming-strategy.ipynb) — host-group naming; [FAQ-02](../../faq/notebooks/-[FAQ]-02-tagging-sources-standards-strategy.ipynb) — tagging strategy.
 

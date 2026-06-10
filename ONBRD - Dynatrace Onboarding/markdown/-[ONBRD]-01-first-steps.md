@@ -1,6 +1,6 @@
 # ONBRD-01: Getting Started: Your First Steps in Dynatrace
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 1 of 10 | **Created:** December 2025 | **Last Updated:** 06/10/2026
 
 ## Finding Your Way Around
 Welcome to Dynatrace. This notebook helps you get oriented in your new environment—where to find things, how to navigate, and what to do first.
@@ -30,7 +30,7 @@ Three sprint-1.337 changes establish what "new customer onboarding" should defau
 2. **Settings v2 (Environment API v2)** — new automation should target Settings v2 paths. Sprint 1.337 SaaS announced that many remaining Configuration API endpoints now have Settings v2 equivalents. Plan onboarding tooling around Settings v2 (Terraform `dynatrace_settings`, Monaco v2). See ONBRD-06 (Organizing Your Environment) and ONBRD-09 (Setting Up Alerts) for the schema-id patterns to use.
 3. **Extensions 3rd-gen API** (managed via Dynatrace API Application → Extensions) — **the only recommended path for new customers adopting custom Extensions.** Existing customers may continue with 2nd-gen, but advocate 3rd-gen as the default in any onboarding conversation.
 
-Also: **OneAgent primary fields/tags at the source** (Latest Dynatrace) means new customers should be told to design their tag taxonomy with primary tags first-class — set during OneAgent install via `oneagentctl --set-host-tag=<key>=<value>`. Covered in ONBRD-05 (Deploying OneAgent) and ONBRD-06 (Organizing Your Environment).
+Also: **OneAgent primary fields/tags at the source** (Latest Dynatrace) means new customers should be told to design their tag taxonomy with primary tags first-class — set during OneAgent install via `oneagentctl --set-host-tag="primary_tags.<key>=<value>"` — the `primary_tags.` prefix must be written explicitly. Covered in ONBRD-05 (Deploying OneAgent) and ONBRD-06 (Organizing Your Environment).
 
 ---
 

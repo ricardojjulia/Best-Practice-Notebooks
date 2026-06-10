@@ -1,6 +1,6 @@
 # DBMON-01: Database Monitoring Fundamentals
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 06/10/2026
 
 ## Overview
 
@@ -178,6 +178,10 @@ Dynatrace supports a broad range of database technologies through OneAgent auto-
 | **Graph** | Neo4j, Amazon Neptune | `neo4j`, `neptune` |
 
 > **Important:** The `db.system` field follows the OpenTelemetry semantic conventions. The exact values may vary depending on the database driver and instrumentation version.
+
+> **Semantic Dictionary 1.340 (May 2026) — first-class Smartscape database models.** The Semantic Dictionary now defines dedicated Smartscape models for major database technologies: Oracle Database (ASM disk group, cluster, instance, database), SQL Server (availability database / group / replica, instance, database), SAP HANA (database, instance, service), IBM Db2 (database member, instance, tablespace), MySQL, MariaDB, and PostgreSQL (database + instance each) — 19 models in total, each with `belongs_to` / `runs_on` / `is_part_of` / `same_as` / `uses` relationship properties. As these roll out, expect database topology to surface as typed Smartscape nodes rather than only the generic `DATABASE_SERVICE` shape used in §3. The span-level `db.system` analysis in this series is unaffected.
+
+> **OneAgent 1.339 (June 2026) — Db2 naming is now mixed case.** Db2 database naming switched to mixed case, so saved DQL or filters that match Db2 *entity or database names* case-sensitively may need updating. The `db.system == "db2"` span-attribute filters used throughout this series follow the OpenTelemetry semantic convention (lowercase value) and are unaffected.
 
 ```dql
 // Discover which database technologies are active in your environment

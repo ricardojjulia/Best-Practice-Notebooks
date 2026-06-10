@@ -1,6 +1,6 @@
 # OPIPE-01: OpenPipeline as a Multi-Scope Platform
 
-> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 05/06/2026
+> **Series:** OPIPE — OpenPipeline Beyond Logs | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 06/10/2026
 
 ## Beyond Logs: Processing Spans, Metrics, and Events at Ingestion
 
@@ -48,7 +48,7 @@ Sprint 1.337 SaaS landed a major OpenPipeline-relevant change: OneAgent now enri
 | `dt.cost.costcenter` | Cost allocation tag; routes spend to org units |
 | `dt.cost.product` | Product-line attribution for cost rollups |
 
-**Primary tags** (customer-defined): set during OneAgent install via `oneagentctl --set-host-tag=<key>=<value>` — e.g., `team`, `env`, `app`, `data_classification`. Land as `primary_tags.<key>` on every signal.
+**Primary tags** (customer-defined): set during OneAgent install via `oneagentctl --set-host-tag="primary_tags.<key>=<value>"` — the `primary_tags.` prefix must be written explicitly (it is never added automatically); e.g., `primary_tags.team`, `primary_tags.env`, `primary_tags.app`, `primary_tags.data_classification`. Land as `primary_tags.<key>` on every signal, up to 20 primary tags per host or process — excess tags are silently dropped without a warning.
 
 **Pipeline implication for cross-scope design:**
 
@@ -67,6 +67,8 @@ Sprint 1.337 SaaS landed a major OpenPipeline-relevant change: OneAgent now enri
 2. **Cross-scope consistency:** because primary fields/tags appear on logs, spans, metrics, AND business events, queries that join across scopes (OPIPE-06 cross-scope design patterns) can correlate without scope-specific lookup tables.
 
 3. **Non-OneAgent sources** (raw syslog, third-party log shippers, OTLP-via-collector) still need OpenPipeline `enrichment` processors to surface the same fields. Document this split in your standard.
+
+> **Update (June 2026) — primary tags are now formally documented.** Dynatrace published a dedicated [Primary tags (DT docs)](https://docs.dynatrace.com/docs/manage/tags/primary-tags) page that canonicalizes what sprint 1.337 introduced. Two points matter for pipeline design: (1) **OpenPipeline itself is a documented primary-tag source** — `primary_tags.*` values can be "derived or transformed from any incoming field at ingest time," which closes the non-OneAgent-sources gap in point 3 above: instead of generic enrichment processors producing ad-hoc fields, derive proper `primary_tags.<key>` values so downstream routing and bucket assignment treat agent and agentless data identically. (2) The other documented sources are OneAgent, Kubernetes annotations (`metadata.dynatrace.com/primary_tags.<key>`), cloud-provider tags, and OpenTelemetry resource attributes — with host/process metadata flagged *Coming soon*. Primary tags are "available before data enters the processing pipeline," which is exactly what makes them usable in `route` conditions like the example above.
 
 **Sprint-337 also added recommended-field suggestions to extraction processors** — the UI flags permission-relevant fields and Smartscape identifiers in the field-promotion dialog, preventing accidental promotion of sensitive content. Existing extraction processors keep working unchanged.
 

@@ -1,6 +1,6 @@
 # Series Catalog & Cross-Reference
 
-> **Purpose:** Full inventory of all 30 Dynatrace Best Practice Topic series with cross-references between them. Use this as a quick lookup when you need to find which series covers a specific topic, or to see related material across series.
+> **Purpose:** Full inventory of all 28 Dynatrace Best Practice Topic series with cross-references between them. Use this as a quick lookup when you need to find which series covers a specific topic, or to see related material across series.
 > **Last Updated:** 05/07/2026
 
 ![Series by Category](images/99-series-by-category.svg)
@@ -9,7 +9,7 @@
 
 ## Table of Contents
 
-1. [Alphabetical Catalog](#alphabetical-catalog) — All 30 series with one-line descriptions
+1. [Alphabetical Catalog](#alphabetical-catalog) — All 28 series with one-line descriptions
 2. [By Category](#by-category) — Series grouped by their role in the journey
 3. [By Entry Point](#by-entry-point) — Which doorway uses each series
 4. [Cross-Reference Matrix](#cross-reference-matrix) — For each series, related series to read
@@ -23,14 +23,12 @@
 |---|---|---|---|
 | **ADOPT** | [Observability Adoption & Maturity](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) | 6 | Maturity model, success metrics, optimization roadmap, FinOps |
 | **AIOPS** | [Dynatrace Intelligence](../AIOPS%20-%20Dynatrace%20Intelligence/) | 8 | Davis problems, anomaly detection, generative AI, agentic workflows |
-| **APPSEC** | [Application Security](../APPSEC%20%E2%80%94%20Application%20Security/) | 10 | RVA (library CVEs), RAP (attack blocking), SPM (posture/compliance), AppSec workflows and governance |
 | **AUTOM** | [Dynatrace Automation](../AUTOM%20-%20Dynatrace%20Automation/) | 11 | Settings API, Monaco, Terraform, workflows-as-code, GitOps, CI/CD |
 | **BIZEV** | [Business Events & Funnel Analysis](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) | 7 | Business event ingestion, conversion funnels, revenue impact, executive reporting |
 | **CLOUD** | [Cloud Provider Integrations](../CLOUD%20-%20Cloud%20Provider%20Integrations/) | 9 | AWS, Azure, GCP integrations; Lambda, EKS, multi-cloud patterns |
 | **DASH** | [Dashboard Design & Building](../DASH%20-%20Dashboard%20Design%20&%20Building/) | 8 | Dashboard hierarchy, executive/operations/engineering audiences, sharing and reporting |
 | **DBMON** | [Database Monitoring](../DBMON%20-%20Database%20Monitoring/) | 7 | SQL, NoSQL, cache, messaging, query analysis |
 | **FAQ** | [Frequently Asked Questions](../FAQ%20-%20Frequently%20Asked%20Questions/) | 2+ | Standalone single-page reference docs (host-group naming, tagging) — growing |
-| **FINOPS** | [Cost Management & FinOps](../FINOPS%20-%20Cost%20Management%20%26%20FinOps/) | 3 | DPS capability units, consumption forecasting, optimization decision framework |
 | **IAM** | [IAM Administration](../IAM%20-%20IAM%20Administration/) | 13 | Policies, boundaries, groups, SSO, audit, parameterized assignments |
 | **K8S** | [Kubernetes Monitoring](../K8S%20-%20Kubernetes%20Monitoring/) | 15 | DynaKube, GitOps deployment, cluster + workload monitoring, troubleshooting |
 | **M2S** | [Managed to SaaS Migration](../M2S%20-%20Managed%20to%20SaaS%20Migration/) | 10 | 9-step procedural runbook for Managed → SaaS deployment migration |
@@ -91,7 +89,6 @@ These are entry points for customers leaving another tool or migrating their Dyn
 - [DBMON](../DBMON%20-%20Database%20Monitoring/) — Databases
 - [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) — Business events
 - [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — Synthetic monitoring
-- [APPSEC](../APPSEC%20%E2%80%94%20Application%20Security/) — Application Security (RVA, RAP, SPM)
 
 ### Ingestion (Cross-Cutting Mechanism)
 
@@ -112,7 +109,6 @@ Read in order; each builds on the previous.
 
 - [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — Continuous improvement framework
 - [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) — Standalone reference docs
-- [FINOPS](../FINOPS%20-%20Cost%20Management%20%26%20FinOps/) — DPS consumption governance and optimization
 
 ---
 
@@ -134,11 +130,9 @@ This table shows which doorway in the playbook uses each series and how it appea
 | OPMIG | — | If on Classic Logs | — |
 | MZ2POL | — | If migrating Gen2 access control | If migrating Gen2 MZs |
 | K8S, CLOUD, SPANS, WEBRUM, MOBL, DBMON, BIZEV, SYNTH | After Foundation | Primary for "adding a domain" | After deployment migration |
-| APPSEC | After Foundation | Primary for "adding security" | After deployment migration |
 | OTEL, OPLOGS, OPIPE | As ingestion needs arise | As ingestion needs arise | As ingestion needs arise |
 | DASH, WFLOW, AUTOM, AIOPS | After first domain | Primary for "maturing operations" | After deployment migration |
 | ADOPT | Ongoing | Ongoing | Ongoing |
-| FINOPS | Ongoing | Ongoing | Ongoing |
 | FAQ | Reference | Reference | Reference |
 
 ---
@@ -151,7 +145,6 @@ For each series, the related series most often read alongside it:
 |---|---|
 | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (cost optimization), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) (success metrics) |
 | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (alert routing), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (visualizing problems), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (workflow-as-code) |
-| [APPSEC](../APPSEC%20%E2%80%94%20Application%20Security/) | [IAM](../IAM%20-%20IAM%20Administration/) (AppSec permissions), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (container security), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (security notifications), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (security_context), [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) (security event pipelines) |
 | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (workflow-as-code overlap), [IAM](../IAM%20-%20IAM%20Administration/) (provisioning), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (GitOps), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (Settings API basics) |
 | [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) (event pipelines), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (executive reporting), [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) (frontend events) |
 | [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) (collectors), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (managed K8s), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (CloudWatch ingestion) |
@@ -178,7 +171,6 @@ For each series, the related series most often read alongside it:
 | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) (alerting on synthetic) |
 | [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) (frontend-to-backend tracing), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) |
 | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) (problem routing), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (workflow-as-code), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) |
-| [FINOPS](../FINOPS%20-%20Cost%20Management%20%26%20FinOps/) | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) (cost maturity), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (buckets and retention), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (log volume costs), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (consumption dashboards) |
 
 ---
 
