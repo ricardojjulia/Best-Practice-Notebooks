@@ -1,6 +1,6 @@
 # AIOPS-02: Anomaly Detection
 
-> **Series:** AIOPS — Dynatrace Intelligence | **Notebook:** 2 of 8 | **Created:** May 2026 | **Last Updated:** 05/05/2026
+> **Series:** AIOPS — Dynatrace Intelligence | **Notebook:** 2 of 8 | **Created:** May 2026 | **Last Updated:** 06/16/2026
 
 ## Overview
 
@@ -32,10 +32,12 @@ For environments where SVG doesn't render
 1. [The Five Detection Mechanisms](#mechanisms)
 2. [Picking the Right Detector](#picking)
 3. [Configuration Surface: App vs. Settings vs. Code](#surface)
-4. [Custom Alerts via DQL](#dql-alerts)
-5. [Testing Detectors with Davis Analyzers (MCP)](#analyzers)
-6. [Anomaly Volume in Your Tenant](#volume)
-7. [Cross-Series Pointers](#cross)
+4. [Building a Davis Anomaly Detector](#building)
+5. [Custom Alerts via DQL](#dql-alerts)
+6. [Metric Events and Settings 2.0 Schemas](#schemas)
+7. [Testing Detectors with Davis Analyzers (MCP)](#analyzers)
+8. [Anomaly Volume in Your Tenant](#volume)
+9. [Cross-Series Pointers](#cross)
 
 ---
 
@@ -103,8 +105,67 @@ Three places to configure detection — pick one per environment, not one per de
 
 Production teams should converge on config-as-code. The app is the right place to *discover* what to alert on — but the moment a detector matters in production, it should live in source control. See **AUTOM-05** and **AUTOM-06** for the patterns.
 
+<a id="building"></a>
+## 4. Building a Davis Anomaly Detector
+
+Sections 1–3 told you *which* mechanism to pick and *where* to configure it. This section walks the actual build in the **Anomaly Detection app** — the four steps that turn a DQL query into a routable Davis event.
+
+![Building a Davis anomaly detector](images/02-anomaly-detector-setup-flow_930x500.png)
+
+<!-- MARKDOWN_TABLE_ALTERNATIVE
+| Step | What you do | Key choices |
+|------|-------------|-------------|
+| 1 · Query | Provide a `timeseries` query for the metric to watch | `from:` required; `by:` dimensions; prototype in a notebook first |
+| 2 · Analyzer | Choose how the series is judged | Static threshold / Auto-adaptive / Seasonal baseline + tuning |
+| 3 · Event template | Define the event that fires | Name, description, event type, properties with `{dims:...}` |
+| 4 · Davis event | Detector fires on breach | Surfaces as a Davis problem → routing & SLOs; promote to config-as-code |
+For environments where SVG doesn't render
+-->
+
+### Step 1 — The query contract
+
+The detector samples a `timeseries` query on a schedule. Critically, **you do not write a `filter ... > threshold` in the detector query** — the analyzer (Step 2) is what decides whether the series is anomalous. Your query's job is to *return the metric*, grouped by the dimensions you want to alert per (`by:{...}`). A `from:` range is mandatory.
+
+> **Develop the query in a notebook first.** This is the notebook-as-scratchpad pattern: write and run the `timeseries` here, confirm it returns the shape you expect, then paste it into the detector. A query that returns nothing in a notebook will silently never fire as a detector.
+
+### Step 2 — The analyzer and its tuning knobs
+
+Apply one analyzer to the series:
+
+| Analyzer | Judges against | Use when |
+|----------|----------------|----------|
+| **Static threshold** | A fixed line | A hard SLO / contract / capacity ceiling |
+| **Auto-adaptive threshold** | A learned, drifting baseline | The metric trends but has no seasonality |
+| **Seasonal baseline** | A confidence band around the seasonal pattern | The metric recurs (business hours, weekly cycles) |
+
+The tuning parameters that control noise:
+
+| Parameter | What it does |
+|-----------|--------------|
+| `tolerance` (seasonal) / sensitivity | Width of the confidence band — higher = fewer alerts |
+| `alertCondition` | Direction that trips: `ABOVE`, `BELOW`, or `OUTSIDE` |
+| `violatingSamples` | How many points in the window must violate to fire (max 60) |
+| `slidingWindow` | How many points are evaluated together (max 60; ≥ `violatingSamples`) |
+| `dealertingSamples` | Consecutive clean points required to close the alert (max 60) |
+| `alertOnMissingData` | Treat absent data as a violation |
+| query offset | Shift the evaluation window to absorb data latency |
+
+**The `violatingSamples` / `slidingWindow` pair is your primary noise control** — requiring, say, 3 violations out of a 5-point window suppresses single-spike flapping while still catching sustained breaches.
+
+### Step 3 — The event template (this is what makes routing possible)
+
+When the detector fires it emits a Davis event whose shape *you* define: an event **name** and **description** (both support `{dims:...}` placeholders that interpolate the breaching dimensions), an event **type** (`CUSTOM_ALERT`, `ERROR_EVENT`, `PERFORMANCE_EVENT`, …), and **properties** — key/value pairs such as team, zone, or service.
+
+Those properties are the metadata a downstream workflow filters on. **Enrich here or you cannot route later** — a detector that fires a bare event with no team/zone property forces every workflow to re-derive ownership from the affected entity. Spend the effort in the template.
+
+### Step 4 — Fire, then promote
+
+On breach the event surfaces as a Davis problem and flows into routing (WFLOW series) and SLO error budgets. Once a detector matters in production, move it out of the app and into config-as-code (`builtin:davis.anomaly-detectors` — see Section 6) so it is versioned and reviewable.
+
+> <sub>**Sources:** [Anomaly detection configuration (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/anomaly-detection-configuration), [Set up anomaly detectors via API (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/set-up-anomaly-detectors-via-api).</sub>
+
 <a id="dql-alerts"></a>
-## 4. Custom Alerts via DQL
+## 5. Custom Alerts via DQL
 
 Beyond pre-canned detectors, Anomaly Detection app supports **DQL-based custom alerts**. You write the query, the app evaluates it on a schedule, and a breach generates a Davis event.
 
@@ -117,7 +178,7 @@ timeseries {
     failures = sum(dt.service.request.failure_count),
     total    = sum(dt.service.request.count)
   },
-  by:{dt.entity.service},
+  by:{dt.smartscape.service},
   from:-1h, interval:1m
 | fieldsAdd error_rate = (failures[] / total[]) * 100
 | fieldsAdd avg_error_rate = arrayAvg(error_rate)
@@ -133,8 +194,22 @@ timeseries {
 - Aggregations used downstream need explicit aliases (`error_rate = ...`, `mttr = ...`).
 - Element-wise array operations on timeseries: `failures[] / total[]` returns an array; wrap in `arrayAvg()` (or similar) to collapse to a scalar before `filter`.
 
+<a id="schemas"></a>
+## 6. Metric Events and Settings 2.0 Schemas
+
+Not every alert needs the DQL-based detector. **Metric events** are the Settings 2.0 mechanism for threshold / baseline alerting directly on a metric key — lighter weight than a DQL detector, and the right tool when you're alerting on a single pre-existing metric.
+
+| Mechanism | Settings 2.0 schema | Reach for it when |
+|-----------|---------------------|-------------------|
+| DQL-based Davis anomaly detector | `builtin:davis.anomaly-detectors` | The signal needs a query — joins, derived fields, multi-metric logic |
+| Metric event | `builtin:anomaly-detection.metric-events` | You're alerting on one existing metric key with a threshold or baseline |
+
+Both are first-class config-as-code targets. Provision them with Monaco or Terraform exactly as in **AUTOM-05 / AUTOM-06**; the schema name is the `--settings-schema` / resource selector. This is how a validated detector from the app becomes a reviewed, version-controlled artifact.
+
+> <sub>**Sources:** [Metric events (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/metric-events), [Anomaly detection configuration (DT docs)](https://docs.dynatrace.com/docs/dynatrace-intelligence/anomaly-detection/anomaly-detection-configuration).</sub>
+
 <a id="analyzers"></a>
-## 5. Testing Detectors with Davis Analyzers (MCP)
+## 7. Testing Detectors with Davis Analyzers (MCP)
 
 The Dynatrace MCP server exposes Davis analyzers as callable tools. Useful when you want to test a detector against historical data before wiring it to a setting or a workflow.
 
@@ -151,7 +226,7 @@ The Dynatrace MCP server exposes Davis analyzers as callable tools. Useful when 
 All five analyzers also have GUI surfaces in the Anomaly Detection app — the MCP tools are the same engine accessed programmatically.
 
 <a id="volume"></a>
-## 6. Anomaly Volume in Your Tenant
+## 8. Anomaly Volume in Your Tenant
 
 Davis events are the raw signals before Causal AI groups them into problems. Look at the category breakdown to understand what kinds of anomalies your detectors are firing.
 
@@ -173,7 +248,7 @@ fetch dt.davis.problems, from:-7d
 **Reading the result:** A high `CUSTOM_ALERT` count means your custom-DQL detectors are firing — review whether they're noisy. A high `RESOURCE_CONTENTION` or `ERROR` count means out-of-the-box auto-adaptive / seasonal detection is doing real work.
 
 <a id="cross"></a>
-## 7. Cross-Series Pointers
+## 9. Cross-Series Pointers
 
 - **AUTOM-05, AUTOM-06** — anomaly detection settings as code (Monaco, Terraform)
 - **WFLOW** — once a detector fires, route the resulting Davis event into a notification or remediation workflow

@@ -10,7 +10,7 @@ Dynatrace best-practice notebooks with matching PDF and Markdown exports. These 
 
 
 > **👉 New here?** Open [`-START-HERE-/`](-START-HERE-/README.md) — a navigational playbook that picks an entry path based on your situation (net-new, expand/consolidate, deployment migration), then sequences the relevant topic series in order.
-> Already know what you need? Skip the playbook and **[browse all 30 topic series ↓](#all-series-az)**.
+> Already know what you need? Skip the playbook and **[browse all 32 topic series ↓](#all-series-az)**.
 
 ## Layout
 
@@ -30,8 +30,8 @@ Series are grouped into six categories for navigation. An alphabetical index fol
   [K8S](#k8s---kubernetes-monitoring) · [CLOUD](#cloud---cloud-provider-integrations) · [MOBL](#mobl---mobile-monitoring) · [WEBRUM](#webrum---web-real-user-monitoring) · [SYNTH](#synth---synthetic-monitoring) · [DBMON](#dbmon---database-monitoring) · [OTEL](#otel---opentelemetry-integration)
 - **Data Processing & Analytics** — ingestion, shaping, querying, dashboards
   [OPLOGS](#oplogs---openpipeline-logs) · [OPIPE](#opipe---openpipeline-beyond-logs) · [SPANS](#spans---distributed-tracing-and-spans) · [BIZEV](#bizev---business-events--funnel-analysis) · [DASH](#dash---dashboard-design--building)
-- **Automation & Workflows** — configuration-as-code and operational workflows
-  [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications) · [AIOPS](#aiops---dynatrace-intelligence)
+- **Automation & Workflows** — configuration-as-code, alerting, reliability, and operational workflows
+  [AUTOM](#autom---dynatrace-automation) · [WFLOW](#wflow---workflows-and-alert-notifications) · [AIOPS](#aiops---dynatrace-intelligence) · [ALERT](#alert---alerting-strategy-and-design) · [SLO](#slo---service-level-objectives)
 - **Security** — runtime vulnerability analytics, application protection, and security posture management
   [APPSEC](#appsec---application-security)
 - **Migrations** — moving to Dynatrace or between Dynatrace environments
@@ -58,6 +58,14 @@ Comprehensive guide to AIOps and Dynatrace Intelligence — Causal AI, Predictiv
 - [AIOPS-06: AI Integrations and Agentic Workflows](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-06-ai-integrations-and-agentic-workflows.md) — AI Workflow tasks, Dynatrace MCP server, and external agent integration
 - [AIOPS-07: Putting It Together — Detect, Investigate, Remediate](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-07-putting-it-together.md) — Composing all AI categories into the full operational AIOps pattern
 - [AIOPS-99: Series Summary](AIOPS%20-%20Dynatrace%20Intelligence/markdown/-%5BAIOPS%5D-99-series-summary.md) — DQL query index, cross-series pointers, and next steps for an AIOps initiative
+
+### [ALERT - Alerting Strategy and Design](ALERT%20-%20Alerting%20Strategy%20and%20Design/README.md)
+Designing alerting end to end in Dynatrace — detection, routing, reliability targets, and ITSM integration — orchestrating the AIOPS, SLO, and WFLOW series into one operational pattern.
+- [ALERT-01: End-to-End Alerting Architecture](ALERT%20-%20Alerting%20Strategy%20and%20Design/markdown/-%5BALERT%5D-01-end-to-end-architecture.md) — The whole alerting board on one canvas: what to set up, where, and how detection, routing, and reliability connect
+- [ALERT-02: Choosing and Building Detection](ALERT%20-%20Alerting%20Strategy%20and%20Design/markdown/-%5BALERT%5D-02-choosing-and-building-detection.md) — Decision framework for the four detection mechanisms — which to use for which signal, and the anti-patterns that cause noise
+- [ALERT-03: Routing, Destinations, and Cost](ALERT%20-%20Alerting%20Strategy%20and%20Design/markdown/-%5BALERT%5D-03-routing-destinations-cost.md) — Simple vs multi-step workflow routing, the destination landscape, the legacy alerting-profile path, and cost discipline
+- [ALERT-04: ITSM Integration: ServiceNow](ALERT%20-%20Alerting%20Strategy%20and%20Design/markdown/-%5BALERT%5D-04-servicenow-integration.md) — Integration maturity ladder from one-way incident creation to bi-directional sync, with the worked ServiceNow Table API path
+- [ALERT-99: Best-Practice Summary and Setup Checklist](ALERT%20-%20Alerting%20Strategy%20and%20Design/markdown/-%5BALERT%5D-99-best-practice-summary.md) — The series on one page: principles, a complete end-to-end setup checklist, and the cross-series build map
 
 ### [APPSEC - Application Security](APPSEC%20%E2%80%94%20Application%20Security/README.md)
 End-to-end application security observability with Dynatrace — covering Runtime Vulnerability Analytics, Runtime Application Protection, Security Posture Management, and the governance patterns to operationalize AppSec at scale.
@@ -361,6 +369,14 @@ Step-by-step migration path from Sumo Logic to Dynatrace, from strategy and inve
 - [SL2DT-08: Automation & GitOps](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-08-automation-and-gitops.md) — CI/CD promotion paths for all migrated configuration via Monaco
 - [SL2DT-09: Cutover, Validation & Decommission](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-09-cutover-validation-decommission.md) — Parallel validation, declaring cutover, and decommissioning Sumo
 - [SL2DT-99: Summary & Runbook Index](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-99-summary-and-runbook-index.md) — Single-page index and reference card for the entire SL2DT series
+
+### [SLO - Service Level Objectives](SLO%20-%20Service%20Level%20Objectives/README.md)
+Defining and operating Service Level Objectives in Dynatrace — SLIs, error budgets, composition, burn-rate alerting, and SLOs as code.
+- [SLO-01: SLO and SLI Fundamentals](SLO%20-%20Service%20Level%20Objectives/markdown/-%5BSLO%5D-01-fundamentals.md) — The three building blocks (SLI, SLO, error budget), the Dynatrace SLO model, and choosing your first SLOs
+- [SLO-02: Defining SLIs](SLO%20-%20Service%20Level%20Objectives/markdown/-%5BSLO%5D-02-defining-slis.md) — The good ÷ total ratio as DQL: availability, latency, error-rate, and custom business SLIs, validated on a live tenant
+- [SLO-03: Composition and Error Budgets](SLO%20-%20Service%20Level%20Objectives/markdown/-%5BSLO%5D-03-composition-and-error-budgets.md) — Error-budget math and burn rate, composite and weighted-global SLOs, and rolling vs calendar windows
+- [SLO-04: SLO Alerting](SLO%20-%20Service%20Level%20Objectives/markdown/-%5BSLO%5D-04-alerting.md) — Burn-rate alerting over threshold-on-SLI: fast-burn and slow-burn multiwindow alerts, surfacing, routing, and avoiding fatigue
+- [SLO-05: SLOs as Code](SLO%20-%20Service%20Level%20Objectives/markdown/-%5BSLO%5D-05-slos-as-code.md) — Promoting SLOs into version control: the `builtin:slo` schema, the `dynatrace_slo_v2` Terraform resource, Monaco, and the API/CI-CD path
 
 ### [SPANS - Distributed Tracing and Spans](SPANS%20-%20Distributed%20Tracing%20and%20Spans/README.md)
 Guidance for working with distributed traces and spans in Dynatrace.
