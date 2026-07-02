@@ -1,6 +1,6 @@
 # OTEL-02: OpenTelemetry Collector Architecture
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 06/29/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 2 of 8 | **Created:** January 2026 | **Last Updated:** 07/01/2026
 
 ## Understanding the OTel Collector Pipeline
 The OpenTelemetry Collector is the backbone of OTel deployments—a vendor-agnostic service for receiving, processing, and exporting telemetry data. This notebook covers its architecture, components, and configuration.
@@ -98,8 +98,8 @@ Receivers ingest telemetry data from external sources.
 | `jaeger` | Jaeger (gRPC/HTTP) | Traces | Jaeger clients |
 | `zipkin` | Zipkin HTTP | Traces | Zipkin clients |
 | `prometheus` | Prometheus scrape | Metrics | Prometheus targets |
-| `filelog` | File tailing | Logs | Log files |
-| `hostmetrics` | Host stats | Metrics | CPU, memory, disk |
+| `file_log` (formerly `filelog` — old name kept as a deprecated alias) | File tailing | Logs | Log files |
+| `host_metrics` (formerly `hostmetrics` — old name kept as a deprecated alias) | Host stats | Metrics | CPU, memory, disk |
 
 ### OTLP Receiver Configuration
 
@@ -314,7 +314,7 @@ Connectors link pipelines, acting as both exporter and receiver.
 
 | Connector | Function |
 |-----------|----------|
-| `spanmetrics` | Generate metrics from spans |
+| `span_metrics` (formerly `spanmetrics` — old name kept as a deprecated alias) | Generate metrics from spans |
 | `servicegraph` | Build service dependency graph |
 | `count` | Count data points |
 
@@ -322,7 +322,7 @@ Connectors link pipelines, acting as both exporter and receiver.
 
 ```yaml
 connectors:
-  spanmetrics:
+  span_metrics:
     dimensions:
       - name: http.method
       - name: http.status_code
@@ -334,9 +334,9 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [spanmetrics, otlphttp]
+      exporters: [span_metrics, otlphttp]
     metrics:
-      receivers: [spanmetrics]  # Receives from connector
+      receivers: [span_metrics]  # Receives from connector
       exporters: [otlphttp]
 ```
 

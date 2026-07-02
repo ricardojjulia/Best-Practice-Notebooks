@@ -1,6 +1,6 @@
 # OTEL-03: Collector Deployment Patterns
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 06/29/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 3 of 8 | **Created:** January 2026 | **Last Updated:** 07/01/2026
 
 ## Deploying the OpenTelemetry Collector
 The OTel Collector can be deployed in various patterns depending on your infrastructure. This notebook covers deployment modes, Kubernetes configurations, and best practices for production.
@@ -84,7 +84,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: otel/opentelemetry-collector-contrib:0.120.0
+          image: otel/opentelemetry-collector-contrib:0.151.0
           args:
             - --config=/conf/otel-collector-config.yaml
           ports:
@@ -121,7 +121,7 @@ spec:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: http://localhost:4317
     - name: otel-collector
-      image: otel/opentelemetry-collector-contrib:0.120.0
+      image: otel/opentelemetry-collector-contrib:0.151.0
       args:
         - --config=/conf/otel-collector-config.yaml
       ports:
@@ -150,7 +150,7 @@ spec:
     spec:
       containers:
         - name: collector
-          image: otel/opentelemetry-collector-contrib:latest
+          image: otel/opentelemetry-collector-contrib:0.151.0  # pinned — see the version-pinning callout in §2
           args:
             - --config=/conf/otel-collector-config.yaml
           ports:
@@ -673,7 +673,7 @@ version: '3.8'
 
 services:
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector-contrib:0.151.0  # pinned — never latest, even in local/dev compose files
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml

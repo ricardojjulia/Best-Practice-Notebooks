@@ -1,6 +1,6 @@
 # OTEL-06: Logs and Events
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 02/09/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 6 of 8 | **Created:** January 2026 | **Last Updated:** 07/01/2026
 
 ## Integrating Logs with OpenTelemetry
 OpenTelemetry logs bridge traditional logging with distributed tracing, enabling correlation between log events and traces. This notebook covers log instrumentation, correlation, and best practices.
@@ -220,11 +220,11 @@ service:
 
 <a id="file-based-log-collection"></a>
 ## 5. File-Based Log Collection
-### Filelog Receiver
+### File Log Receiver (`file_log`, formerly `filelog` — old name kept as a deprecated alias)
 
 ```yaml
 receivers:
-  filelog:
+  file_log:
     include:
       - /var/log/app/*.log
     exclude:
@@ -256,7 +256,7 @@ receivers:
 
 ```yaml
 receivers:
-  filelog:
+  file_log:
     include:
       - /var/log/containers/*.log
     operators:

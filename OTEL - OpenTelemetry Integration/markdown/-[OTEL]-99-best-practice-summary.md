@@ -1,6 +1,6 @@
 # OTEL-99: Best Practice Summary
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 07/01/2026
 
 ## Introduction
 
@@ -32,7 +32,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 | 1 | Always use the `batch` processor | `processors.batch.timeout: 10s`, `send_batch_size: 1000`, `send_batch_max_size: 1500` | Critical | OTEL-02 |
 | 2 | Always use the `memory_limiter` processor | `processors.memory_limiter.check_interval: 1s`, `limit_mib:` 80% of container memory, `spike_limit_mib:` 25% of limit | Critical | OTEL-02 |
 | 3 | Place `memory_limiter` first in every pipeline | `processors: [memory_limiter, resource, batch]` | Critical | OTEL-02, OTEL-08 |
-| 4 | Pin Collector image to a specific version | `image: otel/opentelemetry-collector-contrib:0.120.0` (never `latest`) | Critical | OTEL-03, OTEL-07 |
+| 4 | Pin Collector image to a specific version | `image: otel/opentelemetry-collector-contrib:0.151.0` (never `latest`) | Critical | OTEL-03, OTEL-07 |
 | 5 | Validate config before deploy | Run `otelcol-contrib validate --config=config.yaml` | Critical | OTEL-08 |
 | 6 | Use the Contrib or Dynatrace distribution | `otel/opentelemetry-collector-contrib` or `ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector` | Recommended | OTEL-02, OTEL-07 |
 | 7 | Use `GOMEMLIMIT` instead of deprecated `memory_ballast` | Set `GOMEMLIMIT` env var to ~80% of container memory limit | Critical | OTEL-02 |
@@ -138,7 +138,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 | 65 | Use structured JSON logging | Output logs as JSON objects with `timestamp`, `level`, `message`, and structured fields | Recommended | OTEL-06 |
 | 66 | Filter DEBUG/TRACE logs at the Collector, not in the app | `processors.filter.logs.log_record: ['severity_number < 9']` | Recommended | OTEL-06 |
 | 67 | Use `BatchLogRecordProcessor` for log export | Never use synchronous log export in production | Critical | OTEL-06 |
-| 68 | Use filelog receiver for container/file-based log collection | `receivers.filelog.include: ["/var/log/containers/*.log"]` with JSON and severity parsers | Recommended | OTEL-06 |
+| 68 | Use file_log receiver for container/file-based log collection (formerly `filelog` — old name kept as a deprecated alias) | `receivers.file_log.include: ["/var/log/containers/*.log"]` with JSON and severity parsers | Recommended | OTEL-06 |
 | 69 | Set log severity appropriately | ERROR: unexpected failures; WARN: recoverable issues; INFO: business events; DEBUG: dev only | Recommended | OTEL-06 |
 | 70 | Never log PII or secrets | Exclude passwords, tokens, personal data from log bodies and attributes | Critical | OTEL-06 |
 
@@ -158,7 +158,7 @@ This notebook consolidates every actionable best practice from the OTEL series (
 
 | # | Best Practice | Recommended Setting/Value | Priority | Source |
 |---|---|---|---|---|
-| 76 | Use `spanmetrics` connector to derive metrics from traces | `connectors.spanmetrics` with histogram buckets `[100ms, 500ms, 1s, 5s]` | Optional | OTEL-02 |
+| 76 | Use `span_metrics` connector to derive metrics from traces (formerly `spanmetrics` — old name kept as a deprecated alias) | `connectors.span_metrics` with histogram buckets `[100ms, 500ms, 1s, 5s]` | Optional | OTEL-02 |
 | 77 | Filter health-check spans at the Collector | `processors.filter.traces.span: ['attributes["http.url"] == "/health"']` | Recommended | OTEL-02 |
 | 78 | Use fan-out to send data to multiple backends | Define multiple named exporters under `exporters` and list all in pipeline | Optional | OTEL-02 |
 | 79 | Increase `sending_queue.num_consumers` for high throughput | `num_consumers: 10` | Recommended | OTEL-08 |
