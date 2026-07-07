@@ -1,6 +1,6 @@
 # M2S-05: Step 5 — Execute: Migrate Configuration and Agents
 
-> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 07/01/2026
+> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 5 of 9 | **Phase:** Upgrade | **Step:** Execute | **Created:** March 2026 | **Last Updated:** 07/02/2026
 
 With your SaaS environment prepared, it is time to execute the migration. This step covers deploying configurations via the SaaS Upgrade Assistant in dependency-ordered waves, redirecting OneAgents from Managed to SaaS, and validating data flow after each wave. By the end of this step, all hosts and services will be reporting to your SaaS tenant.
 
@@ -502,7 +502,7 @@ Before proceeding to Step 6, confirm that you have completed each item:
 
 - [SaaS Upgrade Assistant Documentation](https://docs.dynatrace.com/managed/upgrade/saas-upgrade-assistant/)
 - [OneAgent Configuration via Command Line](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent/oneagent-configuration/oneagent-command-line-interface)
-- [Network Zones Configuration](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate/network-zones)
+- [Network Zones Configuration](https://docs.dynatrace.com/docs/manage/network-zones)
 - [Extensions 2.0 Framework](https://docs.dynatrace.com/docs/extend-dynatrace/extensions20)
 
 ---

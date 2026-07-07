@@ -1,6 +1,6 @@
 # FAQ-09: When Should I Query a Metric Instead of Raw Logs?
 
-> **Series:** FAQ — Frequently Asked Questions | **Reference:** 09 — When to Query a Metric Instead of Raw Logs | **Created:** June 2026 | **Last Updated:** 06/16/2026
+> **Series:** FAQ — Frequently Asked Questions | **Reference:** 09 — When to Query a Metric Instead of Raw Logs | **Created:** June 2026 | **Last Updated:** 07/07/2026
 
 ## Overview
 
@@ -53,7 +53,7 @@ Two moves implement this:
 1. **Reach for an OOTB metric first** (§4) — Dynatrace already produces service, host, process, and consumption metrics that teams frequently re-derive from logs by hand.
 2. **Extract a metric from the log at ingest** (§5) — when no OOTB metric fits, an OpenPipeline metric-extraction rule turns "count of matching log records, by a few dimensions" into a first-class metric, computed once as the data arrives.
 
-> <sub>**Sources:** [Extract metrics from log data (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics), [DPS Log Management & Analytics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-log-management). **Derived:** the "how often does it run" rule is an authoring synthesis of the DPS billing model (§2) — the docs describe the capabilities billed, not this decision heuristic.</sub>
+> <sub>**Sources:** [Parse log lines and extract a metric (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline), [DPS Log Management & Analytics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-log-management). **Derived:** the "how often does it run" rule is an authoring synthesis of the DPS billing model (§2) — the docs describe the capabilities billed, not this decision heuristic.</sub>
 
 <a id="economics"></a>
 ## 2. Why This Matters — The DPS Query Economics
@@ -111,7 +111,7 @@ The first query is what belongs behind a tile that thousands of people load and 
 
 A quick test for any existing tile or alert: **if its query has a `fetch logs … | summarize` shape and it lives somewhere that re-runs on a schedule, it's a candidate to move to a metric.**
 
-> <sub>**Sources:** [makeTimeseries (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands/makeTimeseries), [Aggregation functions (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/functions/aggregation-functions), [Extract metrics from log data (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics). OPLOGS-07 covers the dashboard-query patterns in depth.</sub>
+> <sub>**Sources:** [makeTimeseries (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands/aggregation-commands), [Aggregation functions (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/functions/aggregation-functions), [Parse log lines and extract a metric (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline). OPLOGS-07 covers the dashboard-query patterns in depth.</sub>
 
 <a id="ootb-first"></a>
 ## 4. Use OOTB Metrics Before You Extract Anything
@@ -165,7 +165,7 @@ A few framing points:
 - **Log-derived metrics are exact, not sampled.** Span-derived metrics must be made *sampling-aware* because only a fraction of spans are kept (**OPIPE-03**); logs aren't head/tail-sampled, so a count extracted from logs reflects every matching record.
 - **Count vs. value.** Omit `value` to count matching records; set it to a parsed numeric field to track a measurement. Parse the field first (DPL) so the value and dimensions exist on the record when the metric processor runs.
 
-> <sub>**Sources:** [Extract metrics from log data (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics), [OpenPipeline processors (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/configuration/processors), [Dynatrace Pattern Language (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language). OPLOGS-03, OPMIG-07, and OPIPE-03 carry the implementation depth.</sub>
+> <sub>**Sources:** [Parse log lines and extract a metric (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline), [Processing in OpenPipeline (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/processing), [Dynatrace Pattern Language (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-pattern-language). OPLOGS-03, OPMIG-07, and OPIPE-03 carry the implementation depth.</sub>
 
 <a id="cardinality"></a>
 ## 6. Cardinality — The One Thing That Undoes the Savings
@@ -186,7 +186,7 @@ Guardrails:
 
 This is the single most common way a log-to-metric optimization backfires, and it has the same root cause every time: a high-cardinality label that someone added "just in case." **OPIPE-04 (Cardinality Management)** covers the controls in depth; **FINOPS-03 §9** walks a worked high-cardinality-metric remediation.
 
-> <sub>**Sources:** [DPS Metrics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-metrics), [Extract metrics from log data (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics). OPIPE-04 and FINOPS-03 carry the cardinality-control patterns. **Derived:** the cross-product cost model is standard dimensional-metric behavior applied to log-extracted metrics.</sub>
+> <sub>**Sources:** [DPS Metrics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-metrics), [Parse log lines and extract a metric (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline). OPIPE-04 and FINOPS-03 carry the cardinality-control patterns. **Derived:** the cross-product cost model is standard dimensional-metric behavior applied to log-extracted metrics.</sub>
 
 <a id="forward-only"></a>
 ## 7. Extraction Is Forward-Only — and the Retention Split
@@ -206,7 +206,7 @@ Two operational facts shape how you roll this out.
 
 That split is where the saving compounds: long-horizon dashboards read the cheap long-lived metric, while the expensive raw logs age out on a short clock. Bucket and retention design lives in the **ORGNZ** series; retention as a cost lever is **FINOPS-03 §4 (Tune)**.
 
-> <sub>**Sources:** [Extract metrics from log data (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics), [DPS Log Management & Analytics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-log-management). ORGNZ covers bucket/retention design; FINOPS-03 covers retention tuning. **Derived:** the "forward-only" property follows from OpenPipeline processing at ingest time; the retention-split recommendation synthesizes the bucket model with the per-capability billing in §2.</sub>
+> <sub>**Sources:** [Parse log lines and extract a metric (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline), [DPS Log Management & Analytics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-log-management). ORGNZ covers bucket/retention design; FINOPS-03 covers retention tuning. **Derived:** the "forward-only" property follows from OpenPipeline processing at ingest time; the retention-split recommendation synthesizes the bucket model with the per-capability billing in §2.</sub>
 
 <a id="recommended-approach"></a>
 ## 8. Recommended Approach
@@ -234,7 +234,7 @@ That split is where the saving compounds: long-horizon dashboards read the cheap
 | Trend tile still slow/costly over long windows | Raw logs retained long for dashboards instead of the cheap metric | §7 |
 | Dashboard cutover broke during the gap | Migrated before the metric had enough history | §7 |
 
-> <sub>**Sources:** [Extract metrics from log data (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/log-processing/extract-metrics), [DPS Log Management & Analytics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-log-management), [DPS Metrics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-metrics) — each row maps to the capability, rule, or constraint cited in the referenced section.</sub>
+> <sub>**Sources:** [Parse log lines and extract a metric (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-log-processing-pipeline), [DPS Log Management & Analytics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-log-management), [DPS Metrics (DT docs)](https://docs.dynatrace.com/docs/shortlink/dps-metrics) — each row maps to the capability, rule, or constraint cited in the referenced section.</sub>
 
 ---
 
