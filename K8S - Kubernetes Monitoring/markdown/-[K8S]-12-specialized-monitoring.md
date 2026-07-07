@@ -1,6 +1,6 @@
 # K8S-12: Specialized Monitoring Scenarios
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 05/09/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 12 of 13 | **Created:** January 2026 | **Last Updated:** 07/01/2026
 
 ## NGINX Ingress, CSI Driver, Resource Tuning, and StatsD Ingestion
 This notebook covers specialized monitoring scenarios including NGINX Ingress Controller instrumentation, CSI Driver architecture, resource sizing guidelines, and StatsD metric ingestion on Kubernetes.
@@ -381,7 +381,7 @@ spec:
     spec:
       containers:
         - name: otel-collector
-          image: otel/opentelemetry-collector-contrib:0.96.0
+          image: otel/opentelemetry-collector-contrib:0.151.0  # pinned — keep in sync with OTEL-03/OTEL-07
           args: ["--config=/conf/otelcol-config.yaml"]
           ports:
             - containerPort: 8125

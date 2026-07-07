@@ -1,6 +1,6 @@
 # OTEL-04: Trace Instrumentation
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 06/29/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 4 of 8 | **Created:** January 2026 | **Last Updated:** 07/01/2026
 
 ## Instrumenting Applications for Distributed Tracing
 Traces provide visibility into request flows across services. This notebook covers automatic and manual instrumentation techniques for popular languages with OpenTelemetry.
@@ -417,19 +417,19 @@ Tail sampling is **stateful** — all of a trace's spans must reach the **same**
 
 If OpenTelemetry traces are sampled, trace-derived metrics (request counts, error rates) are computed only from the sampled subset — a 20% sampler makes throughput look 5× lower than reality.
 
-Compute service metrics **before** sampling. The `spanmetrics` connector reads the full, unsampled trace stream and emits RED metrics; `tail_sampling` then thins only the trace stream that gets stored:
+Compute service metrics **before** sampling. The `span_metrics` connector (formerly `spanmetrics` — old name kept as a deprecated alias) reads the full, unsampled trace stream and emits RED metrics; `tail_sampling` then thins only the trace stream that gets stored:
 
 ```yaml
 connectors:
-  spanmetrics: {}
+  span_metrics: {}
   forward/sampling: {}
 service:
   pipelines:
     traces/in:                       # full stream
       receivers: [otlp]
-      exporters: [spanmetrics, forward/sampling]
-    metrics/spanmetrics:             # metrics from ALL traces (unbiased)
-      receivers: [spanmetrics]
+      exporters: [span_metrics, forward/sampling]
+    metrics/span_metrics:            # metrics from ALL traces (unbiased)
+      receivers: [span_metrics]
       exporters: [otlphttp]
     traces/sampled:                  # only sampled traces are stored
       receivers: [forward/sampling]
@@ -445,7 +445,7 @@ service:
 - Sampling is a **cost lever, not a default** — start by keeping everything, measure ingest, and sample only if trace volume is the cost driver. OTel trace volume bills directly under DPS (see OTEL-01 §6 and the FINOPS series).
 
 > <sub>**Sources:**</sub>
-> - <sub>[Sampling with the OTel Collector (DT docs)](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/sampling) — `tail_sampling` policies (`status_code`/`latency`/`probabilistic`, `decision_wait`), `spanmetrics`-before-sampling to avoid metric bias, and the no-mixed-mode warning</sub>
+> - <sub>[Sampling with the OTel Collector (DT docs)](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector/use-cases/sampling) — `tail_sampling` policies (`status_code`/`latency`/`probabilistic`, `decision_wait`), `span_metrics`-before-sampling to avoid metric bias, and the no-mixed-mode warning</sub>
 > - <sub>**Derived:** the "route by trace ID to one gateway" requirement combines tail-sampling statefulness with the tiered topology in OTEL-03 §5; the cost-lever framing combines the docs with the DPS trace model (OTEL-01 §6 / FINOPS)</sub>
 
 <a id="best-practices"></a>

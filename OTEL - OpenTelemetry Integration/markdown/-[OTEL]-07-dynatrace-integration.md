@@ -1,6 +1,6 @@
 # OTEL-07: Dynatrace OTLP Integration
 
-> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 05/19/2026
+> **Series:** OTEL — OpenTelemetry Integration | **Notebook:** 7 of 8 | **Created:** January 2026 | **Last Updated:** 07/01/2026
 
 ## Complete Setup for OpenTelemetry with Dynatrace
 This notebook provides end-to-end configuration for sending OpenTelemetry data to Dynatrace, including authentication, endpoints, and verification.
@@ -156,10 +156,10 @@ Using the wrong scheme returns **401 Unauthorized** even when the token has the 
 image: otel/opentelemetry-collector-contrib:latest
 
 # Recommended - Pin to a specific version
-image: otel/opentelemetry-collector-contrib:0.120.0
+image: otel/opentelemetry-collector-contrib:0.151.0
 
-# Or use the Dynatrace distribution
-image: ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector:latest
+# Or use the Dynatrace distribution (pinned, not :latest)
+image: ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector:v0.48.0
 ```
 
 Check the [OpenTelemetry Collector releases](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) or [Dynatrace Collector releases](https://github.com/Dynatrace/dynatrace-otel-collector/releases) for the current stable version.

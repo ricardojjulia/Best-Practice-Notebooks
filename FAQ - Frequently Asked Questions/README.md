@@ -19,6 +19,7 @@ Frequently asked questions and answers across the Dynatrace Best-Practice Notebo
 7. [How Do I Set Up a Launcher Page? (Default + Persona-Based)](markdown/-[FAQ]-07-launcher-page-setup.md) — Default launcher configuration plus persona-based launcher patterns for tailoring the entry experience by role
 8. [How Does OneAgent Decide Which Logs to Collect?](markdown/-[FAQ]-08-oneagent-log-autodiscovery.md) — Log auto-discovery rules, what gets picked up automatically vs what needs a custom log source, host scanning, include/exclude patterns, and verification checklist
 9. [When Should I Query a Metric Instead of Raw Logs?](markdown/-[FAQ]-09-metrics-instead-of-log-queries.md) — Decision framework for replacing recurring log aggregations with pre-extracted metrics; covers Grail query economics, OOTB metrics, cardinality, and extraction trade-offs
+10. [How Do I Size and Scale ActiveGates?](markdown/-[FAQ]-10-activegate-sizing-and-scaling.md) — Capability-to-sizing-dimension map, host-based and containerized K8s sizing tables, synthetic node sizing, HA/network-zone survivor-capacity math, and saturation detection via `dt.sfm.active_gate.*` Grail metrics
 
 ## Usage
 1. Choose a format: import JSON from notebooks/, read pdfs/ for print, or view markdown/ for lightweight browsing.
