@@ -1,6 +1,6 @@
 # WEBRUM-07: Session Replay
 
-> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 7 of 9 | **Created:** March 2026 | **Last Updated:** 04/25/2026
+> **Series:** WEBRUM — Web Real User Monitoring | **Notebook:** 7 of 9 | **Created:** March 2026 | **Last Updated:** 07/07/2026
 
 ## Overview
 
@@ -54,7 +54,9 @@ Dynatrace Session Replay captures the visual state of the web page as the user i
 | **Resource capture** | Includes external resources (images, CSS files) | Very high | Captures all visual assets |
 | **Minimal mode** | DOM structure only, no external resources | Low | Lower — placeholder images |
 
-> **Important:** Session Replay data is stored separately from RUM metrics and has its own retention period (typically 35 days by default). Replay storage counts against your session replay quota.
+> **Important:** Session Replay data is stored separately from RUM metrics and has its own retention period (typically 35 days by default in the classic model). Replay storage counts against your session replay quota.
+
+> **Update (SaaS 1.343, July 2026) — Session Replay is now generally available on Grail.** Replay data is stored natively in the Grail data lakehouse (`fetch user.replays`), with the video player, timeline, and multi-platform support built on that storage. On Grail-based tenants, replay retention follows the Grail bucket configuration rather than the classic quota model above — verify which model your tenant uses before planning retention.
 
 <a id="data-privacy"></a>
 

@@ -272,6 +272,8 @@ sudo /bin/sh Dynatrace-ActiveGate-Linux.sh \
   --set-network-zone={zone-name}
 ```
 
+> **Deprecation note (SaaS 1.343, July 2026):** this classic ActiveGate deployment API (`/api/v1/deployment/installer/gateway/...`) is **deprecated** in favor of the Latest Dynatrace deployment REST API (GA, enabled by default, platform-token support with fine-grained OAuth scopes). It still works during the deprecation period — use it for in-flight migrations, but point new automation at the platform API.
+
 ### 4.3 Network Zone Assignment
 
 Assign each AG to the correct network zone during installation:

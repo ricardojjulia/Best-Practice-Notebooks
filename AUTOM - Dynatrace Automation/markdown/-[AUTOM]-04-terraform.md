@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 07/01/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 07/07/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -387,6 +387,18 @@ The decision table above routes Synthetics / SLO v1 / legacy *Terraform resource
 This narrows the set of surfaces that *force* a classic token. Two caveats: (1) it applies to **direct REST API consumption**, not the Terraform provider — the provider's resource-level token requirements are unchanged until a provider release says otherwise; (2) the release note adds the capability but does not publish the exact Platform Token **scope** required for each API — verify the scope against the API Explorer / Swagger before relying on it. The auth-scheme rule still holds: a Platform Token uses `Authorization: Bearer`, a classic token uses `Authorization: Api-Token` — sending the wrong scheme returns 401 even when the token is otherwise valid.
 
 > <sub>**Sources:** [Dynatrace SaaS 1.340 release notes (DT docs)](https://docs.dynatrace.com/docs/whats-new/saas/sprint-340) — *"Added support for platform tokens for classic network zone / ActiveGate / OneAgent REST APIs."* **Softened:** the exact Platform Token scope per classic API is not stated in the release note — verify at the API Explorer before relying on it.</sub>
+
+#### Sprint update (SaaS 1.342–1.343) — platform tokens reach effectively all classic APIs
+
+The 1.340 loosening has since widened substantially:
+
+- **SaaS 1.342** extends platform-token authentication to the classic **OneAgent management and network-zones** REST APIs (GA framing of the 1.340 addition), and the **Latest Dynatrace REST API for ActiveGate tokens** becomes generally available (enabled by default via the platform domain).
+- **SaaS 1.343** announces **platform-token support across all classic and ingest endpoints**, plus the **fleet-management APIs** for OneAgent and ActiveGate endpoints, and new **ActiveGate deployment platform APIs with fine-grained OAuth scopes** (the legacy ActiveGate deployment API is deprecated).
+- **Breaking (SaaS 1.343):** ActiveGate token management moves to `/platform/fleet-management/v1/activegate/tokens` with platform tokens — migrate automation that manages AG tokens via the classic endpoint.
+
+The practical effect on the decision table above: for **direct REST calls**, the classic-token-only column keeps shrinking — a platform token on the Service User now covers most API surfaces. The two persistent exceptions remain **the Terraform provider's own resource-level token requirements** (unchanged until a provider release says otherwise) and **Access Token minting** (`apiTokens.*` — see the special case below). Per-endpoint platform-token *scopes* are still not enumerated in the release notes — verify at the API Explorer.
+
+> <sub>**Sources:** [SaaS 1.342 release notes (DT docs)](https://docs.dynatrace.com/docs/whats-new/saas/sprint-342), [SaaS 1.343 release notes (DT docs)](https://docs.dynatrace.com/docs/whats-new/saas/sprint-343). **Softened:** "all classic and ingest endpoints" is the release-note phrasing — per-endpoint scope names are not published there; verify at the API Explorer before relying on a specific endpoint.</sub>
 
 #### Special case — Terraform minting Access Tokens (`dynatrace_api_token`)
 
