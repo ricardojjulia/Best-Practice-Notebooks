@@ -1,6 +1,6 @@
 # FAQ-05: How to manage ActiveGate updates on Dynatrace SaaS
 
-> **Series:** FAQ — Frequently Asked Questions | **Reference:** 05 — Managing ActiveGate Updates (SaaS) | **Created:** May 2026 | **Last Updated:** 05/11/2026
+> **Series:** FAQ — Frequently Asked Questions | **Reference:** 05 — Managing ActiveGate Updates (SaaS) | **Created:** May 2026 | **Last Updated:** 07/07/2026
 
 ## Overview
 
@@ -81,6 +81,10 @@ A few mechanics worth knowing:
 - **The restart window is short.** Tens of seconds typically. HA pair architectures absorb this; single-AG architectures briefly drop traffic.
 
 > <sub>**Sources:** [Update ActiveGate (DT docs)](https://docs.dynatrace.com/docs/shortlink/update-activegate) — describes per-AG settings, one-click update, the 30-minute availability check; *"Go to Settings to open the ActiveGate updates settings for the particular ActiveGate."*</sub>
+
+> **Update (SaaS 1.342–1.343, June–July 2026) — AG updates gain OneAgent-style controls.** Two additions materially improve the control story described above: **(1)** the ActiveGate auto-update configuration now supports **`targetVersion`** (pin the version AGs update to) and **`updateWindows`** (constrain *when* updates run) — exposed in the Environment API v2 `autoUpdateSettings` (`GET/PUT /activeGates/autoUpdate`, sprint 1.342) and, for Environment ActiveGates, as *configurable update windows with target version selection* matching the OneAgent controls (SaaS 1.343). **(2)** SaaS 1.343 introduces **Fleet Management** — a centralized console for OneAgent, ActiveGate, and network-zone management at scale, with purpose-built ActiveGate views for deployment health and upgrade scheduling. For fleets beyond a handful of AGs, plan updates from Fleet Management rather than per-AG settings pages.
+
+> <sub>**Sources:** [SaaS 1.343 release notes (DT docs)](https://docs.dynatrace.com/docs/whats-new/saas/sprint-343), [API changelog 1.342 (DT docs)](https://docs.dynatrace.com/docs/whats-new/dynatrace-api/sprint-342) — `targetVersion` / `updateWindows` added to the ActiveGate `autoUpdateSettings` schemas.</sub>
 
 <a id="modes"></a>
 ## 3. The Auto-Update vs Manual Decision

@@ -276,6 +276,9 @@ The classic mechanism (Settings → Log Monitoring → Metrics extraction) still
 
 Calculated service metrics are the classic way to derive request-scoped metrics (by URL pattern, request attribute, etc.). Their status is documented precisely: *"currently, no deprecation date is set"*, but *"when creating new calculated service metrics, you should use OpenPipeline, which uses metric extraction from span data"* — and *"OpenPipeline will eventually become the default method … at that point, the current calculated service metrics functionality will be deprecated."* The Grail path also lifts a real limitation: classic calculated metrics keep at most the top 100 dimension values, while Grail stores the full dimension cardinality (metrics already above 2,000 cardinality cannot be auto-upgraded).
 
+
+> **Update (SaaS 1.343, July 2026):** OpenPipeline metric extraction now supports **histogram metrics** — you can extract a histogram (not just a counter or gauge value) from logs or spans, giving percentile-capable series from record data without shipping raw histograms through OTLP. This narrows the gap noted elsewhere in this entry between OTLP histogram ingestion and record-derived metrics.
+
 > <sub>**Sources:**</sub>
 > - <sub>[OpenPipeline processing (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/concepts/processing) — counter/value processors, supported scopes, Grail-only routing</sub>
 > - <sub>[Extract metrics from spans (DT docs)](https://docs.dynatrace.com/docs/platform/openpipeline/use-cases/tutorial-extract-metrics-from-spans) — sampling-aware processors</sub>
@@ -395,6 +398,9 @@ That asymmetry is the entire argument of FAQ-09: recurring aggregations belong i
 The Metrics API v2 (`/api/v2/metrics/query`) and Data Explorer consume **metric selectors** — a transformation-chain syntax (`builtin:host.cpu.usage:splitBy("dt.entity.host"):avg:fold(avg)`) with up to 10 metrics per query. It remains a current, non-deprecated API surface, but it reads Metrics Classic only. When migrating assets, the built-in converter maps the common shapes (`:splitBy(...)` → `by:{...}`, `:fold(avg)` → array/scalar aggregation, `median` → `percentile(...,50)`, count-metric `value` → `sum`); Classic's "Auto" aggregation has no DQL equivalent and needs a human decision.
 
 Query-size ceilings differ by an order of magnitude and change what is *feasible*: Classic caps a query at 20 million data points; Grail at **500 million** — high-cardinality, long-window analyses that Classic rejects are routine in Notebooks.
+
+
+> **Update (SaaS 1.343, July 2026):** metric **metadata is now queryable via DQL** — available metrics with their dimensions and descriptions can be listed directly from a query, extending the `metrics` discovery command described above. Useful for building self-documenting dashboards and for auditing which dimensions a metric actually carries before writing `by:{...}` clauses.
 
 > <sub>**Sources:**</sub>
 > - <sub>[Metric commands — timeseries, metrics (DT docs)](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands/metric-commands)</sub>

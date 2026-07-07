@@ -1,6 +1,6 @@
 # WFLOW-95 LAB: CMDB-Driven Host Tag Enrichment
 
-> **Series:** WFLOW — Workflows and Alert Notifications | **Reference:** 95 — CMDB-Driven Host Tag Enrichment LAB | **Created:** June 2026 | **Last Updated:** 06/19/2026
+> **Series:** WFLOW — Workflows and Alert Notifications | **Reference:** 95 — CMDB-Driven Host Tag Enrichment LAB | **Created:** June 2026 | **Last Updated:** 07/07/2026
 
 ## Overview
 
@@ -111,7 +111,7 @@ Two *Run JavaScript* tasks wired with a loop. **All configuration lives in workf
 - **Create a Gen2 (classic) API token** with the **`oneAgents.write`** scope (`dt0c01.…`), store it in the **Credential Vault**, and copy its credential ID (`CREDENTIALS_VAULT-…`).
 - **Grant the workflow's run-as identity `environment-api:credentials:read`** so the workflow can read that token from the vault at runtime.
 
-> **Why a classic token, not a platform token?** The remote-config endpoint currently rejects platform Bearer tokens at the scheme level; the platform-token path (`fleet-management:oneagents:write`) is not generally available yet. Revisit when it ships.
+> **Why a classic token, not a platform token?** The remote-config endpoint was live-validated as rejecting platform Bearer tokens at the scheme level (June 2026); the classic `Api-Token` path below is the proven approach. **Update (SaaS 1.343, July 2026):** Dynatrace announced platform-token support across the fleet-management APIs for OneAgent and ActiveGate endpoints — the platform-token path (`fleet-management:oneagents:write`) may now be available. This LAB keeps the validated classic-token flow until the platform-token path is re-tested live; verify in your tenant before switching.
 
 **Step 1 — Create the workflow and define its inputs.** New workflow (leave the on-demand trigger). Define these **workflow inputs** — they become the parameters you can override in the Run dialog (easiest to set via the YAML editor — see the [import skeleton](#import-skeleton)):
 
@@ -401,7 +401,7 @@ workflow:
 - **Scope filters** — `APP_SCOPE` limits the run to one business app; `EXCLUDE_PRODUCTION` skips hosts whose enriched `environment` is `production`. Both are appended to the DQL at runtime.
 - **`sanitizeTagValue`** strips whitespace and caps values at 270 characters (Dynatrace tag-value constraint).
 - **Schedule it** with a cron trigger (WFLOW-02) so newly onboarded hosts get tagged automatically; skip-existing keeps repeat runs cheap.
-- **Token type** — this uses a **Gen2 (classic) `Api-Token`** because the platform-token path (`fleet-management:oneagents:write`) is not GA yet. When it ships, the call can move to platform-token auth — potentially with no stored token at all if the workflow's run-as identity carries the scope.
+- **Token type** — this uses a **Gen2 (classic) `Api-Token`**, the live-validated path. SaaS 1.343 (July 2026) announced platform-token support across the fleet-management APIs, so the platform-token path (`fleet-management:oneagents:write`) may now work — once verified in your tenant, the call can move to platform-token auth, potentially with no stored token at all if the workflow's run-as identity carries the scope.
 
 <a id="next-steps"></a>
 ## 7. Next Steps
