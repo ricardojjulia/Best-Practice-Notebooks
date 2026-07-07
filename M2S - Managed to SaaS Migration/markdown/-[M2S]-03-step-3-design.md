@@ -1,6 +1,6 @@
 # M2S-03: Step 3 — Design: Create Target Architecture
 
-> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 3 of 9 | **Phase:** Plan | **Step:** Design | **Created:** March 2026 | **Last Updated:** 07/01/2026
+> **Series:** M2S — Managed to SaaS Migration | **Notebook:** 3 of 9 | **Phase:** Plan | **Step:** Design | **Created:** March 2026 | **Last Updated:** 07/02/2026
 
 With discovery and strategy complete, it’s time to design the target architecture for your Dynatrace SaaS environment. This step produces the technical blueprints that guide every subsequent migration activity—network connectivity, ActiveGate topology, security controls, and high availability.
 
@@ -591,8 +591,8 @@ Complete this checklist before proceeding to Step 4 (Prepare).
 
 ### Architecture Resources
 
-- [ActiveGate Documentation](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate)
-- [Network Zones](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-activegate/network-zones)
+- [ActiveGate Documentation](https://docs.dynatrace.com/docs/ingest-from/dynatrace-activegate)
+- [Network Zones](https://docs.dynatrace.com/docs/manage/network-zones)
 - [OneAgent Network Requirements](https://docs.dynatrace.com/docs/setup-and-configuration/dynatrace-oneagent/oneagent-configuration/network-connectivity)
 - [IAM Documentation](https://docs.dynatrace.com/docs/manage/identity-access-management)
 - [Dynatrace Trust Center](https://www.dynatrace.com/company/trust-center/)

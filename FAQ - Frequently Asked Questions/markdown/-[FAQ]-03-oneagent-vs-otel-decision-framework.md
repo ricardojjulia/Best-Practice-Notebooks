@@ -1,6 +1,6 @@
 # FAQ-03: OneAgent vs OpenTelemetry — A Decision Framework
 
-> **Series:** FAQ — Frequently Asked Questions | **Reference:** 03 — OneAgent vs OpenTelemetry — A Decision Framework | **Created:** May 2026 | **Last Updated:** 05/29/2026
+> **Series:** FAQ — Frequently Asked Questions | **Reference:** 03 — OneAgent vs OpenTelemetry — A Decision Framework | **Created:** May 2026 | **Last Updated:** 07/07/2026
 
 ## Overview
 
@@ -168,7 +168,7 @@ This is the same model **Dynatrace OneAgent** uses by design — OneAgent's Java
 > - <sub>[Java technology support (DT docs)](https://docs.dynatrace.com/docs/ingest-from/technology-support/application-software/java)</sub>
 > - <sub>[VirtualMachine (Oracle JDK 21)](https://docs.oracle.com/en/java/javase/21/docs/api/jdk.attach/com/sun/tools/attach/VirtualMachine.html) — `loadAgent()` API for dynamic JVM attach</sub>
 > - <sub>[opentelemetry-java-instrumentation (OTel GitHub)](https://github.com/open-telemetry/opentelemetry-java-instrumentation)</sub>
-> - <sub>[@opentelemetry/auto-instrumentations-node (OTel JS contrib)](https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/metapackages/auto-instrumentations-node)</sub>
+> - <sub>[@opentelemetry/auto-instrumentations-node (OTel JS contrib)](https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/packages/auto-instrumentations-node)</sub>
 > - <sub>[opentelemetry-python-contrib (OTel GitHub)](https://github.com/open-telemetry/opentelemetry-python-contrib)</sub>
 > - <sub>[opentelemetry-go-contrib (OTel GitHub)](https://github.com/open-telemetry/opentelemetry-go-contrib)</sub>
 > - <sub>[opentelemetry-php (OTel GitHub)](https://github.com/open-telemetry/opentelemetry-php)</sub>
@@ -248,7 +248,7 @@ Coverage is the single biggest factor in whether *adding* OneAgent gets you what
 > - <sub>[Java technology support (DT docs)](https://docs.dynatrace.com/docs/ingest-from/technology-support/application-software/java) — OneAgent JVM framework coverage (Spring, Servlet/JAX-RS, Akka HTTP 10.1+, Play 2.6+, Tomcat/Jetty/WebLogic/WebSphere/JBoss, gRPC)</sub>
 > - <sub>[Technology support matrix (DT docs)](https://docs.dynatrace.com/docs/ingest-from/technology-support)</sub>
 > - <sub>[supported-libraries (opentelemetry-java-instrumentation)](https://github.com/open-telemetry/opentelemetry-java-instrumentation/blob/main/docs/supported-libraries.md) — kotlinx.coroutines 1.0+, Akka HTTP 10.0+, Akka Actors 2.3+, Finatra 2.9+, Scala ForkJoinPool 2.8+</sub>
-> - <sub>[@opentelemetry/auto-instrumentations-node (OTel JS contrib)](https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/metapackages/auto-instrumentations-node)</sub>
+> - <sub>[@opentelemetry/auto-instrumentations-node (OTel JS contrib)](https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/packages/auto-instrumentations-node)</sub>
 > - <sub>[opentelemetry-python-contrib (OTel GitHub)](https://github.com/open-telemetry/opentelemetry-python-contrib)</sub>
 > - <sub>[opentelemetry-go-contrib (OTel GitHub)](https://github.com/open-telemetry/opentelemetry-go-contrib) — `otelhttp`/`otelgin`/`otelmux`/`otelchi`/`otelfiber`/`otelgrpc`/`otelecho`/`otelsql`/`otelpgx`/`otelgorm`/`otelmongo`/`otelredis`/`otelsarama`</sub>
 
