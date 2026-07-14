@@ -18,7 +18,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 6. [Namespace Organization](markdown/-[K8S]-06-namespace-organization.md) — Organizing and filtering by namespace
 7. [Events and Logs](markdown/-[K8S]-07-events-and-logs.md) — Kubernetes events and log monitoring
 8. [DQL for K8s](markdown/-[K8S]-08-dql-for-k8s.md) — Querying Kubernetes data with DQL
-9. [Troubleshooting](markdown/-[K8S]-09-troubleshooting.md) — Diagnosing Kubernetes monitoring issues
+9. [Troubleshooting](markdown/-[K8S]-09-troubleshooting.md) — Diagnosing Kubernetes monitoring issues; known issues by Operator version, CSI crash-loop mitigations, injection-skip reason codes, support-archive subcommand, and a symptom-to-resolution index mapped to community articles
 10. [Metadata Telemetry Enrichment](markdown/-[K8S]-10-metadata-telemetry-enrichment.md) — Enriching telemetry with Kubernetes metadata
 11. [Multi-Tool Coexistence](markdown/-[K8S]-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
 12. [Specialized Monitoring](markdown/-[K8S]-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning

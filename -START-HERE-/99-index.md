@@ -1,7 +1,7 @@
 # Series Catalog & Cross-Reference
 
 > **Purpose:** Full inventory of all 32 Dynatrace Best Practice Topic series with cross-references between them. Use this as a quick lookup when you need to find which series covers a specific topic, or to see related material across series.
-> **Last Updated:** 07/09/2026
+> **Last Updated:** 07/14/2026
 
 ![Series by Category](images/99-series-by-category.svg)
 
@@ -162,10 +162,10 @@ For each series, the related series most often read alongside it:
 | [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) (collectors), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (managed K8s), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (CloudWatch ingestion) |
 | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) (executive dashboards), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (segments and filters) |
 | [DBMON](../DBMON%20-%20Database%20Monitoring/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) (database call tracing), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (database dashboards) |
-| [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (tagging), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (host groups), [FINOPS](../FINOPS%20-%20Cost%20Management%20&%20FinOps/) (metrics vs. logs cost) |
+| [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (tagging), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (host groups), [FINOPS](../FINOPS%20-%20Cost%20Management%20&%20FinOps/) (metrics vs. logs cost), [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (OpenShift injection) |
 | [FINOPS](../FINOPS%20-%20Cost%20Management%20&%20FinOps/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (buckets + retention), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (sampling), [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) |
 | [IAM](../IAM%20-%20IAM%20Administration/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) (security_context for boundaries), [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) (Gen2 → Gen3), [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) (initial setup) |
-| [K8S](../K8S%20-%20Kubernetes%20Monitoring/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) (collector deployment), [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (managed K8s), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (GitOps), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (K8s logs) |
+| [K8S](../K8S%20-%20Kubernetes%20Monitoring/) | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) (collector deployment), [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (managed K8s), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) (GitOps), [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) (K8s logs), [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) (OpenShift injection) |
 | [M2S](../M2S%20-%20Managed%20to%20SaaS%20Migration/) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/), [IAM](../IAM%20-%20IAM%20Administration/), [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) (Gen2 → Gen3) |
 | [MOBL](../MOBL%20-%20Mobile%20Monitoring/) | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) (mobile-to-backend tracing), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) (mobile dashboards) |
 | [MZ2POL](../MZ2POL%20-%20Management%20Zone%20to%20Policy%20Migration/) | [IAM](../IAM%20-%20IAM%20Administration/), [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) |
