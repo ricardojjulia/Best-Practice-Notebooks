@@ -1,7 +1,7 @@
 # Operationalize Module — DASH → WFLOW → AUTOM → AIOPS
 
 > **Purpose:** Sequenced reading order for layering dashboards, alert routing, configuration automation, and Davis intelligence on a working tenant. The order matters: each builds on the previous.
-> **Last Updated:** 07/09/2026
+> **Last Updated:** 07/15/2026
 
 ![Operationalize Sequence](images/06-operationalize-flow.svg)
 
@@ -53,7 +53,7 @@ Dependencies: [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20S
 
 ## WFLOW — Workflows and Alerting (Second)
 
-10 notebooks in [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/). Coverage: triggers, notification routing, incident management, custom templates, remediation, governance.
+12 notebooks in [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), including 2 hands-on labs. Coverage: triggers, notification routing, incident management, custom templates, remediation, governance.
 
 | # | Notebook | Priority |
 |---|---|---|
@@ -66,6 +66,8 @@ Dependencies: [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20S
 | 07 | Remediation | Recommended (advanced) |
 | 08 | JavaScript and HTTP | Optional — for custom integrations |
 | 09 | Governance | Recommended for mature organizations |
+| 94 | [LAB] EdgeConnect Static Egress (Snowflake) | Optional hands-on — static egress IP for IP-allow-listed connectors |
+| 95 | [LAB] CMDB Host Tag Enrichment | Optional hands-on |
 | 99 | Best Practice Summary | Reference |
 
 Dependencies: [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) notebook 02 (anomaly detection) is helpful background before WFLOW-04 (notification routing) if you'll be routing on Davis problems.
