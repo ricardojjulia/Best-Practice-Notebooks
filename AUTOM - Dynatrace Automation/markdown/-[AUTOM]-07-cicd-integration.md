@@ -1,6 +1,6 @@
 # AUTOM-07: CI/CD Integration
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 07/08/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 7 of 9 | **Created:** January 2026 | **Last Updated:** 07/15/2026
 
 CI/CD integration brings software development practices to Dynatrace configuration management. By storing configs in Git and deploying via pipelines, teams gain version control, review processes, and automated deployments.
 
@@ -1776,7 +1776,7 @@ spec:
 ## 10. Dynatrace Operator GitOps Patterns
 When deploying the Dynatrace Operator via GitOps, follow these patterns for production environments.
 
-> **Important:** Use `apiVersion: dynatrace.com/v1beta5` or `v1beta6` for Dynatrace Operator 1.8.x. Earlier versions (v1beta1, v1beta2) are deprecated and no longer supported.
+> **Important:** Use `apiVersion: dynatrace.com/v1beta6` for new DynaKubes (`v1beta5` remains accepted). Operator 1.9.0 removed `v1beta3` from the CRD, and Operator 1.10.0 (July 15, 2026) deprecates `v1beta4` — audit committed DynaKube manifests for stale API versions before an Operator upgrade rolls through the pipeline.
 
 ### Multi-Cluster Deployment Pattern
 

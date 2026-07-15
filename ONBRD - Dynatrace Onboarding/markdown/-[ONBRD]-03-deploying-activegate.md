@@ -1,6 +1,6 @@
 # ONBRD-03: Deploying ActiveGate
 
-> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 07/08/2026
+> **Series:** ONBRD — Dynatrace Onboarding | **Notebook:** 3 of 10 | **Created:** December 2025 | **Last Updated:** 07/15/2026
 
 ## Your Network Gateway to Dynatrace
 ActiveGate is a lightweight component that routes traffic between your infrastructure and Dynatrace. This notebook covers when you need ActiveGate, how many to deploy, where to place them, and installation steps - including comprehensive Kubernetes deployment options.
@@ -370,7 +370,7 @@ Deploying ActiveGate in Kubernetes requires careful consideration of where, how,
 
 The Dynatrace Operator manages ActiveGate lifecycle automatically.
 
-> **Important:** Use `apiVersion: dynatrace.com/v1beta5` or `v1beta6` for Dynatrace Operator 1.8.x. Operator 1.8.0 removes v1beta3 and auto-converts to v1beta6. v1beta6 adds OTLP exporter configuration.
+> **Important:** Use `apiVersion: dynatrace.com/v1beta6` for new DynaKubes (`v1beta5` remains accepted). Operator **1.9.0** removed `v1beta3` from the CRD (*"Applying DynaKube resources using this version will fail"*), and Operator **1.10.0** (July 15, 2026) deprecates `v1beta4` — check `kubectl get dynakube -A -o jsonpath='{.items[*].apiVersion}'` before upgrading the Operator. v1beta6 adds OTLP exporter configuration.
 
 ```yaml
 # dynakube.yaml - ActiveGate via Operator
@@ -430,10 +430,11 @@ spec:
 # Create namespace
 kubectl create namespace dynatrace
 
-# Create secret with tokens
+# Create secret with tokens — apiToken (with PaaS scopes) is sufficient for the Operator;
+# the separate paasToken secret field is deprecated as of Operator 1.10.0 (still accepted).
+# From Operator 1.10.0 a Platform Token is also accepted in place of the classic access token.
 kubectl -n dynatrace create secret generic dynakube \
-  --from-literal=apiToken=<your-api-token> \
-  --from-literal=paasToken=<your-paas-token>
+  --from-literal=apiToken=<your-api-token>
 
 # Install Dynatrace Operator via Helm
 helm repo add dynatrace https://raw.githubusercontent.com/Dynatrace/dynatrace-operator/main/config/helm/repos/stable

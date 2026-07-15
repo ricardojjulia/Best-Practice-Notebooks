@@ -1,6 +1,6 @@
 # K8S-10: Metadata Telemetry Enrichment
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 10 of 13 | **Created:** January 2026 | **Last Updated:** 07/08/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 10 of 13 | **Created:** January 2026 | **Last Updated:** 07/15/2026
 
 ## Enriching All Telemetry with Kubernetes Metadata
 Kubernetes metadata enrichment automatically adds labels and annotations from your Kubernetes resources to all telemetry signals. This is the **recommended approach** for adding context to your observability data because it enriches everything: metrics, logs, traces, events, and entities.
@@ -122,12 +122,12 @@ metadata:
     metadata.dynatrace.com/primary_tags.environment: production
 ```
 
-Primary fields ride the same surface (`metadata.dynatrace.com/dt.security_context`, `metadata.dynatrace.com/dt.cost.costcenter`, `metadata.dynatrace.com/dt.cost.product`). Precedence is documented as pod over namespace: *"When the same key is set at both scopes, the pod-level value wins for that pod."*
+Primary fields ride the same surface (`metadata.dynatrace.com/dt.security_context`, `metadata.dynatrace.com/dt.cost.costcenter`, `metadata.dynatrace.com/dt.cost.product`). Precedence is documented as pod over namespace: *"When the same key is set at both scopes, the pod-level value wins for that pod."* With Dynatrace Operator 1.10.0 the documented specificity chain extends to four levels (highest wins): pod annotations → namespace annotations → DynaKube resource attributes (see §3) → central configuration rules.
 
 Two adoption caveats:
 
-- **Version gates:** *"the at-source and central configuration options require minimum component versions: OneAgent version 1.343+, ActiveGate version 1.341+, Dynatrace Operator version 1.10+"* — ahead of the OneAgent 1.339 rollout current as of June 2026. Treat the annotation surface as a standard to design toward, and verify component versions before relying on it.
-- **Central configuration ships with SaaS 1.343 (July 2026 — staged tenant rollout):** rules that promote existing namespace labels to primary tags without manifest changes (limited to 20 rules per scope) arrive as *Centralized telemetry metadata enrichment* — key-value pairs, namespace annotations, and domain tags managed centrally. The docs previously flagged this as *"the recommended approach"* arriving mid-2026; it is the documented forward path alongside the settings-based enrichment described in this notebook — which remains the working path until 1.343 reaches your tenant (verify availability before designing against the central rules). On the ActiveGate side, AG 1.341 adds full namespace- and pod-level `metadata.dynatrace.com/primary_tags.<key>` enrichment and primary-Grail-field enrichment (`dt.security_context`, `dt.cost.product`) for Prometheus metrics monitored via ActiveGate. Note the remaining version gate: the at-source annotation path documents OneAgent 1.343+ (not yet released as of July 2026), ActiveGate 1.341+ (shipped), Operator 1.10+.
+- **Version gates:** *"the at-source and central configuration options require minimum component versions: OneAgent version 1.343+, ActiveGate version 1.341+, Dynatrace Operator version 1.10+"* — the Operator gate is now met (**Operator 1.10.0 released July 15, 2026**) and ActiveGate 1.341 has shipped, but OneAgent 1.343 has not yet been released as of July 2026. Treat the annotation surface as a standard to design toward, and verify component versions before relying on it; earlier component versions fall back to the settings-based enrichment described in this notebook.
+- **Central configuration ships with SaaS 1.343 (July 2026 — staged tenant rollout):** rules that promote existing namespace labels to primary tags without manifest changes (limited to 20 rules per scope) arrive as *Centralized telemetry metadata enrichment* — key-value pairs, namespace annotations, and domain tags managed centrally. The docs previously flagged this as *"the recommended approach"* arriving mid-2026; it is the documented forward path alongside the settings-based enrichment described in this notebook — which remains the working path until 1.343 reaches your tenant (verify availability before designing against the central rules). On the ActiveGate side, AG 1.341 adds full namespace- and pod-level `metadata.dynatrace.com/primary_tags.<key>` enrichment and primary-Grail-field enrichment (`dt.security_context`, `dt.cost.product`) for Prometheus metrics monitored via ActiveGate. Note the remaining version gate: the at-source annotation path documents OneAgent 1.343+ (not yet released as of July 2026), ActiveGate 1.341+ (shipped), Operator 1.10+ (shipped July 15, 2026).
 
 **Cost allocation fields** like `dt.cost.costcenter` and `dt.cost.product` also propagate to service metrics, enabling chargeback reporting across teams.
 
@@ -205,6 +205,40 @@ spec:
   metadataEnrichment:
     enabled: false
 ```
+
+### Defining Resource Attributes in the DynaKube (Operator 1.10.0+)
+
+Dynatrace Operator **1.10.0** (released July 15, 2026) adds a cluster-scoped enrichment surface: static resource attributes defined directly in the DynaKube spec. The [Kubernetes tag setup (DT docs)](https://docs.dynatrace.com/docs/manage/tags/tags-domain-k8s) page positions this mechanism in the primary-tag specificity chain below pod/namespace annotations and above central configuration rules. Three spec fields participate:
+
+| Spec field | Applies to | Precedence |
+|------------|-----------|------------|
+| `.spec.resourceAttributes` | All signals (OneAgent, OTLP, log monitoring, ActiveGate) | Base — overridden by the mode-specific fields below on duplicate keys |
+| `.spec.oneAgent.<mode>.additionalResourceAttributes` | OneAgent-emitted signals only | Wins over `.spec.resourceAttributes` on duplicate keys |
+| `.spec.otlpExporterConfiguration.additionalResourceAttributes` | OTLP telemetry only | Wins over `.spec.resourceAttributes` on duplicate keys |
+
+```yaml
+spec:
+  resourceAttributes:
+    aws.account.id: "123456789012"
+  oneAgent:
+    cloudNativeFullStack:
+      additionalResourceAttributes:
+        my.team: platform
+  otlpExporterConfiguration:
+    additionalResourceAttributes:
+      my.team: platform
+```
+
+Constraints documented with the feature:
+
+- A **soft limit of 10 attributes** applies across `.spec.resourceAttributes` and all `additionalResourceAttributes` blocks combined.
+- Keys are sanitized (invalid DNS characters replaced); keys over 63 characters violate Kubernetes label limits.
+- When both OneAgent and OTLP injection are active on the same pod, **conflicting keys produce undefined behavior** — keep the two mode-specific blocks consistent.
+- The values are cluster-scoped and static. Use pod/namespace annotations for per-workload values; use this surface for cluster-wide facts (account IDs, environment, owning platform team).
+
+> **Running an earlier Operator?** These spec fields require Operator 1.10.0+ — on earlier versions the DynaKube rejects them at admission. The namespace/pod annotation path and the settings-based enrichment described in this notebook remain the working paths until your clusters upgrade.
+
+> **See:** [Metadata enrichment (DT docs)](https://docs.dynatrace.com/docs/ingest-from/setup-on-k8s/guides/metadata-automation/metadata-enrichment), [Operator 1.10.0 release notes (DT docs)](https://docs.dynatrace.com/docs/whats-new/dynatrace-operator/dto-fix-1-10-0)
 
 <a id="configuring-settings-based-enrichment"></a>
 ## 4. Configuring Settings-Based Enrichment

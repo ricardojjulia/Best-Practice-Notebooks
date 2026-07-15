@@ -1,7 +1,7 @@
 # Operationalize Module — DASH → WFLOW → AUTOM → AIOPS
 
 > **Purpose:** Sequenced reading order for layering dashboards, alert routing, configuration automation, and Davis intelligence on a working tenant. The order matters: each builds on the previous.
-> **Last Updated:** 07/15/2026
+> **Last Updated:** 05/07/2026
 
 ![Operationalize Sequence](images/06-operationalize-flow.svg)
 
@@ -53,7 +53,7 @@ Dependencies: [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20S
 
 ## WFLOW — Workflows and Alerting (Second)
 
-12 notebooks in [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), including 2 hands-on labs. Coverage: triggers, notification routing, incident management, custom templates, remediation, governance.
+10 notebooks in [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/). Coverage: triggers, notification routing, incident management, custom templates, remediation, governance.
 
 | # | Notebook | Priority |
 |---|---|---|
@@ -66,8 +66,6 @@ Dependencies: [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20S
 | 07 | Remediation | Recommended (advanced) |
 | 08 | JavaScript and HTTP | Optional — for custom integrations |
 | 09 | Governance | Recommended for mature organizations |
-| 94 | [LAB] EdgeConnect Static Egress (Snowflake) | Optional hands-on — static egress IP for IP-allow-listed connectors |
-| 95 | [LAB] CMDB Host Tag Enrichment | Optional hands-on |
 | 99 | Best Practice Summary | Reference |
 
 Dependencies: [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) notebook 02 (anomaly detection) is helpful background before WFLOW-04 (notification routing) if you'll be routing on Davis problems.
@@ -124,7 +122,7 @@ Some topics appear in multiple Operationalize series:
 | Dashboard automation | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — notebook 07 (sharing and reporting) | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 02–04 (dashboards-as-code) | DASH first; AUTOM-02..04 once dashboards stabilize |
 | Alerting on synthetics | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — notebook 02 (browser monitors) | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 | SYNTH for what to alert on; WFLOW for routing |
 
-See [Overlap Map](08-overlap-map.md) for the full overlap table across all 32 series.
+See [Overlap Map](08-overlap-map.md) for the full overlap table across all 28 series.
 
 ---
 

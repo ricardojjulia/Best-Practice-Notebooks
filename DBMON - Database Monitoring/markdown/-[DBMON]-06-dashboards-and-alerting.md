@@ -1,6 +1,6 @@
 # DBMON-06: Dashboards and Alerting
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
@@ -172,6 +172,36 @@ fetch spans, from:-24h
 | Error rate > 1% for 15 minutes | Warning | Notification |
 | Any connection refused error | Critical | Immediate page |
 | Deadlock detected | Warning | Notification |
+
+### Alerting on Engine Internals — SQL Server Extension Metrics
+
+The alert queries above are span-based (caller-side). If the **Microsoft SQL Server extension** is deployed (see DBMON-02 §6 for the feature sets), the engine's own health signals become alertable too — as **metric events or Davis anomaly detectors** on the `sql-server.*` keys, in the same problem/notification pipeline:
+
+| Signal | Metric / stream | Starting point |
+|---|---|---|
+| Transaction log filling up | `sql-server.databases.log.percentUsed` | Metric event at > 80%, warn at > 70% |
+| Engine blocking | `sql-server.general.processesBlocked` | Davis anomaly detector (baseline beats a static count) |
+| Always On degradation | `sql-server.always-on.ag.synchronizationHealth` | Metric event on any drop below healthy |
+| Agent job failures | `failed_jobs` / `current_jobs` **log streams** | DQL log alert — the failure message text is part of the alert context |
+
+Thresholds carried over from homegrown scripts should be revalidated rather than copied — e.g., scripts typically count *blocking* SPIDs while the extension metric counts *blocked* processes. The decision framework for migrating a script/Telegraf estate onto these signals is in **FAQ-14**.
+
+Log-space alert query — databases whose transaction log crossed 80% in the window:
+
+```dql
+// Alert query: transaction logs above 80% utilization (SQL Server extension)
+timeseries logUsedPct = avg(`sql-server.databases.log.percentUsed`), from:-24h
+| fieldsAdd worst = arrayMax(logUsedPct)
+| filter worst > 80
+```
+
+```dql
+// Alert query: failed SQL Server Agent jobs with failure context (Jobs feature set)
+fetch logs, from:-24h
+| filter isNotNull(job_name) and last_run_outcome == "Failed"
+| summarize {failures = count(), latest = max(timestamp)}, by:{job_name, server}
+| sort failures desc
+```
 
 <a id="throughput-capacity"></a>
 
