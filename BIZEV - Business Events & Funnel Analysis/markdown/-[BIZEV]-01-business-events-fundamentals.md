@@ -1,6 +1,6 @@
 # BIZEV-01: Business Events Fundamentals
 
-> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 1 of 6 | **Created:** March 2026 | **Last Updated:** 04/26/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 1 of 7 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
@@ -40,6 +40,8 @@ Available on Latest Dynatrace tenants only.
 | **Permissions** | `storage:events:read`, `storage:bizevents:read` |
 | **Data** | Business events being ingested (OneAgent auto-capture or API) |
 | **Knowledge** | Basic DQL query skills |
+
+> **Running Dynatrace Managed, or a SaaS tenant still operated through the classic (Gen2) experience?** Business events require Grail and are SaaS-only — but a Grail-enabled SaaS tenant can adopt them today with a minimal Gen3 footprint (new Dashboards/Notebooks for this one workload, everything else stays classic), and Managed environments have documented classic approximations. See **BIZEV-07: Gen2 vs Gen3 — Business Events Without (or Before) the Full Move** before deciding this series doesn't apply to you.
 
 <a id="what-are-business-events"></a>
 
@@ -289,7 +291,7 @@ In this notebook, you learned:
 
 ### References
 
-- [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/platform-modules/business-analytics)
+- [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/observe/business-observability)
 - [Business Events API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/business-events)
 - [CloudEvents Specification](https://cloudevents.io/)
 

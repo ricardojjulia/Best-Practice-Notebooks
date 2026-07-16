@@ -26,7 +26,7 @@
 | **ALERT** | [Alerting Strategy and Design](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) | 5 | End-to-end alerting architecture, detection choices, routing, ServiceNow |
 | **APPSEC** | [Application Security](../APPSEC%20—%20Application%20Security/) | 10 | RVA, RAP, SPM; security.events; dual-surface IAM; Security Investigator |
 | **AUTOM** | [Dynatrace Automation](../AUTOM%20-%20Dynatrace%20Automation/) | 14 | Settings API, Monaco, Terraform, workflows-as-code, GitOps, CI/CD |
-| **BIZEV** | [Business Events & Funnel Analysis](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) | 7 | Business event ingestion, conversion funnels, revenue impact, executive reporting |
+| **BIZEV** | [Business Events & Funnel Analysis](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) | 8 | Business event ingestion, conversion funnels, revenue impact, executive reporting; Gen2 vs Gen3 adoption paths (what works without Grail) |
 | **CLOUD** | [Cloud Provider Integrations](../CLOUD%20-%20Cloud%20Provider%20Integrations/) | 9 | AWS, Azure, GCP integrations; Lambda, EKS, multi-cloud patterns |
 | **DASH** | [Dashboard Design & Building](../DASH%20-%20Dashboard%20Design%20&%20Building/) | 8 | Dashboard hierarchy, executive/operations/engineering audiences, sharing and reporting |
 | **DBMON** | [Database Monitoring](../DBMON%20-%20Database%20Monitoring/) | 7 | SQL, NoSQL, cache, messaging, query analysis |

@@ -1,6 +1,6 @@
 # BIZEV-05: KPIs and Metrics
 
-> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 5 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 5 of 7 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
@@ -198,6 +198,8 @@ pipelines:
 | DQL on bizevents | Seconds | Event retention (default 35 days) | Manual threshold | Scans event data |
 | Extracted metrics | Sub-second | Metric retention (default 5 years) | Native Dynatrace Intelligence/SLO | Pre-aggregated |
 
+> **Classic-pipeline variant — the bridge to classic dashboards.** Alongside the OpenPipeline path shown here, Dynatrace documents business-event metric extraction via the classic pipeline (Settings > Business Observability > Metric extraction). Rules there emit metrics keyed with the `bizevents.` prefix (up to 50 dimensions) that are readable in Data Explorer, classic dashboards, and classic metric-event alerting — useful when report consumers still live in the classic (Gen2) experience. Dynatrace recommends the OpenPipeline path where available; either way the output is an ordinary metric. See **BIZEV-07: Gen2 vs Gen3 — Business Events Without (or Before) the Full Move** for the full hybrid-adoption pattern.
+
 ```dql
 // If you have extracted business metrics, query them with timeseries
 // Replace with your actual metric key
@@ -293,7 +295,7 @@ In this notebook, you learned:
 
 ### References
 
-- [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/platform-modules/business-analytics)
+- [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/observe/business-observability)
 - [OpenPipeline Metric Extraction](https://docs.dynatrace.com/docs/platform/openpipeline)
 - [DQL makeTimeseries Command](https://docs.dynatrace.com/docs/platform/grail/dynatrace-query-language/commands/make-timeseries-command)
 

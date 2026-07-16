@@ -1,6 +1,6 @@
 # BIZEV-02: Instrumentation
 
-> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 2 of 6 | **Created:** March 2026 | **Last Updated:** 03/12/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
@@ -29,6 +29,8 @@ Capturing meaningful business events requires deliberate instrumentation. This n
 | **Permissions** | `storage:bizevents:read`, `bizevents.ingest` |
 | **OneAgent** | Deployed on at least one application host (for auto-detection) |
 | **Knowledge** | BIZEV-01 fundamentals, basic REST API concepts |
+
+> **No Grail yet?** Every capture path in this notebook writes to the Grail `bizevents` table and therefore requires a SaaS tenant with Grail. For what a classic (Gen2) environment can do instead — request attributes, session/action properties + USQL, log metrics — and for the hybrid pattern that adopts these capture paths with only a minimal Gen3 footprint, see **BIZEV-07: Gen2 vs Gen3 — Business Events Without (or Before) the Full Move**.
 
 <a id="oneagent-auto-detection"></a>
 
@@ -349,7 +351,7 @@ In this notebook, you learned:
 ### References
 
 - [Business Events API](https://docs.dynatrace.com/docs/dynatrace-api/environment-api/business-events)
-- [OneAgent SDK for Business Events](https://docs.dynatrace.com/docs/platform-modules/business-analytics/ba-events-capturing)
+- [OneAgent SDK for Business Events](https://docs.dynatrace.com/docs/observe/business-observability/bo-events-capturing)
 - [OpenPipeline Processing](https://docs.dynatrace.com/docs/platform/openpipeline)
 
 ---

@@ -102,6 +102,7 @@ Turning business transactions into first-class observability data with Dynatrace
 - [BIZEV-04: Revenue Impact Analysis](BIZEV%20-%20Business%20Events%20%26%20Funnel%20Analysis/markdown/-%5BBIZEV%5D-04-revenue-impact.md) — Quantifying business impact
 - [BIZEV-05: KPIs and Metrics](BIZEV%20-%20Business%20Events%20%26%20Funnel%20Analysis/markdown/-%5BBIZEV%5D-05-kpis-and-metrics.md) — Business metrics and dashboarding
 - [BIZEV-06: Executive Reporting](BIZEV%20-%20Business%20Events%20%26%20Funnel%20Analysis/markdown/-%5BBIZEV%5D-06-executive-reporting.md) — Creating business-focused reports
+- [BIZEV-07: Gen2 vs Gen3 — Business Events Without (or Before) the Full Move](BIZEV%20-%20Business%20Events%20%26%20Funnel%20Analysis/markdown/-%5BBIZEV%5D-07-gen2-vs-gen3-adoption-paths.md) — Decision framework for Managed and classic-operated tenants: what works without Grail, adoption paths, and the migration sequence when you're ready to move
 - [BIZEV-99: Best Practice Summary](BIZEV%20-%20Business%20Events%20%26%20Funnel%20Analysis/markdown/-%5BBIZEV%5D-99-best-practice-summary.md) — Consolidated best practices from the BIZEV series
 
 ### [CLOUD - Cloud Provider Integrations](CLOUD%20-%20Cloud%20Provider%20Integrations/README.md)

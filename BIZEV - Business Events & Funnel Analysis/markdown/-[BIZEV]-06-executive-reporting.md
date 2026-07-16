@@ -1,6 +1,6 @@
 # BIZEV-06: Executive Reporting
 
-> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 6 of 6 | **Created:** March 2026 | **Last Updated:** 04/04/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 6 of 7 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
@@ -308,7 +308,7 @@ fetch bizevents, from:-7d
 
 ## 7. Summary
 
-This is the final notebook in the BIZEV series. Across all six notebooks, you have learned:
+This is the last of the core analysis notebooks in the BIZEV series. Across the series, you have learned:
 
 | Notebook | Key Capability |
 |----------|----------------|
@@ -318,6 +318,7 @@ This is the final notebook in the BIZEV series. Across all six notebooks, you ha
 | **BIZEV-04** | Revenue impact analysis and incident correlation |
 | **BIZEV-05** | Business KPI definition, metric extraction, health scoring |
 | **BIZEV-06** | Executive reporting, SLA tracking, scheduled reports |
+| **BIZEV-07** | Gen2 vs Gen3 adoption paths — business events without (or before) the full move |
 
 ### Key Takeaways for Executive Reporting
 
@@ -329,7 +330,7 @@ This is the final notebook in the BIZEV series. Across all six notebooks, you ha
 
 ### References
 
-- [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/platform-modules/business-analytics)
+- [Dynatrace Business Analytics](https://docs.dynatrace.com/docs/observe/business-observability)
 - [Dynatrace Dashboards](https://docs.dynatrace.com/docs/observe-and-explore/dashboards)
 - [Dynatrace Workflows](https://docs.dynatrace.com/docs/platform/workflows)
 - [SLO in Dynatrace](https://docs.dynatrace.com/docs/observe-and-explore/service-level-objectives)

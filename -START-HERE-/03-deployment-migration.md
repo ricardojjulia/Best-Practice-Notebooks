@@ -89,6 +89,7 @@ Both M2S and S2S land you on a Gen3 SaaS tenant. Several Foundation topics diffe
 | security_context | Universal scope field for Gen3 access control; not present in earlier generations | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 06 |
 | OpenPipeline (Logs) | Replaces Classic Logs in Gen3; if your Managed tenant used Classic Logs, OpenPipeline migration is a separate workstream | [OPMIG](../OPMIG%20-%20OpenPipeline%20Migration/) — full series |
 | Workflows | First-class capability in Gen3; replaces some legacy alerting integrations | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — full series |
+| Business events | Do not exist on Managed — classic business analytics (request attributes + calculated service metrics, USQL, log metrics) maps onto Grail business events after migration; a Grail-enabled SaaS tenant can adopt them before the full experience move | [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) — notebook 07 (Gen2 vs Gen3 adoption paths), then the full series |
 | AppEngine apps | Some Gen2 features are now delivered as Dynatrace apps | Covered in series-specific reading where relevant |
 
 These should run alongside the M2S or S2S step that introduces them — typically in step 3 (Design) and step 7 (Expand).

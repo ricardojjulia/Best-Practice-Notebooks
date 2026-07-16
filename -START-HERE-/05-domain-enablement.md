@@ -137,16 +137,16 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 
 ### [BIZEV — Business Events and Funnel Analysis](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/)
 
-7 notebooks.
+8 notebooks.
 
 | Aspect | Detail |
 |---|---|
-| Prerequisites | At least one ingestion method active (OTel, RUM, or backend instrumentation) |
+| Prerequisites | SaaS tenant with Grail; at least one ingestion method active (OTel, RUM, or backend instrumentation). On Dynatrace Managed or a classic-operated tenant, start with notebook 07 instead |
 | Time | 1–3 weeks (often gated by business stakeholder availability, not technical work) |
 | Mandatory entry | Notebooks 01 (business events fundamentals), 02 (instrumentation) |
 | Recommended next | 03 (funnel analysis), 04 (revenue impact), 05 (KPIs and metrics) |
-| Optional | 06 (executive reporting) |
-| Cross-references | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) for event pipelines; [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) for executive reporting; [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) for frontend events |
+| Optional | 06 (executive reporting); 07 (Gen2 vs Gen3 adoption paths — mandatory first read for Managed or classic-operated tenants) |
+| Cross-references | [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) for event pipelines; [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) for executive reporting; [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) for frontend events; [M2S](../M2S%20-%20Managed%20to%20SaaS%20Migration/) for the Managed → SaaS migration notebook 07 points at |
 
 ### [SYNTH — Synthetic Monitoring](../SYNTH%20-%20Synthetic%20Monitoring/)
 
