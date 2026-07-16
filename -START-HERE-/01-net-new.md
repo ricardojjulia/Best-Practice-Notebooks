@@ -1,7 +1,7 @@
 # Doorway 1 — Net New
 
 > **Purpose:** Reading order for customers starting with a net-new Dynatrace tenant — whether greenfield (no prior observability platform) or migrating from another tool. Routes through Foundation, then migration-specific phases (if applicable), then Domain Enablement and Operationalize.
-> **Last Updated:** 05/07/2026
+> **Last Updated:** 07/15/2026
 
 ![Net New Sub-Paths](images/01-net-new-subpaths.svg)
 
@@ -53,7 +53,7 @@ Time: 1–3 days, depending on procurement and SSO complexity.
 | New Relic, planning to fully replace | [Sub-Path B — From New Relic](#sub-path-b--from-new-relic) | 4–9 months |
 | Splunk (logs and dashboards primarily) | [Sub-Path C — From Splunk](#sub-path-c--from-splunk) | 4–9 months |
 | Sumo Logic (logs and dashboards primarily) | [Sub-Path D — From Sumo Logic](#sub-path-d--from-sumo-logic) | 4–9 months |
-| Multiple tools (e.g., NR for APM + Splunk for logs) | [Sub-Path E — Multi-Tool / Hybrid](#sub-path-e--multi-tool--hybrid) | 6–12 months |
+| Multiple tools (e.g., NR for APM + Splunk for logs) OR security observability mandate | [Sub-Path E – Multi-Tool / Hybrid](#sub-path-e--multi-tool--hybrid) | 6–12 months |
 
 ---
 
@@ -64,7 +64,8 @@ You have no prior observability tool. You are building the practice from zero al
 | Phase | Reading | Time |
 |---|---|---|
 | 1. Foundation | [Foundation Module](04-foundation.md) → [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) + [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) + [IAM](../IAM%20-%20IAM%20Administration/) in parallel | 2–3 weeks |
-| 2. First domain | Pick one from [Domain Enablement](05-domain-enablement.md). For most customers this is [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (if Kubernetes is in scope) or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (if AWS, Azure, or GCP). | 1–2 weeks |
+| 2. Security posture | [APPSEC](../APPSEC%20—%20Application%20Security/) — notebooks 01–02 (fundamentals, platform overview) | 1 week |
+| 3. First domain | Pick one from [Domain Enablement](05-domain-enablement.md). For most customers this is [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (if Kubernetes is in scope) or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (if AWS, Azure, or GCP). | 1–2 weeks |
 | 3. First app coverage | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for distributed tracing on a critical app; add [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) if web-facing | 1–2 weeks |
 | 4. Light operationalize | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) notebooks 01..03 (fundamentals, hierarchy, executive); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) notebooks 01..03 (fundamentals, triggers, notification basics) | 1–2 weeks |
 | 5. Iterate | Add domains as adoption grows. Reference [Domain Enablement Module](05-domain-enablement.md). | Ongoing |
@@ -136,19 +137,21 @@ You are replacing or significantly reducing Sumo Logic usage. Primarily a log + 
 
 ## Sub-Path E — Multi-Tool / Hybrid
 
-You have multiple source tools (e.g., New Relic for APM, Splunk or Sumo Logic for logs, native cloud for infrastructure metrics). The migration runs in waves rather than sequentially.
+You have multiple source tools (e.g., New Relic for APM, Splunk or Sumo Logic for logs, native cloud for infrastructure metrics), or you have a security observability mandate alongside APM/infrastructure. The migration runs in waves rather than sequentially.
 
 Recommended sequencing:
 
 | Wave | Focus | Reading |
 |---|---|---|
 | 1 | Foundation | [Foundation Module](04-foundation.md) — first; everything else depends on it |
-| 2 | APM (highest pain to migrate, shortest dual-run window) | [Sub-Path B](#sub-path-b--from-new-relic) phases 4–7 if from New Relic; otherwise [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) + [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) for native instrumentation |
-| 3 | Infrastructure | [K8S](../K8S%20-%20Kubernetes%20Monitoring/) and/or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/), depending on environment |
-| 4 | Logs | [Sub-Path C](#sub-path-c--from-splunk) or [Sub-Path D](#sub-path-d--from-sumo-logic) |
-| 5 | Frontend | [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/), [MOBL](../MOBL%20-%20Mobile%20Monitoring/) |
-| 6 | Synthetic, business events, databases | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [DBMON](../DBMON%20-%20Database%20Monitoring/) |
-| 7 | Operationalize | [Operationalize Module](06-operationalize.md) |
+| 2 | Security observability | [APPSEC](../APPSEC%20—%20Application%20Security/) — full series; run in parallel with Wave 3 if security is a mandate |
+| 3 | APM (highest pain to migrate, shortest dual-run window) | [Sub-Path B](#sub-path-b--from-new-relic) phases 4–7 if from New Relic; otherwise [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) + [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) for native instrumentation |
+| 4 | Infrastructure | [K8S](../K8S%20-%20Kubernetes%20Monitoring/) and/or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/), depending on environment |
+| 5 | Logs | [Sub-Path C](#sub-path-c--from-splunk) or [Sub-Path D](#sub-path-d--from-sumo-logic) |
+| 6 | Frontend | [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/), [MOBL](../MOBL%20-%20Mobile%20Monitoring/) |
+| 7 | Synthetic, business events, databases | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [DBMON](../DBMON%20-%20Database%20Monitoring/) |
+| 8 | Operationalize | [Operationalize Module](06-operationalize.md) → [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/), [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/), [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) |
+| 9 | Cost & maturity | [FINOPS](../FINOPS%20-%20Cost%20Management%20&%20FinOps/), [SLO](../SLO%20-%20Service%20Level%20Objectives/), [Maturity Module](07-maturity.md) |
 
 Anti-pattern: trying to migrate all source tools simultaneously. Each wave should reach a working state before the next begins. Two simultaneous tool migrations halve your team's focus and double the risk of either failing.
 

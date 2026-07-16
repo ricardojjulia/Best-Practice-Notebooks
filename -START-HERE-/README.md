@@ -1,7 +1,7 @@
 # Best Practice Topics — Where to Start
 
 > **Purpose:** A focused table of contents for the Dynatrace Best Practice Topics. Use the entry-point selector below to find your starting path, then follow the sequenced reading order across topic series.
-> **Last Updated:** 07/09/2026
+> **Last Updated:** 07/15/2026
 
 ![Three Doorways into the Playbook](images/00-three-doorways.svg)
 
@@ -41,7 +41,7 @@ You already have a Dynatrace tenant and are adding scope, pulling data in from a
 
 Sub-paths covered:
 
-- Adding a new domain (Kubernetes, Mobile, RUM, Database, Synthetic, Business Events, Cloud)
+- Adding a new domain (Kubernetes, Mobile, RUM, Database, Synthetic, Business Events, Cloud, Security)
 - Consolidating logs from Splunk or Sumo Logic into an existing tenant
 - Consolidating APM from New Relic into an existing tenant
 - Maturing operations (dashboards, alerting, automation, AI)
@@ -63,7 +63,7 @@ After picking a doorway, the recommended path will route you through one or more
 
 - [Foundation Module](04-foundation.md) — ONBRD + ORGNZ + IAM reading order, mandatory vs optional flags
 - [Domain Enablement Module](05-domain-enablement.md) — Pick-list of domains with prerequisites and recommended sequencing
-- [Operationalize Module](06-operationalize.md) — DASH → WFLOW → AUTOM → AIOPS sequence, with reasoning for that order
+- [Operationalize Module](06-operationalize.md) — ALERT → DASH → WFLOW → SLO → AUTOM → AIOPS → FINOPS sequence, with reasoning for that order
 - [Maturity Module](07-maturity.md) — ADOPT framing for continuous improvement
 
 ---
@@ -110,6 +110,24 @@ Time estimates within each doorway file refine these numbers by sub-track.
 - For DQL syntax and query patterns, the [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) and [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) series each have query references. Official Dynatrace documentation is authoritative.
 - For unresolved questions during a migration, see the appropriate migration series: [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/), [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/), [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/), [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/), [M2S](../M2S%20-%20Managed%20to%20SaaS%20Migration/), [S2S](../S2S%20-%20SaaS%20to%20SaaS%20Migration/).
 - For platform maturity and adoption questions, see [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/).
+
+---
+
+---
+
+## Maintenance Mandate
+
+**When new topic series are added to `topics/`, the -START-HERE- playbook MUST be updated in the same PR/release.**
+
+This includes:
+- Adding the new series to `99-index.md` with notebook count and focus area
+- Placing the series in the appropriate module/category
+- Adding cross-references in `08-overlap-map.md` if overlaps exist with other series
+- Updating last Updated dates across all affected files to the current date
+- Updating series count references (e.g., "28 topic series" → "32 topic series") in all files if the count changes
+- Verifying doorway-specific impact (if the new series affects any reading path in 01/02/03)
+
+The playbook is the primary navigation aid for all users; stale series counts or missing categories create confusion and degraded user experience.
 
 ---
 

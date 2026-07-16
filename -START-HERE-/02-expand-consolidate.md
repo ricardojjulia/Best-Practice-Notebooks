@@ -1,7 +1,7 @@
 # Doorway 2 — Expanding or Consolidating
 
 > **Purpose:** Reading order for existing Dynatrace customers adding scope or pulling data from another tool. Skips most Foundation reading; focuses on the specific expansion or consolidation pattern.
-> **Last Updated:** 05/07/2026
+> **Last Updated:** 07/15/2026
 
 ![Expanding or Consolidating Sub-Paths](images/02-expand-subpaths.svg)
 
@@ -34,10 +34,10 @@ If you are net-new to Dynatrace (no tenant yet), see [Doorway 1 — Net New](01-
 
 | If you are doing… | Go to… |
 |---|---|
-| Adding a new observability domain (K8s, Mobile, RUM, DBMon, etc.) | [Sub-Path A — Adding a New Domain](#sub-path-a--adding-a-new-domain) |
+| Adding a new observability domain (K8s, Mobile, RUM, DBMon, Security, etc.) | [Sub-Path A — Adding a New Domain](#sub-path-a--adding-a-new-domain) |
 | Pulling logs in from Splunk or Sumo Logic without replacing them everywhere | [Sub-Path B — Log Consolidation](#sub-path-b--log-consolidation-from-splunk-or-sumo-logic) |
 | Adding APM data from New Relic for some applications without full replacement | [Sub-Path C — APM Consolidation](#sub-path-c--apm-consolidation-from-new-relic) |
-| Maturing operations (dashboards, alerting, automation, AI) | [Sub-Path D — Maturing Operations](#sub-path-d--maturing-operations) |
+| Maturing operations (dashboards, alerting, SLOs, automation, AI) | [Sub-Path D — Maturing Operations](#sub-path-d--maturing-operations) |
 
 Multiple sub-paths can run in parallel.
 
@@ -49,7 +49,7 @@ Multiple sub-paths can run in parallel.
 |---|---|
 | 1. Pick the domain | See [Domain Enablement Module](05-domain-enablement.md) for the recommended first-read in each domain |
 | 2. Confirm prerequisites | Domain Enablement lists what Foundation pieces each domain needs (most assume basic [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) + [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) already in place) |
-| 3. Read the domain series | Direct entry into the relevant series — [K8S](../K8S%20-%20Kubernetes%20Monitoring/), [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/), [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/), [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/), [MOBL](../MOBL%20-%20Mobile%20Monitoring/), [DBMON](../DBMON%20-%20Database%20Monitoring/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) |
+| 3. Read the domain series | Direct entry into the relevant series — [K8S](../K8S%20-%20Kubernetes%20Monitoring/), [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/), [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/), [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/), [MOBL](../MOBL%20-%20Mobile%20Monitoring/), [DBMON](../DBMON%20-%20Database%20Monitoring/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/), [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/), [APPSEC](../APPSEC%20—%20Application%20Security/) |
 | 4. Foundation refresh if needed | See [Foundation Refresh Checkpoints](#foundation-refresh-checkpoints) below — Gen3 changes to ORGNZ and IAM may apply if your tenant predates them |
 | 5. Operationalize the new domain | Add dashboards ([DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/)) and alerts ([WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/)) for the new domain |
 
@@ -99,8 +99,9 @@ Your tenant is operational; you are improving the depth and quality of dashboard
 | Step | Reading |
 |---|---|
 | 1. Dashboard maturity | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — full series; especially notebook 02 (hierarchy) for organization across teams |
-| 2. Alert routing maturity | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — full series; especially notebooks 04 (notification routing), 05 (incident management), 09 (governance) |
-| 3. Configuration automation | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 01–04 are the foundation (Settings API, Monaco, Terraform); 05–08 build on that (workflows-as-code, SDKs, CI/CD, migration automation) |
+| 2. Alert routing maturity | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — full series for end-to-end alerting architecture; then [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — full series; especially notebooks 04 (notification routing), 05 (incident management), 09 (governance) |
+| 3. Reliability targets (optional) | [SLO](../SLO%20-%20Service%20Level%20Objectives/) — full series if building formal SLOs |
+| 4. Configuration automation | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 01–04 are the foundation (Settings API, Monaco, Terraform); 05–08 build on that (workflows-as-code, SDKs, CI/CD, migration automation) |
 | 4. Davis intelligence | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — full series; especially notebook 02 (anomaly detection), 03 (Davis problems and root cause), 06 (integrations and agentic workflows) |
 | 5. Continuous improvement | [Maturity Module](07-maturity.md) → [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — ongoing |
 

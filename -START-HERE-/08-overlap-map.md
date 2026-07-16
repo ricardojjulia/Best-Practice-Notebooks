@@ -1,7 +1,7 @@
 # Overlap Map
 
 > **Purpose:** Catalog of where multiple series cover the same ground, with recommendations for which is canonical and the suggested reading order. Use this when you find yourself reading similar material across two or more series and want to dedupe.
-> **Last Updated:** 05/07/2026
+> **Last Updated:** 07/15/2026
 
 ---
 
@@ -77,8 +77,12 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| Davis problems and root cause | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 03 | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 (alert routing on problems) | AIOPS-03 first; WFLOW-04 for routing |
-| Anomaly detection | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 02 | [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — notebook 02 (anomaly on synthetics); [DBMON](../DBMON%20-%20Database%20Monitoring/) — notebook 06 (anomaly on DB metrics) | AIOPS-02 for the model; domain series for domain-specific applications |
+| Alerting architecture | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebooks 01 (architecture), 02 (detection choice), 03 (routing) | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 02 (detection methods); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebooks 04 (routing), 09 (governance) | ALERT-01..03 first for the framework; domain series for implementation |
+| Detection mechanisms | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 02 (4-mechanism decision framework) | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 02 (anomaly detection); [SLO](../SLO%20-%20Service%20Level%20Objectives/) — notebook 04 (burn-rate alerting) | ALERT-02 for decision; AIOPS-02 for anomaly depth; SLO-04 for reliability targets |
+| Davis problems and root cause | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 03 | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 01 (framed in end-to-end architecture); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 (alert routing on problems) | ALERT-01 for architecture context; AIOPS-03 for depth; WFLOW-04 for routing |
+| Anomaly detection | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebook 02 | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 02 (decision framework); [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/) — notebook 02 (anomaly on synthetics); [DBMON](../DBMON%20-%20Database%20Monitoring/) — notebook 06 (anomaly on DB metrics) | ALERT-02 for the decision framework; AIOPS-02 for the model; domain series for domain-specific applications |
+| Service level objectives (SLOs) | [SLO](../SLO%20-%20Service%20Level%20Objectives/) — full series | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 01 (SLO-driven alerting in end-to-end architecture); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 (burn-rate alert routing) | SLO-01..02 first for fundamentals; ALERT for architecture context; WFLOW-04 for routing |
+| Burn-rate alerting | [SLO](../SLO%20-%20Service%20Level%20Objectives/) — notebook 04 | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 02 (part of detection mechanisms); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebooks 02 (triggers), 04 (routing) | SLO-04 for the concept; ALERT-02 for context; WFLOW for implementation |
 | Workflow as code | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — full series for concepts | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebook 05 (workflows-as-code) | WFLOW for design; AUTOM-05 for IaC delivery |
 | Dashboard automation | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) — notebook 07 (sharing and reporting) | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebooks 02–04 (Settings API, Monaco, Terraform with dashboard examples) | DASH first; AUTOM-02..04 once dashboards stabilize |
 | Settings API | [AUTOM](../AUTOM%20-%20Dynatrace%20Automation/) — notebook 02 | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 12 (API provisioning) | AUTOM-02 for general; IAM-12 for IAM-specific |
@@ -103,10 +107,13 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 
 | Topic | Canonical | Also covers | Recommended order |
 |---|---|---|---|
-| Cost optimization | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — notebook 05 (optimization roadmap) for the framework | [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 08 (span cost); [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebooks 02, 03 (bucket strategy affects cost); [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 04 (cardinality) | ADOPT-05 for framework; signal-specific series for tactics |
+| Alerting strategy | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — full series | [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebooks 04 (routing emphasis); [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — notebooks 02–03 (detection and root-cause focus) | ALERT for end-to-end; domain series for their pillar |
+| Cost optimization and FinOps | [FINOPS](../FINOPS%20-%20Cost%20Management%20&%20FinOps/) — full series | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — notebook 05 (optimization roadmap); [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebooks 02, 03 (bucket strategy); [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) — notebook 08 (span cost); [OPIPE](../OPIPE%20-%20OpenPipeline%20Beyond%20Logs/) — notebook 04 (cardinality) | FINOPS for dedicated depth; ADOPT-05 for framework context; signal-specific series for tactics |
+| Service reliability and SLOs | [SLO](../SLO%20-%20Service%20Level%20Objectives/) — full series | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 01 (SLO-driven alerting); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebooks 02, 04 (burn-rate routing) | SLO for concepts; ALERT/WFLOW for operationalization |
+| Application security posture | [APPSEC](../APPSEC%20—%20Application%20Security/) — full series | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 05 (boundary design); [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 09 (enterprise patterns) | APPSEC for security observability; IAM for access control; ORGNZ for multi-tenant context |
+| Davis intelligence and AI | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) — full series | [ALERT](../ALERT%20-%20Alerting%20Strategy%20and%20Design/) — notebook 01 (Davis problems in architecture); [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) — notebook 04 (problem routing) | AIOPS for depth; ALERT for alerting context; WFLOW for routing |
 | Tagging governance | [FAQ](../FAQ%20-%20Frequently%20Asked%20Questions/) — entry 02 (tagging sources, standards, strategy) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 01 (introduction); [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) — notebook 06 | FAQ-02 first for the framework; ORGNZ-01 for organizational concepts |
-| Multi-tenant patterns | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 08 (multi-environment) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 09 (enterprise patterns) | IAM-08 for access; ORGNZ-09 for organizational |
-| FinOps and cost allocation | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) — notebook 05 (optimization roadmap) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 09 (enterprise patterns) | ADOPT-05 first; ORGNZ-09 for tagging that supports cost allocation |
+| Multi-tenant patterns | [IAM](../IAM%20-%20IAM%20Administration/) — notebook 08 (multi-environment) | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) — notebook 09 (enterprise patterns); [APPSEC](../APPSEC%20—%20Application%20Security/) — notebook 09 (multi-tenant governance) | IAM-08 for access; ORGNZ-09 for organizational; APPSEC-09 for security governance |
 | Migration validation | [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) — notebook 08; [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) — notebook 08 (validate) | [SL2DT](../SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/) — notebook 09 (cutover validation); [S2D](../S2D%20-%20Splunk%20to%20Dynatrace%20Migration/) — implicit in notebook 09 | Tool-specific validation per migration series |
 
 ---
@@ -121,6 +128,19 @@ This is reference material, not a curriculum. Use it as a lookup when reading ra
 | Reading [NRLC](../NRLC%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Deep%20Dives/) and [NR2DT](../NR2DT%20-%20New%20Relic%20to%20Dynatrace%20Migration%20Steps/) sequentially as if they're a single series | They're paired references — NRLC for component depth, NR2DT for procedural sequencing | Read in parallel: open NR2DT for the step you're on, dive into NRLC for the components touched in that step |
 | Migrating multiple source tools simultaneously | Halves your team's focus, doubles the risk of either failing | Migrate in waves; one source tool at a time |
 | Using [ONBRD](../ONBRD%20-%20Dynatrace%20Onboarding/) as the definitive source for IAM, tagging, or buckets | ONBRD's coverage is intentionally light to keep the onboarding scope narrow | Use ONBRD for orientation; dive into IAM, ORGNZ, or FAQ for depth |
+
+---
+
+## Maintenance Note
+
+**This overlap map MUST be updated whenever new series are added to `topics/` or existing series are significantly expanded:**
+- Add new series to the relevant overlap tables (Operationalize, Domain, Cross-Category, etc.)
+- When a new series introduces overlaps with existing series, add rows to the appropriate table
+- Remove or update anti-patterns if they become outdated due to new series
+- Update series count references if the total count changes (currently 32 topic series as of July 15, 2026)
+- Update Last Updated date to current date
+
+The overlap map is a deduplication guide; stale maps create confusion when readers encounter the same topic in unexpected places. Keep it current alongside new series releases.
 
 ---
 

@@ -1,7 +1,7 @@
 # Doorway 3 — Deployment Migration
 
 > **Purpose:** Reading order for existing Dynatrace customers changing deployment model — Managed → SaaS or SaaS → SaaS. Focused on migration mechanics; selective Foundation refresh where Gen3 differs from prior generations.
-> **Last Updated:** 05/07/2026
+> **Last Updated:** 07/15/2026
 
 ![Deployment Migration Sub-Paths](images/03-deployment-subpaths.svg)
 

@@ -422,14 +422,16 @@ Client-side monitoring and observability for web applications with session repla
 ### [WFLOW - Workflows and Alert Notifications](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/README.md)
 Automating workflows and configuring alert notifications in Dynatrace.
 - [WFLOW-01: Fundamentals](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-01-fundamentals.md) — Core workflow concepts
-- [WFLOW-02: Triggers](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-02-triggers.md) — Workflow trigger configuration
+- [WFLOW-02: Triggers & Event Types](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-02-triggers.md) — Workflow trigger configuration and event-driven patterns
 - [WFLOW-03: Notification Basics](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-03-notification-basics.md) — Setting up basic notifications
 - [WFLOW-04: Notification Routing](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-04-notification-routing.md) — Advanced notification routing
 - [WFLOW-05: Incident Management](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-05-incident-management.md) — Integrating with incident management
 - [WFLOW-06: Custom Templates](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-06-custom-templates.md) — Creating custom notification templates
 - [WFLOW-07: Remediation](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-07-remediation.md) — Automated remediation workflows
 - [WFLOW-08: JavaScript & HTTP](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-08-javascript-http.md) — JavaScript actions and HTTP requests
-- [WFLOW-09: Governance](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-09-governance.md) — Workflow governance and best practices
+- [WFLOW-09: Security, Governance & Monitoring](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-09-governance.md) — Workflow security, secrets management, RBAC, observability, alerting on workflows, and operational best practices
+- [WFLOW-94: [LAB] EdgeConnect Static Egress for Snowflake](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-94-%5BLAB%5D-edgeconnect-static-egress-snowflake.md) — Hands-on build: configure a static egress IP via EdgeConnect for Snowflake connector traffic; step-by-step network policy and Dynatrace Workflow integration
+- [WFLOW-95: [LAB] CMDB-Driven Host Tag Enrichment](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-95-%5BLAB%5D-cmdb-host-tag-enrichment.md) — Hands-on build: enrich hosts from CMDB lookup tables and apply bulk tags via the Remote Configuration Management API (capstone for WFLOW-08)
 - [WFLOW-99: Best Practice Summary](WFLOW%20-%20Workflows%20and%20Alert%20Notifications/markdown/-%5BWFLOW%5D-99-best-practice-summary.md) — Consolidated best practices from the WFLOW series
 
 ## How to Use
