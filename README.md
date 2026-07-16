@@ -12,6 +12,11 @@ Dynatrace best-practice notebooks with matching PDF and Markdown exports. These 
 > **👉 New here?** Open [`-START-HERE-/`](-START-HERE-/README.md) — a navigational playbook that picks an entry path based on your situation (net-new, expand/consolidate, deployment migration), then sequences the relevant topic series in order.
 > Already know what you need? Skip the playbook and **[browse all 32 topic series ↓](#all-series-az)**.
 
+> **🤖 Using this repo with an AI agent?** It's agent-ready: point your agent
+> (Claude Code, Codex, Cursor, Copilot…) at the repo root and it will find
+> [`AGENTS.md`](AGENTS.md), which routes it to the right series and notebook.
+> Most tools load it automatically.
+
 ## Layout
 
 Each topic follows the same structure:
@@ -19,6 +24,9 @@ Each topic follows the same structure:
 - pdfs/ — Printable/exported versions of the notebooks
 - markdown/ — Markdown exports of the same content
 - README.md — Topic overview and usage guide
+- AGENTS.md — Routing table for AI agents (present per series as it rolls out)
+
+A few series use uppercase NOTEBOOKS/ and PDFs/ directory names; markdown/ is lowercase everywhere.
 
 ## Categories
 
