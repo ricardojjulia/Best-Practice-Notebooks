@@ -21,7 +21,9 @@ Comprehensive guide to identity and access management in Dynatrace.
 9. [Troubleshooting](markdown/-[IAM]-09-troubleshooting.md) — Diagnosing and resolving IAM issues
 10. [Templated Policy Assignments](markdown/-[IAM]-10-templated-policy-assignments.md) — Policy templates and bulk assignments
 11. [[WORKSHOP] Policy Persona Simulation](markdown/-[IAM]-11-[WORKSHOP]-policy-persona.md) — Interactive workshop: simulate policy behavior as different personas
-12. [API Provisioning & Validation](markdown/-[IAM]-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API
+12. [API Provisioning & Validation](markdown/-[IAM]-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API (curl flavor)
+13. [[LAB] Terraform IAM Provisioning](markdown/-[IAM]-13-[LAB]-terraform-iam-provisioning.md) — Hands-on lab: groups, policies, boundaries, bindings as code with the Terraform-IAM-MZ-Boundries modules (live-verified, with expected output)
+14. [[LAB] Python IAM Provisioning](markdown/-[IAM]-14-[LAB]-python-iam-provisioning.md) — Hands-on lab: one-command team onboarding with the Python-IAM-Group-Policy-MZ-Boundry tool (live-verified, with expected output)
 99. [Best Practice Summary](markdown/-[IAM]-99-best-practice-summary.md) — Consolidated best practices from the IAM series
 
 ## Usage

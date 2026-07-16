@@ -114,20 +114,22 @@ By the end of this notebook, you will:
 // Grant read access to all logs
 ALLOW storage:logs:read
 
-// Grant read/write to buckets
+// Grant read access to bucket metadata
+// (storage:buckets:write does not exist — buckets are managed via the
+//  Grail bucket-management API, not an IAM storage permission)
 ALLOW storage:buckets:read
-ALLOW storage:buckets:write
 
-// Grant all actions on a resource
-ALLOW storage:logs:*
+// Grant read AND write on logs — enumerate both actions.
+// Wildcards (storage:logs:*) are rejected by the API (live-verified 07/2026).
+ALLOW storage:logs:read, storage:logs:write
 ```
 
 ### Common Services and Resources
 
 | Service | Resources | Common Actions |
 |---------|-----------|----------------|
-| `storage` | `logs`, `spans`, `events`, `metrics`, `buckets` | `read`, `write`, `delete` |
-| `settings` | `objects`, `schemas` | `read`, `write`, `delete` |
+| `storage` | `logs`, `spans`, `events`, `metrics`, `bizevents`, `entities`, `system`, `buckets`, `smartscape` | `read` on all; `write` ONLY on `logs`, `metrics`, `events` (never condition-scoped) |
+| `settings` | `objects`, `schemas` | `read`, `write` (objects only) |
 | `app` | `apps`, `functions` | `run`, `install` |
 | `automation` | `workflows` | `read`, `write`, `run` |
 | `document` | `documents` | `read`, `write`, `delete`, `share` |
@@ -635,10 +637,14 @@ ALLOW storage:spans:read
 // Policy Name: Development Admin
 // Description: Full access to development environment only
 
-ALLOW storage:*:* 
+// Reads are condition-scoped; storage writes cannot take WHERE conditions
+// (live-verified) — grant them unscoped only where justified.
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read,
+      storage:entities:read, storage:system:read, storage:buckets:read
   WHERE storage:dt.security_context startsWith "dev-"
 
-ALLOW settings:objects:* 
+ALLOW settings:objects:read, settings:objects:write
   WHERE settings:scope startsWith "environment:dev"
 ```
 
