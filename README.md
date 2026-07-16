@@ -100,6 +100,10 @@ Comprehensive guide to automating Dynatrace configuration and operations.
 - [AUTOM-07: CI/CD Integration](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-07-cicd-integration.md) — Integrating Dynatrace into CI/CD pipelines
 - [AUTOM-08: Migration Automation](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-08-migration-automation.md) — Automating configuration migrations
 - [AUTOM-09: Terraform GitOps Setup Recipe](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-09-terraform-gitops-setup-recipe.md) — Repo layout, state backends, lifecycle protections, team onboarding
+- [AUTOM-95: [LAB] Terraform IAM Management](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-95-%5BLAB%5D-terraform-iam.md) — Hands-on lab: provision groups, policies, and bindings with the Terraform provider
+- [AUTOM-96: [LAB] CI/CD with GitHub Actions](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-96-%5BLAB%5D-cicd-github-actions.md) — Hands-on lab: GitHub Actions workflows for Dynatrace Terraform deployments
+- [AUTOM-97: [LAB] Monaco](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-97-%5BLAB%5D-monaco.md) — Hands-on lab: configuration as code with Monaco
+- [AUTOM-98: [LAB] Terraform](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-98-%5BLAB%5D-terraform.md) — Hands-on lab: Terraform provider basics for Dynatrace
 - [AUTOM-99: Best Practice Summary](AUTOM%20-%20Dynatrace%20Automation/markdown/-%5BAUTOM%5D-99-best-practice-summary.md) — Consolidated best practices from the AUTOM series
 
 ### [BIZEV - Business Events & Funnel Analysis](BIZEV%20-%20Business%20Events%20%26%20Funnel%20Analysis/README.md)
@@ -202,6 +206,7 @@ Best practices for monitoring Kubernetes with Dynatrace.
 - [K8S-11: Multi-Tool Coexistence](K8S%20-%20Kubernetes%20Monitoring/markdown/-%5BK8S%5D-11-multi-tool-coexistence.md) — Running Dynatrace alongside other monitoring tools
 - [K8S-12: Specialized Monitoring](K8S%20-%20Kubernetes%20Monitoring/markdown/-%5BK8S%5D-12-specialized-monitoring.md) — NGINX Ingress, CSI Driver, and resource tuning
 - [K8S-13: Kafka Monitoring with Kpow](K8S%20-%20Kubernetes%20Monitoring/markdown/-%5BK8S%5D-13-kafka-monitoring-with-kpow.md) — Kafka observability using Kpow Prometheus metrics
+- [K8S-14: [LAB] Kubernetes Deployment Guide](K8S%20-%20Kubernetes%20Monitoring/markdown/-%5BK8S%5D-14-%5BLAB%5D-deployment-guide.md) — Hands-on lab: end-to-end Dynatrace Kubernetes deployment walkthrough
 - [K8S-99: Best Practice Summary](K8S%20-%20Kubernetes%20Monitoring/markdown/-%5BK8S%5D-99-best-practice-summary.md) — Consolidated best practices from the K8S series
 
 ### [M2S - Managed to SaaS Migration](M2S%20-%20Managed%20to%20SaaS%20Migration/README.md)
