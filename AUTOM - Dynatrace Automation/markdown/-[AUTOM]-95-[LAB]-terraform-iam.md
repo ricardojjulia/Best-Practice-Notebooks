@@ -1,10 +1,12 @@
 # AUTOM-95 LAB: Terraform IAM Management
 
-> **Series:** AUTOM — Dynatrace Automation | **Reference:** 95 — Terraform IAM Management LAB | **Created:** May 2026 | **Last Updated:** 05/26/2026
+> **Series:** AUTOM — Dynatrace Automation | **Reference:** 95 — Terraform IAM Management LAB | **Created:** May 2026 | **Last Updated:** 07/16/2026
 
 ## Overview
 
 This hands-on LAB walks the full lifecycle of managing Dynatrace **account-level IAM** with the `dynatrace-oss/dynatrace` Terraform provider: groups, policies, permission boundaries, and policy bindings. It assumes you have read **AUTOM-04** (Terraform Provider) and want to take IAM specifically to production.
+
+> **Related lab, different question:** this LAB covers the *provider lifecycle* — scaffold, resource types, DSL discovery, bulk export/import, CI/CD. For a worked, live-verified walkthrough that *provisions the recommended persona + team access model* (one shared `${bindParam:team}` policy template, per-team `dt.security_context` boundaries, environment-scoped bindings) with expected output from real runs, see **IAM-95** (Terraform flavor) and **IAM-96** (Python flavor) in the IAM series.
 
 IAM is a separate concern from the tenant-level configuration covered in the main Terraform LAB (**AUTOM-98**):
 

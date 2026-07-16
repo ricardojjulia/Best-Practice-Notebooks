@@ -1,6 +1,6 @@
 # IAM-04: Policy Authoring and Management
 
-> **Series:** IAM — IAM Administration | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 05/26/2026
+> **Series:** IAM — IAM Administration | **Notebook:** 4 of 12 | **Created:** January 2026 | **Last Updated:** 07/16/2026
 
 ## Mastering Dynatrace Policy Syntax
 Policies are the heart of Dynatrace Gen3 IAM. They define what actions users can perform. This notebook provides a comprehensive guide to policy authoring, from basic syntax to advanced patterns.
@@ -109,15 +109,19 @@ ALLOW <service>:<resource>:<action>
 | `ALLOW settings:objects:write` | Modify settings |
 | `ALLOW document:documents:read` | Read dashboards/notebooks |
 
-### Wildcards
+### Wildcards Are NOT Supported
 
-Use `*` to match multiple values:
+> **Live-verified (Account Management API, 07/2026):** wildcards in permissions are **rejected** with `Invalid policy statement. ALLOW or DENY must be followed by a permission in the form service-name:resource:action`. This applies to every position: `storage:*:read`, `storage:logs:*`, and `*:*:read` all fail.
 
-| Statement | Matches |
+Enumerate permissions explicitly — comma-separated lists keep statements compact:
+
+| Instead of (invalid) | Write (valid) |
 |-----------|----------|
-| `ALLOW storage:*:read` | Read any storage type (logs, spans, metrics) |
-| `ALLOW storage:logs:*` | Any action on logs (read, write) |
-| `ALLOW *:*:read` | Read access to everything |
+| `ALLOW storage:*:read` | `ALLOW storage:logs:read, storage:spans:read, storage:metrics:read, storage:events:read, storage:bizevents:read, storage:entities:read, storage:system:read, storage:buckets:read;` |
+| `ALLOW storage:logs:*` | `ALLOW storage:logs:read, storage:logs:write;` |
+| `ALLOW settings:objects:*` | `ALLOW settings:objects:read, settings:objects:write;` |
+
+> **Also live-verified — storage WRITE permissions accept no WHERE conditions.** `ALLOW storage:logs:write WHERE storage:bucket-name = "x"` is rejected (`Invalid condition name for permission storage:logs:write`). Storage writes are all-or-nothing: only `storage:logs:write`, `storage:metrics:write`, `storage:events:write` exist (`storage:spans:write` and `storage:bizevents:write` do **not**), and none can be scoped by `WHERE`. Scope *reads* with conditions; grant *writes* unscoped and only to trusted ingest paths — or control ingest via OpenPipeline instead. (Settings writes are different: `settings:objects:write` **does** accept `settings:schemaId` and `settings:dt.security_context` conditions.)
 
 ### Multiple Statements
 
@@ -405,11 +409,13 @@ ALLOW storage:smartscape:read WHERE storage:dt.security_context MATCH('comp:db*'
 ### Pattern 1: Read-Only Access
 
 ```
-// Read all data, no write access
-ALLOW storage:*:read;
+// Read all data, no write access (wildcards are not supported — enumerate)
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read, storage:entities:read,
+      storage:system:read, storage:buckets:read;
 ALLOW document:documents:read;
-ALLOW state:*:read;
-ALLOW settings:objects:read;
+ALLOW state:app-states:read, state:user-app-states:read;
+ALLOW settings:objects:read, settings:schemas:read;
 ```
 
 ### Pattern 2: Team-Scoped Access (Security Context)
@@ -417,18 +423,24 @@ ALLOW settings:objects:read;
 > **Recommended (parameterized):** One policy bound per team via binding parameters. Boundary field standardized on `dt.security_context` (Gen3 universal scoping field). See **IAM REFERENCE.md § Policy Parameterization and Boundary Standardization**.
 
 ```
-// Parameterized — one policy template, bound per team via binding parameters
-ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:team}";
-ALLOW storage:*:write WHERE storage:dt.security_context = "${bindParam:team}";
-ALLOW settings:objects:* WHERE settings:dt.security_context = "${bindParam:team}";
+// Parameterized — one policy template, bound per team via binding parameters.
+// Reads are condition-scoped; storage writes cannot take WHERE conditions
+// (live-verified) — grant them separately and unscoped only where justified.
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "${bindParam:team}";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:dt.security_context = "${bindParam:team}";
 ```
 
 **Resolved when bound with `{"parameters": {"team": "checkout-team"}}`:**
 
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context = "checkout-team";
-ALLOW storage:*:write WHERE storage:dt.security_context = "checkout-team";
-ALLOW settings:objects:* WHERE settings:dt.security_context = "checkout-team";
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "checkout-team";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:dt.security_context = "checkout-team";
 ```
 
 Bind the same template to each team with a different `team` value rather than duplicating the policy. See **IAM-10** for binding mechanics.
@@ -442,26 +454,22 @@ Bind the same template to each team with a different `team` value rather than du
 ```
 // Parameterized — per-team data permissions (one policy template, bound per team)
 ALLOW storage:logs:read    WHERE storage:bucket-name = "${bindParam:log-bucket}";
-ALLOW storage:logs:write   WHERE storage:bucket-name = "${bindParam:log-bucket}";
 ALLOW storage:spans:read   WHERE storage:bucket-name = "${bindParam:span-bucket}";
-ALLOW storage:spans:write  WHERE storage:bucket-name = "${bindParam:span-bucket}";
 ALLOW storage:metrics:read WHERE storage:bucket-name = "${bindParam:metric-bucket}";
-ALLOW storage:metrics:write WHERE storage:bucket-name = "${bindParam:metric-bucket}";
 
 // Shared buckets — literal (Class C: shared is a singleton, not per-team)
 ALLOW storage:logs:read  WHERE storage:bucket-name = "shared_logs";
 ALLOW storage:spans:read WHERE storage:bucket-name = "shared_spans";
 ```
 
+> **Writes cannot be bucket-scoped (live-verified).** `storage:logs:write WHERE storage:bucket-name = ...` is rejected by the API, and `storage:spans:write` does not exist at all — spans are ingest-only. If a team needs log/metric/event write access, grant it unscoped in a separate, deliberately-assigned policy, and control WHERE data lands via OpenPipeline routing — not via IAM conditions.
+
 **Resolved when bound with `{"parameters": {"log-bucket": "checkout_logs", "span-bucket": "checkout_spans", "metric-bucket": "checkout_metrics"}}`:**
 
 ```
 ALLOW storage:logs:read    WHERE storage:bucket-name = "checkout_logs";
-ALLOW storage:logs:write   WHERE storage:bucket-name = "checkout_logs";
 ALLOW storage:spans:read   WHERE storage:bucket-name = "checkout_spans";
-ALLOW storage:spans:write  WHERE storage:bucket-name = "checkout_spans";
 ALLOW storage:metrics:read WHERE storage:bucket-name = "checkout_metrics";
-ALLOW storage:metrics:write WHERE storage:bucket-name = "checkout_metrics";
 ALLOW storage:logs:read  WHERE storage:bucket-name = "shared_logs";
 ALLOW storage:spans:read WHERE storage:bucket-name = "shared_spans";
 ```
@@ -488,32 +496,38 @@ ALLOW storage:logs:read WHERE storage:bucket-name = "checkout_logs"
 ```
 // Read all logs, manage log pipelines
 ALLOW storage:logs:read;
-ALLOW settings:objects:* WHERE settings:schemaId startsWith "builtin:logmonitoring";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:schemaId startsWith "builtin:logmonitoring";
 ```
 
 ### Pattern 5: Dashboard Creator
 
 ```
-// Create and share dashboards
-ALLOW document:documents:*;
-ALLOW storage:*:read;
+// Create and share dashboards (documents:share does not exist — sharing is direct-shares)
+ALLOW document:documents:read, document:documents:write, document:documents:delete;
+ALLOW document:direct-shares:read, document:direct-shares:write;
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read;
 ```
 
 ### Pattern 6: Alerting Manager
 
 ```
 // Manage alerting configuration
-ALLOW settings:objects:* WHERE settings:schemaId startsWith "builtin:alerting";
-ALLOW settings:objects:* WHERE settings:schemaId startsWith "builtin:problem";
-ALLOW automation:workflows:*;
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:schemaId startsWith "builtin:alerting";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:schemaId startsWith "builtin:problem";
+ALLOW automation:workflows:read, automation:workflows:write, automation:workflows:run;
 ```
 
 ### Pattern 7: SRE On-Call Access
 
 ```
-// Broad read access + problem management
-ALLOW storage:*:read;
-ALLOW state:problems:*;
+// Broad read access + problem/event visibility
+// (state:problems does not exist — Davis problems are events in Grail)
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read, storage:entities:read;
 ALLOW document:documents:read;
 ALLOW settings:objects:read;
 ```
@@ -521,11 +535,13 @@ ALLOW settings:objects:read;
 ### Pattern 8: Security Auditor
 
 ```
-// Read everything, write nothing
-ALLOW storage:*:read;
-ALLOW settings:*:read;
-ALLOW document:*:read;
-ALLOW state:*:read;
+// Read everything, write nothing (enumerated — wildcards are not supported)
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read, storage:entities:read,
+      storage:system:read, storage:buckets:read;
+ALLOW settings:objects:read, settings:schemas:read;
+ALLOW document:documents:read, document:direct-shares:read, document:environment-shares:read;
+ALLOW state:app-states:read, state:user-app-states:read;
 ```
 
 ### Pattern 9: Compliance-Scoped Access (Bucket-Based)

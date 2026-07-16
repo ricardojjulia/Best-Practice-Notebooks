@@ -1,6 +1,6 @@
 # MZ2POL-99: Best Practice Summary
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 06/25/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 07/16/2026
 
 ## Overview
 
@@ -57,7 +57,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 |----------|----------------|----------|
 | Start with built-in policies; customize only when needed | `Standard User` for regular/read-only users (+ data-read policies), `Pro User` for power users, `Admin User` for admins. (Classic "Dynatrace Viewer / Professional User" and "Data Viewer / Editor" are not current IAM policy names.) | Critical |
 | Pair a platform policy with data-access policies | Viewers -> `Standard User` + `Read Logs`/`Read Metrics`; Developers -> `Standard User` + `Read Logs`/`Read Spans`/`Read Metrics`; SRE -> `Pro User` + `All Grail data read access`; Admins -> `Admin User` | Critical |
-| Apply least privilege | Grant the minimum permissions required for each role; never use `ALLOW storage:*:*` without a boundary or condition | Critical |
+| Apply least privilege | Grant the minimum permissions required for each role; enumerate them explicitly — wildcards like `ALLOW storage:*:*` are rejected by the API (live-verified 07/2026) — and scope reads with conditions/boundaries | Critical |
 | Use policy conditions with `WHERE` for scoped access | `ALLOW storage:logs:read WHERE storage:dt.security_context = "team-frontend"` (a `WHERE` clause supports `AND`, not `OR`) | Recommended |
 | Never create one policy per user | Assign policies to groups; bind users to groups | Critical |
 | Never duplicate default policies | Extend with custom policies only for permissions default policies do not cover | Recommended |
@@ -127,7 +127,7 @@ This notebook consolidates every actionable best practice from the MZ2POL series
 
 | Practice | Recommended Setting/Value | Priority |
 |----------|----------------|----------|
-| Use `${bindParam:...}` templated policies instead of one policy per MZ | 3-5 templates replace 92+ individual policies. Template: `ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:team}"` | Critical |
+| Use `${bindParam:...}` templated policies instead of one policy per MZ | 3-5 templates replace 92+ individual policies. Template: `ALLOW storage:logs:read, storage:spans:read, storage:metrics:read, storage:events:read, storage:bizevents:read WHERE storage:dt.security_context = "${bindParam:team}"` (enumerated — wildcards are rejected) | Critical |
 | Create templates by MZ type, not by MZ instance | `tpl-team-data-reader`, `tpl-team-data-editor`, `tpl-region-reader` — one template per access pattern | Critical |
 | Use Pattern A (read-only) for viewer MZ replacements | Template grants `storage:logs:read`, `storage:spans:read`, `storage:metrics:read` scoped by `${bindParam:team}` | Recommended |
 | Use Pattern B (full access) for editor MZ replacements | Template grants `storage:*:read`, `storage:*:write`, `settings:objects:*` scoped by `${bindParam:team}` | Recommended |

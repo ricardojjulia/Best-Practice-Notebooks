@@ -1,6 +1,6 @@
 # AUTOM-04: Terraform Provider
 
-> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 07/08/2026
+> **Series:** AUTOM — Dynatrace Automation | **Notebook:** 4 of 9 | **Created:** January 2026 | **Last Updated:** 07/16/2026
 
 The Dynatrace Terraform provider enables infrastructure-as-code management of Dynatrace configurations. It integrates with Terraform's ecosystem for state management, planning, and CI/CD integration.
 
@@ -1284,7 +1284,7 @@ IAM policies support multiple condition operators:
 | `IN` | `settings:schemaId IN ("builtin:alerting.profile", ...)` | Explicit list |
 | `startsWith` | `settings:schemaId startsWith "builtin:alerting"` | Schema family |
 | `contains` | `settings:schemaId contains "custom"` | Substring match |
-| `=` | `storage:bucket.name = "team_logs"` | Data isolation |
+| `=` | `storage:bucket-name = "team_logs"` | Data isolation |
 
 > **Key insight:** The API token scope `settings.write` grants access to ALL schemas. IAM policies with `WHERE settings:schemaId` clauses (using the IAM action `settings:objects:write`) are the only way to restrict schema access at the platform level.
 

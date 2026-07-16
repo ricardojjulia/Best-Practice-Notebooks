@@ -1,6 +1,6 @@
 # SL2DT-07: User Governance & Access
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 07/01/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 7 of 10 | **Created:** April 2026 | **Last Updated:** 07/16/2026
 
 ## Overview
 
@@ -126,36 +126,39 @@ ALLOW storage:logs:read, storage:events:read
   WHERE storage:bucket-name = "custom_logs_prod";
 ```
 
-#### Pattern 2 — Read all, write to own bucket
+#### Pattern 2 — Read all, write via a deliberate unscoped grant
 
 ```
 ALLOW storage:logs:read
   WHERE storage:table = "logs";
-ALLOW storage:logs:write
-  WHERE storage:bucket-name IN ("custom_logs_team_payments");
+// Storage writes cannot be condition-scoped (live-verified 07/2026) —
+// grant unscoped, only to the team's ingest service user, and control
+// where data lands via OpenPipeline routing, not IAM conditions.
+ALLOW storage:logs:write;
 ```
 
 #### Pattern 3 — Admin on multiple buckets
 
 ```
-ALLOW storage:logs:read, storage:logs:write, storage:events:read
+ALLOW storage:logs:read, storage:events:read
   WHERE storage:bucket-name LIKE "custom_logs_prod%";
+ALLOW storage:logs:write;
 ALLOW document:documents:read, document:documents:write;
 ALLOW settings:objects:read, settings:objects:write
   WHERE settings:schema-id = "builtin:monitoring.slo";
 ```
 
+> **Storage writes cannot be bucket-scoped (live-verified 07/2026):** `storage:logs:write WHERE storage:bucket-name ...` is rejected with `Invalid condition name`. Grant writes unscoped in a deliberately-assigned policy and route data via OpenPipeline. Wildcard permissions (`storage:*:read`, `ALLOW *`) are also rejected — enumerate.
+
 #### Pattern 4 — Full admin (limit to platform engineering)
 
-```
-ALLOW *;
-```
+Do not author a wildcard policy (`ALLOW *` is rejected by the API). Bind the built-in **Admin User** managed policy — or, for a classic-parity custom grant, combine `environment:roles:viewer` + `environment:roles:manage-settings` with enumerated storage/settings permissions.
 
 ### Avoid
 
-- `ALLOW *` on team-level groups. Escalation risk.
-- Mixing wildcards and specific grants in the same policy — harder to audit.
-- Permissions without WHERE clauses — silently grants tenant-wide access.
+- Binding admin-level policies to team-level groups. Escalation risk.
+- Broad enumerated grants where a scoped read would do — harder to audit.
+- Read permissions without WHERE clauses — silently grants tenant-wide access. (Storage *writes* cannot take WHERE at all — grant them deliberately and sparingly.)
 
 ### Validate Policies
 
