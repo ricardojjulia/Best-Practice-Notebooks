@@ -989,12 +989,6 @@ fetch logs, from:-1h
 |-----------|---------------|-------|-----|
 | 400 | "payload.map is not a function" | Groups POST received an object instead of array | Wrap payload in `[{...}]` |
 | 400 | "Invalid permission name: documents:create" | Non-existent permission | Use `documents:write` (covers create) |
-| 400 | "ALLOW or DENY must be followed by a permission in the form service-name:resource:action" | Wildcard in permission (`storage:*:read`, `settings:objects:*`, ...) | Wildcards are not supported — enumerate permissions in a comma list |
-| 400 | "Invalid condition name for permission storage:logs:write : storage:bucket-name" | WHERE condition on a storage WRITE permission | Storage writes accept no conditions — grant unscoped or control via OpenPipeline |
-| 400 | "Invalid permission name: spans:write / bizevents:write / buckets:write for service storage" | Permission doesn't exist | Only `logs`, `metrics`, `events` have storage `:write`; spans/bizevents are ingest-only |
-| 400 | "Invalid permission name: roles:admin for service environment" | No such role permission | Classic admin = `environment:roles:viewer` + `environment:roles:manage-settings` |
-| 400 | "Invalid condition name ... storage:bucket.name" | Dotted condition field | The field is `storage:bucket-name` (hyphen) |
-| 400 | "Policy binding cannot be created, such binding already exists" (also on the per-group update endpoint) | Binding already in desired state | Treat as success — the binding is converged (idempotent re-run) |
 | 400 | "There is no policy binding to be deleted" | Deleting bindings from unbound policy | Safe to ignore during cleanup |
 | 400 | "Duplicate entry" | Group with same name already exists | Delete existing group first or use different name |
 | 401 | Unauthorized | Token is invalid or expired | Re-acquire OAuth token (they expire in ~5 min) |
