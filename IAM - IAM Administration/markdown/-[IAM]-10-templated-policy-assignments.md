@@ -94,7 +94,7 @@ ALLOW storage:logs:read WHERE storage:dt.security_context = "checkout";
 ```
 ALLOW storage:logs:read
   WHERE storage:dt.security_context = "${bindParam:team}"
-  AND storage:bucket.name = "${bindParam:bucket}";
+  AND storage:bucket-name = "${bindParam:bucket}";
 ```
 
 Binding: `{"parameters": {"team": "checkout", "bucket": "checkout_logs"}}`
@@ -117,7 +117,7 @@ All four statements resolve using the **same** `team` parameter value from the b
 | Field | Supports bindParam | Domain |
 |-------|-------------------|--------|
 | `storage:dt.security_context` | Yes | Storage (logs, spans, metrics) |
-| `storage:bucket.name` | Yes | Storage (bucket-level) |
+| `storage:bucket-name` | Yes | Storage (bucket-level) |
 | `settings:dt.security_context` | Yes | Settings objects |
 | `settings:schemaId` | Yes | Settings schema |
 | `environment:management-zone` | Yes | Entity access |
@@ -337,7 +337,9 @@ ALLOW storage:metrics:read WHERE storage:dt.security_context = "${bindParam:team
 Scope access by environment (prod, staging, dev).
 
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:environment}";
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "${bindParam:environment}";
 ALLOW settings:objects:read WHERE settings:dt.security_context = "${bindParam:environment}";
 ```
 
@@ -348,9 +350,9 @@ ALLOW settings:objects:read WHERE settings:dt.security_context = "${bindParam:en
 Hard data isolation using dedicated buckets per team.
 
 ```
-ALLOW storage:logs:read WHERE storage:bucket.name = "${bindParam:log-bucket}";
-ALLOW storage:spans:read WHERE storage:bucket.name = "${bindParam:span-bucket}";
-ALLOW storage:metrics:read WHERE storage:bucket.name = "${bindParam:metric-bucket}";
+ALLOW storage:logs:read WHERE storage:bucket-name = "${bindParam:log-bucket}";
+ALLOW storage:spans:read WHERE storage:bucket-name = "${bindParam:span-bucket}";
+ALLOW storage:metrics:read WHERE storage:bucket-name = "${bindParam:metric-bucket}";
 ```
 
 **Binding:** `{"parameters": {"log-bucket": "checkout_logs", "span-bucket": "checkout_spans", "metric-bucket": "checkout_metrics"}}`
@@ -360,9 +362,10 @@ ALLOW storage:metrics:read WHERE storage:bucket.name = "${bindParam:metric-bucke
 Defense-in-depth: require both team and bucket match.
 
 ```
-ALLOW storage:*:read
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
   WHERE storage:dt.security_context = "${bindParam:team}"
-  AND storage:bucket.name = "${bindParam:bucket}";
+  AND storage:bucket-name = "${bindParam:bucket}";
 ```
 
 **Binding:** `{"parameters": {"team": "checkout", "bucket": "prod_checkout_logs"}}`
@@ -372,7 +375,8 @@ ALLOW storage:*:read
 Grant access to specific settings categories.
 
 ```
-ALLOW settings:objects:* WHERE settings:schemaId startsWith "${bindParam:schema-prefix}";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:schemaId startsWith "${bindParam:schema-prefix}";
 ```
 
 **Binding:** `{"parameters": {"schema-prefix": "builtin:alerting"}}` for the alerting team
@@ -382,10 +386,14 @@ ALLOW settings:objects:* WHERE settings:schemaId startsWith "${bindParam:schema-
 Complete replacement of a Management Zone — covers entity, data, and settings access.
 
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:scope}";
-ALLOW storage:*:write WHERE storage:dt.security_context = "${bindParam:scope}";
-ALLOW settings:objects:* WHERE settings:dt.security_context = "${bindParam:scope}";
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "${bindParam:scope}";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:dt.security_context = "${bindParam:scope}";
 ```
+
+> **Storage writes cannot be condition-scoped (live-verified 07/2026)** — `storage:*` wildcards are rejected, and `storage:logs:write WHERE ...` fails with `Invalid condition name`. Grant `storage:logs:write, storage:metrics:write, storage:events:write` unscoped in a separate policy only where genuinely needed.
 
 Combined with a **boundary** using the same security context for entity-level restriction.
 
