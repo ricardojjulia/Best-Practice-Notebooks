@@ -46,11 +46,11 @@ This single query provides a high-level business snapshot.
 ```dql
 // Executive snapshot: business health in the last 24 hours
 fetch bizevents, from:-24h
-| summarize total_transactions = count(),
+| summarize {total_transactions = count(),
            distinct_event_types = countDistinct(event.type),
            distinct_providers = countDistinct(event.provider),
            earliest_event = min(timestamp),
-           latest_event = max(timestamp)
+           latest_event = max(timestamp)}
 | fieldsAdd reporting_period = "Last 24 Hours",
            data_freshness = if(latest_event > now() - 5m, then: "CURRENT", else: "STALE")
 ```
@@ -83,11 +83,10 @@ fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false
 | fieldsAdd duration_hours = resolved_problem_duration / 1h
-| summarize problem_count = count(),
+| summarize {problem_count = count(),
            avg_resolution_hours = avg(duration_hours),
            max_resolution_hours = max(duration_hours),
-           total_impact_hours = sum(duration_hours),
-           by:{event.category}
+           total_impact_hours = sum(duration_hours)}, by:{event.category}
 | sort problem_count desc
 ```
 
@@ -128,9 +127,9 @@ SLA (Service Level Agreement) and SLO (Service Level Objective) tracking from a 
 // Transaction success rate SLO — last 7 days
 fetch bizevents, from:-7d
 | filter in(event.type, {"com.myapp.payment.processed", "com.myapp.payment.failed"})
-| summarize total = count(),
+| summarize {total = count(),
            successful = countIf(event.type == "com.myapp.payment.processed"),
-           failed = countIf(event.type == "com.myapp.payment.failed")
+           failed = countIf(event.type == "com.myapp.payment.failed")}
 | fieldsAdd success_rate = round(toDouble(successful) / toDouble(total) * 100, decimals: 3),
            slo_target = 99.5,
            slo_met = if(toDouble(successful) / toDouble(total) * 100 >= 99.5, then: "YES", else: "NO")
@@ -152,10 +151,10 @@ fetch dt.davis.problems, from:-30d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false and dt.davis.is_frequent_event == false
 | fieldsAdd duration_hours = resolved_problem_duration / 1h
-| summarize avg_mttr = avg(duration_hours),
+| summarize {avg_mttr = avg(duration_hours),
            median_mttr = median(duration_hours),
            p95_mttr = percentile(duration_hours, 95),
-           problem_count = count()
+           problem_count = count()}
 | fieldsAdd mttr_target_hours = 2.0,
            slo_met = if(avg_mttr <= 2.0, then: "YES", else: "NO")
 ```
@@ -173,9 +172,9 @@ Send this as a daily morning report to stakeholders.
 ```dql
 // Daily report: yesterday's business summary
 fetch bizevents, from:bin(now(), 24h) - 24h, to:bin(now(), 24h)
-| summarize total_events = count(),
+| summarize {total_events = count(),
            distinct_types = countDistinct(event.type),
-           distinct_providers = countDistinct(event.provider)
+           distinct_providers = countDistinct(event.provider)}
 | fieldsAdd report_date = bin(now(), 24h) - 24h,
            report_type = "Daily Business Summary"
 ```
@@ -253,9 +252,9 @@ fetch bizevents, from:-24h
 // Dashboard tile: problem impact summary (last 7 days)
 fetch dt.davis.problems, from:-7d
 | filter dt.davis.is_duplicate == false
-| summarize active = countIf(event.status == "ACTIVE"),
+| summarize {active = countIf(event.status == "ACTIVE"),
            closed_today = countIf(event.status == "CLOSED" and event.end > bin(now(), 24h)),
-           total_week = count()
+           total_week = count()}
 ```
 
 <a id="weekly-business-review-queries"></a>
@@ -268,9 +267,8 @@ These queries produce the data needed for a weekly business review meeting.
 // Weekly review: daily business event summary for the past week
 fetch bizevents, from:-7d
 | fieldsAdd day = bin(timestamp, 1d)
-| summarize daily_volume = count(),
-           event_types = countDistinct(event.type),
-           by:{day}
+| summarize {daily_volume = count(),
+           event_types = countDistinct(event.type)}, by:{day}
 | sort day asc
 ```
 

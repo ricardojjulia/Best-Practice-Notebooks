@@ -66,11 +66,11 @@ The simplest funnel counts distinct users (or sessions) at each step. We use `co
 ```dql
 // Basic funnel — count events at each step over the last 24 hours
 fetch bizevents, from:-24h
-| summarize step1_view = countIf(event.type == "com.myapp.product.viewed"),
+| summarize {step1_view = countIf(event.type == "com.myapp.product.viewed"),
            step2_cart = countIf(event.type == "com.myapp.cart.updated"),
            step3_checkout = countIf(event.type == "com.myapp.checkout.started"),
            step4_payment = countIf(event.type == "com.myapp.payment.processed"),
-           step5_complete = countIf(event.type == "com.myapp.order.completed")
+           step5_complete = countIf(event.type == "com.myapp.order.completed")}
 ```
 
 ```dql
@@ -78,11 +78,11 @@ fetch bizevents, from:-24h
 // Uses countDistinctApprox for performance on large datasets
 fetch bizevents, from:-24h
 | filter isNotNull(user_id)
-| summarize step1_users = countDistinctApprox(if(event.type == "com.myapp.product.viewed", then: user_id)),
+| summarize {step1_users = countDistinctApprox(if(event.type == "com.myapp.product.viewed", then: user_id)),
            step2_users = countDistinctApprox(if(event.type == "com.myapp.cart.updated", then: user_id)),
            step3_users = countDistinctApprox(if(event.type == "com.myapp.checkout.started", then: user_id)),
            step4_users = countDistinctApprox(if(event.type == "com.myapp.payment.processed", then: user_id)),
-           step5_users = countDistinctApprox(if(event.type == "com.myapp.order.completed", then: user_id))
+           step5_users = countDistinctApprox(if(event.type == "com.myapp.order.completed", then: user_id))}
 ```
 
 <a id="step-by-step-conversion-rates"></a>
@@ -94,11 +94,11 @@ Conversion rates reveal the percentage of users who proceed from one step to the
 ```dql
 // Calculate conversion rates between each funnel step
 fetch bizevents, from:-24h
-| summarize step1 = countIf(event.type == "com.myapp.product.viewed"),
+| summarize {step1 = countIf(event.type == "com.myapp.product.viewed"),
            step2 = countIf(event.type == "com.myapp.cart.updated"),
            step3 = countIf(event.type == "com.myapp.checkout.started"),
            step4 = countIf(event.type == "com.myapp.payment.processed"),
-           step5 = countIf(event.type == "com.myapp.order.completed")
+           step5 = countIf(event.type == "com.myapp.order.completed")}
 | fieldsAdd view_to_cart = round(toDouble(step2) / toDouble(step1) * 100, decimals: 1),
            cart_to_checkout = round(toDouble(step3) / toDouble(step2) * 100, decimals: 1),
            checkout_to_payment = round(toDouble(step4) / toDouble(step3) * 100, decimals: 1),
@@ -127,9 +127,8 @@ fetch bizevents, from:-24h
 fetch bizevents, from:-24h
 | filter in(event.type, {"com.myapp.checkout.started", "com.myapp.payment.processed"})
 | filter isNotNull(user_id)
-| summarize started_checkout = countIf(event.type == "com.myapp.checkout.started"),
-           completed_payment = countIf(event.type == "com.myapp.payment.processed"),
-           by:{user_id}
+| summarize {started_checkout = countIf(event.type == "com.myapp.checkout.started"),
+           completed_payment = countIf(event.type == "com.myapp.payment.processed")}, by:{user_id}
 | filter started_checkout > 0 and completed_payment == 0
 | summarize abandoned_users = count()
 ```
@@ -146,15 +145,14 @@ Understanding how long users take between funnel steps reveals friction points. 
 fetch bizevents, from:-24h
 | filter in(event.type, {"com.myapp.cart.updated", "com.myapp.checkout.started"})
 | filter isNotNull(user_id)
-| summarize cart_time = min(if(event.type == "com.myapp.cart.updated", then: timestamp)),
-           checkout_time = min(if(event.type == "com.myapp.checkout.started", then: timestamp)),
-           by:{user_id}
+| summarize {cart_time = min(if(event.type == "com.myapp.cart.updated", then: timestamp)),
+           checkout_time = min(if(event.type == "com.myapp.checkout.started", then: timestamp))}, by:{user_id}
 | filter isNotNull(cart_time) and isNotNull(checkout_time)
 | fieldsAdd time_to_checkout_sec = (toDouble(unixMillisFromTimestamp(checkout_time)) - toDouble(unixMillisFromTimestamp(cart_time))) / 1000.0
 | filter time_to_checkout_sec > 0
-| summarize avg_seconds = avg(time_to_checkout_sec),
+| summarize {avg_seconds = avg(time_to_checkout_sec),
            median_seconds = median(time_to_checkout_sec),
-           p95_seconds = percentile(time_to_checkout_sec, 95)
+           p95_seconds = percentile(time_to_checkout_sec, 95)}
 ```
 
 <a id="funnel-segmentation"></a>
@@ -167,9 +165,8 @@ Segmenting funnels by dimensions — device type, geographic region, customer ti
 // Funnel conversion rates segmented by event provider
 // Useful for comparing web vs mobile vs API channels
 fetch bizevents, from:-24h
-| summarize step1 = countIf(event.type == "com.myapp.product.viewed"),
-           step5 = countIf(event.type == "com.myapp.order.completed"),
-           by:{event.provider}
+| summarize {step1 = countIf(event.type == "com.myapp.product.viewed"),
+           step5 = countIf(event.type == "com.myapp.order.completed")}, by:{event.provider}
 | filter step1 > 0
 | fieldsAdd conversion_pct = round(toDouble(step5) / toDouble(step1) * 100, decimals: 1)
 | sort conversion_pct desc
@@ -178,9 +175,8 @@ fetch bizevents, from:-24h
 ```dql
 // Funnel by category — compare product categories or business lines
 fetch bizevents, from:-24h
-| summarize views = countIf(event.type == "com.myapp.product.viewed"),
-           purchases = countIf(event.type == "com.myapp.order.completed"),
-           by:{event.category}
+| summarize {views = countIf(event.type == "com.myapp.product.viewed"),
+           purchases = countIf(event.type == "com.myapp.order.completed")}, by:{event.category}
 | filter views > 0
 | fieldsAdd conversion_pct = round(toDouble(purchases) / toDouble(views) * 100, decimals: 1)
 | sort conversion_pct desc
@@ -203,9 +199,8 @@ fetch bizevents, from:-7d
 // Daily overall conversion rate trend over the past week
 fetch bizevents, from:-7d
 | fieldsAdd day = bin(timestamp, 1d)
-| summarize views = countIf(event.type == "com.myapp.product.viewed"),
-           orders = countIf(event.type == "com.myapp.order.completed"),
-           by:{day}
+| summarize {views = countIf(event.type == "com.myapp.product.viewed"),
+           orders = countIf(event.type == "com.myapp.order.completed")}, by:{day}
 | filter views > 0
 | fieldsAdd conversion_pct = round(toDouble(orders) / toDouble(views) * 100, decimals: 2)
 | sort day asc

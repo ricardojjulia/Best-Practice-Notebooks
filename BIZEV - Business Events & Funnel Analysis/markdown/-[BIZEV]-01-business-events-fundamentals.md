@@ -148,9 +148,9 @@ fetch bizevents, from:-24h
 ```dql
 // Count distinct event types and providers to understand data diversity
 fetch bizevents, from:-24h
-| summarize event_types = countDistinct(event.type),
+| summarize {event_types = countDistinct(event.type),
            providers = countDistinct(event.provider),
-           total_events = count()
+           total_events = count()}
 ```
 
 <a id="ingestion-methods"></a>

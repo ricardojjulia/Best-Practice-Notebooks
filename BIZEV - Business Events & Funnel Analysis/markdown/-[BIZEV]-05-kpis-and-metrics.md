@@ -95,11 +95,11 @@ Revenue KPIs require an `amount` or `total` field in your business events. These
 fetch bizevents, from:-24h
 | filter event.type == "com.myapp.order.completed"
 | filter isNotNull(amount)
-| summarize total_revenue = sum(toDouble(amount)),
+| summarize {total_revenue = sum(toDouble(amount)),
            avg_order_value = avg(toDouble(amount)),
            median_order_value = median(toDouble(amount)),
            max_order_value = max(toDouble(amount)),
-           order_count = count()
+           order_count = count()}
 ```
 
 ```dql
@@ -116,10 +116,9 @@ fetch bizevents, from:-7d
 | filter event.type == "com.myapp.order.completed"
 | filter isNotNull(amount)
 | fieldsAdd day = bin(timestamp, 1d)
-| summarize aov = avg(toDouble(amount)),
+| summarize {aov = avg(toDouble(amount)),
            daily_revenue = sum(toDouble(amount)),
-           orders = count(),
-           by:{day}
+           orders = count()}, by:{day}
 | sort day asc
 ```
 
@@ -134,8 +133,8 @@ Business process error rates measure the percentage of transactions that fail. T
 // Assumes failed events have a status or result field
 fetch bizevents, from:-24h
 | filter in(event.type, {"com.myapp.payment.processed", "com.myapp.payment.failed"})
-| summarize total = count(),
-           failures = countIf(event.type == "com.myapp.payment.failed")
+| summarize {total = count(),
+           failures = countIf(event.type == "com.myapp.payment.failed")}
 | fieldsAdd error_rate_pct = round(toDouble(failures) / toDouble(total) * 100, decimals: 2)
 ```
 
@@ -152,9 +151,8 @@ fetch bizevents, from:-24h
 // Error rate by provider — which channels have the most failures?
 fetch bizevents, from:-24h
 | filter in(event.type, {"com.myapp.payment.processed", "com.myapp.payment.failed"})
-| summarize total = count(),
-           failures = countIf(event.type == "com.myapp.payment.failed"),
-           by:{event.provider}
+| summarize {total = count(),
+           failures = countIf(event.type == "com.myapp.payment.failed")}, by:{event.provider}
 | filter total > 10
 | fieldsAdd error_rate_pct = round(toDouble(failures) / toDouble(total) * 100, decimals: 1)
 | sort error_rate_pct desc
@@ -224,9 +222,9 @@ A composite health score combines multiple KPIs into a single indicator. This si
 ```dql
 // Compute a simple business health dashboard — key metrics at a glance
 fetch bizevents, from:-1h
-| summarize total_events = count(),
+| summarize {total_events = count(),
            distinct_types = countDistinct(event.type),
-           distinct_providers = countDistinct(event.provider)
+           distinct_providers = countDistinct(event.provider)}
 | fieldsAdd time_window = "Last 1 hour",
            status = if(total_events > 0, then: "ACTIVE", else: "NO DATA")
 ```
@@ -234,10 +232,10 @@ fetch bizevents, from:-1h
 ```dql
 // Multi-KPI summary — compute all key metrics in one query
 fetch bizevents, from:-24h
-| summarize total_transactions = count(),
+| summarize {total_transactions = count(),
            order_count = countIf(event.type == "com.myapp.order.completed"),
            payment_failures = countIf(event.type == "com.myapp.payment.failed"),
-           total_payments = countIf(in(event.type, {"com.myapp.payment.processed", "com.myapp.payment.failed"}))
+           total_payments = countIf(in(event.type, {"com.myapp.payment.processed", "com.myapp.payment.failed"}))}
 | fieldsAdd error_rate = if(total_payments > 0,
                then: round(toDouble(payment_failures) / toDouble(total_payments) * 100, decimals: 2),
                else: 0.0)
