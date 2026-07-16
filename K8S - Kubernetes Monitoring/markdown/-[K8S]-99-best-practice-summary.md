@@ -1,14 +1,16 @@
 # K8S-99: Best Practice Summary
 
-> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 05/09/2026
+> **Series:** K8S — Kubernetes Monitoring | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
 This notebook consolidates every actionable best practice for Dynatrace Kubernetes monitoring and DynaKube configuration extracted from the K8S series (notebooks 01-13). Each practice specifies the exact setting, value, priority, and category. Use this as a definitive checklist for new deployments and audits of existing environments.
 
-**Operator Version:** 1.9.0 | **DynaKube API:** `dynatrace.com/v1beta5` (baseline) or `v1beta6` (newer) | **Helm:** `oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.9.0`
+**Operator Version:** 1.9.0 | **DynaKube API:** `dynatrace.com/v1beta5` (baseline) or `v1beta6` (newer) | **Helm:** `oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.10.0` (pin the version you have validated in your estate)
 
-> **Token currency note:** Platform Tokens (`dt0s16`/`dt0s01`) are the recommended choice for new tenants per Dynatrace SaaS sprint-1.337+; Classic API Tokens (`dt0c01`) remain supported for existing deployments. See K8S-02 §Prerequisites.
+> **Token currency note:** Platform Tokens (`dt0s16`) are the recommended choice for new tenants per Dynatrace SaaS sprint-1.337+; the Operator itself accepts platform tokens from **Operator 1.10.0** (July 15, 2026) — Classic API Tokens (`dt0c01`) continue to be accepted and remain the working path on earlier Operator versions. See K8S-02 §Prerequisites.
+
+> **Operator 1.10.0 upgrade notes (July 15, 2026):** the ActiveGate `TopologySpreadConstraint` default changed from `DoNotSchedule` to `ScheduleAnyway` — expect an **ActiveGate restart on upgrade**. DynaKube `v1beta3` was removed in Operator 1.9.0 and `v1beta4` is deprecated as of 1.10.0 — target `v1beta6` for new DynaKubes (`v1beta5` remains accepted). The `gke-autopilot.yaml` release artifact is removed — GKE Autopilot deploys via Helm.
 
 ---
 
@@ -62,7 +64,7 @@ This notebook consolidates every actionable best practice for Dynatrace Kubernet
 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
-| 6 | Install operator via Helm OCI | `helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.9.0 --namespace dynatrace --create-namespace --wait` | **Critical** | Installation |
+| 6 | Install operator via Helm OCI | `helm install dynatrace-operator oci://public.ecr.aws/dynatrace/dynatrace-operator --version 1.10.0 --namespace dynatrace --create-namespace --wait` | **Critical** | Installation |
 | 7 | Enable CSI driver | `csidriver.enabled: true` in Helm values | **Critical** | Installation |
 | 8 | Set platform explicitly | `platform: "kubernetes"` or `platform: "openshift"` | Recommended | Installation |
 | 9 | Create dedicated namespace | `kubectl create namespace dynatrace` | **Critical** | Installation |

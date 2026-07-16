@@ -1,6 +1,6 @@
 # DBMON-02: SQL Database Monitoring
 
-> **Series:** DBMON — Database Monitoring | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 05/07/2026
+> **Series:** DBMON — Database Monitoring | **Notebook:** 2 of 7 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
@@ -229,6 +229,40 @@ fetch spans, from:-6h
                  interval:10m
 ```
 
+### Microsoft SQL Server — Server-Side View via the ActiveGate Extension
+
+Everything above measures SQL Server from the **caller side** — spans emitted by your instrumented applications (`db.system == "mssql"`). That view cannot see engine internals: blocking, transaction-log pressure, Always On replica health, agent job failures, or databases no instrumented service talks to. The **Microsoft SQL Server extension** (Dynatrace Hub, runs remotely on an ActiveGate — no agent on the DB host) completes the picture with documented `sql-server.*` metrics and job-outcome log streams:
+
+| Feature set | Key signals |
+|---|---|
+| **Default** (always on) | `sql-server.general.processesBlocked`, `sql-server.databases.state`, `sql-server.uptime`, user connections, memory/CPU/worker threads |
+| **Transaction Logs** | `sql-server.databases.log.percentUsed`, used/total size, growth/shrink/flush-wait counts |
+| **Database Files** | Per-file size / used / empty space + `largest_files` log stream |
+| **Always On** | `.ag.synchronizationHealth`, `.ar.role` / `.ar.failoverMode` / `.ar.operationalState`, `.db.synchronizationState`, log send/redo queues |
+| **Jobs** + **Agent** | `current_jobs` / `failed_jobs` log streams (outcome, duration, **error message text**) + `sql-server.sql.agent.status` |
+
+Deployment notes that matter:
+
+- **Always On clusters need two monitoring configurations** — the Always On feature set pointed at **primary replicas only**, everything else at all instances. Mixing primaries and secondaries in one Always On config duplicates metrics (documented as discouraged).
+- **Job outcomes arrive as log streams, not metrics** — alert with a DQL log alert or an OpenPipeline log-to-metric rule; the failure text is queryable in Grail.
+- Logs from official database extensions land in the dedicated `default_database_monitoring` Grail bucket (see DBMON-01 §6).
+- The extension accepts **no user-defined SQL**; true gaps (e.g., tempdb version-store pressure) go in a small custom Extensions 2.0 `sqlServer`-datasource extension on the same ActiveGate.
+
+For the full decision framework — mapping a homegrown script/Telegraf monitor estate onto the extension, the honest gaps, and the migration sequence — see **FAQ-14: Should I Replace My Custom SQL Server Monitoring Scripts with the Dynatrace Extension?**
+
+Blocked processes from the engine's point of view — the signal caller-side spans can only infer from slow response times:
+
+```dql
+// SQL Server engine blocking — from the ActiveGate extension (Default feature set)
+timeseries blocked = avg(`sql-server.general.processesBlocked`), from:-24h
+```
+
+```dql
+// Always On availability-group sync health — extension Always On feature set
+// (point the Always On monitoring configuration at the primary replica)
+timeseries agHealth = min(`sql-server.always-on.ag.synchronizationHealth`), from:-24h
+```
+
 <a id="response-time-distribution"></a>
 
 ## 7. Response Time Distribution
@@ -274,7 +308,7 @@ In this notebook you learned:
 - Techniques for finding the highest-impact and slowest queries
 - How to break down database operations by type and table to identify hot spots
 - Connection pressure and error pattern analysis
-- Vendor-specific monitoring patterns for PostgreSQL and MySQL
+- Vendor-specific monitoring patterns for PostgreSQL and MySQL, plus the server-side SQL Server view via the ActiveGate extension (`sql-server.*` metrics, job-outcome log streams)
 - Response time distribution analysis for setting realistic SLOs
 
 ### Next Steps
@@ -287,6 +321,7 @@ In this notebook you learned:
 - **AIOPS series** — Davis anomaly detection on DB connection-pool exhaustion, error rate spikes, and slow-query rate anomalies
 - **AUTOM series** — Monaco / Terraform automation for vendor-specific extension deployment at scale
 - **DBMON-05** — Deep query analysis (N+1 detection, optimization prioritization)
+- **FAQ-14** — Should I replace my custom SQL Server monitoring scripts with the Dynatrace extension? (decision framework, gap handling, migration sequence)
 
 ---
 
