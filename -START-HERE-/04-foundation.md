@@ -1,7 +1,7 @@
 # Foundation Module — ONBRD + ORGNZ + IAM
 
 > **Purpose:** Reading order for the universal foundation every Dynatrace tenant needs, regardless of entry point. Mandatory, recommended, and optional flags help you trim the reading list when time is constrained.
-> **Last Updated:** 05/07/2026
+> **Last Updated:** 07/15/2026
 
 ![Foundation Parallel Reading](images/04-foundation-parallel.svg)
 

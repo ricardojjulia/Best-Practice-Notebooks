@@ -1,7 +1,7 @@
 # Maturity Module — Continuous Improvement
 
 > **Purpose:** Framing for ongoing improvement of a Dynatrace practice using the [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) series. Maturity is not a one-time milestone — it's a loop you run every 6–12 months.
-> **Last Updated:** 07/09/2026
+> **Last Updated:** 07/15/2026
 
 ![Maturity Loop](images/07-maturity-loop.svg)
 
@@ -38,7 +38,6 @@ This module is referenced from each doorway as the final step. It is also the ri
 | 03 | Success Metrics | Recommended | First pass: define what "improvement" means for your team |
 | 04 | Team Enablement | Recommended | When the team is hitting its skill ceiling |
 | 05 | Optimization Roadmap | Mandatory | First pass: build a 6–12 month plan |
-| 06 | Maximizing Platform Value (Coverage Audit & Staged Enablement) | Recommended | When coverage gaps are limiting platform value |
 | 99 | Best Practice Summary | Reference | One-page synthesis |
 
 ---
@@ -53,7 +52,7 @@ ADOPT notebooks map to lifecycle phases in different ways depending on where you
 | Defining success | 03 (success metrics) | [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/) for KPI dashboards |
 | Building a plan | 05 (optimization roadmap) + 01 (maturity model) | All series catalog (for scoping investments) |
 | Team capability | 04 (team enablement) | Depends on team gaps — often [IAM](../IAM%20-%20IAM%20Administration/), [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) |
-| Cost optimization (FinOps) | Covered in 02 + 05 | [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) bucket strategy; [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) cost optimization (notebook 08) |
+| Cost optimization (FinOps) | [FINOPS](../FINOPS%20-%20Cost%20Management%20&%20FinOps/) — full series (3+ notebooks) | [ADOPT](../ADOPT%20-%20Observability%20Adoption%20&%20Maturity/) notebooks 02–05 for roadmap context; [ORGNZ](../ORGNZ%20-%20Organize%20Data:%20Buckets,%20Segments,%20Security/) for bucket strategy; [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/)/[OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) for cost optimization per-domain |
 | Governance scale-out | Covered in 05 | [IAM](../IAM%20-%20IAM%20Administration/), [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) governance (notebook 09) |
 | Continuous improvement | All ADOPT notebooks | All series — read as needed |
 

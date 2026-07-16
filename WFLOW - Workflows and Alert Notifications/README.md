@@ -19,6 +19,7 @@ Automating workflows and configuring alert notifications in Dynatrace.
 7. [Remediation](markdown/-[WFLOW]-07-remediation.md) — Automated remediation workflows
 8. [JavaScript & HTTP](markdown/-[WFLOW]-08-javascript-http.md) — JavaScript actions and HTTP requests
 9. [Security, Governance & Monitoring](markdown/-[WFLOW]-09-governance.md) — Workflow security, secrets management, RBAC, observability, alerting on workflows, and operational best practices
+94. [[LAB] EdgeConnect Static Egress for Snowflake](markdown/-[WFLOW]-94-[LAB]-edgeconnect-static-egress-snowflake.md) — Hands-on build: configure a static egress IP via EdgeConnect for Snowflake connector traffic; step-by-step network policy and Dynatrace Workflow integration
 95. [CMDB-Driven Host Tag Enrichment LAB](markdown/-[WFLOW]-95-[LAB]-cmdb-host-tag-enrichment.md) — Hands-on build: enrich hosts from CMDB lookup tables and apply bulk tags via the Remote Configuration Management API (capstone for WFLOW-08)
 99. [Best Practice Summary](markdown/-[WFLOW]-99-best-practice-summary.md) — Consolidated best practices from the WFLOW series
 

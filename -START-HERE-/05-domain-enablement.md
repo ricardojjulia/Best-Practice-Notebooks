@@ -1,7 +1,7 @@
 # Domain Enablement Module
 
 > **Purpose:** Pick-list of observability domain series with prerequisites, recommended sequencing if doing multiple, and cross-cutting ingestion mechanisms (OTel, OpenPipeline) that touch multiple domains.
-> **Last Updated:** 05/07/2026
+> **Last Updated:** 07/15/2026
 
 ![Domain Enablement Pick-List](images/05-domain-pick-list.svg)
 
@@ -19,7 +19,7 @@
 
 ## How to Use This Module
 
-There are eight observability domains and three cross-cutting ingestion series. You don't need all of them — pick based on what you monitor. Each entry below lists prerequisites (what Foundation pieces must be in place first) and recommended starting points.
+There are nine observability domains and three cross-cutting ingestion series. You don't need all of them — pick based on what you monitor. Each entry below lists prerequisites (what Foundation pieces must be in place first) and recommended starting points.
 
 This module is referenced from each of the three doorways. Read it after [Foundation Module](04-foundation.md) is in progress.
 
@@ -30,11 +30,12 @@ This module is referenced from each of the three doorways. Read it after [Founda
 If you plan to enable several domains over a few months, this is a sensible order:
 
 1. **Infrastructure baseline** — [K8S](../K8S%20-%20Kubernetes%20Monitoring/) (if Kubernetes is in scope) or [CLOUD](../CLOUD%20-%20Cloud%20Provider%20Integrations/) (AWS / Azure / GCP). One of these is almost always first.
-2. **Distributed tracing** — [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/). Most modern apps need this next.
-3. **Frontend experience** — [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) (web) and/or [MOBL](../MOBL%20-%20Mobile%20Monitoring/) (mobile).
-4. **Database** — [DBMON](../DBMON%20-%20Database%20Monitoring/). Often depends on [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for context.
-5. **Synthetic** — [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/). Proactive monitoring.
-6. **Business events** — [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/). Revenue and conversion analytics.
+2. **Security observability** — [APPSEC](../APPSEC%20—%20Application%20Security/). If security compliance / risk is a mandate, this runs in parallel with wave 1. Otherwise, wave 2 or later.
+3. **Distributed tracing** — [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/). Most modern apps need this next.
+4. **Frontend experience** — [WEBRUM](../WEBRUM%20-%20Web%20Real%20User%20Monitoring/) (web) and/or [MOBL](../MOBL%20-%20Mobile%20Monitoring/) (mobile).
+5. **Database** — [DBMON](../DBMON%20-%20Database%20Monitoring/). Often depends on [SPANS](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/) for context.
+6. **Synthetic** — [SYNTH](../SYNTH%20-%20Synthetic%20Monitoring/). Proactive monitoring.
+7. **Business events** — [BIZEV](../BIZEV%20-%20Business%20Events%20&%20Funnel%20Analysis/). Revenue and conversion analytics.
 
 The order is a guideline, not a rule. Skip what doesn't apply; reorder based on business priority.
 
@@ -68,6 +69,19 @@ The order is a guideline, not a rule. Skip what doesn't apply; reorder based on 
 | Recommended next | The provider-specific notebooks for what you have: 02 (AWS), 05 (Azure), 06 (GCP) |
 | Specific use cases | 03 (AWS EKS), 04 (AWS Lambda serverless), 07 (CloudWatch log ingestion), 08 (multi-cloud patterns) |
 | Cross-references | [OTEL](../OTEL%20-%20OpenTelemetry%20Integration/) for collectors; [K8S](../K8S%20-%20Kubernetes%20Monitoring/) for managed K8s; [OPLOGS](../OPLOGS%20-%20OpenPipeline%20Logs/) for cloud log ingestion |
+
+### [APPSEC — Application Security](../APPSEC%20—%20Application%20Security/)
+
+10 notebooks covering RVA, RAP, SPM, and security observability.
+
+| Aspect | Detail |
+|---|---|
+| Prerequisites | Foundation in progress; OneAgent or OTel on applications |
+| Time | 1–3 weeks (varies by maturity of security program) |
+| Mandatory entry | Notebooks 01 (fundamentals), 02 (platform overview) |
+| Recommended next | 03 (RVA — runtime vulnerability analytics), 04 (RAP — runtime application protection), 05 (SPM — security posture management) |
+| Optional | 06 (Investigator), 07 (Davis CoPilot for security), 08 (workflow remediation), 09 (governance dashboards) |
+| Cross-references | [AIOPS](../AIOPS%20-%20Dynatrace%20Intelligence/) for Davis intelligence; [DASH](../DASH%20-%20Dashboard%20Design%20&%20Building/) for security dashboards; [WFLOW](../WFLOW%20-%20Workflows%20and%20Alert%20Notifications/) for remediation |
 
 ### [SPANS — Distributed Tracing and Spans](../SPANS%20-%20Distributed%20Tracing%20and%20Spans/)
 
@@ -193,6 +207,18 @@ Once a domain is producing useful data:
 - [Operationalize Module](06-operationalize.md) — dashboards, alerts, automation, and AI for the new domain
 - [Maturity Module](07-maturity.md) — ongoing improvement
 - [Overlap Map](08-overlap-map.md) — when you find the same topic covered in multiple series (OTel chapter in K8S vs OTEL series, etc.)
+
+---
+
+## Maintenance Note
+
+**When new domain series are added to `topics/`, this module MUST be updated:**
+- Add the domain to the pick-list with notebook count, prerequisites, and entry points
+- Determine the recommended wave position (1–7 above) based on typical dependencies
+- Update "Recommended Order If Doing Multiple Domains" if the new series changes typical sequencing
+- Add cross-references to `08-overlap-map.md` if the new series overlaps with existing domains
+- Update series count references if the overall domain count changes (currently 9 as of July 15, 2026)
+- Update Last Updated date to current date
 
 ---
 
