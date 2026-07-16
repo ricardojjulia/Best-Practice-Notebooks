@@ -1,6 +1,6 @@
 # MZ2POL-08: Templated Policies for MZ Migration
 
-> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 9 of 9 | **Created:** February 2026 | **Last Updated:** 04/27/2026
+> **Series:** MZ2POL — Management Zone to Policy Migration | **Notebook:** 9 of 9 | **Created:** February 2026 | **Last Updated:** 07/16/2026
 
 ## Overview
 
@@ -67,7 +67,9 @@ Each MZ type (from the **MZ2POL REFERENCE**) maps to a specific template pattern
 
 **Template:**
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:environment}";
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "${bindParam:environment}";
 ALLOW settings:objects:read WHERE settings:dt.security_context = "${bindParam:environment}";
 ```
 
@@ -94,10 +96,14 @@ ALLOW storage:metrics:read WHERE storage:dt.security_context = "${bindParam:team
 
 **Template (three-domain, matching MZ2POL-04 best practice):**
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:lob}";
-ALLOW storage:*:write WHERE storage:dt.security_context = "${bindParam:lob}";
-ALLOW settings:objects:* WHERE settings:dt.security_context = "${bindParam:lob}";
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "${bindParam:lob}";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:dt.security_context = "${bindParam:lob}";
 ```
+
+> **Storage writes cannot be condition-scoped (live-verified 07/2026):** wildcards are rejected and `storage:logs:write WHERE ...` fails with `Invalid condition name`. Where a LOB genuinely needs ingest/write access, grant `storage:logs:write, storage:metrics:write, storage:events:write` unscoped in a separate policy.
 
 Combined with **two parallel boundaries** using the same scope (Gen2 boundary attaches to Gen2 policy, Gen3 boundary attaches to Gen3 policy):
 
@@ -150,10 +156,12 @@ ALLOW document:documents:read;
 
 **Template:** `tpl-team-data-editor`
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context = "${bindParam:team}";
-ALLOW storage:*:write WHERE storage:dt.security_context = "${bindParam:team}";
-ALLOW settings:objects:* WHERE settings:dt.security_context = "${bindParam:team}";
-ALLOW document:documents:*;
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context = "${bindParam:team}";
+ALLOW settings:objects:read, settings:objects:write
+  WHERE settings:dt.security_context = "${bindParam:team}";
+ALLOW document:documents:read, document:documents:write, document:documents:delete;
 ```
 
 **Binding:** `{"parameters": {"team": "checkout"}}`
@@ -182,7 +190,9 @@ Both bindings are additive — the user gets access to both scopes.
 
 **Template:** `tpl-region-reader`
 ```
-ALLOW storage:*:read WHERE storage:dt.security_context startsWith "${bindParam:region-prefix}";
+ALLOW storage:logs:read, storage:spans:read, storage:metrics:read,
+      storage:events:read, storage:bizevents:read
+  WHERE storage:dt.security_context startsWith "${bindParam:region-prefix}";
 ALLOW settings:objects:read WHERE settings:dt.security_context startsWith "${bindParam:region-prefix}";
 ```
 

@@ -174,7 +174,9 @@ Enterprise identity and access management administration for Dynatrace.
 - [IAM-09: Troubleshooting](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-09-troubleshooting.md) — Diagnosing and resolving IAM issues
 - [IAM-10: Templated Policy Assignments](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-10-templated-policy-assignments.md) — Policy templates and bulk assignments
 - [IAM-11: [WORKSHOP] Policy Persona Simulation](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-11-%5BWORKSHOP%5D-policy-persona.md) — Interactive workshop: simulate policy behavior as different personas
-- [IAM-12: API Provisioning & Validation](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API
+- [IAM-12: API Provisioning & Validation](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-12-api-provisioning-validation.md) — Scripts and DQL for provisioning via Account Management API (curl flavor)
+- [IAM-95: [LAB] Terraform IAM Provisioning](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-95-%5BLAB%5D-terraform-iam-provisioning.md) — Hands-on lab: groups, policies, boundaries, bindings as code (live-verified, with expected output)
+- [IAM-96: [LAB] Python IAM Provisioning](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-96-%5BLAB%5D-python-iam-provisioning.md) — Hands-on lab: one-command team onboarding (live-verified, with expected output)
 - [IAM-99: Best Practice Summary](IAM%20-%20IAM%20Administration/markdown/-%5BIAM%5D-99-best-practice-summary.md) — Consolidated best practices from the IAM series
 
 ### [K8S - Kubernetes Monitoring](K8S%20-%20Kubernetes%20Monitoring/README.md)
