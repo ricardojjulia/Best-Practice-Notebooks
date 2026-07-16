@@ -1,10 +1,10 @@
 # BIZEV-99: Best Practice Summary
 
-> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 03/26/2026
+> **Series:** BIZEV — Business Events & Funnel Analysis | **Notebook:** 99 | **Created:** March 2026 | **Last Updated:** 07/15/2026
 
 ## Overview
 
-This notebook consolidates every actionable best practice from the BIZEV series (notebooks 01 through 06) into a single, definitive reference. Each practice specifies exactly what to set, with no hedging. Use this as a checklist when instrumenting business events, building conversion funnels, and creating executive reports in Dynatrace.
+This notebook consolidates every actionable best practice from the BIZEV series (notebooks 01 through 07) into a single, definitive reference. Each practice specifies exactly what to set, with no hedging. Use this as a checklist when instrumenting business events, building conversion funnels, and creating executive reports in Dynatrace.
 
 ---
 
@@ -19,6 +19,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 7. [Executive Reporting and Dashboards](#executive-reporting-and-dashboards)
 8. [DQL Query Patterns](#dql-query-patterns)
 9. [SLA and SLO Tracking](#sla-and-slo-tracking)
+10. [Gen2 vs Gen3 Adoption](#gen2-vs-gen3-adoption)
 
 ---
 
@@ -28,7 +29,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 |-------------|----------|
 | **Dynatrace Environment** | SaaS with Grail enabled |
 | **Permissions** | `storage:bizevents:read`, `storage:events:read`, `storage:metrics:read`, `bizevents.ingest` |
-| **Knowledge** | BIZEV-01 through BIZEV-06 |
+| **Knowledge** | BIZEV-01 through BIZEV-07 |
 
 <a id="data-model-and-schema"></a>
 
@@ -177,6 +178,23 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 | 83 | Calculate weekly SLA availability from problem duration | `(40 - total_downtime_hours) / 40 * 100` using 8h x 5d = 40 business hours/week | Recommended | SLA |
 | 84 | Include SLO status indicator in every report | `if(success_rate >= 99.5, then: "MET", else: "MISSED")` | Critical | Reporting |
 | 85 | Track MTTR with `avg`, `median`, and `p95` | Report all three — avg shows the mean, median shows the typical case, p95 shows worst cases | Recommended | Metrics |
+
+<a id="gen2-vs-gen3-adoption"></a>
+## 10. Gen2 vs Gen3 Adoption
+
+Practices from BIZEV-07 for environments that have not (fully) moved to the Gen3 experience.
+
+| # | Best Practice | Recommended Setting/Value | Priority | Category |
+|---|---------------|---------------------------|----------|----------|
+| 86 | Confirm the platform generation before designing business analytics | Dynatrace Managed = no business events in any form (classic toolchain only); SaaS with Grail = adopt business events, regardless of how classic the day-to-day operation is | Critical | Adoption |
+| 87 | On Grail-enabled SaaS tenants, build new business analytics on business events, not classic mechanisms | Calculated service metrics are closed to new customers and superseded by OpenPipeline metric extraction — new classic investment is migration debt | Critical | Adoption |
+| 88 | Use the minimal Gen3 footprint for hybrid adoption | Capture via Settings (OneAgent rules — Full-Stack mode required), report in Notebooks + the new Dashboards app, grant `storage:bizevents:read` — nothing else has to move | Recommended | Adoption |
+| 89 | Bridge business KPIs to classic dashboards with metric extraction | `bizevents.`-prefixed extracted metrics are readable in Data Explorer, classic dashboards, and classic metric-event alerting | Recommended | Adoption |
+| 90 | Create metric-extraction rules at capture time, not reporting time | Extraction is forward-only — no backfill; late-timestamped events land in a `.failed`-suffixed key | Critical | Adoption |
+| 91 | Capture must-not-miss events server-side, not (only) via RUM | `sendBizEvent` is dropped for unmonitored sessions (cost and traffic controls) — orders and payments belong on OneAgent capture rules or the ingest API | Critical | Adoption |
+| 92 | On Managed, apply reverse-domain naming to classic artifacts | Name request attributes, session properties, and log metrics in `com.<company>.<domain>.<action>` style so the eventual migration is a mapping exercise | Recommended | Adoption |
+| 93 | Size business events against your actual license model before rollout | Classic DDU: 100 DDUs/GB ingest, 0.30 DDUs/GB-day retain, 1.70 DDUs/GB query, 200,000 DDUs/year free tier; DPS: Events powered by Grail capability | Recommended | Adoption |
+| 94 | Scope business-analyst access with a bucket-limited IAM policy | `ALLOW storage:bizevents:read WHERE storage:bucket-name = "default_bizevents";` plus the matching `storage:buckets:read` statement — grants Gen3-app access to business events only, nothing else in Grail; route sensitive streams to custom buckets for per-team policies | Recommended | Adoption |
 
 ---
 
