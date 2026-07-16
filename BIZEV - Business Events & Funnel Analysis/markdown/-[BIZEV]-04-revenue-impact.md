@@ -108,9 +108,9 @@ If your business events include an `amount` or `total` field, you can calculate 
 fetch bizevents, from:-24h
 | filter event.type == "com.myapp.order.completed"
 | filter isNotNull(amount)
-| summarize total_revenue = sum(toDouble(amount)),
+| summarize {total_revenue = sum(toDouble(amount)),
            order_count = count(),
-           avg_order_value = avg(toDouble(amount))
+           avg_order_value = avg(toDouble(amount))}
 ```
 
 ```dql
@@ -128,9 +128,8 @@ fetch bizevents, from:-24h
 | filter event.type == "com.myapp.order.completed"
 | filter isNotNull(amount)
 | fieldsAdd hour = getHour(timestamp)
-| summarize hourly_revenue = sum(toDouble(amount)),
-           order_count = count(),
-           by:{hour}
+| summarize {hourly_revenue = sum(toDouble(amount)),
+           order_count = count()}, by:{hour}
 | sort hour asc
 ```
 
@@ -161,9 +160,8 @@ fetch bizevents, from:-7d
 | fieldsAdd period = if(dow >= 1 and dow <= 5 and hour >= 9 and hour < 17,
                         then: "Business Hours",
                         else: "After Hours")
-| summarize total_revenue = sum(toDouble(amount)),
-           order_count = count(),
-           by:{period}
+| summarize {total_revenue = sum(toDouble(amount)),
+           order_count = count()}, by:{period}
 ```
 
 <a id="day-over-day-business-comparison"></a>
@@ -205,9 +203,9 @@ fetch dt.davis.problems, from:-7d
 | filter event.status == "CLOSED"
 | filter dt.davis.is_duplicate == false
 | fieldsAdd duration_hours = resolved_problem_duration / 1h
-| summarize total_problem_hours = sum(duration_hours),
+| summarize {total_problem_hours = sum(duration_hours),
            problem_count = count(),
-           avg_mttr_hours = avg(duration_hours)
+           avg_mttr_hours = avg(duration_hours)}
 ```
 
 ```dql

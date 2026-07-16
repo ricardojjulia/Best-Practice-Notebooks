@@ -122,10 +122,9 @@ For high-volume scenarios, send multiple events in a single request using `appli
 // Verify API-ingested events are arriving
 // API-ingested events often have a custom source/provider value
 fetch bizevents, from:-1h
-| summarize event_count = count(),
+| summarize {event_count = count(),
            latest = max(timestamp),
-           earliest = min(timestamp),
-           by:{event.provider}
+           earliest = min(timestamp)}, by:{event.provider}
 | sort event_count desc
 ```
 
@@ -260,10 +259,9 @@ com.<company>.<domain>.<action>
 ```dql
 // Audit event naming — find event types that may need standardization
 fetch bizevents, from:-7d
-| summarize event_count = count(),
+| summarize {event_count = count(),
            first_seen = min(timestamp),
-           last_seen = max(timestamp),
-           by:{event.type}
+           last_seen = max(timestamp)}, by:{event.type}
 | sort event_count desc
 ```
 
@@ -299,10 +297,10 @@ High-cardinality fields (fields with millions of unique values) can degrade quer
 ```dql
 // Assess cardinality of common fields in your business events
 fetch bizevents, from:-24h
-| summarize total = count(),
+| summarize {total = count(),
            distinct_types = countDistinct(event.type),
            distinct_providers = countDistinct(event.provider),
-           distinct_categories = countDistinct(event.category)
+           distinct_categories = countDistinct(event.category)}
 ```
 
 <a id="verifying-instrumentation-with-dql"></a>
@@ -321,10 +319,10 @@ fetch bizevents, from:-24h
 ```dql
 // Validate that required fields are populated (not null)
 fetch bizevents, from:-1h
-| summarize total = count(),
+| summarize {total = count(),
            has_type = countIf(isNotNull(event.type)),
            has_provider = countIf(isNotNull(event.provider)),
-           has_category = countIf(isNotNull(event.category))
+           has_category = countIf(isNotNull(event.category))}
 | fieldsAdd type_pct = round(toDouble(has_type) / toDouble(total) * 100, decimals: 1),
            provider_pct = round(toDouble(has_provider) / toDouble(total) * 100, decimals: 1),
            category_pct = round(toDouble(has_category) / toDouble(total) * 100, decimals: 1)

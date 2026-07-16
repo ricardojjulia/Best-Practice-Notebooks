@@ -86,7 +86,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 | # | Best Practice | Recommended Setting/Value | Priority | Category |
 |---|---------------|-----------------|----------|----------|
 | 28 | Define explicit funnel steps as distinct event types | Each step gets its own `event.type`: `product.viewed` → `cart.updated` → `checkout.started` → `payment.processed` → `order.completed` | Critical | Funnel Design |
-| 29 | Use `countIf` for funnel step counts in a single query | `summarize step1 = countIf(event.type == "..."), step2 = countIf(...)` — never run separate queries per step | Critical | DQL Pattern |
+| 29 | Use `countIf` for funnel step counts in a single query | `summarize {step1 = countIf(event.type == "..."), step2 = countIf(...)}` — never run separate queries per step | Critical | DQL Pattern |
 | 30 | Use `countDistinctApprox` for distinct-user funnels | `countDistinctApprox(if(event.type == "...", then: user_id))` — more accurate than event counts for conversion rates | Critical | Funnel Design |
 | 31 | Calculate step conversion as `step_N / step_N-1 * 100` | `round(toDouble(step2) / toDouble(step1) * 100, decimals: 1)` | Critical | Metrics |
 | 32 | Calculate overall conversion as `last_step / first_step * 100` | `round(toDouble(step5) / toDouble(step1) * 100, decimals: 2)` | Critical | Metrics |
@@ -158,6 +158,7 @@ This notebook consolidates every actionable best practice from the BIZEV series 
 | 70 | Use `==` for exact matches, `~` only for wildcards | `filter event.type == "com.myapp.order.completed"` not `event.type ~ "*order*"` | Critical | Performance |
 | 71 | Use `in()` with curly-brace arrays for multi-value filters | `filter in(event.type, {"type1", "type2"})` — never SQL-style `IN ('a','b')` | Critical | Syntax |
 | 72 | Alias all aggregations used in sort | `summarize c = count()` then `sort c desc` — never `sort count() desc` | Critical | Syntax |
+| 72b | Wrap multiple `summarize` aggregations in `{}` | When summarizing 2+ aggregations, wrap them: `summarize { a = count(), b = avg(x) }, by: {field}`. Tenant emits `PARAMETERS_SHOULD_BE_GROUPED` INFO if not wrapped (query still runs but is non-canonical). | **Recommended** | Syntax |
 | 73 | Use `round(..., decimals: N)` with named parameter | `round(value, decimals: 2)` — never `round(value, 2)` | Critical | Syntax |
 | 74 | Use `if(cond, then: ..., else: ...)` with named parameters | Named `then:` and `else:` parameters are mandatory | Critical | Syntax |
 | 75 | Cast `amount` fields with `toDouble()` before math | `sum(toDouble(amount))` — payload fields may arrive as strings | Recommended | Data Types |
