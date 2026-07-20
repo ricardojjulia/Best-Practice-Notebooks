@@ -1,6 +1,6 @@
 # OPMIG-08: Security, Masking & Compliance
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 8 of 10 | **Created:** December 2025 | **Last Updated:** 07/20/2026
 
 ---
 
@@ -131,22 +131,31 @@ Fields: content, message
 
 ### Email Addresses
 
+> **There is no built-in `EMAIL` matcher in DPL.** A pattern of `EMAIL` is rejected with
+> `Named pattern element 'EMAIL' is not valid`, so a masking processor built on it never
+> redacts anything. Use the hand-rolled character-class pattern below.
+
 **DPL Pattern:**
 ```
-EMAIL
+[a-zA-Z0-9._%+-]+ '@' [a-zA-Z0-9.-]+
 ```
 
 **Matches:**
 - `user@example.com`
 - `first.last@company.org`
+- `a-b_c%d+e@sub.domain.co.uk`
 
 **Masking Processor:**
 ```
 Name: Mask Emails
-Pattern: EMAIL:email
+Pattern: [a-zA-Z0-9._%+-]+ '@' [a-zA-Z0-9.-]+
 Replacement: [EMAIL_REDACTED]
 Fields: content, message
 ```
+
+> **Note:** the domain class includes `.`, so a sentence-final period is absorbed into the
+> match (`mail x@y.io.` → `mail [EMAIL_REDACTED]`). That over-masks by one character rather
+> than under-masking — the safe direction for PII.
 
 ### IP Addresses
 
@@ -169,8 +178,12 @@ Fields: content, client_ip, remote_addr
 
 **DPL Pattern:**
 ```
-'(' INT{3} ')' SPACE? INT{3} '-' INT{4}
+'(' [0-9]{3} ')' SPACE? [0-9]{3} '-' [0-9]{4}
 ```
+
+> **`INT` does not accept a `{n}` quantifier** — it supports only `*` and `+`, and
+> `INT{3}` fails with `INT only supports '*' (nullable) and '+' (not nullable) quantifiers`.
+> Use a `[0-9]{n}` character class for fixed-width digit runs.
 
 **Matches:**
 - `(555) 123-4567`
@@ -193,16 +206,20 @@ fieldsAdd content = replacePattern(content, "PATTERN", replacement: "REPLACEMENT
 **Pattern:** SSN format `123-45-6789`
 
 ```dql
-fieldsAdd content = replacePattern(content, "INT{3} '-' INT{2} '-' INT{4}", replacement: "[SSN_REDACTED]")
+fieldsAdd content = replacePattern(content, "[0-9]{3} '-' [0-9]{2} '-' [0-9]{4}", replacement: "[SSN_REDACTED]")
 ```
 
 ### Example: Mask API Keys
 
-**Pattern:** Keys starting with `key_` followed by alphanumeric
+**Pattern:** Keys starting with `key_`, masked through to the next whitespace
 
 ```dql
-fieldsAdd content = replacePattern(content, "'key_' WORD", replacement: "[API_KEY_REDACTED]")
+fieldsAdd content = replacePattern(content, "'key_' NSPACE", replacement: "[API_KEY_REDACTED]")
 ```
+
+> **Why not `'key_' WORD`?** `WORD` matches a greedy run of alphanumerics and underscores,
+> but stops at `-`. Against `key_XY-99` it yields `[API_KEY_REDACTED]-99`, leaving part of
+> the secret in the log. `NSPACE` consumes to the next whitespace and masks the whole token.
 
 ### Example: Mask Bearer Tokens
 
@@ -225,7 +242,7 @@ fieldsAdd content = replacePattern(content, "'password=' LD:pwd ('&'|EOL)", repl
 ```dql
 // Apply multiple masks in sequence
 fieldsAdd content = replacePattern(content, "CREDITCARD", replacement: "[CC_REDACTED]")
-| fieldsAdd content = replacePattern(content, "EMAIL", replacement: "[EMAIL_REDACTED]")
+| fieldsAdd content = replacePattern(content, "[a-zA-Z0-9._%+-]+ '@' [a-zA-Z0-9.-]+", replacement: "[EMAIL_REDACTED]")
 | fieldsAdd content = replacePattern(content, "IPADDR", replacement: "[IP_REDACTED]")
 ```
 
@@ -246,7 +263,7 @@ fieldsAdd content = replacePattern(content, "CREDITCARD", replacement: "[CC_REDA
 // Mask credit card numbers
 fieldsAdd content = replacePattern(content, "CREDITCARD", replacement: "[PAN_REDACTED]")
 // Mask CVV (3-4 digits after 'cvv=' or 'cvc=')
-| fieldsAdd content = replacePattern(content, "('cvv='|'cvc='|'CVV='|'CVC=') INT{3,4}", replacement: "cvv=[REDACTED]")
+| fieldsAdd content = replacePattern(content, "('cvv='|'cvc='|'CVV='|'CVC=') [0-9]{3,4}", replacement: "cvv=[REDACTED]")
 ```
 
 ### GDPR Compliance
@@ -260,7 +277,7 @@ fieldsAdd content = replacePattern(content, "CREDITCARD", replacement: "[PAN_RED
 
 ```dql
 // Mask emails
-fieldsAdd content = replacePattern(content, "EMAIL", replacement: "[PII_REDACTED]")
+fieldsAdd content = replacePattern(content, "[a-zA-Z0-9._%+-]+ '@' [a-zA-Z0-9.-]+", replacement: "[PII_REDACTED]")
 // Mask IP addresses
 | fieldsAdd content = replacePattern(content, "IPADDR", replacement: "[IP_REDACTED]")
 // Mask user IDs
@@ -282,7 +299,7 @@ fieldsAdd content = replacePattern(content, "'patientId=' LD:pid", replacement: 
 // Mask MRNs
 | fieldsAdd content = replacePattern(content, "'mrn=' LD:mrn", replacement: "mrn=[PHI_REDACTED]")
 // Mask SSNs
-| fieldsAdd content = replacePattern(content, "INT{3} '-' INT{2} '-' INT{4}", replacement: "[SSN_REDACTED]")
+| fieldsAdd content = replacePattern(content, "[0-9]{3} '-' [0-9]{2} '-' [0-9]{4}", replacement: "[SSN_REDACTED]")
 ```
 
 ### SOC 2 Compliance
@@ -486,13 +503,13 @@ Matching: (all records)
 
 **Masking Processor 2: CVV Codes**
 ```dql
-fieldsAdd content = replacePattern(content, "('cvv='|'cvc=') INT{3,4}", replacement: "cvv=[REDACTED]")
+fieldsAdd content = replacePattern(content, "('cvv='|'cvc=') [0-9]{3,4}", replacement: "cvv=[REDACTED]")
 ```
 
 **Masking Processor 3: Emails**
 ```
 Name: Mask Emails
-Pattern: EMAIL
+Pattern: [a-zA-Z0-9._%+-]+ '@' [a-zA-Z0-9.-]+
 Replacement: [EMAIL_REDACTED]
 Fields: content, customer_email
 Matching: (all records)

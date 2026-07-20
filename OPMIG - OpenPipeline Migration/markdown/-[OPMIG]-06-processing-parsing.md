@@ -1,6 +1,6 @@
 # OPMIG-06: Processing, Parsing & Transformation
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 6 of 10 | **Created:** December 2025 | **Last Updated:** 07/20/2026
 
 ---
 
@@ -193,6 +193,9 @@ DPL is a powerful pattern matching language for extracting structured data from 
 | `'literal'` | Match exact text | `'error_code='` |
 | `(a\|b)` | Alternatives | `('user='\|'userId=')` |
 | `MATCHER{n,m}` | Quantifier | `WORD{1,3}` |
+
+> **Quantifier caveat:** `{n,m}` is not universal. `INT` accepts only `*` and `+` —
+> `INT{3}` is rejected. For fixed-width digit runs use a character class: `[0-9]{3}`.
 
 ### Basic Parse Examples
 

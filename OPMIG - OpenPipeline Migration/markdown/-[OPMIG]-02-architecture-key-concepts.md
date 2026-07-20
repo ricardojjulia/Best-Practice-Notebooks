@@ -1,6 +1,6 @@
 # OPMIG-02: OpenPipeline Migration Guide: Part 2
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 06/23/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 2 of 10 | **Created:** December 2025 | **Last Updated:** 07/20/2026
 
 ## Architecture & Key Concepts
 ---
@@ -249,6 +249,9 @@ DPL is a powerful pattern matching language used in the `parse` command.
 | Literal | `'exact text'` | Match literal string |
 | Alternatives | `('opt1'\|'opt2')` | Match either option |
 | Quantifier | `MATCHER{2,5}` | Match 2-5 times |
+
+> **Quantifier caveat:** `{n,m}` is not universal. `INT` accepts only `*` and `+` —
+> `INT{3}` is rejected. For fixed-width digit runs use a character class: `[0-9]{3}`.
 
 ### DPL Examples
 

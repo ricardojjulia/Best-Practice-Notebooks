@@ -1,6 +1,6 @@
 # OPMIG-04: OpenPipeline Migration Guide: Part 4
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 4 of 10 | **Created:** December 2025 | **Last Updated:** 05/06/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 4 of 10 | **Created:** December 2025 | **Last Updated:** 07/20/2026
 
 ## Pipeline Configuration Fundamentals
 ---
@@ -370,7 +370,7 @@ fieldsAdd content = replacePattern(content, "CREDITCARD", replacement: "[CC_REDA
 
 **Processor 2: Mask CVV**
 ```dql
-fieldsAdd content = replacePattern(content, "('cvv='|'cvc=') INT{3,4}", replacement: "cvv=[REDACTED]")
+fieldsAdd content = replacePattern(content, "('cvv='|'cvc=') [0-9]{3,4}", replacement: "cvv=[REDACTED]")
 ```
 
 **Processor 3: Parse Payment Data**
