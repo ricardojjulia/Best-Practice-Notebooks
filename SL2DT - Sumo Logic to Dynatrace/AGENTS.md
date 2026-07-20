@@ -25,6 +25,7 @@ Read only the file(s) matching the question. All paths are under `markdown/`.
 | Translating Sumo RBAC (roles, search filters, capabilities) to IAM groups/policies, bucket-scoped policies, SSO and user provisioning | `-[SL2DT]-07-user-governance-and-access.md` |
 | Terraform vs Monaco tool selection, CI/CD promotion pipelines, automating the Sumo-extract → Dynatrace-import flow | `-[SL2DT]-08-automation-and-gitops.md` |
 | Parallel-run validation tiers, the cutover runbook, rollback plan, decommissioning Sumo | `-[SL2DT]-09-cutover-validation-decommission.md` |
+| Migrating Telegraf-collected metrics off Sumo: inventorying the metric estate, choosing the target ingest path, Telegraf output-plugin mechanics (local OneAgent endpoint vs remote environment endpoint), metric-key reshaping at the boundary, parity validation during the parallel run | `-[SL2DT]-10-telegraf-metric-migration.md` |
 | Series index, critical-decisions checklist, failure-mode reference, engagement timeline, DQL quick reference | `-[SL2DT]-99-summary-and-runbook-index.md` |
 
 If more than three rows match, start with

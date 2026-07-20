@@ -1,6 +1,6 @@
 # SL2DT-06: Dashboard Conversion
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 6 of 10 | **Created:** April 2026 | **Last Updated:** 06/23/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 6 of 11 | **Created:** April 2026 | **Last Updated:** 07/20/2026
 
 ## Overview
 

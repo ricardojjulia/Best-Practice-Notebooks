@@ -1,6 +1,6 @@
 # SL2DT-08: Automation & GitOps
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 8 of 10 | **Created:** April 2026 | **Last Updated:** 05/15/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 8 of 11 | **Created:** April 2026 | **Last Updated:** 07/20/2026
 
 ## Overview
 
