@@ -392,6 +392,7 @@ Step-by-step migration path from Sumo Logic to Dynatrace, from strategy and inve
 - [SL2DT-07: User Governance & Access](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-07-user-governance-and-access.md) — Translating Sumo RBAC to Dynatrace Platform IAM groups and policies
 - [SL2DT-08: Automation & GitOps](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-08-automation-and-gitops.md) — CI/CD promotion paths for all migrated configuration via Monaco
 - [SL2DT-09: Cutover, Validation & Decommission](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-09-cutover-validation-decommission.md) — Parallel validation, declaring cutover, and decommissioning Sumo
+- [SL2DT-10: Migrating Telegraf-Collected Metrics](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-10-telegraf-metric-migration.md) — Repointing a Telegraf metric estate at Dynatrace: ingest-path choice, output-plugin mechanics, key reshaping, and parity validation
 - [SL2DT-99: Summary & Runbook Index](SL2DT%20-%20Sumo%20Logic%20to%20Dynatrace/markdown/-%5BSL2DT%5D-99-summary-and-runbook-index.md) — Single-page index and reference card for the entire SL2DT series
 
 ### [SLO - Service Level Objectives](SLO%20-%20Service%20Level%20Objectives/README.md)

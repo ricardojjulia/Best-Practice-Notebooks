@@ -1,6 +1,6 @@
 # SL2DT-09: Cutover, Validation & Decommission
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 9 of 10 | **Created:** April 2026 | **Last Updated:** 07/08/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 9 of 11 | **Created:** April 2026 | **Last Updated:** 07/20/2026
 
 ## Overview
 

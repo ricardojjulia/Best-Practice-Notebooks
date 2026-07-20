@@ -1,12 +1,14 @@
 # SL2DT-03: Log Ingest Architecture
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 3 of 10 | **Created:** April 2026 | **Last Updated:** 07/01/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 3 of 11 | **Created:** April 2026 | **Last Updated:** 07/20/2026
 
 ## Overview
 
 **Goal of this step:** stand up Dynatrace ingest that produces parity with (or improvement over) the Sumo collector footprint. Design Grail buckets, deploy OneAgent + OTel + OpenPipeline pipelines, convert every Field Extraction Rule into an OpenPipeline processor.
 
 This step is gating. Downstream monitors (SL2DT-05), dashboards (SL2DT-06), and the translation pass (SL2DT-04) all assume logs are flowing into the correct buckets with the expected fields. Don't start those until the ingest layer produces at least 5–10% of final production volume for validation.
+
+> **Metrics are a separate workstream.** This notebook covers the **log** ingest path. If the source account also collects metrics — Telegraf, hosted metrics sources, StatsD, or Prometheus scrape — run **SL2DT-10: Migrating Telegraf-Collected Metrics** alongside this step rather than after cutover.
 
 ---
 

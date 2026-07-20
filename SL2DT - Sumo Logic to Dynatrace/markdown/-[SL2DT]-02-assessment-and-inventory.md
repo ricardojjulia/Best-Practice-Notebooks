@@ -1,6 +1,6 @@
 # SL2DT-02: Assessment & Inventory
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 2 of 10 | **Created:** April 2026 | **Last Updated:** 06/23/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 2 of 11 | **Created:** April 2026 | **Last Updated:** 07/20/2026
 
 ## Overview
 
@@ -269,6 +269,9 @@ Every Sumo Collector needs a Dynatrace ingest equivalent. Classify each:
 | Hosted (GCP Pub/Sub) | Dynatrace GCP cloud integration |
 | Hosted (Kubernetes) | DynaKube + OneAgent + log module |
 | Hosted (HTTP source) | OpenPipeline HTTP endpoint or OTel HTTP receiver |
+| Installed — Telegraf metrics output | *Metric path* — target chosen in **SL2DT-10** |
+| Hosted (metrics source / StatsD / Graphite) | *Metric path* — target chosen in **SL2DT-10** |
+| Hosted (Prometheus scrape) | *Metric path* — target chosen in **SL2DT-10** |
 
 For each collector, document:
 
@@ -279,6 +282,8 @@ For each collector, document:
 - Retention policy
 
 **Output:** `inventory/collectors-mapping.md` — one row per collector with target.
+
+> **Metrics run on a parallel track.** The rows marked *metric path* are covered by **SL2DT-10: Migrating Telegraf-Collected Metrics** — inventory them here, but choose their ingest path and map their metric keys there. Metric keys change shape at the boundary on every available path, so that mapping cannot be deferred to cutover.
 
 ![Sumo Collector → Dynatrace Ingest Mapping](images/02-collector-mapping_930x500.png)
 

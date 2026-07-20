@@ -1,12 +1,12 @@
 # SL2DT-99: Summary & Runbook Index
 
-> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 10 of 10 | **Created:** April 2026 | **Last Updated:** 06/23/2026
+> **Series:** SL2DT — Sumo Logic to Dynatrace | **Notebook:** 11 of 11 | **Created:** April 2026 | **Last Updated:** 07/20/2026
 
 ## Overview
 
 **Goal of this notebook:** single-page index for the entire SL2DT series. Use as a reference card during migration work, a hand-off document for incoming teams, and a quick-start for future Sumo-to-Dynatrace engagements.
 
-This notebook is intentionally terse. Each section points to the authoritative detail in SL2DT-01 through SL2DT-09.
+This notebook is intentionally terse. Each section points to the authoritative detail in SL2DT-01 through SL2DT-10.
 
 ---
 
@@ -71,6 +71,7 @@ Target outcomes:
 | 07 | User Governance & Access | Wave 1 (do early!) | IAM groups/policies/bindings |
 | 08 | Automation & GitOps | Wave 1 ongoing | Terraform + Monaco configs, CI pipelines |
 | 09 | Cutover, Validation & Decommission | Wave 5 | Cutover runbook, validation report, retro |
+| 10 | Telegraf Metric Migration | Parallel track — run alongside 02-06 | `inventory/metrics.json`, `metric-key-map.md`, `parity-report.md` |
 | 99 | Summary (this notebook) | Any time — reference card | — |
 
 <a id="decisions"></a>
