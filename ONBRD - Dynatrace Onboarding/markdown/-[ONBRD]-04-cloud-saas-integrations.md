@@ -49,7 +49,6 @@ For environments where SVG doesn't render
 | **Clouds App (recommended where supported)** | AWS (GA), Azure (preview); GCP not yet available | No (direct connection) |
 | **Cloud Integrations (Classic / AG-polling)** | GCP today; AWS / Azure where Clouds app is not used | Yes |
 | **Extensions 2.0** *(current framework)* | Custom data sources, SaaS APIs, on-host integrations | Yes (AG-hosted) |
-| **Extensions 2.0 *(legacy / existing installs)*** | Pre-existing Extension 2.0 packages | Yes |
 | **OpenTelemetry** | OTel-instrumented apps | No (direct OTLP ingest) |
 | **Log Ingest** | External log sources | Optional (AG can route) |
 | **Metrics Ingest** | Custom metrics via API | No |
