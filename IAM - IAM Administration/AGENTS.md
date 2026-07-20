@@ -28,7 +28,7 @@ Read only the file(s) matching the question. All paths are under `markdown/`.
 | Hands-on workshop: designing a persona-based permissions model (personas, AD alignment, schema/app audits, data boundaries) | `-[IAM]-11-[WORKSHOP]-policy-persona.md` |
 | curl/jq provisioning scripts against the Account Management API, OAuth client setup, policy/binding reports, cleanup, validation DQL | `-[IAM]-12-api-provisioning-validation.md` |
 | Hands-on lab: provisioning groups, policies, boundaries, and bindings as code with Terraform modules | `-[IAM]-95-[LAB]-terraform-iam-provisioning.md` |
-| Hands-on lab: one-command team onboarding (group + shared policy + boundary + binding) with a Python tool | `-[IAM]-96-[LAB]-python-iam-provisioning.md` |
+| Hands-on lab: provisioning a group, parameterized policy, boundary, and binding step by step against the raw Account Management API in Python — OAuth token exchange, per-step verification, idempotent re-runs, and cleanup | `-[IAM]-96-[LAB]-python-iam-provisioning.md` |
 | Consolidated checklist: SSO, groups, policies, boundaries, lifecycle, tokens, audit, governance | `-[IAM]-99-best-practice-summary.md` |
 
 If more than three rows match, start with `-[IAM]-99-best-practice-summary.md`

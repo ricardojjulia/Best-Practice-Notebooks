@@ -5,9 +5,10 @@ Humans: see [README.md](README.md).
 
 10 notebooks on migrating from Dynatrace Managed to Dynatrace SaaS: a
 3-phase / 9-step journey (Plan → Upgrade → Run) covering discovery, strategy,
-target architecture, the SaaS Upgrade Assistant, OneAgent/ActiveGate cutover,
-integration reconnection, SaaS-capability adoption, user enablement, and
-Managed decommissioning, plus a consolidated best-practice summary.
+target architecture, the SaaS Upgrade Assistant, Grail bucket planning before
+first ingest, OneAgent/ActiveGate/Kubernetes/serverless cutover, integration
+reconnection, SaaS-capability adoption, user enablement, and Managed
+decommissioning, plus a consolidated best-practice summary.
 
 ## Routing table
 
@@ -16,10 +17,10 @@ Read only the file(s) matching the question. All paths are under `markdown/`.
 | When the question is about… | Read |
 |---|---|
 | Why move to SaaS, inventorying the Managed environment (configs, Credential Vault, tokens, extensions), what migrates automatically vs manually | `-[M2S]-01-step-1-discover.md` |
-| Choosing a migration approach, the 11-step order of operations, risk assessment, success criteria, timeline, the 90/10 rule | `-[M2S]-02-step-2-strategize.md` |
+| Choosing a migration approach (host-count bands plus cloud-native and serverless sizing axes for estates with few VMs), the 11-step order of operations, risk assessment, success criteria, timeline, the 90/10 rule | `-[M2S]-02-step-2-strategize.md` |
 | Target architecture: network connectivity/firewall rules, network zones (`builtin:networkzones.zones`), ActiveGate sizing and placement, SSO/IAM security, HA | `-[M2S]-03-step-3-design.md` |
-| Pre-migration readiness: licensing for dual-run, tenant provisioning, SAML SSO setup, parallel ActiveGates, SaaS Upgrade Assistant install (Managed v1.294+), config freeze, rollback plan | `-[M2S]-04-step-4-prepare.md` |
-| Running the migration: dependency-ordered configuration waves via the SaaS Upgrade Assistant, redirecting OneAgents to SaaS, per-wave validation | `-[M2S]-05-step-5-execute.md` |
+| Pre-migration readiness: licensing for dual-run, tenant provisioning, SAML SSO setup, parallel ActiveGates, SaaS Upgrade Assistant install (align to the target tenant's major version — no fixed minimum), Grail bucket strategy before first ingest, config freeze, rollback plan | `-[M2S]-04-step-4-prepare.md` |
+| Running the migration: dependency-ordered configuration waves via the SaaS Upgrade Assistant, redirecting each workload surface to SaaS (OneAgent via `oneagentctl`, Kubernetes DynaKube recreate, Cloud Run image rebuild, OTLP endpoint repoint), Grail bucket routing before high-volume log redirect, per-wave validation | `-[M2S]-05-step-5-execute.md` |
 | Reconnecting integrations: dashboards, alert/notification channels, CI/CD pipelines, ITSM, extensions, API scripts, synthetic monitors | `-[M2S]-06-step-6-integrate.md` |
 | Adopting SaaS-only capabilities post-cutover: Grail, Notebooks, OpenPipeline, Workflows, Dynatrace Assist, platform apps, privacy controls | `-[M2S]-07-step-7-expand.md` |
 | Communication plan, persona-based training, documentation updates, support channels, measuring enablement success | `-[M2S]-08-step-8-enable.md` |
