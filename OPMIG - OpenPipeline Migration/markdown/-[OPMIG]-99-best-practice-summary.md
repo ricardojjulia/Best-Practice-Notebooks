@@ -1,6 +1,6 @@
 # OPMIG-99: Best Practice Summary
 
-> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 10 of 10 | **Created:** March 2026 | **Last Updated:** 05/06/2026
+> **Series:** OPMIG — OpenPipeline Migration | **Notebook:** 10 of 10 | **Created:** March 2026 | **Last Updated:** 07/20/2026
 
 Definitive best practice settings for migrating from classic logs to OpenPipeline. Each entry specifies the exact configuration.
 
@@ -120,10 +120,10 @@ Definitive best practice settings for migrating from classic logs to OpenPipelin
 |----------|---------|----------|
 | Masking processors FIRST in every pipeline | Sensitive data redacted before parsing, routing, storage | Critical |
 | Credit cards | Built-in `CREDITCARD` matcher → `[CC_REDACTED]` | Critical |
-| CVV codes | `('cvv='\|'cvc=') INT{3,4}` → `cvv=[REDACTED]` | Critical |
-| Email addresses | Built-in `EMAIL` matcher → `[EMAIL_REDACTED]` | Critical |
+| CVV codes | `('cvv='\|'cvc=') [0-9]{3,4}` → `cvv=[REDACTED]` | Critical |
+| Email addresses | `[a-zA-Z0-9._%+-]+ '@' [a-zA-Z0-9.-]+` → `[EMAIL_REDACTED]` (no built-in `EMAIL` matcher exists) | Critical |
 | IP addresses (GDPR) | Built-in `IPADDR` matcher → `[IP_REDACTED]` | Critical |
-| SSNs | `INT{3} '-' INT{2} '-' INT{4}` → `[SSN_REDACTED]` | Critical |
+| SSNs | `[0-9]{3} '-' [0-9]{2} '-' [0-9]{4}` → `[SSN_REDACTED]` (`INT` takes no `{n}` quantifier) | Critical |
 | Bearer tokens | `'Bearer ' NSPACE` → `Bearer [TOKEN_REDACTED]` | Critical |
 | API keys | `('api_key='\|'apiKey=') LD:key` → `api_key=[REDACTED]` | Critical |
 | Passwords | `('password='\|'pwd='\|'passwd=') LD:pwd` → `password=[REDACTED]` | Critical |
