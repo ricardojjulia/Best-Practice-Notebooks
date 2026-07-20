@@ -5,8 +5,8 @@ Humans: see [README.md](README.md).
 
 9 notebooks on integrating Dynatrace with AWS, Azure, and GCP: the Clouds app
 vs classic ActiveGate polling, per-provider connection and authentication
-setup, EKS and serverless deep dives, CloudWatch log ingestion, and
-multi-cloud observability patterns.
+setup, EKS and serverless deep dives, CloudWatch and GCP Pub/Sub log
+ingestion, and multi-cloud observability patterns.
 
 ## Routing table
 
@@ -19,7 +19,7 @@ Read only the file(s) matching the question. All paths are under `markdown/`.
 | EKS clusters: DynaKube on EKS, node groups vs Fargate, IRSA, Container Insights comparison, namespace cost allocation | `-[CLOUD]-03-aws-eks-monitoring.md` |
 | Lambda and serverless: cold starts, throttles, `dt.faas.*` metrics, Service Detection v2, API Gateway, Step Functions, DynamoDB, end-to-end serverless tracing | `-[CLOUD]-04-aws-lambda-serverless.md` |
 | Connecting Azure: Azure Native Dynatrace Service, Entra ID app registration, supported services, AKS, resource group mapping | `-[CLOUD]-05-azure-integration.md` |
-| Connecting GCP: service account auth, push-based Helm/Pub/Sub integration on GKE, supported services, GKE and Cloud Run monitoring | `-[CLOUD]-06-gcp-integration.md` |
+| Connecting GCP: service account auth, push-based Helm/Pub/Sub integration on GKE, Pub/Sub log-forwarder sizing and horizontal scaling, supported services, GKE monitoring, Cloud Run OneAgent coverage caveats (Java/Node.js only, build-time credentials, Gen1 metric gaps), manual `traceparent` propagation across Pub/Sub | `-[CLOUD]-06-gcp-integration.md` |
 | Forwarding cloud logs: Amazon Data Firehose setup, deprecated Lambda forwarder migration, S3 ingestion, source-vs-Dynatrace filtering, OpenPipeline processing, log cost | `-[CLOUD]-07-cloudwatch-log-ingestion.md` |
 | Running on more than one cloud: cross-cloud comparison queries, naming conventions, unified dashboards and alerting, cost comparison, governance | `-[CLOUD]-08-multi-cloud-patterns.md` |
 | Consolidated checklist: connection/auth choices, service tiering, log ingestion defaults, alert windows for delayed cloud metrics | `-[CLOUD]-99-best-practice-summary.md` |

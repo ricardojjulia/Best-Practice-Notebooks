@@ -3,7 +3,7 @@
 Per-series routing for AI agents. Repo-wide rules: [../AGENTS.md](../AGENTS.md).
 Humans: see [README.md](README.md).
 
-14 standalone single-page reference entries, each answering one recurring
+15 standalone single-page reference entries, each answering one recurring
 Dynatrace question in decision-support format. Entries are independent — there
 is no reading order; match the question and read only that entry.
 
@@ -27,6 +27,7 @@ Read only the file(s) matching the question. All paths are under `markdown/`.
 | Partial enablement after migrating from another tool: mode ladder (Discovery/Infrastructure/Full-Stack), dependency cascade, per-capability handicaps, coverage-audit DQL | `-[FAQ]-12-cost-of-coverage-gaps.md` |
 | OpenShift pods rejected with `Forbidden: seccomp may not be set`: anyuid + Operator 1.9.0 default flip, SCC compatibility matrix, custom SCC fix, pre-upgrade audit | `-[FAQ]-13-openshift-scc-seccomp-injection.md` |
 | Replacing custom SQL Server / Telegraf monitoring scripts with the Dynatrace extension: `sql-server.*` metric mapping, honest gaps (tempdb version store), EF 2.0 fallback | `-[FAQ]-14-sql-server-extension-vs-custom-scripts.md` |
+| How DPL works: the pattern model, coming from regex (no backtracking, character classes as the only overlap), matcher catalog, why a pattern returns null or the wrong value, quantifiers, the five DQL surfaces (`parse` / `parseAll` / `matchesPattern` / `replacePattern` / `splitByPattern`), ingest-vs-query placement, failure diagnosis | `-[FAQ]-15-how-dpl-works.md` |
 
 ## Related series
 
