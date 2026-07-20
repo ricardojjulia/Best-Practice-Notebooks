@@ -34,6 +34,7 @@ If more than three rows match, start with
 - Ongoing OpenPipeline **log** work after (or independent of) the migration — ingest, parsing, routing as day-2 operations: `../OPLOGS - OpenPipeline Logs/`
 - OpenPipeline for **non-log signal types** (spans, metrics, business/security events): `../OPIPE - OpenPipeline Beyond Logs/`
 - Grail bucket, segment, and security-context strategy behind the routing decisions: `../ORGNZ - Organize Data: Buckets, Segments, Security/`
+- The full DPL reference behind the patterns quoted here — matcher catalog, per-matcher quantifier support, no-backtracking semantics, and every DQL surface that takes a pattern: `../FAQ - Frequently Asked Questions/`
 
 ## Rules
 
