@@ -3,7 +3,7 @@
 Per-series routing for AI agents. Repo-wide rules: [../AGENTS.md](../AGENTS.md).
 Humans: see [README.md](README.md).
 
-10 notebooks forming a procedural runbook for migrating from Sumo Logic to
+11 notebooks forming a procedural runbook for migrating from Sumo Logic to
 Dynatrace: strategy and wave planning, Sumo inventory and cut-scope, log
 ingest architecture, SumoQL→DQL translation, monitor and dashboard
 conversion, IAM governance, GitOps automation, and cutover/decommission.
