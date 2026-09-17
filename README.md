@@ -17,6 +17,45 @@ Dynatrace best-practice notebooks with matching PDF and Markdown exports. These 
 > [`AGENTS.md`](AGENTS.md), which routes it to the right series and notebook.
 > Most tools load it automatically.
 
+## What This Repository Contains
+
+- **32 Dynatrace topic series** plus the [`-START-HERE-` playbook](-START-HERE-/README.md) for choosing a recommended reading path
+- **319 importable notebook JSON files** in `notebooks/` or `NOTEBOOKS/` for use inside Dynatrace Notebooks
+- **319 matching Markdown exports** in `markdown/` for browser-friendly reading, search, and diffs
+- **319 matching PDF exports** in `pdfs/` or `PDFs/` for print-friendly review and sharing
+- **Series-level `README.md` and `AGENTS.md` files** that explain scope, notebook order, and routing
+
+## Supported Dynatrace Use Cases
+
+This repository is organized around practical Dynatrace adoption and operations scenarios, including:
+
+- **Foundations and onboarding** — tenant setup, IAM, Grail data organization, adoption maturity, and FinOps
+- **Instrumentation and data sources** — Kubernetes, cloud integrations, mobile, web RUM, synthetic, databases, and OpenTelemetry
+- **Analytics and data processing** — OpenPipeline, spans, business events, dashboards, and DQL-driven analysis
+- **Automation and workflows** — configuration as code, alerting strategy, workflows, AIOps, and SLO operations
+- **Security** — Dynatrace application security, runtime protection, posture management, and AppSec governance
+- **Migrations** — New Relic, Splunk, Sumo Logic, OpenPipeline, Managed-to-SaaS, SaaS-to-SaaS, and management-zone modernization
+
+## Prerequisites
+
+You can browse the Markdown and PDF exports locally with no special setup. To use the interactive notebook assets as intended, you should have:
+
+- Access to a Dynatrace tenant
+- Permissions to create or import notebooks in that tenant
+- Relevant Dynatrace data already flowing into the tenant for the notebook topic you want to exercise
+- Awareness that version-sensitive claims should be verified against current official Dynatrace documentation
+
+## File Types and How They Are Used
+
+| Location | Purpose | Typical use |
+|---|---|---|
+| `markdown/` | Canonical readable notebook text | Read in GitHub, search locally, quote snippets, diff changes |
+| `notebooks/` or `NOTEBOOKS/` | Dynatrace notebook JSON exports | Import into Dynatrace Notebooks for interactive use against your tenant data |
+| `pdfs/` or `PDFs/` | Print-friendly exports | Share or review offline |
+| Series `README.md` | Topic overview and notebook lineup | Choose the right series and sequence |
+| Series `AGENTS.md` | Routing metadata for AI agents | Route questions to the correct notebook without crawling the full repo |
+| `-START-HERE-/` | Cross-series playbook | Pick a scenario-based starting path across multiple series |
+
 ## Layout
 
 Each topic follows the same structure:
@@ -464,13 +503,39 @@ Automating workflows and configuring alert notifications in Dynatrace.
 
 ## How to Use
 
-1. Open a topic README for context and prerequisites.
-2. Choose your format:
-	- Import JSON from notebooks/ into Dynatrace Notebooks for interactive use.
-	- Read pdfs/ for printable versions.
-	- Use markdown/ for lightweight viewing or diffs.
-3. Follow the numbered sequence to progress through each series.
+1. If you are new to the repository, start with [`-START-HERE-/README.md`](-START-HERE-/README.md) to find the right scenario-based path.
+2. Open the relevant series `README.md` for scope, prerequisites, and the recommended notebook order.
+3. Use `markdown/` when you want fast local reading, search, or diffs.
+4. Use `notebooks/` or `NOTEBOOKS/` when you want the full interactive experience: import the JSON notebook into Dynatrace Notebooks in your tenant and run the included DQL or configuration examples against your own data.
+5. Use `pdfs/` or `PDFs/` when you need a print-friendly or offline-friendly copy.
+6. When citing or sharing material, preserve the existing notebook attribution and unofficial-support notices.
+
+## Maintenance and Update Process
+
+This repository has no build system or automated test suite; maintenance is primarily an editorial and content-synchronization workflow. When updating repository content:
+
+1. Keep the series `README.md`, `AGENTS.md`, and any related navigation files accurate.
+2. If notebook content changes, keep the exported formats aligned so `markdown/`, notebook JSON, and PDF copies do not drift.
+3. Preserve `Created` / `Last Updated` metadata and source attribution already embedded in the notebooks.
+4. If you add a new series or materially change routing, update the `-START-HERE-` playbook in the same change set.
+5. Follow the additional contributor checklist in [CONTRIBUTING.md](CONTRIBUTING.md) and the repository's [minimal check-in policy](CHECK_IN_POLICY.md).
+
+## Limitations and Support Status
+
+- The notebooks are **AI-generated from community-submitted and publicly available sources**.
+- The repository and its contents are **not officially supported by Dynatrace**.
+- Product behavior, pricing, licensing models, feature availability, and UI flows can change over time.
+- Interactive notebook behavior depends on your Dynatrace tenant, permissions, and available data.
+- Official Dynatrace documentation remains the authoritative source for version-sensitive guidance.
+
+## Contributing
+
+Improvements to repository-level documentation, navigation, and accuracy are welcome, but contributors should avoid casual bulk edits to notebook exports. See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and guardrails for updating this repository.
+
+## Licensing and Attribution
+
+This repository currently does **not** include a `LICENSE` file. As a result, the repository does not presently publish open-source reuse, redistribution, or modification terms. Preserve the source attributions already embedded in the notebooks and review [LICENSE-STATUS.md](LICENSE-STATUS.md) before reusing or republishing repository content.
 
 ---
 
-<sub>*This notebook was AI-generated from community-submitted and publicly available sources. This notebook series is not officially supported by Dynatrace. Always verify information against official Dynatrace documentation.*</sub>
+<sub>*This repository contains AI-generated notebook content derived from community-submitted and publicly available sources. It is not officially supported by Dynatrace. Always verify version-sensitive guidance against official Dynatrace documentation.*</sub>
