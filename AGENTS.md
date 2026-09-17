@@ -3,7 +3,7 @@
 Guidance for AI agents consuming this repository. Humans: see [README.md](README.md).
 
 This is a **content-only** repository: 32 series of Dynatrace best-practice
-notebooks (~307 documents, ~725k words). There is no build system, no tests,
+notebooks (~319 documents, ~808k words). There is no build system, no tests,
 and no application code.
 
 ## How to navigate (important — do not crawl)
